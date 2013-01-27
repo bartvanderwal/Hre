@@ -1,0 +1,41 @@
+﻿@model HRE.Models.MeedoenModel
+@{
+    ViewBag.Title = "Meedoen";
+}
+
+<h1>Meedoen</h1>
+@Html.ValidationSummary(true)
+<img src="/Content/img/pen.png" title="Contact" alt="Contact"/>
+<p>Op 1 februari opent de inschrijving. Deelnemers van het eerste rondje eilanden krijgen daarvoor een mail met een speciale kortingsactie en de mogelijkheid om eerder in te schrijven...</p>
+
+@*
+<p>Was je er niet bij, en wil je toch van de actie gebruik maken vraag dan iemand die wel heeft meegedaan. Geef je e-mail adres door via het volgende veld om op de hoogte gehouden te worden:</p>
+@{Html.BeginForm("HouMeOpDeHoogte", "Meedoen", FormMethod.Post);}
+    @Html.ValidationMessage("MeedoenModel")
+    @Html.AntiForgeryToken()
+    @Html.TextBox("Email", "", new { @placeholder="email@domein.nl", @class="placeholder" })
+    <input type="submit" value="Hou me op de hoogte!" />
+@{Html.EndForm();}
+    <p>De inschrijving opent over</p>
+    <div id="subscription-countdown" class="countdown"></div>
+    <script type="text/javascript">
+        $(function () {
+            (function ($) {
+                $.countdown.regional['nl'] = {
+                    labels: ['Jaren', 'Maanden', 'Weken', 'Dagen', 'Uren', 'Minuten', 'Seconden'],
+                    labels1: ['Jaar', 'Maand', 'Week', 'Dag', 'Uur', 'Minuut', 'Seconde'],
+                    compactLabels: ['j', 'm', 'w', 'd'],
+                    whichLabels: null,
+                    timeSeparator: ':',
+                    isRTL: false
+                };
+                $.countdown.setDefaults($.countdown.regional['nl']);
+            })(jQuery);
+
+            subscriptionDateTime = new Date(2013, 2 - 1, 1, 0);
+            $('#subscription-countdown').countdown({ until: subscriptionDateTime });
+        });
+    </script>
+
+*@
+

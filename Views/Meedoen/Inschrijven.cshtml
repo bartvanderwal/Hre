@@ -1,0 +1,37 @@
+﻿@model HRE.Models.ContactViewModel
+
+@{
+    ViewBag.Title = "Deelnemersformulier";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <h1>Beperkte na-inschrijving...</h1>
+    <table class="deelname-kosten">
+        <tr>
+            <td/>
+            <th>na 15 mei</th>
+            <th>voor 15 mei</th>
+        </tr>
+        <tr>
+            <td class="first">Individueel</td>
+            <td class="col">&euro;27,50</td>
+            <td class="col">&euro;25,00</td>
+        </tr>
+        <tr>
+            <td colspan="1">Daglicentie</td>
+            <td colspan="3" class="col"><i>+ &euro;2,10 (voor niet NTB-leden)</i></td>
+        </tr>
+        <tr>
+            <td colspan="1">Chip</td>
+            <td colspan="3" class="col"><i>+ &euro;2,50 (geen eigen MyLaps chip)</i></td>
+        </tr>
+    </table>
+    <p>Op 30 juli hadden 340 deelnemers aangemeld. Daarmee zijn voorlopig nog sowieso 20 startplaatsen beschikbaar (maximaal aantal deelnemers: 360). Na-inschrijving is mogelijk op 4 augustus zolang de voorraad strekt... Na-inschrijvers moeten uiterlijk 15:00 aanwezig zijn bij de inschrijfbalie op Zandeiland 1 en terplekke contant en gepast betalen. Zij zitten ook vast aan afname van een huurchip (invoer van eigen chipnummers is NIET meer mogelijk).</p>
+    <p>Voor het verhogen van je kans op een startplek en snellere aanmelding op de dag kun je tot en met uiterlijk do 2 augustus via onderstaand formulier je gegevens alvast doorgeven.</p>
+    <iframe class="bigframe" src="http://www.ntbinschrijvingen.nl/inschrijvingen/overzicht.asp?Code=2005881" frameborder="0" scrolling="no" id="frmNTBInschrijvingen"></iframe>
+    <ul>
+        <li>Let op: Voor alle deelnemers geld dat alleen aanmeldingen waarvan het inschrijfgeld is voldaan gelden als daadwerkelijke inschrijvingen. Bank rekening 1684.92.059 (Rabobank) ten name van Stichting Woelig Water (te Vinkeveen) onder vermelding van: 'Inschrijfgeld HRE + je naam'. In verband met organisatiedrukte kunnen we niet garanderen dat we reageren op vragen per e-mail over beschikbare plaatsen en of je kunt starten of niet. Dit graag op de dag navragen ode deelnemerslijst of website in de gaten houden.</li>
+        <li>Na-inschrijvingen komen op de wachtlijst. Bij na-inschrijving op 4 augustus hoeft dan alleen nog betaald te worden. In verband met nog mogelijke afmeldingen en nog onbetaalde aanmeldingen heeft de wachtlijst plek voor niet 20, maar maximaal 50 aanmeldingen. Nainschrijvers betalen het na-15-mei tarief van 27,50 + 2,50 voor een huurchip = &euro; 30. Niet NTB leden betalen nog &euro; 2,10 voor een daglicentie (inschrijfgeld is inclusief aandenken en korting op het eten bij het avondprogramma (&euro; 3,50 ipv &euro; 10,- voor toeschouwers)).</li>
+        <li>Voor nog verder zeker stellen van je startplek kun je naar eigen inschatting ook het inschrijfgeld alsnog overmaken. Wie bij Rabobank bankiert heeft het geld in 1 dag over, want Het Rondje Eilanden heeft ook een Rabo rekening. <img class="partner" src="/Content/img/Rabobank_small.png" width="40px" height="40px" alt="Rabobank" title="Rabobank - Rijn en veenstromen" /> Rabobank Rijn en Veenstromen is sponsor van Het Rondje Eilanden! Transacties vanaf andere banken kunnen langer duren (2, mogelijk meer dagen). Als criterium wordt gehanteerd dat als inschrijfgeld dat bij de laatste controle vrijdagmiddag 3 aug niet op de rekening staat dit terplekke alsnog contant betaald moet worden. Dubbel of te veel betaald inschrijfgeld wordt - na constatering achteraf - uiteraard teruggestort naar de deelnemer! Na-inschrijvers van wie het inschrijfgeld tijdig binnen is schuiven door naar de reguliere deelnemerslijst.</li>
+        <li>Deelname betekent instemmen met de @Html.ActionLink("reglementen", HRE.Business.AppConstants.MeedoenReglementen, HRE.Business.AppConstants.Meedoen).</li>
+        <li>Mocht de wachtlijst helemaal vol lopen, dan wordt dit op de website gemeld en sluit de inschrijving geheel.</li>
+    </ul>

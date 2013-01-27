@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "TryOut";
+}
+
+<div class="nieuws-content">
+    <h1>Try out</h1>
+    <p></p>
+    <img src="/Content/img/TryOut_small.jpg" title="Parcoursverkenning aug 2011" alt="Parcoursverkenning aug 2011" style="float: left;"/>
+    <ul>
+        <li><a href="#facebook-pagina-live">Rondje Facebook pagina</li>
+    </ul>
+
+    <br clear="all" />
+    <h2><a name="facebook-pagina-live"></a></h2>
+    <span class="nieuws-datum">30-05-2012</span>
+    @Facebook.GetInitializationScripts()
+    @Facebook.Comments()
+    @RenderBody()
+</div>

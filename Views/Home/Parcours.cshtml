@@ -1,0 +1,13 @@
+﻿@{ ViewBag.Title = "Parcours"; }
+    <h1>Parcours</h1>
+    <a href="Kaart"><img src="/Content/img/2DParcours-rechtsom_thumb.png" alt="Het parcours: 11 stukken zwemmen en 11 stukken lopen"/></a>
+    <p>Het parcours gaat over 12 eilanden. Je start met zwemmen vanaf het strand op Zandeiland 1. Het eerste stuk lopen is op eiland 2. Totaal zijn er 11 stukken zwemmen en lopen, waarna je weer finisht op eiland 1. Totaal zwem je 1500 meter en loop je zo'n 5 kilometer.</p>
+    <span class="like">@Facebook.LikeButton("", "standard", true, 320, 80, "like", "", "light", "")</span>
+    <p>Verder verkennen?</p>
+    <ul>
+        <li>@Html.ActionLink("Grote kaart en tabel met zwem- en loopafstanden", HRE.Business.AppConstants.HomeKaart, HRE.Business.AppConstants.Home)</li>
+        <li>@Html.ActionLink("3D flyby in Google Earth voor gebruikers met moderne browser", HRE.Business.AppConstants.HomeParcours3D, HRE.Business.AppConstants.Home)</li>
+        <li>@Html.ActionLink("2D virtueel parcours (afstandmeten.nl)", HRE.Business.AppConstants.HomeParcours2D, HRE.Business.AppConstants.Home)</li>
+    </ul>
+    <p>Er wordt bij deze eerste editie van het Rondje Eilanden NIET gefietst. Wel moedigen we iedereen voor wie dit mogelijk is aan om op de fiets te komen. Voor deelnemers is er de mogelijkheid racefietsen te stallen.</p>
+	<p>Tijdens de gehele wedstrijd is het verplicht om schoeisel te dragen. Het is ABSOLUUT NIET toegestaan om te duiken vanaf de eilanden. Dit in verband met ondiep water en de veiligheid van de overige deelnemers. Omdat het merendeel van de eilanden een vrij hoge beschoeing heeft zullen er trappen aangebracht worden.</p>

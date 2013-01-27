@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Contactformulier";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Contact</h1>
+@model HRE.Models.ContactViewModel
+<img src="/Content/img/mailbox-icon.png" title="Contact" alt="Contact"/>
+<p>Nog een vraag? Als deze op deze site niet wordt beantwoord, ook niet bij de  @Html.ActionLink("veelgestelde vragen", "faq", "Home") kun je altijd een mailtje sturen naar het 'info-at' e-mail adres van hetrondjeeilanden.nl. Of gebruik onderstaand contact formulier.</p>
+<p>Let op: vul een geldig e-mail adres in bij 'Afzender', anders werkt het niet.</p>
+<br clear="all" />
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Contact</legend>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Afzender)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Afzender)
+            @Html.ValidationMessageFor(model => model.Afzender)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Onderwerp)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Onderwerp)
+            @Html.ValidationMessageFor(model => model.Onderwerp)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Bericht)
+        </div>
+
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.Bericht)
+            @Html.ValidationMessageFor(model => model.Bericht)
+        </div>
+        <p>
+            <input type="submit" value="Verstuur" />
+        </p>
+    </fieldset>
+}

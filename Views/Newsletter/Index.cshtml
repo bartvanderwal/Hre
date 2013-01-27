@@ -1,0 +1,44 @@
+﻿@model List<HRE.Models.Newsletters.NewsletterViewModel>
+
+@{
+    ViewBag.Title = "Nieuwsbrieven beheren";
+    //ViewBag.Title = GlobalResources.Resource.NewsletterSubscribe_SubscriptionHeader;
+    //ViewBag.Description = GlobalResources.Resource.NewsletterSubscribe_SubscriptionText;
+}
+
+@Html.ActionLink("Nieuwe nieuwsbrief", "CreateNewsletter", null, new { @class = "nice-button preview" })
+<br /><br />
+@if (Model.Count() == 0) {
+    <h3>Geen nieuwsbrieven gevonden</h3>
+} else {
+    int i = 0;
+    <table>
+    <tr><th>Titel</th><th>Verzonden</th><th colspan="2">&nbsp;</th></tr>
+    @foreach (HRE.Models.Newsletters.NewsletterViewModel item in Model) {
+        var SentDate = "-";
+        var row = "";
+        
+        if (item.Sent != null) {
+            DateTime dt = (DateTime)item.Sent;
+            SentDate = dt.ToString("dd-MM-yyyy");
+        }
+        
+        if (i % 2 == 0 || i == 0) {
+            row = "class=\"odd\"";
+        }
+        
+        <tr @Html.Raw(row)>
+            @{ string title = item.Title;
+                if (string.IsNullOrEmpty(title)) {
+                    title = "- no title -";
+                }
+            }
+            <td>@Html.ActionLink(title, "CreateNewsletter", new { id = item.ID })</td>
+            <td>@item.Created.ToString("dd-MM-yyyy")</td>
+            <td>@Html.ActionLink("Bekijk", "Display", new { id = item.ID })</td>
+            <td>@if (SentDate == "-") { @Html.ActionLink("Versturen", "SendNewsletter", new { id = item.ID }) } else { @Html.Raw("Verstuurd") }</td>
+        </tr>
+        i++;
+    }
+    </table>
+}

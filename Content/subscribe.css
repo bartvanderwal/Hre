@@ -1,0 +1,129 @@
+/* Source: http://codepen.io/ryanseddon/pen/BqJhf */
+/* General style to make original checkboxes and radio's invisible. */
+.editor-field:not(#foo) > input[type="checkbox"],
+.editor-field:not(#foo) > input[type="radio"]  { 
+	padding: 0;
+	margin: 0;
+	height: 30px;
+	width: 15px;
+	float: left;
+	position: absolute;
+	left: 0;
+	opacity: 0;
+}
+
+
+/* General background image and display mode for inputs. */
+.editor-field:not(#foo) > input + label:before {
+	background: url('/Content/img/InschrijvenHREIconSet.png') -35px -214px no-repeat;
+	content: "";
+	display: inline-block;
+	*display: inline;
+	zoom: 1;
+	margin-right: 6px;
+}
+
+/* Checkbox image size. */
+.editor-field:not(#foo) > input[type="checkbox"] + label:before {
+	height: 30px;
+	width: 48px;
+}
+			
+/* Radio button image size. */
+.editor-field:not(#foo) > input[type="radio"] + label:before {
+	height: 30px;
+	width: 25px;
+}
+			
+/****** Gender ***/
+/* Unchecked male radio button. */
+.editor-field:not(#foo) > input[type="radio"][value="M"] + label:before {
+	background-position: -30px -214px;
+}
+
+/* Unchecked female radio button. */
+.editor-field:not(#foo) > input[type="radio"][value="V"] + label:before {
+	background-position: -5px -214px;
+    color: white;
+}
+
+/* Checked male radio button. */
+.editor-field:not(#foo) > input[type="radio"][value="M"]:checked + label:before {
+	background-position: -93px -214px;
+}
+
+/* Checked female radio button. */
+.editor-field:not(#foo) > input[type="radio"][value="V"]:checked + label:before {
+	background-position: -67px -214px;
+}
+
+/****** Serie ***/
+/* Unchecked recreatieve serie radio button. */
+.editor-field:not(#foo) > input[type="radio"][value="R"] + label:before {
+	background-position: -684px -214px;
+}
+
+/* Unchecked top serie radio button. */
+.editor-field:not(#foo) > input[type="radio"][value="W"] + label:before {
+	background-position: -655px -214px;
+}
+
+/* Checked recreatieve serie radio button. */
+.editor-field:not(#foo) > input[type="radio"][value="R"]:checked + label:before {
+	background-position: -621px -214px;
+}
+
+/* Checked top serie radio button. */
+.editor-field:not(#foo) > input[type="radio"][value="W"]:checked + label:before {
+	background-position: -592px -214px;
+}
+			
+/****** Parc Fermé  ***/
+/* Unchecked bike checkbox. */
+.editor-field:not(#foo) > input[type="checkbox"][name="bike"] + label:before { 
+	background-position: -382px -211px;
+}
+
+/* Checked bike checkbox. */
+.editor-field:not(#foo) > input[type="checkbox"][name="bike"]:checked + label:before {
+	background-position: -440px -212px;
+}
+
+/****** NTB licentie ***/
+/* Unchecked NTB license checkbox. */
+.editor-field:not(#foo) > input[type="checkbox"][name="ntb"] + label:before { 
+	background-position: -544px -216px;
+}
+
+/* Checked NTB license checkbox. */
+.editor-field:not(#foo) > input[type="checkbox"][name="ntb"]:checked + label:before {
+	background-position: -497px -216px;
+}
+
+
+/****** Eten ***/
+/* Unchecked food checkbox. */
+.editor-field:not(#foo) > input[type="checkbox"][name="food"] + label:before { 
+	background-position: -131px -212px;
+}
+
+/* Checked food checkbox. */
+.editor-field:not(#foo) > input[type="checkbox"][name="food"]:checked + label:before{ 
+	background-position: -194px -212px;
+}
+
+/****** Kamperen ***/
+/* Unchecked camp checkbox. */
+.editor-field:not(#foo) > input[type="checkbox"][name="camp"] + label:before { 
+	background-position: -254px -212px;
+}
+
+/* Checked camp checkbox. */
+.editor-field:not(#foo) > input[type="checkbox"][name="camp"]:checked + label:before { 
+	background-position: -316px -211px;
+}
+
+/* Override of jQuery ui font-size in date picker */
+.ui-datepicker {
+    font-size: 0.9em;
+}

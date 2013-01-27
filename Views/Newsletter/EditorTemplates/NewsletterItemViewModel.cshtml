@@ -1,0 +1,54 @@
+﻿@model HRE.Models.Newsletters.NewsletterItemViewModel
+<table>
+    <tbody>
+    <tr>
+        <td colspan="2">
+            <h3 style="float:left">Nieuwsbrief Item</h3>
+            <a href="#" class="remove" style="float:right;margin-top:1em;"><img alt="Verwijderen" class="delete-button" src="/Images/delete.png" title="Verwijderen"></a>
+            @Html.TextBoxFor(m => m.SequenceNumber, new { @style = "display: none" })
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => Model.Title)
+        </td>
+        <td>
+            @Html.EditorFor(m => Model.Title)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => Model.SubTitle)
+        </td>
+        <td>
+            @Html.EditorFor(m => Model.SubTitle)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @Html.LabelFor(m => Model.Text)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @Html.TextAreaFor(m => Model.Text, new { @class = "editor" })
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => Model.IconImagePath)
+        </td>
+        <td>
+            @Html.EditorFor(m => Model.IconImagePath)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => Model.ImagePath)
+        </td>
+        <td>
+            @Html.EditorFor(m => Model.ImagePath)
+        </td>
+    </tr>
+    </tbody>
+</table>

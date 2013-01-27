@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Deelnemers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <h1>Deelnemers</h1>
+    <p>Toegekende startnummers vind je in de 1e kolom 'SN' in de deelnemerslijst voor 2012. Via je startnummer vind je in het volgende overzicht een indicatie van de bijbehorende starttijd:</p>
+    <ul class="startoverzicht">
+	    <li>Startnummer <b>1</b>-<b>60</b>: tussen <b>16:00</b> en <b>16:05</b></li>
+	    <li>Startnummer <b>61</b>-<b>120</b>: tussen <b>16:05</b> en <b>16:10</b></li>
+	    <li>Startnummer <b>121</b>-<b>180</b>: tussen <b>16:10</b> en <b>16:15</b></li>
+	    <li>Startnummer <b>181</b>-<b>240</b>: tussen <b>16:15</b> en <b>16:20</b></li>
+	    <li>Startnummer <b>241</b>-<b>300</b>: tussen <b>16:20</b> en <b>16:25</b></li>
+	    <li>Startnummer <b>301</b>-<b>360</b>: tussen <b>16:25</b> en <b>16:30</b></li>
+    </ul>
+	<p>Van aanmeldingen die hier niet staan is het inschrijfgeld nog niet binnen en gelden niet als ingeschreven. Zie @Html.ActionLink("hier de complete lijst met aanmeldingen", "Aanmeldingen", "Meedoen")).</p>
+    <iframe class="bigframe" src="http://www.ntbinschrijvingen.nl/inschrijvingen/overzicht_inschrijvingen.asp?Serie=4549&Code=2005881&ID=9076&numRows=40&AB=1" frameborder="0" scrolling="no" id="frmNTBInschrijvingenDeelnemers" width="570" height="620px"></iframe>
+    <p>De deelnemerslijst is alfabetisch op achternaam gesorteerd om jezelf op te kunnen zoeken, en geeft  NIET de startvolgorde weer. Er wordt gestart op volgorde van startnummers. Zo gaat het werken:</p>
+    <ul>
+        <li>Ga nadat je je hebt aangemeld bij de inschrijfbalie en klaargemaakt voor de wedstrijd tijdig op je positie in de rij staan</li>
+        <li>Loop mee in de rij tot je start, wacht als de laatste voor je is gestart nog netjes de paar seconden tot de starter teken geeft dat je los mag.</li>
+        <li>Als je vragen of opmerkingen hebt kun je bij de assistent-starter die de rijen controleert en op volgorde zet. De starter zelf heeft hier GEEN tijd voor!</li>
+        <li>Starten vanaf een andere plek dan de startlijn, of zonder 'go' van de starter leidt tot diskwalificatie!</li>
+    </ul>

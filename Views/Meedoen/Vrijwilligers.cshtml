@@ -1,0 +1,43 @@
+﻿
+@model HRE.Models.ContactViewModel
+
+@{
+    ViewBag.Title = "Aanmeldformulier vrijwilligers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Vrijwilligers</h1>
+<p>Meldt je aan als vrijwilliger. Een gave manier om er bij te zijn en alles van dichtbij mee te maken. Misschien krijg je wel een dag je eigen eiland! En 's avonds heb je sowieso gezelligheid op zandeiland 1.</p>
+<p>Gebruik onderstaand formulier in of stuur een <a href="mailto:martine@hetrondjeeilanden.nl?subject=Vrijwilliger%20Het%20Rondje%20Eilanden&body=Hoi Martine,\n\nIk%20wil%20graag%20vrijwilligeren%20op%204%20augustus.%20Hieronder%20mijn%20gegevens.\n\nGroet,\n\n\nNaam:%20\nAdres:%20\nPostcode+woonplaats:%20\nMobiel%20nummer:%20\n">mail naar Martine</a>. We nemen dan nog nader contact met je op! Alvast hartelijk bedankt voor je hulp!</p>
+<p>Let op: vul een geldig e-mail adres in bij 'Afzender', anders werkt het niet.</p>
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Aanmelden als vrijwilliger</legend>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Afzender)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Afzender)
+            @Html.ValidationMessageFor(model => model.Afzender)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Onderwerp)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Onderwerp)
+            @Html.ValidationMessageFor(model => model.Onderwerp)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Bericht)
+        </div>
+
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.Bericht)
+            @Html.ValidationMessageFor(model => model.Bericht)
+        </div>
+        <p>
+            <input type="submit" value="Verstuur" />
+        </p>
+    </fieldset>
+}

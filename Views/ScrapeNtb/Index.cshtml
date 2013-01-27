@@ -1,0 +1,46 @@
+﻿@model HRE.Models.ScrapeNtbIModel
+
+@using HRE.Business
+
+@{
+    ViewBag.Title = "Scrape NTB";
+    Layout = "~/Views/Shared/_NewLayout.cshtml";
+}
+
+@{Html.BeginForm("Scrape", "ScrapeNtb", FormMethod.Post);}
+    @Html.AntiForgeryToken()
+    Maximaal aantal te scrapen items: @Html.TextBox("maxNumberOfScrapedItems", "3") (gebruik 0 voor alles)<br />
+    <input type="submit" value="Scrape NTB" />
+@{Html.EndForm();}
+<br /><br />
+
+@if (Model==null || Model.Entries==null || Model.Entries.Count==0) {
+    <span>Er zijn nog geen deelnemers. Update de lijst vanuit NTB inschrijvingen!</span>
+} else {
+    <table class="deelnemers">
+        <tr>
+            <th>Deelnemer</th>
+            <th>Woonplaats</th>
+            <th>E-mail adres</th>
+            <th>Geb. datum</th>
+            <th>Ingeschreven</th>
+            <th>Eerst gescraped</th>
+            <th>Laatst gescraped</th>
+            <th>Updated</th>
+        </tr>
+
+        @foreach (var entry in Model.Entries) {
+            string participant = entry.Achternaam;
+            <tr>
+                <td>@Html.ActionLink(entry.FullName, "Edit", new { externalId = entry.ExternalIdentifier })</td>
+                <td>@entry.Woonplaats</td>
+                <td><a href="mailto:@entry.Email">@entry.Email</a></td>
+                <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td>
+                <td>@string.Format("{0:dd-MM-yyyy}", entry.RegistrationDate)</td>
+                <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstScraped.HasValue ? entry.DateFirstScraped.Value.RelativeDateDescription() : "-")</td>
+                <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastScraped.HasValue ? entry.DateLastScraped.Value.RelativeDateDescription()  : "-")</td>
+                <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>
+            </tr>
+        }
+    </table>
+}

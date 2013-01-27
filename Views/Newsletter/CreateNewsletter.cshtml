@@ -1,0 +1,85 @@
+﻿@model HRE.Models.Newsletters.NewsletterViewModel
+
+@{
+    ViewBag.Title = "Nieuwe Newsletter";
+}
+
+@{ Html.BeginForm(); } 
+@if (!ViewData.ModelState.IsValid) { Html.RenderPartial("_MessageBox"); }
+<div id="ModelForm" class="vote rounded newsletter">
+    <div class="contents">
+        <div class="overview-edit">
+            <h3>Nieuwe nieuwsbrief</h3>
+            <p>Kies de gewenste titel van de nieuwsbrief, of deze een persoonlijke inloglink moet bevatten en daarna voor elk item de titel, tekst, bestandsnaam header icoon en bestandsnaam foto rechts van de tekst.</p>
+            <table>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => Model.Title)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => Model.Title)
+                        </td>
+                    </tr>
+                     <tr>
+                        <td>
+                            @Html.LabelFor(m => Model.IncludeLoginLink)
+                        </td>
+                        <td>
+                            @Html.EditorFor(m => Model.IncludeLoginLink)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => Model.Created)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.Created)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => Model.Updated)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.Updated)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => Model.Sent)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.Sent)
+                        </td>
+                    </tr>
+            </table>
+            <div id="ChildItems">
+                @Html.EditorFor(model => model.Items)
+            </div>
+        </div>
+        <div class="clear-fix"></div>
+    </div>
+    <div class="footer">
+        @Html.ActionLink("Naar index","index")
+        <input type="submit" style="float:right;" value="Opslaan" />
+        <a class="nice-button preview" style="margin: 5px;" href="#">Preview</a>
+        <a href="#" class="nice-button" style="margin: 5px;" id="AddNewsletterItem">Voeg nog een item toe</a>
+        <div class="clear-fix"></div>
+    </div>
+</div>
+
+<div id="dialog-modal" title="Nieuwsbrief Preview"></div>
+
+@Html.TextBoxFor(m => Model.Created, new { @style = "display: none" })
+@Html.TextBoxFor(m => Model.Updated, new { @style = "display: none" })
+@Html.TextBoxFor(m => Model.Sent, new { @style = "display: none" })
+<input id="ID" name="ID" style="display: none" type="text" value="@Model.ID">
+@Html.TextBoxFor(m => Model.SequenceNumber, new { @style = "display: none" })
+
+@{ Html.EndForm(); }
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/newsletter.js"></script>
+    <script type="text/javascript" src="/Scripts/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="/Scripts/ckeditor/jqueryAdapter.js"></script>
+}

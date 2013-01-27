@@ -1,0 +1,32 @@
+﻿@model HRE.Models.Newsletters.SendNewsletterViewModel
+
+@{
+    ViewBag.Title = "Nieuwsbrief versturen";
+}
+
+<h2>Nieuwsbrief versturen</h2>
+@Html.LabelFor(m => m.Subject) <p>@Model.Subject</p>
+
+@{ Html.BeginForm(); }
+@if (!ViewData.ModelState.IsValid) { Html.RenderPartial("_MessageBox"); } 
+
+@Html.LabelFor(m => m.TestEmail) @Html.TextBoxFor(m => m.TestEmail)
+@Html.TextBoxFor(m => m.NewsletterID, new { @style = "display: none" })
+<input type="submit" value="Verzenden" /><br /><br />
+
+<div>
+    @Html.ActionLink("Naar index", "Index")
+    <a class="nice-button send" style="margin: 5px;" href="#">Verstuur nieuwsbrief</a>
+    <a class="nice-button adresses" style="margin: 5px;" href="#">Toon geaddresseerden</a>
+</div>
+@Html.HiddenFor(m => m.NewsletterID)
+@Html.HiddenFor(m => m.Subject)
+
+@{ Html.EndForm(); }
+
+<div id="dialog-modal" title="Geaddresseerden"></div>
+<div id="dialog_box"></div>
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/newsletter.js"></script>
+}

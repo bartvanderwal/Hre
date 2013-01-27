@@ -1,0 +1,773 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AA9FD8E3-776A-41D9-BC48-E27D3D9A56F7}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HRE</RootNamespace>
+    <AssemblyName>HRE</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AjaxControlToolkit">
+      <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\AjaxControlToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="AntiXSSLibrary">
+      <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\SanitizerProviders\AntiXSSLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.4.1.10715.0\lib\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net40\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlSanitizationLibrary">
+      <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\SanitizerProviders\HtmlSanitizationLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SanitizerProviders">
+      <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\SanitizerProviders\SanitizerProviders.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Extensions.Design" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebMatrix.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\Dashboard.aspx.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Dashboard.aspx.designer.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Newsletter.aspx.cs">
+      <DependentUpon>Newsletter.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Newsletter.aspx.designer.cs">
+      <DependentUpon>Newsletter.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Newsletters.aspx.cs">
+      <DependentUpon>Newsletters.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Newsletters.aspx.designer.cs">
+      <DependentUpon>Newsletters.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Business\AppConstants.cs" />
+    <Compile Include="Business\EmailSender.cs" />
+    <Compile Include="Business\EncDec.cs" />
+    <Compile Include="Business\Enums.cs" />
+    <Compile Include="Business\HREAdminPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Business\HREPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Business\Contact.cs" />
+    <Compile Include="Business\Email.cs" />
+    <Compile Include="Business\Settings.cs" />
+    <Compile Include="Business\HtmlTextAreaExtensions.cs" />
+    <Compile Include="Business\TypeExtensions.cs" />
+    <Compile Include="Business\Util.cs" />
+    <Compile Include="Common\DBConnection.cs" />
+    <Compile Include="Common\Helpers.cs" />
+    <Compile Include="Common\HreSettings.cs" />
+    <Compile Include="Common\SettingsBase.cs" />
+    <Compile Include="Common\Util.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\NewsletterController.cs" />
+    <Compile Include="Controllers\VideoController.cs" />
+    <Compile Include="Controllers\OudFaqController.cs" />
+    <Compile Include="Controllers\ProgrammaController.cs" />
+    <Compile Include="Controllers\MeedoenController.cs" />
+    <Compile Include="Controllers\OudParcoursController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ScrapeNtbController.cs" />
+    <Compile Include="Controls\LnkButton.ascx.cs">
+      <DependentUpon>LnkButton.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\LnkButton.ascx.designer.cs">
+      <DependentUpon>LnkButton.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Dal\SportsEventDal.cs" />
+    <Compile Include="Dal\SportsEventParticipationDal.cs" />
+    <Compile Include="Dal\EmailAuditDal.cs" />
+    <Compile Include="Dal\NewsletterDal.cs" />
+    <Compile Include="Dal\NewsletterItemDal.cs" />
+    <Compile Include="Dal\ObjectDal.cs" />
+    <Compile Include="Dal\LogonUserDal.cs" />
+    <Compile Include="Dal\UserCreatableObjectDal.cs" />
+    <Compile Include="Data\HRE.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HRE.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Errors\_401.aspx.cs">
+      <DependentUpon>_401.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Errors\_401.aspx.designer.cs">
+      <DependentUpon>_401.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Errors\_404.aspx.cs">
+      <DependentUpon>_404.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Errors\_404.aspx.designer.cs">
+      <DependentUpon>_404.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Errors\DefaultError.aspx.cs">
+      <DependentUpon>DefaultError.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Errors\DefaultError.aspx.designer.cs">
+      <DependentUpon>DefaultError.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Errors\NotAuthorized.aspx.cs">
+      <DependentUpon>NotAuthorized.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Errors\NotAuthorized.aspx.designer.cs">
+      <DependentUpon>NotAuthorized.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="HRE.Master.cs">
+      <DependentUpon>HRE.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HRE.Master.designer.cs">
+      <DependentUpon>HRE.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\BaseRepository.cs" />
+    <Compile Include="Models\ContactViewModel.cs" />
+    <Compile Include="Models\MeedoenModel.cs" />
+    <Compile Include="Models\Newsletter\NewsletterItemViewModel.cs" />
+    <Compile Include="Models\Newsletter\NewsletterRepository.cs" />
+    <Compile Include="Models\Newsletter\NewsletterSubscribeViewModel.cs" />
+    <Compile Include="Models\Newsletter\NewsletterViewModel.cs" />
+    <Compile Include="Models\Newsletter\SendNewsletterViewModel.cs" />
+    <Compile Include="Models\ScrapeNtbIEntryModel.cs" />
+    <Compile Include="Models\ScrapeNtbIRepository.cs" />
+    <Compile Include="Models\ScrapeNtbIModel.cs" />
+    <Compile Include="Models\VolonteerModel.cs" />
+    <Compile Include="NewsletterSubscription.aspx.cs">
+      <DependentUpon>NewsletterSubscription.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewsletterSubscription.aspx.designer.cs">
+      <DependentUpon>NewsletterSubscription.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Admin\Dashboard.aspx" />
+    <Content Include="Admin\Newsletter.aspx" />
+    <Content Include="Admin\Newsletters.aspx" />
+    <Content Include="Content\accid-wf.svg" />
+    <Content Include="Content\ckeditor\contents.css" />
+    <Content Include="Content\ckeditor\dialog.css" />
+    <Content Include="Content\ckeditor\dialog_ie.css" />
+    <Content Include="Content\ckeditor\dialog_ie7.css" />
+    <Content Include="Content\ckeditor\dialog_ie8.css" />
+    <Content Include="Content\ckeditor\dialog_iequirks.css" />
+    <Content Include="Content\ckeditor\dialog_opera.css" />
+    <Content Include="Content\ckeditor\editor.css" />
+    <Content Include="Content\ckeditor\editor_gecko.css" />
+    <Content Include="Content\ckeditor\editor_ie.css" />
+    <Content Include="Content\ckeditor\editor_ie7.css" />
+    <Content Include="Content\ckeditor\editor_ie8.css" />
+    <Content Include="Content\ckeditor\editor_iequirks.css" />
+    <Content Include="Content\ckeditor\icons.png" />
+    <Content Include="Content\ckeditor\images\arrow.png" />
+    <Content Include="Content\ckeditor\images\close.png" />
+    <Content Include="Content\ckeditor\images\mini.png" />
+    <Content Include="Content\subscribe.css" />
+    <Content Include="Content\img\Back.png" />
+    <Content Include="Content\img\twitter_smaller.png" />
+    <Content Include="Content\img\YouTube.png" />
+    <Content Include="Content\img\YouTube_smaller.png" />
+    <Content Include="Content\main_new.css" />
+    <Content Include="Content\Copy of main.css" />
+    <Content Include="Content\img\2DParcours-rechtsom.png" />
+    <Content Include="Content\img\2DParcours-rechtsom_org.png" />
+    <Content Include="Content\img\2DParcours-rechtsom_thumb.png" />
+    <Content Include="Content\img\3Aug2013.png" />
+    <Content Include="Content\img\4Aug2012.png" />
+    <Content Include="Content\img\AbcoudeCSNaarZandEiland1.png" />
+    <Content Include="Content\img\Background_Grass_strookje-LowD.jpg" />
+    <Content Include="Content\img\Background_Grass_strookje2-LowD.jpg" />
+    <Content Include="Content\img\Background_Paper_Repeat.jpg" />
+    <Content Include="Content\img\Background_Paper_Repeat.png" />
+    <Content Include="Content\img\Beta.png" />
+    <Content Include="Content\img\Beta_smaller.png" />
+    <Content Include="Content\img\boekje-pen.jpg" />
+    <Content Include="Content\img\boekje-pen.png" />
+    <Content Include="Content\img\Bug-Titles.png" />
+    <Content Include="Content\img\eilandentriathlon.jpg" />
+    <Content Include="Content\img\eilandentriathlon2.jpg" />
+    <Content Include="Content\img\EmailNieuwsbrief.png" />
+    <Content Include="Content\img\estafette.jpg" />
+    <Content Include="Content\img\facebook_smaller.png" />
+    <Content Include="Content\img\favicon.ico" />
+    <Content Include="Content\img\favicon.png" />
+    <Content Include="Content\img\favicon114.png" />
+    <Content Include="Content\img\favicon32.ico" />
+    <Content Include="Content\img\favicon32.png" />
+    <Content Include="Content\img\favicon57.png" />
+    <Content Include="Content\img\favicon72.png" />
+    <Content Include="Content\img\FiveFingers.jpg" />
+    <Content Include="Content\img\FiveFingers.png" />
+    <Content Include="Content\img\FiveFingers_large.png" />
+    <Content Include="Content\img\FiveFingers_medium.png" />
+    <Content Include="Content\img\FiveFingers_org.png" />
+    <Content Include="Content\img\FiveFingers_org_large.png" />
+    <Content Include="Content\img\FiveFingers_org_medium.png" />
+    <Content Include="Content\img\FiveFingers_org_small.png" />
+    <Content Include="Content\img\FiveFingers_small.png" />
+    <Content Include="Content\img\fp.jpg" />
+    <Content Include="Content\img\fp2.jpg" />
+    <Content Include="Content\img\fp3.jpg" />
+    <Content Include="Content\img\GambaSpiesSpaansklein.jpg" />
+    <Content Include="Content\img\GambaSpiesSpaansklein_small.jpg" />
+    <Content Include="Content\img\gitaar.png" />
+    <Content Include="Content\img\Grass-LowD.jpg" />
+    <Content Include="Content\img\Grass.jpg" />
+    <Content Include="Content\img\Grass.png" />
+    <Content Include="Content\img\HetRondjeEilanden_2012.jpg" />
+    <Content Include="Content\img\HetRondjeEilanden_2012_smaller.jpg" />
+    <Content Include="Content\img\Home_Logo.png" />
+    <Content Include="Content\img\Home_Logo_Slick.png" />
+    <Content Include="Content\img\inbeta.png" />
+    <Content Include="Content\img\InschrijvenHRE.png" />
+    <Content Include="Content\img\InschrijvenHREIconSet.png" />
+    <Content Include="Content\img\klamer.png" />
+    <Content Include="Content\img\krant.png" />
+    <Content Include="Content\img\LG2.png" />
+    <Content Include="Content\img\LG2_large.png" />
+    <Content Include="Content\img\LG2_medium.png" />
+    <Content Include="Content\img\logo1.jpg" />
+    <Content Include="Content\img\logo2.jpg" />
+    <Content Include="Content\img\logo_SWW_white-1.png" />
+    <Content Include="Content\img\logo_SWW_white-1_small.png" />
+    <Content Include="Content\img\Lowlands.jpeg" />
+    <Content Include="Content\img\mailbox-icon.png" />
+    <Content Include="Content\img\menu_button.png" />
+    <Content Include="Content\img\Menu_Button_1.png" />
+    <Content Include="Content\img\Menu_Button_2.png" />
+    <Content Include="Content\img\Menu_Button_3.png" />
+    <Content Include="Content\img\Menu_Button_4.png" />
+    <Content Include="Content\img\nieuw.png" />
+    <Content Include="Content\img\NieuwsbriefHeader.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_2013.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_CheapCheap.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_Email.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_Facebook.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_Footer.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_Header.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_Header_left.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_TileEB.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_TileNY.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_TitleEB.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_TitleNY.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_Twitter.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_Web.png" />
+    <Content Include="Content\img\Nieuwsbrief\Nieuwsbrief.png" />
+    <Content Include="Content\img\Nieuwsbrief\Nieuwsbrief1 - kopie.html" />
+    <Content Include="Content\img\Nieuwsbrief\VroegeVogelsOntwaakt.html" />
+    <Content Include="Content\img\NTB-Run.png" />
+    <Content Include="Content\img\NTB-Run2.png" />
+    <Content Include="Content\img\NTB-Run3.png" />
+    <Content Include="Content\img\NTB-Swim.png" />
+    <Content Include="Content\img\NTB-Swim2.png" />
+    <Content Include="Content\img\NTB-Swim3.png" />
+    <Content Include="Content\img\NTB25Jubileum.jpg" />
+    <Content Include="Content\img\NTBFull-run-swim.png" />
+    <Content Include="Content\img\NTBFull-transparant.png" />
+    <Content Include="Content\img\NTBFull.png" />
+    <Content Include="Content\img\openwaterswim.png" />
+    <Content Include="Content\img\pallet.png" />
+    <Content Include="Content\img\panoramicview.jpg" />
+    <Content Include="Content\img\pdf_icon.png" />
+    <Content Include="Content\img\pen.png" />
+    <Content Include="Content\img\PivotGrid.png" />
+    <Content Include="Content\img\Question_mark.png" />
+    <Content Include="Content\img\Rabobank.png" />
+    <Content Include="Content\img\rabobanklogo.gif" />
+    <Content Include="Content\img\Rabobank_large.png" />
+    <Content Include="Content\img\Rabobank_medium.png" />
+    <Content Include="Content\img\Rabobank_small.png" />
+    <Content Include="Content\img\RondjeEilandenParcours90dpi.jpg" />
+    <Content Include="Content\img\rondje_smaller.png" />
+    <Content Include="Content\img\rond_logo.jpg" />
+    <Content Include="Content\img\rond_logo.png" />
+    <Content Include="Content\img\rond_logo_smaller.png" />
+    <Content Include="Content\img\rond_logo_smallest.png" />
+    <Content Include="Content\img\Run2Day.jpg" />
+    <Content Include="Content\img\Run2Day.png" />
+    <Content Include="Content\img\Run2Day_large.png" />
+    <Content Include="Content\img\Run2Day_medium.png" />
+    <Content Include="Content\img\Run2Day_small.png" />
+    <Content Include="Content\img\Shadow_Grass.png" />
+    <Content Include="Content\img\Shadow_Top.png" />
+    <Content Include="Content\img\Shadow_Top_Stripe.png" />
+    <Content Include="Content\img\sign_off.png" />
+    <Content Include="Content\img\sign_off2.png" />
+    <Content Include="Content\img\sign_up.png" />
+    <Content Include="Content\img\sign_up2.png" />
+    <Content Include="Content\img\sign_up3.png" />
+    <Content Include="Content\img\sign_up4.png" />
+    <Content Include="Content\img\stichtingwoeligwater.jpg" />
+    <Content Include="Content\img\stopwatch.png" />
+    <Content Include="Content\img\submenu_button.png" />
+    <Content Include="Content\img\TijsGroen.jpg" />
+    <Content Include="Content\img\Top_Wood-LowD.jpg" />
+    <Content Include="Content\img\tortel.png" />
+    <Content Include="Content\img\TryOut.jpg" />
+    <Content Include="Content\img\TryOut_small.jpg" />
+    <Content Include="Content\img\twitter_newbird_blue_smaller.png" />
+    <Content Include="Content\img\Untitled.png" />
+    <Content Include="Content\img\VanWijngaarden.png" />
+    <Content Include="Content\img\VanWijngaarden_large.png" />
+    <Content Include="Content\img\VanWijngaarden_medium.png" />
+    <Content Include="Content\img\VanWijngaarden_small.png" />
+    <Content Include="Content\img\vuurkorf.jpg" />
+    <Content Include="Content\img\Website_total.jpg" />
+    <Content Include="Content\img\Website_Total_backup.jpg" />
+    <Content Include="Content\img\Website_total_LowD.jpg" />
+    <Content Include="Content\img\Website_Total_LowD_backup.jpg" />
+    <Content Include="Content\img\Winkeloord.png" />
+    <Content Include="Content\img\Winkeloord_large.png" />
+    <Content Include="Content\img\Winkeloord_medium.png" />
+    <Content Include="Content\img\Winkeloord_org.png" />
+    <Content Include="Content\img\Winkeloord_small.png" />
+    <Content Include="Content\img\YouTubeNL.gif" />
+    <Content Include="Content\img\zwempakshop.jpg" />
+    <Content Include="Content\img\zwempakshop.png" />
+    <Content Include="Content\img\zwempakshop_large.png" />
+    <Content Include="Content\img\zwempakshop_medium.png" />
+    <Content Include="Content\img\zwempakshop_small.png" />
+    <Content Include="Content\main.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
+    <Content Include="Content\themes\base\jquery.ui.all.css" />
+    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="Content\themes\base\jquery.ui.base.css" />
+    <Content Include="Content\themes\base\jquery.ui.button.css" />
+    <Content Include="Content\themes\base\jquery.ui.core.css" />
+    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
+    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
+    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
+    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
+    <Content Include="Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
+    <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\minified\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.button.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Controls\LnkButton.ascx" />
+    <Content Include="Errors\_401.aspx" />
+    <Content Include="Errors\_404.aspx" />
+    <Content Include="Errors\DefaultError.aspx" />
+    <Content Include="Errors\NotAuthorized.aspx" />
+    <Content Include="Facebook\Docs\content\images\FBCoreSettings.png" />
+    <Content Include="Facebook\Docs\content\images\FBCreateApplication.png" />
+    <Content Include="Facebook\Docs\content\images\webx-bkg.png" />
+    <Content Include="Facebook\Docs\content\images\webx-content-bkg.jpg" />
+    <Content Include="Facebook\Docs\content\images\webx-icon.png" />
+    <Content Include="Facebook\Docs\content\images\wm-mysite-settings.png" />
+    <Content Include="Facebook\Docs\content\images\wm-site-settings.png" />
+    <Content Include="Facebook\Docs\content\Site.css" />
+    <Content Include="Facebook\Docs\reference.htm" />
+    <Content Include="Facebook\Docs\startHere.htm" />
+    <Content Include="Global.asax" />
+    <Content Include="NewsletterSubscription.aspx" />
+    <Content Include="README.jQuery.vsdoc.txt" />
+    <Content Include="Scripts\ckeditor\ckeditor.js" />
+    <Content Include="Scripts\ckeditor\config.js" />
+    <Content Include="Scripts\ckeditor\editor_gecko.js" />
+    <Content Include="Scripts\ckeditor\jqueryAdapter.js" />
+    <Content Include="Scripts\ckeditor\lang\nl.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\a11yhelp.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\ar.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\bg.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\ca.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\cs.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\cy.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\da.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\de.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\el.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\en.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\eo.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\et.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\fa.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\fi.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\fr.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\gu.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\he.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\hi.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\hr.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\hu.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\it.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\ku.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\lt.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\lv.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\mk.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\mn.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\nb.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\nl.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\no.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\pl.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\pt-br.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\pt.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\ro.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\ru.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\sk.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\sl.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\tr.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\ug.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\uk.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\vi.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\zh-cn.js" />
+    <Content Include="Scripts\ckeditor\plugins\a11yhelp\dialogs\lang\_translationstatus.txt" />
+    <Content Include="Scripts\ckeditor\plugins\about\dialogs\about.js" />
+    <Content Include="Scripts\ckeditor\plugins\about\dialogs\logo_ckeditor.png" />
+    <Content Include="Scripts\ckeditor\plugins\clipboard\dialogs\paste.js" />
+    <Content Include="Scripts\ckeditor\plugins\dialog\dialogDefinition.js" />
+    <Content Include="Scripts\ckeditor\plugins\fakeobjects\images\spacer.gif" />
+    <Content Include="Scripts\ckeditor\plugins\icons.png" />
+    <Content Include="Scripts\ckeditor\plugins\image\dialogs\image.js" />
+    <Content Include="Scripts\ckeditor\plugins\image\images\noimage.png" />
+    <Content Include="Scripts\ckeditor\plugins\link\dialogs\anchor.js" />
+    <Content Include="Scripts\ckeditor\plugins\link\dialogs\link.js" />
+    <Content Include="Scripts\ckeditor\plugins\link\images\anchor.png" />
+    <Content Include="Scripts\ckeditor\plugins\magicline\images\icon.png" />
+    <Content Include="Scripts\ckeditor\plugins\pastefromword\filter\default.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\ca.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\cs.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\cy.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\de.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\el.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\en.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\eo.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\et.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\fa.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\fi.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\fr.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\he.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\hr.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\it.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\ku.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\lv.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\nb.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\nl.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\no.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\pt-br.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\sk.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\tr.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\ug.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\zh-cn.js" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\lang\_translationstatus.txt" />
+    <Content Include="Scripts\ckeditor\plugins\specialchar\dialogs\specialchar.js" />
+    <Content Include="Scripts\ckeditor\plugins\tabletools\dialogs\tableCell.js" />
+    <Content Include="Scripts\ckeditor\plugins\table\dialogs\table.js" />
+    <Content Include="Scripts\ckeditor\styles.js" />
+    <Content Include="Scripts\jquery-1.7.2-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.7.2.js" />
+    <Content Include="Scripts\jquery-1.7.2.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.20.js" />
+    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\jquery.countdown.css" />
+    <Content Include="Scripts\jquery.countdown.min.js" />
+    <Content Include="Scripts\jquery.countdown.package-1.5.11\countdownBasic.html" />
+    <Content Include="Scripts\jquery.countdown.package-1.5.11\countdownGlowing.gif" />
+    <Content Include="Scripts\jquery.countdown.package-1.5.11\countdownLED.png" />
+    <Content Include="Scripts\jquery.countdown.package-1.5.11\jquery.countdown-nl.js" />
+    <Content Include="Scripts\jquery.countdown.package-1.5.11\jquery.countdown.css" />
+    <Content Include="Scripts\jquery.countdown.package-1.5.11\jquery.countdown.js" />
+    <Content Include="Scripts\jquery.countdown.package-1.5.11\jquery.countdown.min.js" />
+    <Content Include="Scripts\jquery.countdown.package-1.5.11\jquery.countdown.pack.js" />
+    <Content Include="Scripts\jquery.jqdock.js" />
+    <Content Include="Scripts\jquery.jqdock.min.js" />
+    <Content Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\main-script.js" />
+    <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\newsletter.js" />
+    <Content Include="sql\1.create_asp_tables.sql" />
+    <Content Include="sql\2.create_hre.sql" />
+    <Content Include="sql\0.undo_script.sql" />
+    <Content Include="sql\3.insert_roles.sql" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MicrosoftAjax.js" />
+    <Content Include="Scripts\MicrosoftAjax.debug.js" />
+    <Content Include="Scripts\MicrosoftMvcAjax.js" />
+    <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
+    <Content Include="Scripts\MicrosoftMvcValidation.js" />
+    <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Account\WijzigWW.cshtml" />
+    <Content Include="Views\Account\WijzigWWBevestiging.cshtml" />
+    <Content Include="Views\Account\LogIn.cshtml" />
+    <Content Include="Views\Account\Eilanders.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_LogOnPartial.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Common\Email\" />
+    <Folder Include="Models\Newsletter\EditorTemplates\" />
+    <Folder Include="Views\Newsletter\Template\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Copy of _LogOnPartial.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Code\TwitterGoodies.cshtml" />
+    <Content Include="App_Code\Facebook.cshtml" />
+    <Content Include="Configuration\Prod\AppSettings.config" />
+    <Content Include="Configuration\Prod\Compilation.config" />
+    <Content Include="Configuration\PreProd\ConnectionStrings.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Configuration\Prod\CustomErrors.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Configuration\Prod\HealthMonitoring.config" />
+    <Content Include="Configuration\Prod\SmtpSettings.config" />
+    <Content Include="Configuration\PreProd\AppSettings.config" />
+    <Content Include="Configuration\PreProd\SmtpSettings.config" />
+    <Content Include="Configuration\PreProd\Compilation.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Configuration\PreProd\CustomErrors.config" />
+    <Content Include="Configuration\PreProd\HealthMonitoring.config" />
+    <Content Include="Configuration\Prod\ConnectionStrings.config" />
+    <Content Include="Configuration\Dev\AppSettings.config" />
+    <Content Include="Configuration\Dev\SmtpSettings.config" />
+    <Content Include="Configuration\Dev\Compilation.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Configuration\Dev\ConnectionStrings.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Configuration\Dev\CustomErrors.config" />
+    <Content Include="Configuration\Dev\HealthMonitoring.config" />
+    <Content Include="Content\accid-wf.eot" />
+    <Content Include="Content\accid-wf.ttf" />
+    <Content Include="Content\accid-wf.woff" />
+    <Content Include="Content\accid.ttf" />
+    <Content Include="Content\calibri.eot" />
+    <Content Include="Content\calibri.ttf" />
+    <Content Include="Content\calibrib.ttf" />
+    <Content Include="Content\calibrii.ttf" />
+    <Content Include="Content\calibriz.ttf" />
+    <Content Include="Content\data\opgenomen_tour.kmz" />
+    <None Include="Content\img\FiveFingers_medium.pdn" />
+    <None Include="Content\img\Nieuwsbrief\HRE_iconset.ai" />
+    <None Include="Content\img\Nieuwsbrief\Nieuwsbrief.psd" />
+    <None Include="Content\img\rondje_smaller.pdn" />
+    <Content Include="Content\pdf\ProgrammaboekjeHetRondjeEilanden2012.pdf" />
+    <Content Include="Content\scriptbl.ttf" />
+    <Content Include="Views\Home\Parcours.cshtml" />
+    <Content Include="Views\Meedoen\Index.cshtml" />
+    <Content Include="Views\Programma\Index.cshtml" />
+    <Content Include="Views\Home\Historie.cshtml" />
+    <Content Include="Views\Home\FAQ.cshtml" />
+    <Content Include="Facebook\Login.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\ContactConfirm.cshtml" />
+    <Content Include="Views\Programma\TijdRace.cshtml" />
+    <Content Include="Views\Programma\Avond.cshtml" />
+    <Content Include="Views\Programma\Finale.cshtml" />
+    <Content Include="Views\Home\Organisatie.cshtml" />
+    <Content Include="Views\Programma\Kamperen.cshtml" />
+    <Content Include="Views\Meedoen\Deelnemers.cshtml" />
+    <Content Include="Views\Meedoen\Inschrijven.cshtml" />
+    <Content Include="Views\Meedoen\Vrijwilligers.cshtml" />
+    <Content Include="Views\Meedoen\Reglementen.cshtml" />
+    <Content Include="Views\Video\Tweets.cshtml" />
+    <Content Include="Views\Video\Index.cshtml" />
+    <Content Include="Views\Video\Media.cshtml" />
+    <Content Include="Views\Meedoen\VrijwilligersConfirm.cshtml" />
+    <Content Include="Views\Home\Kaart.cshtml" />
+    <Content Include="Views\Home\Parcours2D.cshtml" />
+    <Content Include="Views\Home\Parcours3D.cshtml" />
+    <Content Include="Views\Video\TryOut.cshtml" />
+    <Content Include="HRE.Master" />
+    <EntityDeploy Include="Data\HRE.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>HRE.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Views\Account\Registreer.cshtml" />
+    <Content Include="Views\Home\Partners.cshtml" />
+    <Content Include="Views\Meedoen\Aanmeldingen.cshtml" />
+    <Content Include="Views\Video\Uitslagen.cshtml" />
+    <Content Include="Views\ScrapeNtb\Index.cshtml" />
+    <Content Include="Views\ScrapeNtb\Edit.cshtml" />
+    <Content Include="Views\Shared\_SubscribeForm.cshtml" />
+    <Content Include="Views\Meedoen\EarlyBird.cshtml" />
+    <Content Include="Views\Meedoen\AangemeldNieuwsbrief.cshtml" />
+    <Content Include="Views\Newsletter\CreateNewsletter.cshtml" />
+    <Content Include="Views\Newsletter\Index.cshtml" />
+    <Content Include="Views\Newsletter\Send.cshtml" />
+    <Content Include="Views\Newsletter\SendNewsletter.cshtml" />
+    <Content Include="Views\Newsletter\Unsubscribe.cshtml" />
+    <Content Include="Views\Newsletter\_NewsletterAdresses.cshtml" />
+    <Content Include="Views\Newsletter\NewsletterLocalizations\NewsletterLayout.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Newsletter\EditorTemplates\NewsletterItemViewModel.cshtml" />
+    <Content Include="Views\Shared\_MessageBox.cshtml" />
+    <Content Include="Views\Newsletter\NewsletterLocalizations\NewsletterLayout-kopie.cshtml" />
+    <Content Include="Views\Shared\_NewLayout.cshtml" />
+    <Content Include="Views\Account\_ViewStart.cshtml" />
+    <Content Include="Views\Newsletter\_ViewStart.cshtml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>63647</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:50310/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

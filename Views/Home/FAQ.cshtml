@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "FAQ";
+}
+
+<script type="text/javascript">
+	$(function () {
+	    $("#faq-accordion").accordion({
+	        collapsible: true,
+	        autoHeight: false,
+	        active: false
+	    });
+	});
+</script>
+
+
+<h1>Veelgestelde vragen</h1>
+<img src="/Content/img/Question_mark.png" title="Contact" alt="Contact"/>
+<p>Hieronder de FAQ - een lijst met veelgestelde vragen. Heb je nog een vraag die niet in deze lijst voorkomt? Neem gerust @Html.ActionLink("contact", "Contact", "Home") met ons op.</p>
+<br clear="all" />
+<div id="faq-accordion" class="faq">
+    <h3><a href="#">Hoe zit het nou met schoenen?</a></h3>
+	<div>Om problemen met scherpe stenen, glas e.d. onderwater te voorkomen is het verplicht om gedurende de hele wedstrijd schoenen aan te hebben. Dus ook tijdens het zwemmen. Denk hier van tevoren even goed over na. Je kan een oud paar hardloopschoenen gebruiken. Kies liefst voor zo licht mogelijke schoenen, om zo weinig mogelijk last te hebben bij het zwemmen. Je kan ook waterschoentjes gebruiken of speciale surfschoentjes. Of idealiter zelfs Vibram FiveFingers, als je ze hebt. Het dragen van spikes is uiteraard absoluut verboden, vanwege verwondingsgevaar van je medeatleten! (onmiddellijke diskwalificatie volgt).</div>
+
+	<h3><a href="#">Mag ik een wetsuit aandoen tijdens de wedstrijd?</a></h3>
+	<div><p>Zeer waarschijnlijk niet! Met de verwachte lucht- en watertemperatuur in augustus is het niet verstandig een dik neopreen pak aan te doen, en kan zelfs gevaarlijk zijn in verband met warmtestuwing bij het hardlopen met het wetsuit. We volgen hierbij de regels van de Nederlandse Triathlon Bond, maar met <b>andere</b> temperatuurgrenzen dan normaal.</p>
+    <p>In het geval dat de temperatuur aanleiding geeft kan de organisatie beslissen dat wetsuits wel zijn toegestaan. Hierover volgt op de dag voor de wedstrijd definitief bericht bij het nieuws. Je moet in ieder geval de gehele wedstrijd in dezelfde kleding doen en mag onderweg niks achterlaten op het parcours.</p>
+    </div>
+
+    <h3><a href="#">Mag ik ook naar het avondprogramma komen zonder dat ik meedoe met de wedstrijd?</a></h3>
+    <div>Jazeker! Hoe meer zielen, hoe meer vreugd.</div>
+
+    <h3><a href="#">Waarom is de wedstrijd aan het eind van de middag? Ik start liever wat vroeger, dan heb ik nog wat aan mijn dag.</a></h3>
+    <div>Als organisatie zijn we erg gehecht aan onze slaap....</div>
+
+    <h3><a href="#">Jullie zijn een groene wedstrijd, wat houdt dat in?</a></h3>
+    <div>Dat houdt in dat we graag hebben dat je met de trein / openbaar vervoer komt in plaats van met de auto :). Waar mogelijk proberen we verantwoorde en milieuvriendelijke keuzes te maken, door bijvoorbeeld geen startpakketten te doen en ook geen startnummers :)!</div>
+
+    <h3><a href="#">Waar kan ik mijn auto parkeren?</a></h3>
+    <div>Als je met de auto komt, kun je deze parkeren bij de parkeerplaatsen bij Zandeiland 1, afslag Abcoude vanaf de A2.</div>
+
+    <h3><a href="#">Ik heb niet genoeg getraind om mee te doen c.q. ben geblesseerd. Kan ik er toch op de een of andere manier bij zijn?</a></h3>
+    <div>Kom kijken of - beter nog - geef je zo mogelijk op als vrijwilliger! Je krijgt een shirt en wordt verzorgd, en kunt 's avonds meegenieten van het avond programma. Als je een muziekinstrument bespeelt of kan zingen kun je ook navragen of je niet actief mee kunt doen met het avondprogramma...</div>
+
+    <h3><a href="#">Ik ben 15, mag ik meedoen?</a></h3>
+    <div>Nee, tenzij je dit jaar nog 16 wordt. Deelname aan het Rondje Eilanden is toegestaan vanaf 16 jaar en de triathlon bond telt iedereen die in een bepaald jaar 16 wordt tot de categorie D16/H16. Als je dit jaar 15 bent geworden kun je NIET meedoen. Bij voldoende animo kunnen we in de toekomst kijken of er aparte jeugdseries kunnen worden georganiseerd.</div>
+
+    <h3><a href="#">Mag ik ook alleen starten in de Finale Ronde en de Tijdrit Ronde achterwege laten?</a></h3>
+    <div>Nee, de Tijdrit Ronde geldt als kwalificatieronde voor de Finale Ronde. Als je geen tijd hebt in de Tijdrit Ronde kun je je ook niet kwalificeren voor de Finale.</div>
+
+    <h3><a href="#">Als ik me kwalificeer voor de Finale Ronde, maakt mijn tijd in de Tijdrit Ronde dan nog uit?</a></h3>
+    <div>Nee, in de Finale Ronde heeft iedereen weer gelijke kansen. De tijden worden NIET bij elkaar opgeteld of iets dergelijks, dus de tijd in tijdrit ronde maakt dus niet uit, zolang deze maar bij de 50 (heren) of 30 (dames) snelsten behoort. Uitzondering hierop is het 'pole position' systeem dat we hanteren: de tien snelste heren en zes snelste dames uit de Tijdrit Ronde worden voor de start van de Finale ronde speciaal afgekondigd door de speaker en mogen zich dan bij een startstreep een aantal meter voor de rest van het veld opstellen. Dit geeft hen natuurlijk licht voordeel, maar zij hebben zich in de eerste ronde blijkbaar ook al bijzonder ingespannen.</div>
+
+    <h3><a href="#">Waarom starten er in de finale minder dames dan heren?</a></h3>
+    <div>Het veld bij de heren is over het algemeen wat sterker in de breedte. Bij de dames lopen de tijdsverschillen bij de 1e 10 over het algemeen wat sneller op dan bij de heren. Merk verder ook op dat het aantal starters helemaal niet perse 50 en 30 hoeft te zijn, in geval enkele deelnemers bij de snelsten de absolute tijdslimiet niet halen, kunnen er bijvoorbeeld ook 25 dames en 35 heren starten.</div>
+
+    <h3><a href="#">Wat gebeurt er als ik me in de Tijdrit Ronde plaats voor de Finale Ronde, maar ik start daar niet in, of ik haal de finish niet?</a></h3>
+    <div>Als je helemaal niet start of voor de finish uitvalt in de Finale Ronde, om wat voor reden dan ook, dan geldt alsnog je tijd uit de tijdrit ronde voor je eindklassement. Hou er wel rekening mee dat alle deelnemers die in de Finale wel finishen wel voor je eindigen, ook als hun tijd in de Finale Ronde langzamer is dan jouw tijd in de Tijdrit Ronde. Uitstappen geeft dus nooit voordeel.</div>
+
+    <h3><a href="#">Waarom wordt er niet meer gefietst zoals vroeger bij de Eilandentriathlon? Dat is mijn favoriete onderdeel. Zo is het toch geen triathlon?</a></h3>
+    <div>Het was heel gaaf om bij de Eilandentriathlon eens als afsluitend onderdeel te fietsen. De Ronde Venen is ook een mooi fietsgebied. Maar vanwege de organisatorische complexiteit is gekozen om het dit eerste jaar bij zwemmen-lopen te houden. Zowel vanwege vergunning aanvraag, het grote aantal benodigde vrijwilligers cq. verkeersregelaars. En geef toe, het oude parcours was ook wel erg smal op sommige stukken. Het zwem-loop rondje, de kern van de Eilandentriathlon is geheel behouden. Bij veel animo kan bij een eventuele latere editie overwogen worden om het fietsen weer toe te voegen.</div>
+
+    <h3><a href="#">Zijn jullie een commerciële organisatie?</a></h3>
+    <div>An sich vinden wij niet dat geld stinkt en vinden wij Atlas Shrugged toch ook wel een erg gaaf boek. Desondanks organiseren wij deze wedstrijd echt voor onze lol en blijft er nog geen dubbeltje over na aftrek van alle kosten.</div>
+
+    <h3><a href="#">Ik ben erg snel en zou graag een mooie prijs komen ophalen. Hebben jullie die?</a></h3>
+    <div>Echte dubbelgedraaide Vinkeveense paardenworst hebben ze zelfs in London niet, dus dat komt mooi uit!</div>
+
+    <h3><a href="#">De Rijwielpaleis Bilthoven Triathlon is toch de enige echte Hellas Triathlon?</a></h3>
+    <div>Dat klopt en dat blijft deze ook. Het Rondje Eilanden wordt slechts door een aantal Hellas-leden georganiseerd en staat verder helemaal los van de prachtige vereniging Hellas.</div>
+
+    <h3><a href="#">Ik wil graag Twitteren over Het Rondje Eilanden en ik zoek nog een hashtag. Hebben jullie een idee?</a></h3>
+    <div>Wij zijn erg gesteld op de hashtag #hetrondjeeilanden. Natuurlijk mag je ook altijd Twitteren met de hashtag #HRE. Weet je, laat het lekker van je duim afhangen. Ohja: je kan ons volgen op Twitter via @@trondjeeilanden. Jawel met een t aan het begin (Twitternamen mogen niet langer zijn dan 15 karakters, dus 'hetrondjeeilanden' paste niet, happy typing!).</div>
+
+    <h3><a href="#">FAQ, Frequently Asked Questions, 'Veel Gestelde Vragen', hoe kan deze er nou zijn, terwijl deze wedstrijd voor het eerst georganiseerd wordt?</a></h3>
+    <div>Jij bent scherp! Wellicht moeten we spreken over 'Vragen die we denken dat veel gesteld zullen gaan worden. Oftewel 'Questions We Expected To Be Frequently Asked', maar als we deze pagina 'QWETBA' hadden genoemd had dat waarschijnlijk meer vragen opgeroepen dan deze beantwoord.</div>
+</div>
