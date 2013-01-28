@@ -1,17 +1,17 @@
-﻿@model HRE.Models.Newsletters.SendNewsletterViewModel
+﻿@model HRE.Models.Newsletters.SendPersonalNewsletterViewModel
 
 @{
     ViewBag.Title = "Nieuwsbrief versturen";
 }
 
 <h2>Nieuwsbrief versturen</h2>
-@Html.LabelFor(m => m.Subject) <p>@Model.Subject</p>
+@Html.LabelFor(m => m.Newsletter.Title) <p>@Model.Newsletter.Title</p>
 
 @{ Html.BeginForm(); }
 @if (!ViewData.ModelState.IsValid) { Html.RenderPartial("_MessageBox"); } 
 
 @Html.LabelFor(m => m.TestEmail) @Html.TextBoxFor(m => m.TestEmail)
-@Html.TextBoxFor(m => m.NewsletterID, new { @style = "display: none" })
+@Html.TextBoxFor(m => m.Newsletter.ID, new { @style = "display: none" })
 <input type="submit" value="Verzenden" /><br /><br />
 
 <div>
@@ -19,8 +19,8 @@
     <a class="nice-button send" style="margin: 5px;" href="#">Verstuur nieuwsbrief</a>
     <a class="nice-button adresses" style="margin: 5px;" href="#">Toon geaddresseerden</a>
 </div>
-@Html.HiddenFor(m => m.NewsletterID)
-@Html.HiddenFor(m => m.Subject)
+@Html.HiddenFor(m => m.Newsletter.ID)
+@Html.HiddenFor(m => m.Newsletter.Title)
 
 @{ Html.EndForm(); }
 

@@ -2,8 +2,6 @@
 
 @{
     ViewBag.Title = "Nieuwsbrieven beheren";
-    //ViewBag.Title = GlobalResources.Resource.NewsletterSubscribe_SubscriptionHeader;
-    //ViewBag.Description = GlobalResources.Resource.NewsletterSubscribe_SubscriptionText;
 }
 
 @Html.ActionLink("Nieuwe nieuwsbrief", "CreateNewsletter", null, new { @class = "nice-button preview" })
@@ -27,16 +25,12 @@
             row = "class=\"odd\"";
         }
         
-        <tr @Html.Raw(row)>
-            @{ string title = item.Title;
-                if (string.IsNullOrEmpty(title)) {
-                    title = "- no title -";
-                }
-            }
+        <tr class="@Html.Raw(row)">
+            @{ string title = item.Title ?? "- no title -"; }
             <td>@Html.ActionLink(title, "CreateNewsletter", new { id = item.ID })</td>
             <td>@item.Created.ToString("dd-MM-yyyy")</td>
-            <td>@Html.ActionLink("Bekijk", "Display", new { id = item.ID })</td>
-            <td>@if (SentDate == "-") { @Html.ActionLink("Versturen", "SendNewsletter", new { id = item.ID }) } else { @Html.Raw("Verstuurd") }</td>
+            <td>@Html.ActionLink("Bekijk", "Display", new { newsletterId = item.ID })</td>
+            <td>@if (SentDate == "-") { @Html.ActionLink("Versturen", "SendNewsletter", new { newsletterId = item.ID, logonUserId = 1 }) } else { @Html.Raw("Verstuurd") }</td>
         </tr>
         i++;
     }

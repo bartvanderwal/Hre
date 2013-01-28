@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using HRE.Dal;
 
 namespace HRE.Models.Newsletters {
     public class NewsletterViewModel {
@@ -35,7 +36,11 @@ namespace HRE.Models.Newsletters {
         public List<NewsletterItemViewModel> Items { get; set; } 
 
         [Display(Name = "Toevoegen persoonlijke inlog link?")]
-        public bool IncludeLoginLink { get; set; } 
+        public bool IncludeLoginLink { get; set; }
+
+        public bool IsEmail { get; set; }
+
+        public LogonUserDal CurrentLogonUser {get; set; }
 
     }
 }

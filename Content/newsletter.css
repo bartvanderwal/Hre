@@ -1,0 +1,14 @@
+@font-face {
+    font-family: accid;
+    src: url('accid-wf.eot');
+    src: url('accid-wf.eot?#iefix') format('embedded-opentype'),
+         url('accid-wf.woff') format('woff'),
+         url('accid-wf.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: calibri;
+    src: url('calibri.eot');
+    src: url('calibri.eot?#iefix') format('embedded-opentype'),
+         url("calibri.ttf") format("truetype");
+}

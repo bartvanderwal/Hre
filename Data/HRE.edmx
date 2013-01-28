@@ -9,6 +9,19 @@
           <EntitySet Name="address" EntityType="hreModel.Store.address" store:Type="Tables" Schema="hre" />
           <EntitySet Name="emailaudit" EntityType="hreModel.Store.emailaudit" store:Type="Tables" Schema="hre" />
           <EntitySet Name="logonuser" EntityType="hreModel.Store.logonuser" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="my_aspnet_applications" EntityType="hreModel.Store.my_aspnet_applications" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="my_aspnet_membership" EntityType="hreModel.Store.my_aspnet_membership" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="my_aspnet_profiles" EntityType="hreModel.Store.my_aspnet_profiles" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="my_aspnet_roles" EntityType="hreModel.Store.my_aspnet_roles" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="my_aspnet_sessioncleanup" EntityType="hreModel.Store.my_aspnet_sessioncleanup" store:Type="Tables" store:Schema="hre" store:Name="my_aspnet_sessioncleanup">
+            <DefiningQuery>SELECT
+      `my_aspnet_sessioncleanup`.`LastRun`, 
+      `my_aspnet_sessioncleanup`.`IntervalMinutes`
+      FROM `my_aspnet_sessioncleanup` AS `my_aspnet_sessioncleanup`</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="my_aspnet_sessions" EntityType="hreModel.Store.my_aspnet_sessions" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="my_aspnet_users" EntityType="hreModel.Store.my_aspnet_users" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="my_aspnet_usersinroles" EntityType="hreModel.Store.my_aspnet_usersinroles" store:Type="Tables" Schema="hre" />
           <EntitySet Name="newsletter" EntityType="hreModel.Store.newsletter" store:Type="Tables" Schema="hre" />
           <EntitySet Name="newsletteritem" EntityType="hreModel.Store.newsletteritem" store:Type="Tables" Schema="hre" />
           <EntitySet Name="paymenttype" EntityType="hreModel.Store.paymenttype" store:Type="Tables" Schema="hre" />
@@ -102,9 +115,101 @@
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
           <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="64" />
         </EntityType>
+        <EntityType Name="my_aspnet_applications">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" MaxLength="256" />
+          <Property Name="description" Type="varchar" MaxLength="256" />
+        </EntityType>
+        <EntityType Name="my_aspnet_membership">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="128" />
+          <Property Name="Comment" Type="varchar" MaxLength="255" />
+          <Property Name="Password" Type="varchar" Nullable="false" MaxLength="128" />
+          <Property Name="PasswordKey" Type="char" MaxLength="32" />
+          <Property Name="PasswordFormat" Type="tinyint" />
+          <Property Name="PasswordQuestion" Type="varchar" MaxLength="255" />
+          <Property Name="PasswordAnswer" Type="varchar" MaxLength="255" />
+          <Property Name="IsApproved" Type="bool" />
+          <Property Name="LastActivityDate" Type="datetime" />
+          <Property Name="LastLoginDate" Type="datetime" />
+          <Property Name="LastPasswordChangedDate" Type="datetime" />
+          <Property Name="CreationDate" Type="datetime" />
+          <Property Name="IsLockedOut" Type="bool" />
+          <Property Name="LastLockedOutDate" Type="datetime" />
+          <Property Name="FailedPasswordAttemptCount" Type="uint" />
+          <Property Name="FailedPasswordAttemptWindowStart" Type="datetime" />
+          <Property Name="FailedPasswordAnswerAttemptCount" Type="uint" />
+          <Property Name="FailedPasswordAnswerAttemptWindowStart" Type="datetime" />
+        </EntityType>
+        <EntityType Name="my_aspnet_profiles">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="valueindex" Type="longtext" />
+          <Property Name="stringdata" Type="longtext" />
+          <Property Name="binarydata" Type="longblob" />
+          <Property Name="lastUpdatedDate" Type="timestamp" Nullable="false" Precision="0" />
+        </EntityType>
+        <EntityType Name="my_aspnet_roles">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="applicationId" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="255" />
+        </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'def.hre.my_aspnet_sessioncleanup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
+        <EntityType Name="my_aspnet_sessioncleanup">
+          <Key>
+            <PropertyRef Name="LastRun" />
+            <PropertyRef Name="IntervalMinutes" />
+          </Key>
+          <Property Name="LastRun" Type="datetime" Nullable="false" />
+          <Property Name="IntervalMinutes" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_sessions">
+          <Key>
+            <PropertyRef Name="SessionId" />
+            <PropertyRef Name="ApplicationId" />
+          </Key>
+          <Property Name="SessionId" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="ApplicationId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" Nullable="false" />
+          <Property Name="Expires" Type="datetime" Nullable="false" />
+          <Property Name="LockDate" Type="datetime" Nullable="false" />
+          <Property Name="LockId" Type="int" Nullable="false" />
+          <Property Name="Timeout" Type="int" Nullable="false" />
+          <Property Name="Locked" Type="bool" Nullable="false" />
+          <Property Name="SessionItems" Type="longblob" />
+          <Property Name="Flags" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="applicationId" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="256" />
+          <Property Name="isAnonymous" Type="bool" Nullable="false" />
+          <Property Name="lastActivityDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="my_aspnet_usersinroles">
+          <Key>
+            <PropertyRef Name="userId" />
+            <PropertyRef Name="roleId" />
+          </Key>
+          <Property Name="userId" Type="int" Nullable="false" />
+          <Property Name="roleId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="newsletter">
           <Key>
             <PropertyRef Name="Id" />
@@ -114,6 +219,7 @@
           <Property Name="CultureId" Type="int" Nullable="false" />
           <Property Name="DateSent" Type="datetime" />
           <Property Name="SequenceNumber" Type="int" Nullable="false" />
+          <Property Name="AddPersonalLoginLink" Type="bit" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
         </EntityType>
@@ -127,7 +233,9 @@
           <Property Name="ItemSubTitle" Type="varchar" MaxLength="256" />
           <Property Name="ItemText" Type="text" />
           <Property Name="PictureURL" Type="varchar" MaxLength="256" />
+          <Property Name="IconPictureURL" Type="varchar" MaxLength="256" />
           <Property Name="SequenceNumber" Type="int" Nullable="false" />
+          <Property Name="HeadingHtmlColour" Type="varchar" MaxLength="8" />
         </EntityType>
         <EntityType Name="paymenttype">
           <Key>
@@ -176,6 +284,7 @@
           <Property Name="PaymentType" Type="int" />
           <Property Name="ParticipationStatus" Type="int" />
           <Property Name="ExternalIdentifier" Type="varchar" MaxLength="45" />
+          <Property Name="YouTubeVideoCode" Type="varchar" MaxLength="64" />
           <Property Name="Source" Type="int" />
         </EntityType>
         <EntityType Name="usersecondaryaddress">
@@ -273,12 +382,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <!--Errors Found During Generation:
-      warning 6013: The table/view 'def.hre.my_aspnet_schemaversion' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-      
-      <EntityType Name="my_aspnet_schemaversion">
-        <Property Name="version" Type="int" />
-      </EntityType>-->
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -286,14 +389,8 @@
         <EntityContainer Name="hreEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="address" EntityType="hreModel.address" />
           <EntitySet Name="emailaudit" EntityType="hreModel.emailaudit" />
-          <EntitySet Name="newsletter" EntityType="hreModel.newsletter" />
-          <EntitySet Name="newsletteritem" EntityType="hreModel.newsletteritem" />
           <EntitySet Name="paymenttype" EntityType="hreModel.paymenttype" />
           <EntitySet Name="usersecondaryaddress" EntityType="hreModel.usersecondaryaddress" />
-          <AssociationSet Name="Newsletter1" Association="hreModel.Newsletter1">
-            <End Role="newsletter" EntitySet="newsletter" />
-            <End Role="newsletteritem" EntitySet="newsletteritem" />
-          </AssociationSet>
           <EntitySet Name="logonuser" EntityType="hreModel.logonuser" />
           <AssociationSet Name="PrimaryAddress" Association="hreModel.PrimaryAddress">
             <End Role="address" EntitySet="address" />
@@ -308,6 +405,15 @@
             <End Role="emailaudit" EntitySet="emailaudit" />
           </AssociationSet>
           <EntitySet Name="sportsevent" EntityType="hreModel.sportsevent" />
+          <EntitySet Name="my_aspnet_applications" EntityType="hreModel.my_aspnet_applications" />
+          <EntitySet Name="my_aspnet_membership" EntityType="hreModel.my_aspnet_membership" />
+          <EntitySet Name="my_aspnet_profiles" EntityType="hreModel.my_aspnet_profiles" />
+          <EntitySet Name="my_aspnet_roles" EntityType="hreModel.my_aspnet_roles" />
+          <EntitySet Name="my_aspnet_sessioncleanup" EntityType="hreModel.my_aspnet_sessioncleanup" />
+          <EntitySet Name="my_aspnet_sessions" EntityType="hreModel.my_aspnet_sessions" />
+          <EntitySet Name="my_aspnet_users" EntityType="hreModel.my_aspnet_users" />
+          <EntitySet Name="my_aspnet_usersinroles" EntityType="hreModel.my_aspnet_usersinroles" />
+          <EntitySet Name="newsletter" EntityType="hreModel.newsletter" />
           <EntitySet Name="sportseventparticipation" EntityType="hreModel.sportseventparticipation" />
           <AssociationSet Name="User" Association="hreModel.User">
             <End Role="logonuser" EntitySet="logonuser" />
@@ -316,6 +422,11 @@
           <AssociationSet Name="sportevent" Association="hreModel.sportevent">
             <End Role="sportsevent" EntitySet="sportsevent" />
             <End Role="sportseventparticipation" EntitySet="sportseventparticipation" />
+          </AssociationSet>
+          <EntitySet Name="newsletteritem" EntityType="hreModel.newsletteritem" />
+          <AssociationSet Name="Newsletter1" Association="hreModel.Newsletter1">
+            <End Role="newsletter" EntitySet="newsletter" />
+            <End Role="newsletteritem" EntitySet="newsletteritem" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="address">
@@ -361,32 +472,6 @@
           <NavigationProperty Name="logonuser" Relationship="hreModel.UserIdReceiver" FromRole="emailaudit" ToRole="logonuser" />
           <NavigationProperty Name="logonuser1" Relationship="hreModel.UserIdSender" FromRole="emailaudit" ToRole="logonuser" />
           </EntityType>
-        <EntityType Name="newsletter">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Title" />
-          <Property Type="Int32" Name="CultureId" Nullable="false" />
-          <Property Type="DateTime" Name="DateSent" />
-          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
-          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
-          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
-          <NavigationProperty Name="newsletteritem" Relationship="hreModel.Newsletter1" FromRole="newsletter" ToRole="newsletteritem" />
-        </EntityType>
-        <EntityType Name="newsletteritem">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="NewsletterId" Nullable="false" />
-          <Property Type="String" Name="ItemTitle" />
-          <Property Type="String" Name="ItemSubTitle" />
-          <Property Type="String" Name="ItemText" />
-          <Property Type="String" Name="PictureURL" />
-          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
-          <NavigationProperty Name="newsletter" Relationship="hreModel.Newsletter1" FromRole="newsletteritem" ToRole="newsletter" />
-        </EntityType>
         <EntityType Name="paymenttype">
           <Key>
             <PropertyRef Name="Id" />
@@ -406,18 +491,6 @@
           <Property Type="DateTime" Name="DateCreated" Nullable="false" />
           <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
         </EntityType>
-        <Association Name="Newsletter1">
-          <End Type="hreModel.newsletter" Role="newsletter" Multiplicity="1" />
-          <End Type="hreModel.newsletteritem" Role="newsletteritem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="newsletter">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="newsletteritem">
-              <PropertyRef Name="NewsletterId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="logonuser">
           <Key>
             <PropertyRef Name="Id" />
@@ -494,6 +567,112 @@
           <Property Type="String" Name="ExternalEventSerieIdentifier" />
           <NavigationProperty Name="sportseventparticipation" Relationship="hreModel.sportevent" FromRole="sportsevent" ToRole="sportseventparticipation" />
         </EntityType>
+        <EntityType Name="my_aspnet_applications">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" />
+          <Property Type="String" Name="description" />
+        </EntityType>
+        <EntityType Name="my_aspnet_membership">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Type="Int32" Name="userId" Nullable="false" />
+          <Property Type="String" Name="Email" />
+          <Property Type="String" Name="Comment" />
+          <Property Type="String" Name="Password" Nullable="false" />
+          <Property Type="String" Name="PasswordKey" />
+          <Property Type="SByte" Name="PasswordFormat" />
+          <Property Type="String" Name="PasswordQuestion" />
+          <Property Type="String" Name="PasswordAnswer" />
+          <Property Type="Boolean" Name="IsApproved" />
+          <Property Type="DateTime" Name="LastActivityDate" />
+          <Property Type="DateTime" Name="LastLoginDate" />
+          <Property Type="DateTime" Name="LastPasswordChangedDate" />
+          <Property Type="DateTime" Name="CreationDate" />
+          <Property Type="Boolean" Name="IsLockedOut" />
+          <Property Type="DateTime" Name="LastLockedOutDate" />
+          <Property Type="Int64" Name="FailedPasswordAttemptCount" />
+          <Property Type="DateTime" Name="FailedPasswordAttemptWindowStart" />
+          <Property Type="Int64" Name="FailedPasswordAnswerAttemptCount" />
+          <Property Type="DateTime" Name="FailedPasswordAnswerAttemptWindowStart" />
+        </EntityType>
+        <EntityType Name="my_aspnet_profiles">
+          <Key>
+            <PropertyRef Name="userId" />
+          </Key>
+          <Property Type="Int32" Name="userId" Nullable="false" />
+          <Property Type="String" Name="valueindex" />
+          <Property Type="String" Name="stringdata" />
+          <Property Type="Binary" Name="binarydata" />
+          <Property Type="DateTime" Name="lastUpdatedDate" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_roles">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="applicationId" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_sessioncleanup">
+          <Key>
+            <PropertyRef Name="LastRun" />
+            <PropertyRef Name="IntervalMinutes" />
+          </Key>
+          <Property Type="DateTime" Name="LastRun" Nullable="false" />
+          <Property Type="Int32" Name="IntervalMinutes" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_sessions">
+          <Key>
+            <PropertyRef Name="SessionId" />
+            <PropertyRef Name="ApplicationId" />
+          </Key>
+          <Property Type="String" Name="SessionId" Nullable="false" />
+          <Property Type="Int32" Name="ApplicationId" Nullable="false" />
+          <Property Type="DateTime" Name="Created" Nullable="false" />
+          <Property Type="DateTime" Name="Expires" Nullable="false" />
+          <Property Type="DateTime" Name="LockDate" Nullable="false" />
+          <Property Type="Int32" Name="LockId" Nullable="false" />
+          <Property Type="Int32" Name="Timeout" Nullable="false" />
+          <Property Type="Boolean" Name="Locked" Nullable="false" />
+          <Property Type="Binary" Name="SessionItems" />
+          <Property Type="Int32" Name="Flags" Nullable="false" />
+        </EntityType>
+        <EntityType Name="my_aspnet_users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="applicationId" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" />
+          <Property Type="Boolean" Name="isAnonymous" Nullable="false" />
+          <Property Type="DateTime" Name="lastActivityDate" />
+        </EntityType>
+        <EntityType Name="my_aspnet_usersinroles">
+          <Key>
+            <PropertyRef Name="userId" />
+            <PropertyRef Name="roleId" />
+          </Key>
+          <Property Type="Int32" Name="userId" Nullable="false" />
+          <Property Type="Int32" Name="roleId" Nullable="false" />
+        </EntityType>
+        <EntityType Name="newsletter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Title" />
+          <Property Type="Int32" Name="CultureId" Nullable="false" />
+          <Property Type="DateTime" Name="DateSent" />
+          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
+          <Property Type="Boolean" Name="AddPersonalLoginLink" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
+          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
+          <NavigationProperty Name="newsletteritem" Relationship="hreModel.Newsletter1" FromRole="newsletter" ToRole="newsletteritem" />
+        </EntityType>
         <EntityType Name="sportseventparticipation">
           <Key>
             <PropertyRef Name="Id" />
@@ -520,6 +699,7 @@
           <Property Type="Int32" Name="PaymentType" />
           <Property Type="Int32" Name="ParticipationStatus" />
           <Property Type="String" Name="ExternalIdentifier" />
+          <Property Type="String" Name="YouTubeVideoCode" />
           <Property Type="Int32" Name="Source" />
           <NavigationProperty Name="logonuser" Relationship="hreModel.User" FromRole="sportseventparticipation" ToRole="logonuser" />
           <NavigationProperty Name="sportsevent" Relationship="hreModel.sportevent" FromRole="sportseventparticipation" ToRole="sportsevent" />
@@ -545,6 +725,33 @@
             </Principal>
             <Dependent Role="sportseventparticipation">
               <PropertyRef Name="SportsEventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="newsletteritem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="NewsletterId" Nullable="false" />
+          <Property Type="String" Name="ItemTitle" />
+          <Property Type="String" Name="ItemSubTitle" />
+          <Property Type="String" Name="ItemText" />
+          <Property Type="String" Name="PictureURL" />
+          <Property Type="String" Name="IconPictureURL" />
+          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
+          <Property Type="String" Name="HeadingHtmlColour" />
+          <NavigationProperty Name="newsletter" Relationship="hreModel.Newsletter1" FromRole="newsletteritem" ToRole="newsletter" />
+        </EntityType>
+        <Association Name="Newsletter1">
+          <End Type="hreModel.newsletter" Role="newsletter" Multiplicity="1" />
+          <End Type="hreModel.newsletteritem" Role="newsletteritem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="newsletter">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="newsletteritem">
+              <PropertyRef Name="NewsletterId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -592,32 +799,6 @@
                 <ScalarProperty Name="CCAddresses" ColumnName="CCAddresses" />
                 <ScalarProperty Name="FromAddress" ColumnName="FromAddress" />
                 <ScalarProperty Name="ToAddresses" ColumnName="ToAddresses" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="newsletter">
-            <EntityTypeMapping TypeName="hreModel.newsletter">
-              <MappingFragment StoreEntitySet="newsletter">
-                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
-                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
-                <ScalarProperty Name="CultureId" ColumnName="CultureId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="newsletteritem">
-            <EntityTypeMapping TypeName="hreModel.newsletteritem">
-              <MappingFragment StoreEntitySet="newsletteritem">
-                <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
-                <ScalarProperty Name="PictureURL" ColumnName="PictureURL" />
-                <ScalarProperty Name="ItemText" ColumnName="ItemText" />
-                <ScalarProperty Name="ItemSubTitle" ColumnName="ItemSubTitle" />
-                <ScalarProperty Name="ItemTitle" ColumnName="ItemTitle" />
-                <ScalarProperty Name="NewsletterId" ColumnName="NewsletterId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -680,10 +861,122 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_applications">
+            <EntityTypeMapping TypeName="hreModel.my_aspnet_applications">
+              <MappingFragment StoreEntitySet="my_aspnet_applications">
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_membership">
+            <EntityTypeMapping TypeName="hreModel.my_aspnet_membership">
+              <MappingFragment StoreEntitySet="my_aspnet_membership">
+                <ScalarProperty Name="FailedPasswordAnswerAttemptWindowStart" ColumnName="FailedPasswordAnswerAttemptWindowStart" />
+                <ScalarProperty Name="FailedPasswordAnswerAttemptCount" ColumnName="FailedPasswordAnswerAttemptCount" />
+                <ScalarProperty Name="FailedPasswordAttemptWindowStart" ColumnName="FailedPasswordAttemptWindowStart" />
+                <ScalarProperty Name="FailedPasswordAttemptCount" ColumnName="FailedPasswordAttemptCount" />
+                <ScalarProperty Name="LastLockedOutDate" ColumnName="LastLockedOutDate" />
+                <ScalarProperty Name="IsLockedOut" ColumnName="IsLockedOut" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="LastPasswordChangedDate" ColumnName="LastPasswordChangedDate" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="LastActivityDate" ColumnName="LastActivityDate" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="PasswordAnswer" ColumnName="PasswordAnswer" />
+                <ScalarProperty Name="PasswordQuestion" ColumnName="PasswordQuestion" />
+                <ScalarProperty Name="PasswordFormat" ColumnName="PasswordFormat" />
+                <ScalarProperty Name="PasswordKey" ColumnName="PasswordKey" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_profiles">
+            <EntityTypeMapping TypeName="hreModel.my_aspnet_profiles">
+              <MappingFragment StoreEntitySet="my_aspnet_profiles">
+                <ScalarProperty Name="lastUpdatedDate" ColumnName="lastUpdatedDate" />
+                <ScalarProperty Name="binarydata" ColumnName="binarydata" />
+                <ScalarProperty Name="stringdata" ColumnName="stringdata" />
+                <ScalarProperty Name="valueindex" ColumnName="valueindex" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_roles">
+            <EntityTypeMapping TypeName="hreModel.my_aspnet_roles">
+              <MappingFragment StoreEntitySet="my_aspnet_roles">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="applicationId" ColumnName="applicationId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_sessioncleanup">
+            <EntityTypeMapping TypeName="hreModel.my_aspnet_sessioncleanup">
+              <MappingFragment StoreEntitySet="my_aspnet_sessioncleanup">
+                <ScalarProperty Name="IntervalMinutes" ColumnName="IntervalMinutes" />
+                <ScalarProperty Name="LastRun" ColumnName="LastRun" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_sessions">
+            <EntityTypeMapping TypeName="hreModel.my_aspnet_sessions">
+              <MappingFragment StoreEntitySet="my_aspnet_sessions">
+                <ScalarProperty Name="Flags" ColumnName="Flags" />
+                <ScalarProperty Name="SessionItems" ColumnName="SessionItems" />
+                <ScalarProperty Name="Locked" ColumnName="Locked" />
+                <ScalarProperty Name="Timeout" ColumnName="Timeout" />
+                <ScalarProperty Name="LockId" ColumnName="LockId" />
+                <ScalarProperty Name="LockDate" ColumnName="LockDate" />
+                <ScalarProperty Name="Expires" ColumnName="Expires" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="ApplicationId" ColumnName="ApplicationId" />
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_users">
+            <EntityTypeMapping TypeName="hreModel.my_aspnet_users">
+              <MappingFragment StoreEntitySet="my_aspnet_users">
+                <ScalarProperty Name="lastActivityDate" ColumnName="lastActivityDate" />
+                <ScalarProperty Name="isAnonymous" ColumnName="isAnonymous" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="applicationId" ColumnName="applicationId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_usersinroles">
+            <EntityTypeMapping TypeName="hreModel.my_aspnet_usersinroles">
+              <MappingFragment StoreEntitySet="my_aspnet_usersinroles">
+                <ScalarProperty Name="roleId" ColumnName="roleId" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="newsletter">
+            <EntityTypeMapping TypeName="hreModel.newsletter">
+              <MappingFragment StoreEntitySet="newsletter">
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="AddPersonalLoginLink" ColumnName="AddPersonalLoginLink" />
+                <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
+                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
+                <ScalarProperty Name="CultureId" ColumnName="CultureId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="sportseventparticipation">
             <EntityTypeMapping TypeName="hreModel.sportseventparticipation">
               <MappingFragment StoreEntitySet="sportseventparticipation">
                 <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="YouTubeVideoCode" ColumnName="YouTubeVideoCode" />
                 <ScalarProperty Name="ExternalIdentifier" ColumnName="ExternalIdentifier" />
                 <ScalarProperty Name="ParticipationStatus" ColumnName="ParticipationStatus" />
                 <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
@@ -705,6 +998,21 @@
                 <ScalarProperty Name="DateRegistered" ColumnName="DateRegistered" />
                 <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="newsletteritem">
+            <EntityTypeMapping TypeName="hreModel.newsletteritem">
+              <MappingFragment StoreEntitySet="newsletteritem">
+                <ScalarProperty Name="HeadingHtmlColour" ColumnName="HeadingHtmlColour" />
+                <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
+                <ScalarProperty Name="IconPictureURL" ColumnName="IconPictureURL" />
+                <ScalarProperty Name="PictureURL" ColumnName="PictureURL" />
+                <ScalarProperty Name="ItemText" ColumnName="ItemText" />
+                <ScalarProperty Name="ItemSubTitle" ColumnName="ItemSubTitle" />
+                <ScalarProperty Name="ItemTitle" ColumnName="ItemTitle" />
+                <ScalarProperty Name="NewsletterId" ColumnName="NewsletterId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -732,36 +1040,44 @@
       <Diagram Name="HRE" ZoomLevel="57">
         <EntityTypeShape EntityType="hreModel.address" Width="1.5" PointX="0.625" PointY="3.625" Height="3.7109993489583317" />
         <EntityTypeShape EntityType="hreModel.emailaudit" Width="1.5" PointX="6" PointY="3.875" Height="4.6725065104166674" />
-        <EntityTypeShape EntityType="hreModel.newsletter" Width="1.5" PointX="8.25" PointY="0.875" Height="2.5571907552083246" />
-        <EntityTypeShape EntityType="hreModel.newsletteritem" Width="1.5" PointX="10.625" PointY="0.875" Height="2.5571907552083246" />
         <EntityTypeShape EntityType="hreModel.paymenttype" Width="1.5" PointX="0.75" PointY="1" Height="1.5956835937500102" />
         <EntityTypeShape EntityType="hreModel.usersecondaryaddress" Width="2.75" PointX="2.75" PointY="1" Height="2.1725878906250102" />
-        <AssociationConnector Association="hreModel.Newsletter1" >
-          <ConnectorPoint PointX="9.75" PointY="2.1535953776041623" />
-          <ConnectorPoint PointX="10.625" PointY="2.1535953776041623" />
-        </AssociationConnector>
         <EntityTypeShape EntityType="hreModel.logonuser" Width="1.5" PointX="2.75" PointY="3.875" Height="4.8648079427083335" />
         <AssociationConnector Association="hreModel.PrimaryAddress" >
           <ConnectorPoint PointX="2.125" PointY="5.6054996744791659" />
           <ConnectorPoint PointX="2.75" PointY="5.6054996744791659" />
         </AssociationConnector>
         <AssociationConnector Association="hreModel.UserIdReceiver" >
-          <ConnectorPoint PointX="4.25" PointY="7.0284662501017259" />
-          <ConnectorPoint PointX="6" PointY="7.0284662501017259" />
+          <ConnectorPoint PointX="4.25" PointY="7.0316209326187771" />
+          <ConnectorPoint PointX="6" PointY="7.0316209326187771" />
         </AssociationConnector>
         <AssociationConnector Association="hreModel.UserIdSender" >
-          <ConnectorPoint PointX="4.25" PointY="5.3892331250508629" />
-          <ConnectorPoint PointX="6" PointY="5.3892331250508629" />
+          <ConnectorPoint PointX="4.25" PointY="5.3908104663093885" />
+          <ConnectorPoint PointX="6" PointY="5.3908104663093885" />
         </AssociationConnector>
         <EntityTypeShape EntityType="hreModel.sportsevent" Width="1.5" PointX="5.375" PointY="9.125" Height="2.7494921875000031" />
-        <EntityTypeShape EntityType="hreModel.sportseventparticipation" Width="1.5" PointX="9.375" PointY="4.5" Height="5.8263151041666674" />
+        <EntityTypeShape EntityType="hreModel.my_aspnet_applications" Width="1.5" PointX="0.75" PointY="9.75" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="hreModel.my_aspnet_membership" Width="1.5" PointX="2.75" PointY="9.75" Height="4.6725065104166674" />
+        <EntityTypeShape EntityType="hreModel.my_aspnet_profiles" Width="1.5" PointX="11.75" PointY="4.75" Height="1.9802864583333317" />
+        <EntityTypeShape EntityType="hreModel.my_aspnet_roles" Width="1.5" PointX="11.75" PointY="7.75" Height="1.5956835937500031" />
+        <EntityTypeShape EntityType="hreModel.my_aspnet_sessioncleanup" Width="1.5" PointX="7.75" PointY="11.75" Height="1.4033821614583388" />
+        <EntityTypeShape EntityType="hreModel.my_aspnet_sessions" Width="1.5" PointX="9.75" PointY="11.75" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="hreModel.my_aspnet_users" Width="1.5" PointX="11.75" PointY="10.75" Height="1.9802864583333388" />
+        <EntityTypeShape EntityType="hreModel.my_aspnet_usersinroles" Width="1.5" PointX="4.75" PointY="12.75" Height="1.4033821614583388" />
+        <EntityTypeShape EntityType="hreModel.newsletter" Width="1.5" PointX="8.75" PointY="1" Height="2.7494921875000031" />
+        <EntityTypeShape EntityType="hreModel.sportseventparticipation" Width="1.5" PointX="9" PointY="4.875" Height="6.0186165364583388" />
         <AssociationConnector Association="hreModel.User" >
           <ConnectorPoint PointX="4.25" PointY="8.7710579427083335" />
-          <ConnectorPoint PointX="9.375" PointY="8.7710579427083335" />
+          <ConnectorPoint PointX="9" PointY="8.7710579427083335" />
         </AssociationConnector>
         <AssociationConnector Association="hreModel.sportevent" >
-          <ConnectorPoint PointX="6.875" PointY="9.7256575520833337" />
-          <ConnectorPoint PointX="9.375" PointY="9.7256575520833337" />
+          <ConnectorPoint PointX="6.875" PointY="10.009308268229169" />
+          <ConnectorPoint PointX="9" PointY="10.009308268229169" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="hreModel.newsletteritem" Width="1.5" PointX="11" PointY="0.875" Height="2.9417936197916674" />
+        <AssociationConnector Association="hreModel.Newsletter1" >
+          <ConnectorPoint PointX="10.25" PointY="2.37474609375" />
+          <ConnectorPoint PointX="11" PointY="2.37474609375" />
         </AssociationConnector>
         </Diagram>
     </Diagrams>

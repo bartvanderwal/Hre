@@ -217,6 +217,14 @@ namespace HRE.Dal {
         /// <summary>
         /// Constructor. Construct a user DAL object based on a mailAudit DB object.
         /// </summary>
+        public LogonUserDal() {
+            _user = new logonuser();
+        }
+
+
+        /// <summary>
+        /// Constructor. Construct a user DAL object based on a mailAudit DB object.
+        /// </summary>
         public LogonUserDal(logonuser user) {
             if (user.Id==0) {
                 throw new ArgumentException("This constructor may only be used with existing 'logonuser' argument, which was retrieved from the database.");

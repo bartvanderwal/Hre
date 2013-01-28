@@ -53,7 +53,10 @@ namespace HRE.Models {
                 new AdminUser("bart@hetrondjeeilanden.nl", "24dec2012"), 
                 new AdminUser("yordi@hetrondjeeilanden.nl", "24dec2012"), 
                 new AdminUser("pieter@hetrondjeeilanden.nl", "24dec2012"), 
-                new AdminUser("rudo@hetrondjeeilanden.nl", "24dec2012")
+                new AdminUser("rudo@hetrondjeeilanden.nl", "24dec2012"),
+                new AdminUser("cock@hetrondjeeilanden.nl", "24dec2012"),
+                new AdminUser("ad@hetrondjeeilanden.nl", "24dec2012"),
+                new AdminUser("kitty@hetrondjeeilanden.nl", "24dec2012")
             };
 
             foreach(AdminUser adminUser in listOfAdmins) {
@@ -64,6 +67,17 @@ namespace HRE.Models {
                         Roles.AddUserToRole(adminUser.UserNameAndEmail, ADMIN_ROLE_NAME); 
                     }
                 }
+            }
+
+            LogonUserDal bart = LogonUserDal.GetByEmailAddress("bart@hetrondjeeilanden.nl");
+            if (bart!=null && !bart.DateOfBirth.HasValue) {
+                bart.DateCreated = DateTime.Now;
+                bart.DateOfBirth = DateTime.ParseExact("27/06/1977", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                bart.IsMailingListMember = true;
+                bart.IsActive = true;
+                bart.Gender = true;
+                bart.UserName = bart.EmailAddress;
+                bart.Save();
             }
         }
 

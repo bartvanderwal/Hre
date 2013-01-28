@@ -80,6 +80,7 @@ create table SportsEventParticipation (
   PaymentType int NULL,
   ParticipationStatus int NULL,
   ExternalIdentifier varchar(45) NULL,
+  YouTubeVideoCode varchar(64),
   Source int NULL
 );
 
@@ -129,6 +130,7 @@ create table Newsletter (
   CultureId int NOT NULL,
   DateSent datetime,
   SequenceNumber int NOT NULL,
+  AddPersonalLoginLink bit,
   DateCreated datetime NOT NULL,
   DateUpdated datetime NOT NULL
 );
@@ -140,10 +142,12 @@ create table NewsletterItem (
   ItemSubTitle varchar(256),
   ItemText text,
   PictureURL varchar(256),
+  IconPictureURL varchar(256),
+  HeadingHtmlColour varchar(8),
   SequenceNumber int NOT NULL
 );
 
-ALTER TABLE emailaudit ADD CONSTRAINT UserIdReceiver
+ALTER TABLE EmailAudit ADD CONSTRAINT UserIdReceiver
   FOREIGN KEY (UserIdReceiver)
   REFERENCES logonuser(Id)
   ON DELETE CASCADE
@@ -151,7 +155,7 @@ ALTER TABLE emailaudit ADD CONSTRAINT UserIdReceiver
   , ADD INDEX UserIdReceiver(UserIdReceiver ASC);
 
 
-ALTER TABLE emailaudit
+ALTER TABLE EmailAudit
   ADD CONSTRAINT UserIdSender
   FOREIGN KEY (UserIdSender)
   REFERENCES logonuser(Id)

@@ -11,11 +11,14 @@
     $("#AddNewsletterItem").click(function (event) {
         event.preventDefault();
         var count = $("#ChildItems table").size();
-        $("#ChildItems").append("<table><tbody><tr><td colspan=\"2\"><h3 style=\"float:left\">Nieuwsbrief Item</h3><a href=\"#\" class=\"remove\" style=\"float:right;margin-top:1em;\"><img alt=\"Verwijderen\" class=\"delete-button\" src=\"/Images/delete.png\" title=\"Verwijderen\"></a></td></tr>" +
-    "<tr><td><label for=\"Items_" + count + "__Title\">Titel</label></td><td><input class=\"text-box single-line\" id=\"Items_" + count + "__Title\" name=\"Items[" + count + "].Title\" type=\"text\" \">" +
-    "</td></tr><tr><td><label for=\"Items_" + count + "__SubTitle\">Sub Titel</label></td><td><input class=\"text-box single-line\" id=\"Items_" + count + "__SubTitle\" name=\"Items[" + count + "].SubTitle\" type=\"text\" \>" +
-    "</td></tr><tr><td colspan=\"2\"><label for=\"Items_" + count + "__Text\">Text</label></td></tr><tr><td colspan=\"2\"><textarea class=\"editor\" cols=\"20\" id=\"Items_" + count + "__Text\" name=\"Items[" + count + "].Text\" rows=\"" + count + "\"></textarea></td></tr>" +
-    "<!--<tr><td><label for=\"Items_" + count + "__Image\">Afbeelding</label></td><td><input class=\"text-box single-line\" id=\"Items_" + count + "__Image\" name=\"Items[" + count + "].Image\" type=\"text\"></td></tr>--></tbody></table>");
+        $("#ChildItems").append(
+            "<table><tbody><tr><td colspan=\"2\"><h3 style=\"float:left\">Nieuwsbrief Item " + (count+1) + "</h3><a href=\"#\" class=\"remove\" style=\"float:right;margin-top:1em;\"><img alt=\"Verwijderen\" class=\"delete-button\" src=\"/Content/img/delete.png\" title=\"Verwijderen\"></a></td></tr>" +
+            "<tr><td><label for=\"Items_" + count + "__Title\">Titel</label></td><td><input class=\"text-box single-line\" id=\"Items_" + count + "__Title\" name=\"Items[" + count + "].Title\" type=\"text\" \"></td></tr>" +
+            "<tr><td><label for=\"Items_" + count + "__SubTitle\">Sub titel</label></td><td><input class=\"text-box single-line\" id=\"Items_" + count + "__SubTitle\" name=\"Items[" + count + "].SubTitle\" type=\"text\" \></td></tr>" + 
+            "<tr><td><label for=\"Items_" + count + "__IconImagePath\">Icon</label></td><td><input id=\"Items_" + count + "__IconImagePath\" class=\"text-box single-line\" type=\"text\" value=\"\" name=\"Items[" + count + "].IconImagePath\"></td></tr>" +
+            "<tr><td><label for=\"Items_" + count + "__ImagePath\">Afbeelding</label></td><td><input id=\"Items_" + count + "__ImagePath\" class=\"text-box single-line\" type=\"text\" value=\"\" name=\"Items[" + count + "].ImagePath\"></td></tr>" +
+            "<tr><td colspan=\"2\"><label for=\"Items_" + count + "__Text\">Text</label></td></tr><tr><td colspan=\"2\"><textarea class=\"editor\" cols=\"20\" id=\"Items_" + count + "__Text\" name=\"Items[" + count + "].Text\" rows=\"" + count + "\"></textarea></td></tr>" +
+            "</tbody></table>");
         $("#Items_" + count + "__Text").ckeditor();
     });
 

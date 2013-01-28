@@ -4,6 +4,10 @@
     ViewBag.Title = "Nieuwe Newsletter";
 }
 
+@section Css {
+    <link href="/Content/admin_new.css" rel="stylesheet" type="text/css">
+}
+
 @{ Html.BeginForm(); } 
 @if (!ViewData.ModelState.IsValid) { Html.RenderPartial("_MessageBox"); }
 <div id="ModelForm" class="vote rounded newsletter">
@@ -60,9 +64,10 @@
         <div class="clear-fix"></div>
     </div>
     <div class="footer">
-        @Html.ActionLink("Naar index","index")
+        @Html.ActionLink("< Overzicht","index")
         <input type="submit" style="float:right;" value="Opslaan" />
-        <a class="nice-button preview" style="margin: 5px;" href="#">Preview</a>
+        @Html.ActionLink("Bekijk", "Display", new { newsletterId = Model.ID })
+        @*<a class="nice-button preview" style="margin: 5px;" href="#">Preview</a> *@
         <a href="#" class="nice-button" style="margin: 5px;" id="AddNewsletterItem">Voeg nog een item toe</a>
         <div class="clear-fix"></div>
     </div>

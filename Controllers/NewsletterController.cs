@@ -53,19 +53,19 @@ namespace HRE.Controllers {
         }
 
 
-        public ActionResult SendNewsletter(int id) {
-            NewsletterViewModel nvm = NewsletterRepository.GetByID(id);
-            SendNewsletterViewModel snl = new SendNewsletterViewModel {
-                NewsletterID = Convert.ToInt32(id),
-                Subject = nvm.Title
+        public ActionResult SendNewsletter(int newsletterId, int logonUserId) {
+            // NewsletterViewModel nvm = NewsletterRepository.GetByID(id);
+            SendPersonalNewsletterViewModel snl = new SendPersonalNewsletterViewModel() {
+                NewsletterId = newsletterId,
+                LogonUserId = logonUserId
             };
             return View(snl);
         }
 
 
         [HttpPost]
-        public ActionResult SendNewsletter(SendNewsletterViewModel snlvm) {
-            NewsletterViewModel nvm = NewsletterRepository.GetByID(snlvm.NewsletterID);
+        public ActionResult SendNewsletter(SendPersonalNewsletterViewModel snlvm) {
+            NewsletterViewModel nvm = NewsletterRepository.GetByID(snlvm.NewsletterId);
             string Newsletter = this.RenderNewsletterViewToString("NewsletterLocalizations/NewsletterLayout", nvm);
 
             MailMessage message = new MailMessage();
@@ -80,31 +80,27 @@ namespace HRE.Controllers {
         }
 
 
-        public ActionResult Send(int id) {
-            NewsletterViewModel nvm = NewsletterRepository.GetByID(id);
-            if (nvm.Sent == null) {
-                List<LogonUserDal> users = nr.DetermineAddressees(nvm.Culture);
+        public ActionResult Send(int newsletterId) {
+            SendPersonalNewsletterViewModel spnvm = new SendPersonalNewsletterViewModel();
+            spnvm.NewsletterId = newsletterId;
+            if (spnvm.Newsletter.Sent == null) {
+                List<LogonUserDal> users = nr.DetermineAddressees();
                 MailMessage mm = new MailMessage();
                 mm.From = new MailAddress(HreSettings.ReplyToAddress);
-                mm.Subject = nvm.Title;
+                mm.Subject = spnvm.Newsletter.Title;
                 mm.IsBodyHtml = true;
-                string newsletter = this.RenderNewsletterViewToString("NewsletterLocalizations/NewsletterLayout", nvm);
-                newsletter.Replace("%ID%", nvm.ID.ToString());
-                mm.Body = newsletter;
-
                 foreach (LogonUserDal user in users) {
+                    spnvm.LogonUserId = user.ID;
+                    mm.Body = this.RenderNewsletterViewToString("NewsletterLocalizations/NewsletterLayout", spnvm);
                     mm.To.Clear();
                     mm.To.Add(new MailAddress(user.EmailAddress));
-                    mm.Body = mm.Body.Replace("%UNSUB%", Util.RC2Encryption(user.EmailAddress, HreSettings.EmaCypher, HreSettings.HiddenCypher));
-                    mm.Body = mm.Body.Replace("%ADDRESSEE%", user.PrimaryAddress.Firstname);
-                    mm.Body = mm.Body.Replace("%SOSLINK%", Util.RC2Encryption(user.EmailAddress, HreSettings.SosCypher, HreSettings.HiddenCypher));
-                    EmailSender.SendEmail(mm, EmailCategory.Newsletter, nvm.ID);
-                    
-                    // Reset body of email so %UNSUB% can be replaced next iteration.
-                    mm.Body = newsletter;
+                    // mm.Body = mm.Body.Replace("%UNSUB%", Util.RC2Encryption(user.EmailAddress, HreSettings.EmaCypher, HreSettings.HiddenCypher));
+                    // mm.Body = mm.Body.Replace("%ADDRESSEE%", user.PrimaryAddress.Firstname);
+                    // mm.Body = mm.Body.Replace("%SOSLINK%", Util.RC2Encryption(user.EmailAddress, HreSettings.SosCypher, HreSettings.HiddenCypher));
+                    EmailSender.SendEmail(mm, EmailCategory.Newsletter, spnvm.Newsletter.ID);                   
                 }
-                nvm.Sent = DateTime.Now;
-                NewsletterRepository.UpdateNewsletter(nvm);
+                spnvm.Newsletter.Sent = DateTime.Now;
+                NewsletterRepository.UpdateNewsletter(spnvm.Newsletter);
                 ViewBag.message = "E-mails met succes verstuurd!";                
             } else {
                 ViewBag.message = "Deze nieuwsbrief is al eens verstuurd, neem contact op met de technische jongens.";  
@@ -112,6 +108,7 @@ namespace HRE.Controllers {
 
             return View();
         }
+
 
         [HttpPost]
         [ValidateInput(false)]
@@ -139,15 +136,19 @@ namespace HRE.Controllers {
         [HttpPost]
         public ActionResult NewsletterAdresses(int id)
         {
-            return PartialView("_NewsletterAdresses", nr.DetermineAddressees(id));
+            return PartialView("_NewsletterAdresses", nr.DetermineAddressees());
         }
 
+
         // [AllowAnonymous]
-        public ActionResult Display(int id) {
-            NewsletterViewModel nvm = NewsletterRepository.GetByID(id);
+        public ActionResult Display(int newsletterId) {
+            NewsletterViewModel nvm = NewsletterRepository.GetByID(newsletterId);
             if (nvm != null) {
-                ViewBag.IsEmail = false;
-                return View("NewsletterLocalizations/NewsletterLayout", nvm);
+                nvm.IsEmail = false;
+                SendPersonalNewsletterViewModel spnvm = new SendPersonalNewsletterViewModel();
+                spnvm.NewsletterId = newsletterId;
+                spnvm.LogonUserId = LogonUserDal.GetByEmailAddress("bart@hetrondjeeilanden.nl").ID;
+                return View("NewsletterLocalizations/NewsletterLayout", spnvm);
             } else {
                 return RedirectToAction("Index", "Home");
             }

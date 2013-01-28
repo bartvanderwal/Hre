@@ -1,0 +1,12 @@
+/* CreateNewsletter. */
+
+input {
+    width: 400px;
+}
+
+input[type=submit] {
+    width: inherit;
+}
+
+
+/* End CreateNewsletter. */

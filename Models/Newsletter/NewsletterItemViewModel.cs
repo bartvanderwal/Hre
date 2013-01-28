@@ -16,7 +16,7 @@ namespace HRE.Models.Newsletters {
         [Display(Name="Titel")]
         public string Title { get; set; }
 
-        [Display(Name = "Sub Titel")]
+        [Display(Name = "Sub titel")]
         public string SubTitle { get; set; }
 
         [Display(Name = "Text")]
@@ -27,5 +27,9 @@ namespace HRE.Models.Newsletters {
 
         [Display(Name = "Icon")]
         public string IconImagePath { get; set; }
-    }
+
+        [Display(Name = "Header HTML kleur")]
+        public string HeadingHtmlColour { get; set; }
+
+        }
 }

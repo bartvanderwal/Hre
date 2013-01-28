@@ -20,7 +20,7 @@ namespace HRE.Business {
             EmailAuditDal emailAuditDal = new EmailAuditDal(message, category, relatedEntityID);
 
             SmtpClient smtpClient = new SmtpClient();
-        
+            
             // Try to send the mail.
             try {
                 smtpClient.Send(message);

@@ -67,7 +67,10 @@ namespace HRE.Models.Newsletters {
                         SequenceNumber = nli.SequenceNumber,
                         SubTitle = nli.ItemSubTitle,
                         Title = nli.ItemTitle,
-                        Text = nli.ItemText
+                        Text = nli.ItemText,
+                        ImagePath = nli.PictureURL,
+                        IconImagePath = nli.IconPictureURL,
+                        HeadingHtmlColour = nli.HeadingHtmlColour
                     }
                 );
             }
@@ -111,7 +114,7 @@ namespace HRE.Models.Newsletters {
             nl.DateSent = nvm.Sent;
             nl.SequenceNumber = nvm.SequenceNumber;
             nl.Title = nvm.Title;
-
+            nl.AddPersonalLoginLink = nvm.IncludeLoginLink;
             List<newsletteritem> nlis = DB.newsletteritem.Where(nli => nli.NewsletterId == nl.Id).ToList();
 
             foreach (newsletteritem nli in nlis) {
@@ -126,6 +129,8 @@ namespace HRE.Models.Newsletters {
                         SequenceNumber = nivm.SequenceNumber,
                         ItemText = nivm.Text,
                         PictureURL = nivm.ImagePath,
+                        IconPictureURL = nivm.IconImagePath,
+                        HeadingHtmlColour = nivm.HeadingHtmlColour,
                         newsletter = nl
                     });
                 }
@@ -135,7 +140,7 @@ namespace HRE.Models.Newsletters {
         }
 
 
-        public List<LogonUserDal> DetermineAddressees(int cultureID) {
+        public List<LogonUserDal> DetermineAddressees() {
             // List<string> users = DB.logonuser.Where(c => c.IsMailingListMember.HasValue && c.IsMailingListMember.HasValue).Select(c => c.EmailAddress).ToList();
             // List<LogonUserDal> users = LogonUserDal.GetMailingListMembers();
             // List<string> addresses = new List<string>();

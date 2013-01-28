@@ -205,7 +205,7 @@
     <Compile Include="Models\Newsletter\NewsletterRepository.cs" />
     <Compile Include="Models\Newsletter\NewsletterSubscribeViewModel.cs" />
     <Compile Include="Models\Newsletter\NewsletterViewModel.cs" />
-    <Compile Include="Models\Newsletter\SendNewsletterViewModel.cs" />
+    <Compile Include="Models\Newsletter\SendPersonalNewsletterViewModel.cs" />
     <Compile Include="Models\ScrapeNtbIEntryModel.cs" />
     <Compile Include="Models\ScrapeNtbIRepository.cs" />
     <Compile Include="Models\ScrapeNtbIModel.cs" />
@@ -224,6 +224,7 @@
     <Content Include="Admin\Newsletter.aspx" />
     <Content Include="Admin\Newsletters.aspx" />
     <Content Include="Content\accid-wf.svg" />
+    <Content Include="Content\admin.css" />
     <Content Include="Content\ckeditor\contents.css" />
     <Content Include="Content\ckeditor\dialog.css" />
     <Content Include="Content\ckeditor\dialog_ie.css" />
@@ -241,6 +242,9 @@
     <Content Include="Content\ckeditor\images\arrow.png" />
     <Content Include="Content\ckeditor\images\close.png" />
     <Content Include="Content\ckeditor\images\mini.png" />
+    <Content Include="Content\admin_new.css" />
+    <Content Include="Content\newsletter.css" />
+    <Content Include="Content\img\Cup.png" />
     <Content Include="Content\subscribe.css" />
     <Content Include="Content\img\Back.png" />
     <Content Include="Content\img\twitter_smaller.png" />
