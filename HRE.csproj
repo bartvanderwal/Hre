@@ -731,7 +731,7 @@
     <Content Include="Views\Meedoen\AangemeldNieuwsbrief.cshtml" />
     <Content Include="Views\Newsletter\CreateNewsletter.cshtml" />
     <Content Include="Views\Newsletter\Index.cshtml" />
-    <Content Include="Views\Newsletter\Send.cshtml" />
+    <Content Include="Views\Newsletter\Sent.cshtml" />
     <Content Include="Views\Newsletter\SendNewsletter.cshtml" />
     <Content Include="Views\Newsletter\Unsubscribe.cshtml" />
     <Content Include="Views\Newsletter\_NewsletterAdresses.cshtml" />

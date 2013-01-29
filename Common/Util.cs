@@ -105,7 +105,7 @@ namespace HRE.Common {
                 CryptoStream CS = new CryptoStream(MS, CryptoMethod.CreateEncryptor(byteKey, byteIV), CryptoStreamMode.Write);
                 CS.Write(byteInput, 0, byteInput.Length);
                 CS.FlushFinalBlock();
-                return Convert.ToBase64String(MS.ToArray());
+                return HttpUtility.UrlEncode(Convert.ToBase64String(MS.ToArray()));
             }
             catch (Exception up) {
                 throw up;
@@ -115,7 +115,7 @@ namespace HRE.Common {
 
         public static string RC2Decryption(string strInput, string strKey, string strIV) {
             try {
-                strInput = strInput.Replace(" ","+");
+                strInput = HttpUtility.UrlDecode(strInput).Replace(" ","+");
                 byte[] byteInput = Convert.FromBase64String(strInput);
                 byte[] byteKey = Encoding.ASCII.GetBytes(strKey);
                 byte[] byteIV = Encoding.ASCII.GetBytes(strIV);

@@ -67,7 +67,8 @@
         Newsletter,
         NewsletterTest,
         Test,
-        ResetPassword
+        ResetPassword,
+        EmailUnsubscription
     }
 
 

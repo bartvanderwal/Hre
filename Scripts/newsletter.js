@@ -72,7 +72,7 @@
     $(".adresses").click(function (event) {
         $.ajax({
             type: "POST",
-            url: "/newsletter/NewsletterAdresses/",
+            url: "/Newsletter/NewsletterAdresses/",
             success: function (data) {
                 $("#dialog-modal").html(data).dialog({
                     width: 1100,
@@ -96,7 +96,7 @@
             [{ 
                 text: 'Ja',
                 click: function () {
-                    location.href = "/Newsletter/Send/" + $("#NewsletterID").val();
+                    location.href = "/Newsletter/Sent/" + $("#Newsletter_ID").val();
                 } 
             }, { 
                 text: 'Nee',

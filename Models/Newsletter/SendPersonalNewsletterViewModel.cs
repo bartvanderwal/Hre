@@ -33,7 +33,7 @@ namespace HRE.Models.Newsletters {
 
         public string PersonalLoginLink {
             get {
-                return Util.RC2Encryption(LogonUserDal.GetByID(LogonUserId).EmailAddress + ";" + DateTime.Now.ToString(), HreSettings.EmaCypher, HreSettings.HiddenCypher);
+                return Util.RC2Encryption(LogonUserDal.GetByID(LogonUserId).EmailAddress, HreSettings.EmaCypher, HreSettings.HiddenCypher);
             }
         }
 

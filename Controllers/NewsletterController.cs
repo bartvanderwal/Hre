@@ -64,25 +64,25 @@ namespace HRE.Controllers {
 
 
         [HttpPost]
-        public ActionResult SendNewsletter(SendPersonalNewsletterViewModel snlvm) {
-            NewsletterViewModel nvm = NewsletterRepository.GetByID(snlvm.NewsletterId);
-            string Newsletter = this.RenderNewsletterViewToString("NewsletterLocalizations/NewsletterLayout", nvm);
+        public ActionResult SendNewsletter(SendPersonalNewsletterViewModel spnvm) {
+            // NewsletterViewModel nvm = NewsletterRepository.GetByID(snlvm.NewsletterId);
+            string Newsletter = this.RenderNewsletterViewToString("NewsletterLocalizations/NewsletterLayout", spnvm);
 
             MailMessage message = new MailMessage();
             message.From = new MailAddress(HreSettings.ReplyToAddress, HreSettings.ReplyToAddress);
-            message.To.Add(new MailAddress(snlvm.TestEmail));
-            message.Subject = nvm.Title;
+            message.To.Add(new MailAddress(spnvm.TestEmail));
+            message.Subject = spnvm.Newsletter.Title;
             message.IsBodyHtml = true;
             message.Body = Newsletter;
-            EmailSender.SendEmail(message, EmailCategory.Newsletter, null);
+            EmailSender.SendEmail(message, EmailCategory.Newsletter, spnvm.LogonUserId);
 
-            return View(snlvm);
+            return View(spnvm);
         }
 
 
-        public ActionResult Send(int newsletterId) {
+        public ActionResult Sent(int Id) {
             SendPersonalNewsletterViewModel spnvm = new SendPersonalNewsletterViewModel();
-            spnvm.NewsletterId = newsletterId;
+            spnvm.NewsletterId = Id;
             if (spnvm.Newsletter.Sent == null) {
                 List<LogonUserDal> users = nr.DetermineAddressees();
                 MailMessage mm = new MailMessage();
@@ -91,12 +91,10 @@ namespace HRE.Controllers {
                 mm.IsBodyHtml = true;
                 foreach (LogonUserDal user in users) {
                     spnvm.LogonUserId = user.ID;
+                    spnvm.Newsletter.IsEmail = true;
                     mm.Body = this.RenderNewsletterViewToString("NewsletterLocalizations/NewsletterLayout", spnvm);
                     mm.To.Clear();
                     mm.To.Add(new MailAddress(user.EmailAddress));
-                    // mm.Body = mm.Body.Replace("%UNSUB%", Util.RC2Encryption(user.EmailAddress, HreSettings.EmaCypher, HreSettings.HiddenCypher));
-                    // mm.Body = mm.Body.Replace("%ADDRESSEE%", user.PrimaryAddress.Firstname);
-                    // mm.Body = mm.Body.Replace("%SOSLINK%", Util.RC2Encryption(user.EmailAddress, HreSettings.SosCypher, HreSettings.HiddenCypher));
                     EmailSender.SendEmail(mm, EmailCategory.Newsletter, spnvm.Newsletter.ID);                   
                 }
                 spnvm.Newsletter.Sent = DateTime.Now;
@@ -157,7 +155,7 @@ namespace HRE.Controllers {
 
         // [AllowAnonymous]
         public ActionResult Unsubscribe(string id) {
-            string email = System.Web.HttpUtility.UrlDecode(id);
+            string email = id;
             try {
                 email = Util.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
             } catch (Exception) {
@@ -168,16 +166,21 @@ namespace HRE.Controllers {
             LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(email);
 
             if (user != null) {
-                if (user.IsMailingListMember.HasValue && user.IsMailingListMember.Value) {
+                // if (user.IsMailingListMember.HasValue && user.IsMailingListMember.Value) {
                     user.IsMailingListMember = false;
                     user.Save();
-                    ViewBag.Message = email + ", U bent succesvol aangemeld voor de nieuwsbrief!";
-                } else {
-                    ViewBag.Message = email + "U bent succesvol afgemeld voor de nieuwsbrief!";
-                }
+                    ViewBag.Message = email + ", U bent succesvol afgemeld voor de nieuwsbrief!";
+                // }
             } else {
-                ViewBag.Message = "Deze gebruiker is niet gevonden.";
+                ViewBag.Message = "Fout. Ongeldig unsubscribe link. Mail naar <a href=\"mailto:bart@hetrondjeeilanden.nl\">bart@hetrondjeeilanden.nl</a>";
             }
+
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress(HreSettings.ReplyToAddress, HreSettings.ReplyToAddress);
+            message.To.Add(new MailAddress("bartvanderwal@gmail.com"));
+            message.To.Add(new MailAddress("pieter@hetrondjeeilanden.nl"));
+            message.Subject = email + " heeft zich zojuist afgemeld voor de HRE nieuwsbrief";
+            EmailSender.SendEmail(message, EmailCategory.EmailUnsubscription, null);
 
             return View();
         }
