@@ -104,7 +104,7 @@ namespace HRE.Common {
         /// </summary>
         public static string NtbIUsername {
             get {
-                return ReadStringSetting("NtbIUsername", "SWW");
+                return ReadStringSetting("NtbIUsername", "some_NtbIUsername");
             }
         }
 
@@ -115,7 +115,7 @@ namespace HRE.Common {
         /// </summary>
         public static string NtbIPassword {
             get {
-                return ReadStringSetting("NtbIPassword", "18jan2012");
+                return ReadStringSetting("NtbIPassword", "some_NtbIPassword");
             }
         }
         

@@ -5,6 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using HRE.Dal;
+using HRE.Business;
 
 namespace HRE.Models.Newsletters {
     public class NewsletterViewModel {
@@ -39,6 +40,14 @@ namespace HRE.Models.Newsletters {
         public bool IncludeLoginLink { get; set; }
 
         public bool IsEmail { get; set; }
+
+        [Display(Name = "Sturen naar?")]
+        /// <summary>
+        /// Determine the audience of the newsletter.
+        /// Default: only to members.
+        /// </summary>
+        public NewsletterAudience Audience { get; set; }
+
 
         public LogonUserDal CurrentLogonUser {get; set; }
 

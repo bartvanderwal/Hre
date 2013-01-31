@@ -16,8 +16,8 @@ namespace HRE.Business {
         /// <summary>
         /// Sends an e-mail (and creates an e-mail audit record).
         /// </summary>
-        public static void SendEmail(MailMessage message, EmailCategory? category, int? relatedEntityID) {
-            EmailAuditDal emailAuditDal = new EmailAuditDal(message, category, relatedEntityID);
+        public static void SendEmail(MailMessage message, EmailCategory? category, int? relatedEntityID, int? userIdReceiver = null) {
+            EmailAuditDal emailAuditDal = new EmailAuditDal(message, category, LogonUserDal.GetCurrentUser().ID, userIdReceiver, relatedEntityID);
 
             SmtpClient smtpClient = new SmtpClient();
             
@@ -42,7 +42,7 @@ namespace HRE.Business {
         /// Sends an e-mail (and creates an e-mail audit record).
         /// </summary>
         public static void SendEmail(string to, string from, string cc, string bcc, string subject, string body, bool isBodyHtml, 
-                                        EmailCategory? category, int? relatedEntityID, Attachment attachment) {
+                                        EmailCategory? category, int? relatedEntityID, int? userIdReceiver, Attachment attachment) {
             string fromAddress = from ?? "noreply@karakterstructuren.com";
             MailMessage message = new MailMessage(fromAddress, to, subject, body);
             message.To.Add(new MailAddress(fromAddress, "karakterstructuren.com"));
@@ -58,7 +58,7 @@ namespace HRE.Business {
                 message.Attachments.Add(attachment);
             }
 
-            SendEmail(message, category, relatedEntityID);
+            SendEmail(message, category, userIdReceiver, relatedEntityID);
         }
 
 

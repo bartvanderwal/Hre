@@ -174,22 +174,6 @@ namespace HRE.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<newsletter> newsletter
-        {
-            get
-            {
-                if ((_newsletter == null))
-                {
-                    _newsletter = base.CreateObjectSet<newsletter>("newsletter");
-                }
-                return _newsletter;
-            }
-        }
-        private ObjectSet<newsletter> _newsletter;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<sportseventparticipation> sportseventparticipation
         {
             get
@@ -218,6 +202,22 @@ namespace HRE.Data
             }
         }
         private ObjectSet<newsletteritem> _newsletteritem;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<newsletter> newsletter
+        {
+            get
+            {
+                if ((_newsletter == null))
+                {
+                    _newsletter = base.CreateObjectSet<newsletter>("newsletter");
+                }
+                return _newsletter;
+            }
+        }
+        private ObjectSet<newsletter> _newsletter;
 
         #endregion
         #region AddTo Methods
@@ -271,14 +271,6 @@ namespace HRE.Data
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the newsletter EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTonewsletter(newsletter newsletter)
-        {
-            base.AddObject("newsletter", newsletter);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the sportseventparticipation EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
@@ -292,6 +284,14 @@ namespace HRE.Data
         public void AddTonewsletteritem(newsletteritem newsletteritem)
         {
             base.AddObject("newsletteritem", newsletteritem);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the newsletter EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTonewsletter(newsletter newsletter)
+        {
+            base.AddObject("newsletter", newsletter);
         }
 
         #endregion
@@ -1978,6 +1978,30 @@ namespace HRE.Data
         private global::System.DateTime _DateUpdated;
         partial void OnDateUpdatedChanging(global::System.DateTime value);
         partial void OnDateUpdatedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Audience
+        {
+            get
+            {
+                return _Audience;
+            }
+            set
+            {
+                OnAudienceChanging(value);
+                ReportPropertyChanging("Audience");
+                _Audience = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Audience");
+                OnAudienceChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Audience;
+        partial void OnAudienceChanging(Nullable<global::System.Int32> value);
+        partial void OnAudienceChanged();
 
         #endregion
     

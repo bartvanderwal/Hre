@@ -29,8 +29,14 @@
 				padding: 10px 30px 10px 30px;
 				border: 0px 0px 0px 0px;
                 color: #406A80;
+                text-align: justify;
 			}
 			
+            .footer td,
+            .header th {
+				padding: 0px;
+            }
+
             .item-content td {
 				padding: 10px 0px 10px 0px;
             }
@@ -69,17 +75,6 @@
 			.item-header td.icon {
 				text-align: left;
 			}
-
-            .item-header .header-title {
-				font-size: 45px;
-                border-color: White;
-                border-width: 30px;
-                font-weight: bolder;
-            }
-            			
-            .item-header .header-sub-title {
-				font-size: 20px;
-            }
 
             .unsubscribe-link p {
                 text-align: center;
@@ -134,8 +129,8 @@
                         <td class="icon" style="background-color: #@Item.HeadingHtmlColour;"><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/@Item.IconImagePath" alt="@Item.Title" /></td>
     					<td class="spacer"></td>
 	    				<td class="header-text" style="background-color: #@Item.HeadingHtmlColour;">
-                        <span class="header-title">@Item.Title</span><br />
-                        <span class="header-sub-title">@Item.SubTitle</span>
+                        <span class="header-title" style="font-size: 45px; color: White; border-width: 30px; font-weight: bolder;">@Item.Title</span><br />
+                        <span class="header-sub-title" style="font-size: 20px; color: White;">@Item.SubTitle</span>
                         </td>
 			    	</tr>
                 </table>
@@ -148,7 +143,7 @@
 				</tr>
             } else {
                 <tr class="item-content">
-					<td colspan="8">@Html.Raw(@Item.Text)</td>
+					<td>@Html.Raw(@Item.Text)</td>
 				</tr>
             }
             </table>

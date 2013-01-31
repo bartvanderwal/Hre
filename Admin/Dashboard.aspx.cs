@@ -23,7 +23,7 @@ namespace HRE.Admin {
                 string subject="Test subject";
                 string body = "Test body.";
                 EmailSender.SendEmail("bartvanderwal@gmail.com", "noreply@hetrondjeeilanden.nl", null, null, 
-                        subject, body, false, EmailCategory.Test, null, null);
+                        subject, body, false, EmailCategory.Test, null, null, null);
             }
         }
 

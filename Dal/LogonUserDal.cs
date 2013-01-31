@@ -355,16 +355,25 @@ namespace HRE.Dal {
         */
 
         /// <summary>
-        /// Return all the users that are subscribed to the mailing list / newsletter.
+        /// Return all the users according to the desired audience:
+        /// - OnlyToMembers: All that are undefined or that are subscribed to the mailing list / newsletter.
+        ///    This is the default; basically only use this!
+        /// - SpamAll: All logonusers.
+        ///    Use with caution, SPAM alert!
+        /// - OnlyToNonMembers: All that are defined NOT to be subscribed to the mailing list / newsletter.
+        ///    More SPAM alert. Only to notify non members with a modest message. Basically only to expand OnlyToMembers to if SpamAll was forgotten to be set.
         /// </summary>
-        public static List<LogonUserDal> GetMailingListMembers() {
-             List<LogonUserDal> users = new List<LogonUserDal>();
-             
-             foreach (logonuser user in DB.logonuser.Where(u => !u.IsMailingListMember.HasValue || u.IsMailingListMember.Value).OrderBy(u => u.DateCreated)) {
-                users.Add(new LogonUserDal(user));
-             }
+        public static List<LogonUserDal> GetNewsletterReceivers(NewsletterAudience audience) {
+            int audienceAsInt = (int) audience;
+            IQueryable<LogonUserDal> users = from logonuser user in DB.logonuser where 
+                    audience == (int) NewsletterAudience.OnlyToMembers && (!user.IsMailingListMember.HasValue || user.IsMailingListMember.Value)
+                    || (audienceAsInt == (int) NewsletterAudience.SpamAll)
+                    || ((audienceAsInt == (int) NewsletterAudience.OnlyToNonMembers) && user.IsMailingListMember.HasValue && !user.IsMailingListMember.Value) 
+                        select new LogonUserDal() {
+                            _user = user
+                        };
 
-             return users;
+             return users.ToList();
         }
 
 
@@ -497,5 +506,14 @@ namespace HRE.Dal {
             DB.SaveChanges();
         }
         #endregion :: Methods
+
+
+        /// <summary>
+        /// Get the LogonUserDal object for the currently logged in (Membership) user.
+        /// </summary>
+        /// <returns></returns>
+        public static LogonUserDal GetCurrentUser() {
+            return GetByEmailAddress(Membership.GetUser().Email);
+        }
     }
 }

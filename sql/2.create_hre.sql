@@ -131,6 +131,7 @@ create table Newsletter (
   DateSent datetime,
   SequenceNumber int NOT NULL,
   AddPersonalLoginLink bit,
+  Audience int,
   DateCreated datetime NOT NULL,
   DateUpdated datetime NOT NULL
 );
@@ -174,7 +175,7 @@ ALTER TABLE NewsletterItem
 
 
 -- Foreign keys
-ALTER TABLE sportseventparticipation
+ALTER TABLE SportsEventparticipation
   ADD CONSTRAINT sportevent
   FOREIGN KEY (sportsEventId)
   REFERENCES sportsevent(Id)
@@ -183,7 +184,7 @@ ALTER TABLE sportseventparticipation
   ADD INDEX sportsevent(sportsEventId ASC);
 
 
-ALTER TABLE sportseventparticipation
+ALTER TABLE SportsEventParticipation
   ADD CONSTRAINT User
   FOREIGN KEY (UserId)
   REFERENCES logonuser(Id)
@@ -192,7 +193,7 @@ ALTER TABLE sportseventparticipation
   , ADD INDEX User(UserId ASC);
 
 
-ALTER TABLE logonUser
+ALTER TABLE LogonUser
   ADD CONSTRAINT PrimaryAddress
   FOREIGN KEY (PrimaryAddressId)
   REFERENCES address(Id)

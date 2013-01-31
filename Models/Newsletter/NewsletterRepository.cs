@@ -6,9 +6,43 @@ using System.Web.Security;
 using HRE.Models;
 using HRE.Data;
 using HRE.Dal;
+using System.Web.Mvc;
+using HRE.Business;
 
 namespace HRE.Models.Newsletters {
     public class NewsletterRepository : BaseRepository {
+
+        /// <summary>
+        /// Get a select list of possbile audience types.
+        /// </summary>
+        /// <returns></returns>
+        public static List<SelectListItem> AudienceSelectList(string selectedValue) {
+            List<SelectListItem> result = new List<SelectListItem> { 
+                new SelectListItem { Text = "Alleen leden", Value = NewsletterAudience.OnlyToMembers.ToString()},
+                new SelectListItem { Text = "Iedereen (spam alert!)", Value = NewsletterAudience.SpamAll.ToString()},
+		        new SelectListItem { Text = "Alleen niet leden (spam alert!)", Value = NewsletterAudience.OnlyToNonMembers.ToString()},
+            };
+            SelectListItem selectedItem = result.Where(sli => sli.Value==selectedValue).FirstOrDefault();
+            if (selectedItem!=null) {
+                selectedItem.Selected = true;
+            }
+            return result;
+        }
+
+
+        /*
+        /// <summary>
+        /// Get a select list of possbile audience types.
+        /// </summary>
+        /// <returns></returns>
+        public static SelectList AudienceSelectList(string selectedValue) {
+            return new SelectList(new List({ { 
+                new SelectListItem { Text = "Alleen leden", Value = NewsletterAudience.OnlyToMembers.ToString(), Selected= (Value==selectedValue)},
+                new SelectListItem { Text = "Iedereen (spam alert!)", Value = NewsletterAudience.SpamAll.ToString()},
+		        new SelectListItem { Text = "Alleen niet leden (spam alert!)", Value = NewsletterAudience.OnlyToNonMembers.ToString() },
+            };
+        }
+        */
 
         public static List<NewsletterViewModel> GetNewsletterList(int CultureID = 0) {
 
@@ -23,6 +57,7 @@ namespace HRE.Models.Newsletters {
                                       Sent = (DateTime)n.DateSent,
                                       Updated = (DateTime)n.DateUpdated,
                                       SequenceNumber = n.SequenceNumber,
+                                      Audience = n.Audience.HasValue ? (NewsletterAudience) n.Audience : NewsletterAudience.OnlyToMembers,
                                       Title = n.Title
                                   }).ToList();
             } else {
@@ -55,7 +90,8 @@ namespace HRE.Models.Newsletters {
                 Created = nl.DateCreated,
                 Updated = nl.DateUpdated,
                 Sent = nl.DateSent,
-                Title = nl.Title
+                Title = nl.Title,
+                Audience = nl.Audience.HasValue ? (NewsletterAudience) nl.Audience.Value : NewsletterAudience.OnlyToMembers
             };
 
             nivm.Items = new List<NewsletterItemViewModel>();
@@ -85,6 +121,7 @@ namespace HRE.Models.Newsletters {
                 DateSent = null,
                 SequenceNumber = nvm.SequenceNumber,
                 Title = nvm.Title,
+                Audience = (int) nvm.Audience
             };
 
             if (nvm.Items != null) {
@@ -115,6 +152,7 @@ namespace HRE.Models.Newsletters {
             nl.SequenceNumber = nvm.SequenceNumber;
             nl.Title = nvm.Title;
             nl.AddPersonalLoginLink = nvm.IncludeLoginLink;
+            nl.Audience = (int) nvm.Audience;
             List<newsletteritem> nlis = DB.newsletteritem.Where(nli => nli.NewsletterId == nl.Id).ToList();
 
             foreach (newsletteritem nli in nlis) {
@@ -140,21 +178,5 @@ namespace HRE.Models.Newsletters {
         }
 
 
-        public List<LogonUserDal> DetermineAddressees() {
-            // List<string> users = DB.logonuser.Where(c => c.IsMailingListMember.HasValue && c.IsMailingListMember.HasValue).Select(c => c.EmailAddress).ToList();
-            // List<LogonUserDal> users = LogonUserDal.GetMailingListMembers();
-            // List<string> addresses = new List<string>();
-            return LogonUserDal.GetMailingListMembers();
-            
-            /*
-            foreach (string user in users) {
-                if (mu != null && !mu.IsLockedOut) {
-                    // Profile profile = (Profile)Profile.GetUserProfile(mu.UserName);
-                    addresses.Add(mu.Email);
-                }
-            }
-            */
-            // return addresses;
-        }
     }
 }

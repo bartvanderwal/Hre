@@ -94,20 +94,6 @@
     <Compile Include="Admin\Dashboard.aspx.designer.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\Newsletter.aspx.cs">
-      <DependentUpon>Newsletter.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Newsletter.aspx.designer.cs">
-      <DependentUpon>Newsletter.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\Newsletters.aspx.cs">
-      <DependentUpon>Newsletters.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Newsletters.aspx.designer.cs">
-      <DependentUpon>Newsletters.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Business\AppConstants.cs" />
     <Compile Include="Business\EmailSender.cs" />
     <Compile Include="Business\EncDec.cs" />
@@ -221,8 +207,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Admin\Dashboard.aspx" />
-    <Content Include="Admin\Newsletter.aspx" />
-    <Content Include="Admin\Newsletters.aspx" />
     <Content Include="Content\accid-wf.svg" />
     <Content Include="Content\admin.css" />
     <Content Include="Content\ckeditor\contents.css" />
@@ -740,7 +724,6 @@
     </Content>
     <Content Include="Views\Newsletter\EditorTemplates\NewsletterItemViewModel.cshtml" />
     <Content Include="Views\Shared\_MessageBox.cshtml" />
-    <Content Include="Views\Newsletter\NewsletterLocalizations\NewsletterLayout-kopie.cshtml" />
     <Content Include="Views\Shared\_NewLayout.cshtml" />
     <Content Include="Views\Account\_ViewStart.cshtml" />
     <Content Include="Views\Newsletter\_ViewStart.cshtml" />

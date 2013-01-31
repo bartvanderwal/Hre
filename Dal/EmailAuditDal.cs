@@ -142,8 +142,23 @@ namespace HRE.Dal {
             get { return _emailAudit.AttachmentEntityId.Value; }
             set { _emailAudit.AttachmentEntityId = value; }
         }
-        
 
+        /// <summary>
+        /// The ID of the user that sends the e-mail.
+        /// </summary>
+        public int? UserIdReceiver {
+            get { return _emailAudit.UserIdReceiver; }
+            set { _emailAudit.UserIdReceiver = value; }
+        }
+
+        /// <summary>
+        /// The ID of the user that sends the e-mail.
+        /// </summary>
+        public int? UserIdSender {
+            get { return _emailAudit.UserIdSender; }
+            set { _emailAudit.UserIdSender = value; }
+        }
+        
         #endregion :: Properties
         
         #region :: Methods
@@ -159,7 +174,7 @@ namespace HRE.Dal {
         /// Constructor. Construct a mailaudit object based on a mailmessage object.
         /// </summary>
         /// <param name="mailMessage"></param>
-        public EmailAuditDal(MailMessage mailMessage, EmailCategory? category, int? attachmentEntityID) {
+        public EmailAuditDal(MailMessage mailMessage, EmailCategory? category, int? userIdSender, int? userIdReceiver, int? attachmentEntityID) {
             _emailAudit = new emailaudit();
 
             // Copy data from the MailMessage object to the MailAudit object.
@@ -183,6 +198,13 @@ namespace HRE.Dal {
                 AttachmentEntityId = attachmentEntityID.Value;
             }
 
+            if (userIdReceiver.HasValue) {
+                UserIdReceiver = userIdReceiver.Value;
+            }
+
+            if (userIdSender.HasValue) {
+                UserIdSender = userIdSender.Value;
+            }
         }
 
 

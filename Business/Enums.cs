@@ -84,4 +84,13 @@
         HRE2012Sponsor = 5
     }
 
+    /// <summary>
+    /// The options to send the newsletter with regards to users being subscribed to it or not.
+    /// </summary>
+    public enum NewsletterAudience {
+        OnlyToMembers = 0, // Default, basically only use this!
+        SpamAll = 1, // Use with caution!
+        OnlyToNonMembers = 2 // OnlyToNotify, or if forgotten previously
+    }
+
 }

@@ -102,9 +102,6 @@
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
           <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="64" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'def.hre.my_aspnet_sessioncleanup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
         <EntityType Name="newsletter">
           <Key>
             <PropertyRef Name="Id" />
@@ -117,6 +114,7 @@
           <Property Name="AddPersonalLoginLink" Type="bit" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
+          <Property Name="Audience" Type="int" />
         </EntityType>
         <EntityType Name="newsletteritem">
           <Key>
@@ -300,7 +298,6 @@
             <End Role="emailaudit" EntitySet="emailaudit" />
           </AssociationSet>
           <EntitySet Name="sportsevent" EntityType="hreModel.sportsevent" />
-          <EntitySet Name="newsletter" EntityType="hreModel.newsletter" />
           <EntitySet Name="sportseventparticipation" EntityType="hreModel.sportseventparticipation" />
           <AssociationSet Name="User" Association="hreModel.User">
             <End Role="logonuser" EntitySet="logonuser" />
@@ -311,6 +308,7 @@
             <End Role="sportseventparticipation" EntitySet="sportseventparticipation" />
           </AssociationSet>
           <EntitySet Name="newsletteritem" EntityType="hreModel.newsletteritem" />
+          <EntitySet Name="newsletter" EntityType="hreModel.newsletter" />
           <AssociationSet Name="Newsletter1" Association="hreModel.Newsletter1">
             <End Role="newsletter" EntitySet="newsletter" />
             <End Role="newsletteritem" EntitySet="newsletteritem" />
@@ -454,20 +452,6 @@
           <Property Type="String" Name="ExternalEventSerieIdentifier" />
           <NavigationProperty Name="sportseventparticipation" Relationship="hreModel.sportevent" FromRole="sportsevent" ToRole="sportseventparticipation" />
         </EntityType>
-        <EntityType Name="newsletter">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Title" />
-          <Property Type="Int32" Name="CultureId" Nullable="false" />
-          <Property Type="DateTime" Name="DateSent" />
-          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
-          <Property Type="Boolean" Name="AddPersonalLoginLink" />
-          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
-          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
-          <NavigationProperty Name="newsletteritem" Relationship="hreModel.Newsletter1" FromRole="newsletter" ToRole="newsletteritem" />
-        </EntityType>
         <EntityType Name="sportseventparticipation">
           <Key>
             <PropertyRef Name="Id" />
@@ -537,6 +521,21 @@
           <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
           <Property Type="String" Name="HeadingHtmlColour" />
           <NavigationProperty Name="newsletter" Relationship="hreModel.Newsletter1" FromRole="newsletteritem" ToRole="newsletter" />
+        </EntityType>
+        <EntityType Name="newsletter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Title" />
+          <Property Type="Int32" Name="CultureId" Nullable="false" />
+          <Property Type="DateTime" Name="DateSent" />
+          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
+          <Property Type="Boolean" Name="AddPersonalLoginLink" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
+          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
+          <Property Type="Int32" Name="Audience" />
+          <NavigationProperty Name="newsletteritem" Relationship="hreModel.Newsletter1" FromRole="newsletter" ToRole="newsletteritem" />
         </EntityType>
         <Association Name="Newsletter1">
           <End Type="hreModel.newsletter" Role="newsletter" Multiplicity="1" />
@@ -656,20 +655,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="newsletter">
-            <EntityTypeMapping TypeName="hreModel.newsletter">
-              <MappingFragment StoreEntitySet="newsletter">
-                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="AddPersonalLoginLink" ColumnName="AddPersonalLoginLink" />
-                <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
-                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
-                <ScalarProperty Name="CultureId" ColumnName="CultureId" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="sportseventparticipation">
             <EntityTypeMapping TypeName="hreModel.sportseventparticipation">
               <MappingFragment StoreEntitySet="sportseventparticipation">
@@ -715,6 +700,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="newsletter">
+            <EntityTypeMapping TypeName="hreModel.newsletter">
+              <MappingFragment StoreEntitySet="newsletter">
+                <ScalarProperty Name="Audience" ColumnName="Audience" />
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="AddPersonalLoginLink" ColumnName="AddPersonalLoginLink" />
+                <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
+                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
+                <ScalarProperty Name="CultureId" ColumnName="CultureId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -754,7 +754,6 @@
           <ConnectorPoint PointX="6" PointY="5.3908104663093885" />
         </AssociationConnector>
         <EntityTypeShape EntityType="hreModel.sportsevent" Width="1.5" PointX="5.375" PointY="9.125" Height="2.7494921875000031" />
-        <EntityTypeShape EntityType="hreModel.newsletter" Width="1.5" PointX="8.75" PointY="1" Height="2.7494921875000031" />
         <EntityTypeShape EntityType="hreModel.sportseventparticipation" Width="1.5" PointX="9" PointY="4.875" Height="6.0186165364583388" />
         <AssociationConnector Association="hreModel.User" >
           <ConnectorPoint PointX="4.25" PointY="8.7710579427083335" />
@@ -765,9 +764,10 @@
           <ConnectorPoint PointX="9" PointY="10.009308268229169" />
         </AssociationConnector>
         <EntityTypeShape EntityType="hreModel.newsletteritem" Width="1.5" PointX="11" PointY="0.875" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="hreModel.newsletter" Width="1.5" PointX="8.75" PointY="0.875" Height="2.9417936197916674" />
         <AssociationConnector Association="hreModel.Newsletter1" >
-          <ConnectorPoint PointX="10.25" PointY="2.37474609375" />
-          <ConnectorPoint PointX="11" PointY="2.37474609375" />
+          <ConnectorPoint PointX="10.25" PointY="2.3458968098958333" />
+          <ConnectorPoint PointX="11" PointY="2.3458968098958333" />
         </AssociationConnector>
         </Diagram>
     </Diagrams>

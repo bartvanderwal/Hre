@@ -32,6 +32,15 @@
                             @Html.EditorFor(m => Model.IncludeLoginLink)
                         </td>
                     </tr>
+                     <tr>
+                        <td>
+                            @Html.LabelFor(m => Model.Audience)
+                        </td>
+                        <td>@Html.DropDownListFor(m => m.Audience, 
+                                HRE.Models.Newsletters.NewsletterRepository.AudienceSelectList(Model.Audience.ToString()), 
+                                new { @style = "width: 230px", @class = "select2-dropdown" })
+                        </td>
+                    </tr>
                     <tr>
                         <td>
                             @Html.LabelFor(m => Model.Created)
