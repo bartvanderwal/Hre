@@ -187,6 +187,7 @@ namespace HRE.Controllers {
                     ViewBag.Message = email + ", U bent succesvol afgemeld voor de nieuwsbrief!";
                     message.Subject = "[HRE-Flessenpost] " + email + " heeft zich zojuist afgemeld voor de HRE nieuwsbrief";
                 } else {
+                    ViewBag.Message = email + ", U bent al afgemeld voor de nieuwsbrief!";
                     message.Subject = "[HRE-Flessenpost] " + email + " heeft zich zojuist afgemeld voor de HRE nieuwsbrief (maar had zich eigenlijk nooit aangemeld)";
                 }
                 EmailSender.SendEmail(message, EmailCategory.EmailUnsubscription, null);
