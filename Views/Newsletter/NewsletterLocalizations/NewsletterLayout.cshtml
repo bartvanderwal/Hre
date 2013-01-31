@@ -8,15 +8,6 @@
 	<head>
         <link href="http://www.hetrondjeeilanden.nl/Content/newsletter.css" rel="stylesheet" type="text/css">
 		<style TYPE="text/css">
-
-			table {
-				width: 800px;
-				border: 0px;
-				margin: 0px;
-				padding: 0px;
-				cellpadding: 0;
-				cellspacing: 0;
-			}
 			
 			tr.header,
 			tr.footer {
@@ -76,11 +67,6 @@
 				text-align: left;
 			}
 
-            .unsubscribe-link p {
-                text-align: center;
-                font-size: small;
-            }
-
 			.item-content td {
 				text-align: right;
 				vertical-align: top;
@@ -90,24 +76,10 @@
 				text-align: left;
 			}
 
-            td.icon {
-                width: 150px;
-            }
-
-            td.spacer {
-                width: 20px;
-                padding: 0px;
-                margin: 0px
-            }
-
-            td.header-text {
-                width: 600px;
-            }
-
 		</style>
 	</head>
 	<body>
-		<table border="0" cellspacing="0" cellpadding="0">
+		<table border="0" cellspacing="0" cellpadding="0" style="width: 800px; border: 0px; margin: 0px; padding: 0px;">
             <thead>
 				<tr class="header">
 					<th><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/News_Header.png" alt="HRE Niewsbrief"/></th>
@@ -123,33 +95,33 @@
         </table>
 		@foreach(var Item in Model.Newsletter.Items) {
             if (!string.IsNullOrEmpty(Item.IconImagePath)) {
-                <table border="0" cellspacing="0" cellpadding="0">
+                <table border="0" cellspacing="0" cellpadding="0" style="width: 800px; border: 0px; margin: 0px; padding: 0px;">
                     <tr class="item-header">
-    					<td class="spacer"></td>
-                        <td class="icon" style="background-color: #@Item.HeadingHtmlColour;"><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/@Item.IconImagePath" alt="@Item.Title" /></td>
-    					<td class="spacer"></td>
-	    				<td class="header-text" style="background-color: #@Item.HeadingHtmlColour;">
+    					<td class="spacer" style="width: 20px; padding: 0px; margin: 0px"></td>
+                        <td class="icon" style="width: 150px; background-color: #@Item.HeadingHtmlColour;"><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/@Item.IconImagePath" alt="@Item.Title" /></td>
+    					<td class="spacer" style="width: 20px; padding: 0px; margin: 0px"></td>
+	    				<td class="header-text" style="width: 600px; background-color: #@Item.HeadingHtmlColour; padding: 10px 30px 10px 30px;">
                         <span class="header-title" style="font-size: 45px; color: White; border-width: 30px; font-weight: bolder;">@Item.Title</span><br />
                         <span class="header-sub-title" style="font-size: 20px; color: White;">@Item.SubTitle</span>
                         </td>
 			    	</tr>
                 </table>
             }
-            <table border="0" cellspacing="0" cellpadding="0">
+            <table border="0" cellspacing="0" cellpadding="0" style="width: 800px; border: 0px; margin: 0px; padding: 0px;">
             @if (!string.IsNullOrEmpty(Item.ImagePath)) {
                 <tr class="item-content">
-					<td width="600px">@Html.Raw(@Item.Text)</td>
+					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 14pt;">@Html.Raw(@Item.Text)</td>
 					<td><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/@Item.ImagePath" alt="@Item.Title" /></td>
 				</tr>
             } else {
                 <tr class="item-content">
-					<td>@Html.Raw(@Item.Text)</td>
+					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 14pt;">@Html.Raw(@Item.Text)</td>
 				</tr>
             }
             </table>
         }
 
-        <table border="0" cellspacing="0" cellpadding="0">
+        <table border="0" cellspacing="0" cellpadding="0" style="width: 800px; border: 0px; margin: 0px; padding: 0px;">
             @if (Model.Newsletter.IsEmail && Model.Newsletter.IncludeLoginLink) {
 			    <tr class="item-content">
 				    <td colspan="4"><a href="http://www.hetrondjeeilanden.nl/Account/@Model.PersonalLoginLink"><img src="http://www.hetrondjeeilanden.nl/Content/img/sign_up.png" alt="Persoonlijke link" />Klik hier voor jouw persoonlijke toegang tot de HRE site</a></td>
@@ -162,7 +134,7 @@
 				<td><a href="http://www.facebook.com/HetRondjeEilanden" target="_other"><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/News_Facebook.png" alt="Facebook" title="Facebook"></td>
 			</tr>
             @*if(Model.Newsletter.IsEmail) { *@
-				<tr class="unsubscribe-link"><td colspan="4"><p><a href="http://www.hetrondjeeilanden.nl/NewsLetter/Unsubscribe/@Model.UnsubscribeLink" target="_blank">Klik hier om je af te melden voor de nieuwsbrief</a></p></td></tr>
+				<tr class="unsubscribe-link" style="text-align: center; font-size: small;"><td colspan="4"><p><a href="http://www.hetrondjeeilanden.nl/NewsLetter/Unsubscribe/@Model.UnsubscribeLink" target="_blank">Klik hier om je af te melden voor de nieuwsbrief</a></p></td></tr>
             @*} *@
 		</table>
 	</body>
