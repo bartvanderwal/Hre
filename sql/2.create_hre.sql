@@ -81,7 +81,9 @@ create table SportsEventParticipation (
   ParticipationStatus int NULL,
   ExternalIdentifier varchar(45) NULL,
   YouTubeVideoCode varchar(64),
-  Source int NULL
+  Source int NULL,
+  EarlyBird bit,
+  FreeStarter bit
 );
 
 

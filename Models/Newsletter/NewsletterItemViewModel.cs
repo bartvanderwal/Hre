@@ -30,6 +30,5 @@ namespace HRE.Models.Newsletters {
 
         [Display(Name = "Header HTML kleur")]
         public string HeadingHtmlColour { get; set; }
-
         }
 }

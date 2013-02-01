@@ -387,8 +387,7 @@ p.partnerlink {
 #menu {
     margin: 93px 0px 0px 0px;
     background-color: White;
-    border-color: 2483b3;
-    height: 55px;
+    /* height: 55px; */
 }
 
 #menu .submenu a {

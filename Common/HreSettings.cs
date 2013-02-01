@@ -154,7 +154,7 @@ namespace HRE.Common {
 
 
         /// <summary>
-        /// The number of characters a vote (localization remark) can be before it is cut off with a 'read more..' link.
+        /// The number of characters a text can be before it is cut off with a 'read more..' link.
         /// Default: 100.
         /// </summary>
         public static int CharacterLengthForReadMore {
@@ -163,6 +163,27 @@ namespace HRE.Common {
             }
         }
 
+
+        /// <summary>
+        /// Het totaal aantal startplekken.
+        /// Default: 500.
+        /// </summary>
+        public static int AantalStartPlekken {
+            get {
+                return ReadIntSetting("AantalStartPlekken", 500);
+            }
+        }
+
+
+        /// <summary>
+        /// Het aantal Early Bird startplekken.
+        /// Default: 200.
+        /// </summary>
+        public static int AantalEarlyBirdStartPlekken {
+            get {
+                return ReadIntSetting("AantalEarlyBirdStartPlekken", 200);
+            }
+        }
 
     }
 }

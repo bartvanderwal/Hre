@@ -195,6 +195,35 @@ namespace HRE.Controllers {
             return View();
         }
 
+
+        public ActionResult Inschrijven(ScrapeNtbIEntryModel entryModel) {
+            // ScrapeNtbIEntryModel scrapeModel = new ScrapeNtbIEntryModel(birdModel.User);
+            return View(entryModel);
+        }
+
+
+        public ActionResult EarlyBird(string id) {
+            string email = id;
+            try {
+                email = Util.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
+            } catch (Exception) {
+                ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
+                return View();
+            }
+
+            EarlyBirdViewModel birdModel = new EarlyBirdViewModel();
+            birdModel.User = LogonUserDal.CreateOrRetrieveUser(email);
+
+            if (birdModel.User==null) {
+                ViewBag.Message = "Ongeldige Early Bird™ link! <br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je nieuwsbrief helemaal niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
+                return View();
+            } else {
+                ScrapeNtbIEntryModel scrapeModel = new ScrapeNtbIEntryModel(birdModel.User);
+                return View(scrapeModel);
+            }
+        }
+
+
         #region Status Codes
         private static string ErrorCodeToString(MembershipCreateStatus createStatus) {
             // See http://go.microsoft.com/fwlink/?LinkID=177550 for

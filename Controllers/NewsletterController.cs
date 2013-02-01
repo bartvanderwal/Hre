@@ -60,8 +60,9 @@ namespace HRE.Controllers {
             // NewsletterViewModel nvm = NewsletterRepository.GetByID(id);
             SendPersonalNewsletterViewModel snl = new SendPersonalNewsletterViewModel() {
                 NewsletterId = newsletterId,
-                LogonUserId = logonUserId
+                LogonUserId = logonUserId,
             };
+            snl.Newsletter.IsEmail = true;
             return View(snl);
         }
 
@@ -88,15 +89,17 @@ namespace HRE.Controllers {
         public ActionResult Sent(int Id) {
             SendPersonalNewsletterViewModel spnvm = new SendPersonalNewsletterViewModel();
             spnvm.NewsletterId = Id;
+            spnvm.Newsletter.IsEmail = true;
+
             if (spnvm.Newsletter.Sent == null) {
                 List<LogonUserDal> users = LogonUserDal.GetNewsletterReceivers(spnvm.Newsletter.Audience);
                 MailMessage mm = new MailMessage();
                 mm.From = new MailAddress(HreSettings.ReplyToAddress);
                 mm.Subject = spnvm.Newsletter.Title;
                 mm.IsBodyHtml = true;
+
                 foreach (LogonUserDal user in users) {
                     spnvm.LogonUserId = user.ID;
-                    spnvm.Newsletter.IsEmail = true;
                     mm.Body = this.RenderNewsletterViewToString("NewsletterLocalizations/NewsletterLayout", spnvm);
                     mm.To.Clear();
                     mm.To.Add(new MailAddress(user.EmailAddress));

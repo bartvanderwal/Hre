@@ -5,7 +5,7 @@
 }
 
 <h2>Nieuwsbrief versturen</h2>
-@Html.LabelFor(m => m.Newsletter.Title) <p>@Model.Newsletter.Title</p>
+@Html.LabelFor(m => m.Newsletter.Title): @Model.Newsletter.Title
 
 @{ Html.BeginForm(); }
 @if (!ViewData.ModelState.IsValid) { Html.RenderPartial("_MessageBox"); } 

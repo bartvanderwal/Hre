@@ -91,6 +91,7 @@ namespace HRE.Models.Newsletters {
                 Updated = nl.DateUpdated,
                 Sent = nl.DateSent,
                 Title = nl.Title,
+                IncludeLoginLink = nl.AddPersonalLoginLink.HasValue && nl.AddPersonalLoginLink.Value,
                 Audience = nl.Audience.HasValue ? (NewsletterAudience) nl.Audience.Value : NewsletterAudience.OnlyToMembers
             };
 
@@ -119,6 +120,7 @@ namespace HRE.Models.Newsletters {
                 DateCreated = DateTime.Now,
                 DateUpdated = DateTime.Now,
                 DateSent = null,
+                AddPersonalLoginLink = nvm.IncludeLoginLink,
                 SequenceNumber = nvm.SequenceNumber,
                 Title = nvm.Title,
                 Audience = (int) nvm.Audience

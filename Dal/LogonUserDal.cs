@@ -515,5 +515,17 @@ namespace HRE.Dal {
         public static LogonUserDal GetCurrentUser() {
             return GetByEmailAddress(Membership.GetUser().Email);
         }
+
+
+        /// <summary>
+        /// Determines the number of participants or early birds in the 2013 HRE event.
+        /// </summary>
+        /// <returns></returns>
+        public static int DetermineNumberOfParticipants(bool earlyBirdsOnly) {
+            return (from p in DB.sportseventparticipation 
+                    where p.SportsEventId==SportsEventDal.HRE2012Id && (!earlyBirdsOnly || (p.EarlyBird.HasValue && p.EarlyBird.Value))
+                    select p
+                    ).Count();
+        }
     }
 }

@@ -21,9 +21,9 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("hreModel", "PrimaryAddress", "address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.address), "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.logonuser), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdReceiver", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdSender", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
+[assembly: EdmRelationshipAttribute("hreModel", "Newsletter1", "newsletter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HRE.Data.newsletter), "newsletteritem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.newsletteritem), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "User", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "sportevent", "sportsevent", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.sportsevent), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
-[assembly: EdmRelationshipAttribute("hreModel", "Newsletter1", "newsletter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HRE.Data.newsletter), "newsletteritem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.newsletteritem), true)]
 
 #endregion
 
@@ -174,22 +174,6 @@ namespace HRE.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<sportseventparticipation> sportseventparticipation
-        {
-            get
-            {
-                if ((_sportseventparticipation == null))
-                {
-                    _sportseventparticipation = base.CreateObjectSet<sportseventparticipation>("sportseventparticipation");
-                }
-                return _sportseventparticipation;
-            }
-        }
-        private ObjectSet<sportseventparticipation> _sportseventparticipation;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<newsletteritem> newsletteritem
         {
             get
@@ -218,6 +202,22 @@ namespace HRE.Data
             }
         }
         private ObjectSet<newsletter> _newsletter;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<sportseventparticipation> sportseventparticipation
+        {
+            get
+            {
+                if ((_sportseventparticipation == null))
+                {
+                    _sportseventparticipation = base.CreateObjectSet<sportseventparticipation>("sportseventparticipation");
+                }
+                return _sportseventparticipation;
+            }
+        }
+        private ObjectSet<sportseventparticipation> _sportseventparticipation;
 
         #endregion
         #region AddTo Methods
@@ -271,14 +271,6 @@ namespace HRE.Data
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the sportseventparticipation EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
-        {
-            base.AddObject("sportseventparticipation", sportseventparticipation);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the newsletteritem EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTonewsletteritem(newsletteritem newsletteritem)
@@ -292,6 +284,14 @@ namespace HRE.Data
         public void AddTonewsletter(newsletter newsletter)
         {
             base.AddObject("newsletter", newsletter);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the sportseventparticipation EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
+        {
+            base.AddObject("sportseventparticipation", sportseventparticipation);
         }
 
         #endregion
@@ -3291,6 +3291,54 @@ namespace HRE.Data
         private Nullable<global::System.Int32> _Source;
         partial void OnSourceChanging(Nullable<global::System.Int32> value);
         partial void OnSourceChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> EarlyBird
+        {
+            get
+            {
+                return _EarlyBird;
+            }
+            set
+            {
+                OnEarlyBirdChanging(value);
+                ReportPropertyChanging("EarlyBird");
+                _EarlyBird = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("EarlyBird");
+                OnEarlyBirdChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _EarlyBird;
+        partial void OnEarlyBirdChanging(Nullable<global::System.Boolean> value);
+        partial void OnEarlyBirdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> FreeStarter
+        {
+            get
+            {
+                return _FreeStarter;
+            }
+            set
+            {
+                OnFreeStarterChanging(value);
+                ReportPropertyChanging("FreeStarter");
+                _FreeStarter = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("FreeStarter");
+                OnFreeStarterChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _FreeStarter;
+        partial void OnFreeStarterChanging(Nullable<global::System.Boolean> value);
+        partial void OnFreeStarterChanged();
 
         #endregion
     

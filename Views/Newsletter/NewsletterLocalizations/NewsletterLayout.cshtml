@@ -82,13 +82,13 @@
 		<table border="0" cellspacing="0" cellpadding="0" style="width: 800px; border: 0px; margin: 0px; padding: 0px;">
             <thead>
 				<tr class="header">
-					<th><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/News_Header.png" alt="HRE Niewsbrief"/></th>
+					<th><img src="@Model.BaseDomain/Content/img/Nieuwsbrief/News_Header.png" alt="HRE Niewsbrief"/></th>
 				</tr>
 			</thead>
             <tbody>
-				@if (Model.Newsletter.IsEmail) {
+				if (Model.Newsletter.IsEmail) {
 				<tr>
-					<td><p>Beste @Model.LogonUser.PrimaryAddress.Firstname, </p></td>
+					<td><p>Hallo @Model.LogonUser.PrimaryAddress.Firstname!</p></td>
 				</tr>
                 }
             </tbody>
@@ -116,17 +116,15 @@
             } else {
                 <tr class="item-content">
 					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 14pt;">@Html.Raw(@Item.Text)</td>
+                    @if (Model.Newsletter.IsEmail && Model.Newsletter.IncludeLoginLink) {
+				        <a style="color: #ffffff; background-color: #2483B3;" href="http://www.hetrondjeeilanden.nl/Account/EarlyBird/@Model.PersonalLoginLink">Klik hier voor jouw persoonlijke toegang tot de HRE site ></a>
+                    }
 				</tr>
             }
             </table>
         }
 
         <table border="0" cellspacing="0" cellpadding="0" style="width: 800px; border: 0px; margin: 0px; padding: 0px;">
-            @if (Model.Newsletter.IsEmail && Model.Newsletter.IncludeLoginLink) {
-			    <tr class="item-content">
-				    <td colspan="4"><a href="http://www.hetrondjeeilanden.nl/Account/@Model.PersonalLoginLink"><img src="http://www.hetrondjeeilanden.nl/Content/img/sign_up.png" alt="Persoonlijke link" />Klik hier voor jouw persoonlijke toegang tot de HRE site</a></td>
-			    </tr>
-            }
 			<tr class="footer">
 				<td><a href="http://www.hetrondjeeilanden.nl" target="_other"><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/News_Web.png" alt="Online" title="Web"/></a></td>
 				<td><a href="mailto:info@hetrondjeeilanden.nl" target="_other"><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/News_Email.png" alt="E-mail" title="E-mail"/></td>

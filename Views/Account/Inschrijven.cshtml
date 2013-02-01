@@ -1,0 +1,19 @@
+﻿@model HRE.Models.ScrapeNtbIEntryModel
+
+@{
+    ViewBag.Title = "Inschrijven Het 2e Rondje Eilanden - 3 augustus 2013";
+}
+
+    @Html.ActionLink(" ", "Index", null, new { @class="editor-image back", @title="Terug naar overzicht", @alt="Back" })
+    
+    <h1>Aanmeldformulier Het 2e Rondje Eilanden</h1>
+    <p>Meld je nu aan voor zaterdag 3 augustus 2013!</p>
+    
+    <div style="float: right; font-size: large; font-weight: bold;">Nog <span class="stats participant-counter">@aantalEarlyBirdsPlekken</span> Early Birds™ te gaan</div>
+    <div style="float: right; font-size: large; font-weight: bold;">Totaal <span class="stats participant-counter">@aantalStarters</span> / @aantalStartPlekken startplaatsen vergeven</div>
+    <div style="float: right; font-size: large; font-weight: bold;">&euro; <span class="stats amount">20,00</span> Inschrijving</div>
+    <div style="float: right; font-size: large; font-weight: bold;">&euro; <span class="stats amount">2,30</span> Daglicentie</div>
+    <div style="float: right; font-size: large; font-weight: bold;">&euro; <span class="stats amount">2,50</span> MyLaps chip</div>
+    <div style="float: right; font-size: large; font-weight: bold;">&euro; <span class="stats amount" id="total">26,50</span> Totaal</div>
+
+    @{Html.RenderPartial("_SubscribeForm", Model); }

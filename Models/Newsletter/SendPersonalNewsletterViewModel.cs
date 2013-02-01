@@ -44,5 +44,11 @@ namespace HRE.Models.Newsletters {
         }
         
 
+        public string BaseDomain {
+            get {
+                return HreSettings.IsDevelopment ? "http://localhost:63647" : "http://www.hetrondjeeilanden.nl";
+            }
+        }
+
     }
 }
