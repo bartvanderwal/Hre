@@ -524,7 +524,8 @@ namespace HRE.Dal {
         /// </summary>
         /// <returns></returns>
         public static LogonUserDal GetCurrentUser() {
-            return GetByEmailAddress(Membership.GetUser().Email);
+            var currentUser = Membership.GetUser();
+            return currentUser!=null ? GetByEmailAddress(currentUser.Email) : null;
         }
 
 

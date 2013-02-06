@@ -75,7 +75,7 @@ namespace HRE.Models {
         
         public string LicentieNummer { get; set; }
 
-        [StringLength(10)]
+        [StringLength(50)]
         [Required(ErrorMessage = "Geef je achternaam aan")]
         public string Achternaam { get; set; }
 
@@ -235,7 +235,8 @@ namespace HRE.Models {
         /// </summary>
         public bool IsEditAllowed {
             get {
-                return  Roles.IsUserInRole("Admin") || LogonUserDal.GetCurrentUser().EmailAddress==Email;
+                var currentUser = LogonUserDal.GetCurrentUser();
+                return  Roles.IsUserInRole("Admin") || (currentUser!=null && currentUser.EmailAddress==Email);
             }
         }
 
