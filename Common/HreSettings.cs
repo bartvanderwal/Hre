@@ -39,9 +39,9 @@ namespace HRE.Common {
         /// Voor tonen van de Google 'Plus one' knop.
         /// Default: False.
         /// </summary>
-        public static bool ShowGooglePlusOneButtons {
+        public static bool ShowGooglePlusOneButton {
             get {
-                return ReadBoolSetting("ShowGooglePlusOneButtons");
+                return ReadBoolSetting("ShowGooglePlusOneButton");
             }
         }
 
@@ -49,9 +49,9 @@ namespace HRE.Common {
         /// Voor tonen van de 'Tweet this' knop.
         /// Default: False.
         /// </summary>
-        public static bool ShowTweetThisButtons {
+        public static bool ShowTweetThisButton {
             get {
-                return ReadBoolSetting("ShowTweetThisButtons");
+                return ReadBoolSetting("ShowTweetThisButton");
             }
         }
 
@@ -163,7 +163,7 @@ namespace HRE.Common {
             }
         }
 
-
+        
         /// <summary>
         /// Het totaal aantal startplekken.
         /// Default: 500.
@@ -185,5 +185,49 @@ namespace HRE.Common {
             }
         }
 
+
+        /// <summary>
+        /// Het huidige - kale - deelnamebedrag (exclusief korting zoals early bird, en extra kosten zoals chip/licentie).
+        /// Default: 2750.
+        /// </summary>
+        public static int HuidigeDeelnameBedrag {
+            get {
+                return ReadIntSetting("HuidigeDeelnameBedrag", 2750);
+            }
+        }
+
+
+        /// <summary>
+        /// Kosten van een daglicentie.
+        /// Default: 230 (EUR 2,30).
+        /// </summary>
+        public static int KostenDagLicentie {
+            get {
+                return ReadIntSetting("KostenDagLicentie", 230);
+            }
+        }
+
+
+        /// <summary>
+        /// De kosten voor huur van een (gele) MyLaps chip.
+        /// Default: 250.
+        /// </summary>
+        public static int KostenHuurMyLapsChipGeel {
+            get {
+                return ReadIntSetting("KostenHuurMyLapsChipGeel", 250);
+            }
+        }
+
+
+        /// <summary>
+        /// De korting voor Early Birds.
+        /// Default: 750.
+        /// </summary>
+        public static int HoogteEarlyBirdKorting {
+            get {
+                return ReadIntSetting("HoogteEarlyBirdKorting", 750);
+            }
+        }
+        
     }
 }

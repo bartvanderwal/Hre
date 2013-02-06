@@ -7,9 +7,14 @@
     Layout = "~/Views/Shared/_NewLayout.cshtml";
 }
 
-@{Html.BeginForm("Scrape", "ScrapeNtb", FormMethod.Post);}
+@{Html.BeginForm("Scrape", "Inschrijvingen");}
     @Html.AntiForgeryToken()
-    Maximaal aantal te scrapen items: @Html.TextBox("maxNumberOfScrapedItems", "3") (gebruik 0 voor alles)<br />
+    Maximaal aantal te scrapen items:
+    @Html.DropDownList("maxNumberOfScrapedItems", 
+        new SelectList(new Dictionary<string, int> { {"Alles", 0}, {"5", 5}, {"10", 10}, {"20", 20}, {"50", 50}, 
+                                                     {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
+                                                     {"1000", 1000}}, "Value", "Key"))
+    @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"} ) Overschrijf lokale updates
     <input type="submit" value="Scrape NTB" />
 @{Html.EndForm();}
 <br /><br />
@@ -37,8 +42,8 @@
                 <td><a href="mailto:@entry.Email">@entry.Email</a></td>
                 <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td>
                 <td>@string.Format("{0:dd-MM-yyyy}", entry.RegistrationDate)</td>
-                <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstScraped.HasValue ? entry.DateFirstScraped.Value.RelativeDateDescription() : "-")</td>
-                <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastScraped.HasValue ? entry.DateLastScraped.Value.RelativeDateDescription()  : "-")</td>
+                <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstSynchronized.HasValue ? entry.DateFirstSynchronized.Value.RelativeDateDescription() : "-")</td>
+                <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastSynchronized.HasValue ? entry.DateLastSynchronized.Value.RelativeDateDescription()  : "-")</td>
                 <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>
             </tr>
         }

@@ -44,6 +44,7 @@ namespace HRE.Dal {
                     _primaryAddress = (from primaryAddress in DB.address where primaryAddress.Id==_user.PrimaryAddressId select primaryAddress).FirstOrDefault();
                     if (_primaryAddress==null) {
                         _primaryAddress = new address();
+                        _primaryAddress.DateCreated = DateTime.Now;
                     }
                 }
                 return _primaryAddress;
@@ -264,8 +265,19 @@ namespace HRE.Dal {
 
 
         // Creates a new logonuser, that is not active and with a random password stored in the comments.
-        public static LogonUserDal CreateOrRetrieveUser(string emailAddressAndUsername, string password="") {
+        public static LogonUserDal CreateOrRetrieveUser(string emailAddressAndUsername, string password="", string externalSubscriptionIdentifier = null) {
             
+            // If an external identifier was given, then try to retrieve the user via this.
+            if (!string.IsNullOrEmpty(externalSubscriptionIdentifier)) {
+                int? userId = (from p in DB.sportseventparticipation where p.ExternalIdentifier == externalSubscriptionIdentifier select p.UserId).FirstOrDefault();
+                if (userId.HasValue) {
+                    logonuser u = (from logonUser in DB.logonuser where logonUser.Id==userId.Value select logonUser).FirstOrDefault();
+                    if (u!=null) {
+                        return new LogonUserDal(u);
+                    }
+                }
+            }
+
             // Create the user for ASP.NET membership.
             MembershipUser membershipUser;
 
@@ -315,7 +327,6 @@ namespace HRE.Dal {
             DB.SaveChanges();
 
             return new LogonUserDal(user);
-            // return GetByEmailAddress(emailAddressAndUsername);
         }
 
 

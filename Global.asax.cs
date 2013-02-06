@@ -35,7 +35,7 @@ namespace HRE {
             RegisterRoutes(RouteTable.Routes);
 
             // Create the admin role and admin users if they don't exist yet.
-            ScrapeNtbIRepository.CreateAdminRoleAndAdmins();
+            InschrijvingenRepository.CreateAdminRoleAndAdmins();
         }
     }
 }

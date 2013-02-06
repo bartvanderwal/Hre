@@ -50,7 +50,7 @@ namespace HRE.Controllers {
                 LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(email);
 
                 if (user!=null) {
-                    ScrapeNtbIEntryModel entryModel = new ScrapeNtbIEntryModel(user);
+                    InschrijvingModel entryModel = new InschrijvingModel(user);
                     RedirectToAction("EarlyBird", "Meedoen", new { model = entryModel } );
                 }
             }
@@ -63,15 +63,29 @@ namespace HRE.Controllers {
         // POST: /Account/LogOn
         [HttpPost]
         public ActionResult LogIn(LogOnModel model, string returnUrl) {
+            string login = string.Empty;
             Initialise(AppConstants.AccountLogIn);
             if (ModelState.IsValid) {
-                if (Membership.ValidateUser(model.EmailAddress, model.Password)) {
-                    FormsAuthentication.SetAuthCookie(model.EmailAddress, model.RememberMe);
+                if (!model.EmailAddress.Contains('@')) {
+                    MembershipUserCollection members = Membership.FindUsersByEmail(model.EmailAddress + "@%");
+                        if (members.Count==1) {
+                        foreach(MembershipUser member in members) {
+                            login = member.Email;
+                            break;
+                        }
+                    } else {
+                        ModelState.AddModelError("", "Geef het gehele e-mail adres op!");
+                    }
+                } else {
+                    login = model.EmailAddress;
+                }
+                if (Membership.ValidateUser(login, model.Password)) {
+                    FormsAuthentication.SetAuthCookie(login, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\")) {
                         return Redirect(returnUrl);
                     } else {
-                        if (Roles.IsUserInRole(ScrapeNtbIRepository.ADMIN_ROLE_NAME)) {
+                        if (Roles.IsUserInRole(InschrijvingenRepository.ADMIN_ROLE_NAME)) {
                             return Redirect("/Admin/Dashboard.aspx");
                         } else {
                             return RedirectToAction("Index", "Home");
@@ -196,8 +210,7 @@ namespace HRE.Controllers {
         }
 
 
-        public ActionResult Inschrijven(ScrapeNtbIEntryModel entryModel) {
-            // ScrapeNtbIEntryModel scrapeModel = new ScrapeNtbIEntryModel(birdModel.User);
+        public ActionResult Inschrijven(InschrijvingModel entryModel) {
             return View(entryModel);
         }
 
@@ -218,7 +231,7 @@ namespace HRE.Controllers {
                 ViewBag.Message = "Ongeldige Early Bird™ link! <br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je nieuwsbrief helemaal niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
                 return View();
             } else {
-                ScrapeNtbIEntryModel scrapeModel = new ScrapeNtbIEntryModel(birdModel.User);
+                InschrijvingModel scrapeModel = new InschrijvingModel(birdModel.User);
                 return View(scrapeModel);
             }
         }

@@ -9,10 +9,9 @@
         <asp:image AlternateText="Admin Dashboard" runat="server" ID="header" ImageUrl="/Site/Images/admin-header.png" /><br/>
         <div id="LeftDashboard">
             <ul>
-                <li><a href="Newsletters.aspx">Nieuwsbrieven</a></li>
+                <li><a href="Newsletters">Nieuwsbrieven</a></li>
                 <li><a href="/ScrapeNtb">Inschrijvingen</a></li>
                 <li><a href="EmailAudits.aspx">E-mail Audit</a></li>
-                <li><a href="/NewsletterSubscription.aspx">Nieuwsbrief subscribe/unsubscribe</a></li>
             </ul>
         </div>
 

@@ -16,7 +16,7 @@ namespace HRE.Models {
     /// <summary>
     /// Class with utility functions to put into and retrieve Ntb entries from the database.
     /// </summary>
-    public class ScrapeNtbIRepository : BaseRepository {
+    public class InschrijvingenRepository : BaseRepository {
 
         #region :: Constants
 
@@ -49,17 +49,22 @@ namespace HRE.Models {
                 Roles.CreateRole(ADMIN_ROLE_NAME);
             }
 
-            List<AdminUser> listOfAdmins = new List<AdminUser>() { 
-                new AdminUser("bart@hetrondjeeilanden.nl", "24dec2012"), 
-                new AdminUser("yordi@hetrondjeeilanden.nl", "24dec2012"), 
-                new AdminUser("pieter@hetrondjeeilanden.nl", "24dec2012"), 
-                new AdminUser("rudo@hetrondjeeilanden.nl", "24dec2012"),
-                new AdminUser("cock@hetrondjeeilanden.nl", "24dec2012"),
-                new AdminUser("ad@hetrondjeeilanden.nl", "24dec2012"),
-                new AdminUser("kitty@hetrondjeeilanden.nl", "24dec2012")
+            List<AutoCreatedUser> listOfAdmins = new List<AutoCreatedUser>() { 
+                new AutoCreatedUser("bart@hetrondjeeilanden.nl", "24dec2012"), 
+                new AutoCreatedUser("yordi@hetrondjeeilanden.nl", "24dec2012"), 
+                new AutoCreatedUser("pieter@hetrondjeeilanden.nl", "24dec2012"), 
+                new AutoCreatedUser("rudo@hetrondjeeilanden.nl", "24dec2012"),
+                new AutoCreatedUser("cock@hetrondjeeilanden.nl", "24dec2012"),
+                new AutoCreatedUser("ad@hetrondjeeilanden.nl", "24dec2012"),
+                new AutoCreatedUser("kitty@hetrondjeeilanden.nl", "24dec2012")
             };
 
-            foreach(AdminUser adminUser in listOfAdmins) {
+            List<AutoCreatedUser> listOfTestUsers = new List<AutoCreatedUser>() { 
+                new AutoCreatedUser("tester1@hetrondjeeilanden.nl", "24dec2012"), 
+                new AutoCreatedUser("tester2@hetrondjeeilanden.nl", "24dec2012"), 
+            };
+
+            foreach(AutoCreatedUser adminUser in listOfAdmins) {
                 MembershipUser user = Membership.GetUser(adminUser.UserNameAndEmail);
                 if (user==null) {
                     LogonUserDal logonUser = LogonUserDal.CreateOrRetrieveUser(adminUser.UserNameAndEmail, adminUser.Password);
@@ -68,6 +73,15 @@ namespace HRE.Models {
                     }
                 }
             }
+
+
+            foreach(AutoCreatedUser testUser in listOfTestUsers) {
+                MembershipUser user = Membership.GetUser(testUser.UserNameAndEmail);
+                if (user==null) {
+                    LogonUserDal logonUser = LogonUserDal.CreateOrRetrieveUser(testUser.UserNameAndEmail, testUser.Password);
+                }
+            }
+
 
             LogonUserDal bart = LogonUserDal.GetByEmailAddress("bart@hetrondjeeilanden.nl");
             if (bart!=null && !bart.DateOfBirth.HasValue) {
@@ -97,10 +111,7 @@ namespace HRE.Models {
         /// </summary>
         /// <param name="externalId"></param>
         /// <returns></returns>
-        public static ScrapeNtbIEntryModel GetByExternalIdentifier(string externalId, string eventNr = "") {
-            if (string.IsNullOrEmpty(eventNr)) {
-                eventNr = HRE_EVENTNR;
-            }
+        public static InschrijvingModel GetByExternalIdentifier(string externalId, string eventNr) {
             var currentEntry = (from entry in SelectEntries(eventNr)
                                 where entry.ExternalIdentifier==externalId
                                 select entry
@@ -113,7 +124,7 @@ namespace HRE.Models {
         /// </summary>
         /// <param name="eventNr"></param>
         /// <returns></returns>
-        public static List<ScrapeNtbIEntryModel> GetEntries(string eventNr) {
+        public static List<InschrijvingModel> GetEntries(string eventNr) {
             return SelectEntries(eventNr).ToList();
         }
 
@@ -123,7 +134,7 @@ namespace HRE.Models {
         /// </summary>
         /// <param name="eventNr"></param>
         /// <returns></returns>
-        public static IEnumerable<ScrapeNtbIEntryModel> SelectEntries(string eventNr, int userId = 0) {
+        public static IEnumerable<InschrijvingModel> SelectEntries(string eventNr, int userId = 0) {
             hreEntities DB = DBConnection.GetHreContext();
             
             var raceEntries = from sportseventparticipation p in DB.sportseventparticipation
@@ -131,7 +142,7 @@ namespace HRE.Models {
                 join logonuser u in DB.logonuser on p.UserId equals u.Id 
                 join address a in DB.address on u.PrimaryAddressId equals a.Id
                 where e.ExternalEventIdentifier == eventNr
-                select new ScrapeNtbIEntryModel() {
+                select new InschrijvingModel() {
                     // User data.    
                     UserId = u.Id,
                     UserName = u.UserName,
@@ -160,16 +171,23 @@ namespace HRE.Models {
                     // Sportseventparticipation data.
                     ExternalIdentifier = p.ExternalIdentifier,
                     RegistrationDate = p.DateRegistered,
-                    DateFirstScraped = p.DateFirstScraped,
-                    DateLastScraped = p.DateLastScraped,
+                    
+                    // TODO BW 2013-02-06: Rename the database fields from 'Scraped' also to 'Synchronized' like the ORM fields
+                    // once this is an accurate description (e.g. when posting 'updates' and 'inserts' to NTB inschrijvingen is also done on Save).
+                    DateFirstSynchronized = p.DateFirstScraped,
+                    DateLastSynchronized = p.DateLastScraped,
+                    // END TODO
+
                     DateCreated = p.DateCreated,
                     DateUpdated = p.DateUpdated,
-                    ChampionChipNummer = p.MyLapsChipIdentifier,
+                    MyLapsChipNummer = p.MyLapsChipIdentifier,
                     MaatTshirt = p.TShirtSize,
                     InteresseOvernachtenNaWedstrijd = p.IsInterestedToSleepOver,
                     OpmerkingenTbvSpeaker = p.SpeakerRemarks,
                     Bijzonderheden = p.Notes,
-                    Deelnamebedrag = p.ParticipationAmountInEuroCents
+                    
+                    IsEarlyBird = p.EarlyBird.HasValue && p.EarlyBird.Value
+                    
                 };
 
             if (userId!=0) {
@@ -208,53 +226,55 @@ namespace HRE.Models {
         /// <summary>
         /// Sav an entry.
         /// </summary>
-        /// <param name="raceEntry"></param>
+        /// <param name="inschrijving"></param>
         /// <param name="eventNumber"></param>
-        public static void SaveEntry(ScrapeNtbIEntryModel raceEntry, string eventNumber, bool isScrape) {
+        public static void SaveEntry(InschrijvingModel inschrijving, string eventNumber, bool isScrape, bool overrideLocallyUpdated = false) {
+
+            // TODO BW 2013-02-6 Als een inschrijving wordt gesaved die is gescraped van NTB inschrijvingen, maar het e-mail adres is
+            // inmiddels aangepast dan werkt onderstaande niet. De persoon wordt dan onder een nieuwe inschrijving gesaved en klapt er mogelijk uit op duplicate NTB licentie nummer..
 
             // Create and/or retrieve the user (and the underlying ASP.NET membership user).
-            LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(raceEntry.Email);
+            LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(inschrijving.Email, "", inschrijving.ExternalIdentifier);
 
             // Update the rest of the user data ONLY if:
             // - It is NOT being scraped for this save
             // - Or the raceEntry is first created
             // - OR it IS being scraped but was scraped before and was NOT updated after it was last scraped (e.g. DateUpdated<=DateLastScraped)
             // TODO: Update (and save) only if the information is newer; somehow...
-            if (!isScrape || !user.DateOfBirth.HasValue || (raceEntry.DateLastScraped.HasValue 
-                                && DateTime.Compare(raceEntry.DateUpdated, raceEntry.DateLastScraped.Value)<=0)) {
-                user.DateOfBirth = raceEntry.GeboorteDatum;
-                user.IsMailingListMember = raceEntry.InteresseNieuwsbrief;
-                user.UserName = raceEntry.Email;
-                user.EmailAddress = raceEntry.Email;
-                user.TelephoneNumber = raceEntry.Telefoon;
-                string tussenvoegsel = string.IsNullOrEmpty(raceEntry.Tussenvoegsel) ? " " : " " + raceEntry.Tussenvoegsel + " ";
-                user.UserName = raceEntry.Voornaam + tussenvoegsel + raceEntry.Achternaam;
-                if (!string.IsNullOrEmpty(raceEntry.LicentieNummer)) {
-                    user.NtbLicenseNumber = raceEntry.LicentieNummer;
-                }
+            if (overrideLocallyUpdated || !isScrape || !user.DateOfBirth.HasValue || (inschrijving.DateLastSynchronized.HasValue 
+                                && DateTime.Compare(inschrijving.DateUpdated, inschrijving.DateLastSynchronized.Value)<=0)) {
+                user.DateOfBirth = inschrijving.GeboorteDatum;
+                user.IsMailingListMember = inschrijving.InteresseNieuwsbrief;
+                user.UserName = inschrijving.Email;
+                user.EmailAddress = inschrijving.Email;
+                user.TelephoneNumber = inschrijving.Telefoon;
+
+                user.NtbLicenseNumber = inschrijving.HasLicentieNummer ? inschrijving.LicentieNummer : null;
+                
                 user.IsActive = false;
-                if (!string.IsNullOrEmpty(raceEntry.Geslacht)) {
-                    user.Gender = raceEntry.Geslacht=="M";
+                if (!string.IsNullOrEmpty(inschrijving.Geslacht)) {
+                    user.Gender = inschrijving.Geslacht=="M";
                 }
 
                 // If the user has no address or the addres was updated later then the user then add an address.
                 address address = user.PrimaryAddress;
                 if (address==null) {
+                    throw new ArgumentException("address is null. This should not occur. This code should be able to be deleted :P.");
                     // Create an address.
                     address = new address();
                     address.DateCreated = DateTime.Now;
                 }
                 address.DateUpdated = DateTime.Now;
-                address.City = raceEntry.Woonplaats;
-                address.Street = raceEntry.Straat;
-                address.Housenumber = raceEntry.Huisnummer;
-                address.HouseNumberAddition = raceEntry.HuisnummerToevoeging;
-                address.Country = raceEntry.Land;
-                address.Firstname = raceEntry.Voornaam;
-                address.Insertion = raceEntry.Tussenvoegsel;
-                address.Lastname = raceEntry.Achternaam;
-                address.PostalCode = raceEntry.Postcode;
-                DB.SaveChanges();
+                address.City = inschrijving.Woonplaats;
+                address.Street = inschrijving.Straat;
+                address.Housenumber = inschrijving.Huisnummer;
+                address.HouseNumberAddition = inschrijving.HuisnummerToevoeging;
+                address.Country = inschrijving.Land;
+                address.Firstname = inschrijving.Voornaam;
+                address.Insertion = inschrijving.Tussenvoegsel;
+                address.Lastname = inschrijving.Achternaam;
+                address.PostalCode = inschrijving.Postcode;
+                // DB.SaveChanges();
                 user.PrimaryAddress = address; 
                 user.Save();
 
@@ -262,7 +282,7 @@ namespace HRE.Models {
                 int eventId = GetHreEvent().Id;
 
                 // Create the sportsparticipation.
-                sportseventparticipation participation = (from p in DB.sportseventparticipation where p.UserId==user.ID && p.ExternalIdentifier == raceEntry.ExternalIdentifier select p).FirstOrDefault();
+                sportseventparticipation participation = (from p in DB.sportseventparticipation where p.UserId==user.ID && p.ExternalIdentifier == inschrijving.ExternalIdentifier select p).FirstOrDefault();
 
                 if (participation==null) {
                     participation = new sportseventparticipation();
@@ -278,17 +298,19 @@ namespace HRE.Models {
                 } else {
                     participation.DateUpdated=DateTime.Now;
                 }
-                participation.DateRegistered=raceEntry.RegistrationDate;
-                participation.ExternalIdentifier=raceEntry.ExternalIdentifier;
+                participation.DateRegistered=inschrijving.RegistrationDate;
+                participation.ExternalIdentifier=inschrijving.ExternalIdentifier;
                 participation.SportsEventId = eventId;
                 participation.UserId = user.ID;
                     
-                participation.SpeakerRemarks = raceEntry.OpmerkingenTbvSpeaker;
-                participation.IsInterestedToSleepOver = raceEntry.InteresseOvernachtenNaWedstrijd;
-                participation.TShirtSize = raceEntry.MaatTshirt;
+                participation.SpeakerRemarks = inschrijving.OpmerkingenTbvSpeaker;
+                participation.IsInterestedToSleepOver = inschrijving.InteresseOvernachtenNaWedstrijd;
+                participation.TShirtSize = inschrijving.MaatTshirt;
                 participation.ParticipationStatus = 1;
-                participation.MyLapsChipIdentifier = raceEntry.ChampionChipNummer;
-                participation.Notes = raceEntry.Bijzonderheden;
+                participation.MyLapsChipIdentifier = inschrijving.HasMyLapsChipNummer ? inschrijving.MyLapsChipNummer : string.Empty;
+                participation.Notes = inschrijving.Bijzonderheden;
+
+                participation.ParticipationAmountInEuroCents = inschrijving.InschrijfGeld;
 
                 if (participation.Id==0) {
                     DB.AddTosportseventparticipation(participation);
@@ -299,13 +321,13 @@ namespace HRE.Models {
 
 
 
-        public class AdminUser {
+        public class AutoCreatedUser {
 
             public string UserNameAndEmail { get; private set; } 
             
             public string Password { get; private set; }
 
-            public AdminUser(string userNameAndEmail, string password) {
+            public AutoCreatedUser(string userNameAndEmail, string password) {
                 UserNameAndEmail = userNameAndEmail;
                 Password = password;
             }

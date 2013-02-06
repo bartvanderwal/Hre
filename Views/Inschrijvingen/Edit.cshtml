@@ -1,4 +1,4 @@
-﻿@model HRE.Models.ScrapeNtbIEntryModel
+﻿@model HRE.Models.InschrijvingModel
 
 @{
     ViewBag.Title = "Bekijken/wijzigen inschrijving";
@@ -7,5 +7,4 @@
 
     @Html.ActionLink(" ", "Index", null, new { @class="editor-image back", @title="Terug naar overzicht", @alt="Back" })
     
-    <!-- <h1>Details inschrijving</h1> -->
     @{Html.RenderPartial("_SubscribeForm", Model); }

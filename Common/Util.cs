@@ -115,7 +115,7 @@ namespace HRE.Common {
 
         public static string RC2Decryption(string strInput, string strKey, string strIV) {
             try {
-                strInput = HttpUtility.UrlDecode(strInput).Replace(" ","+");
+                strInput = HttpUtility.UrlDecode(strInput); // .Replace(" ","+");
                 byte[] byteInput = Convert.FromBase64String(strInput);
                 byte[] byteKey = Encoding.ASCII.GetBytes(strKey);
                 byte[] byteIV = Encoding.ASCII.GetBytes(strIV);

@@ -9,9 +9,11 @@ namespace HRE.Models {
 
     public class ScrapeNtbIModel {
 
-        public List<ScrapeNtbIEntryModel> Entries { get; set; }
+        public List<InschrijvingModel> Entries { get; set; }
 
-        public int maxNumberOfScrapedItems { get; set; }
+        public int MaxNumberOfScrapedItems { get; set; }
+
+        public bool OverrideLocallyUpdated { get; set; }
     }
 
 

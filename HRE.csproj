@@ -117,6 +117,7 @@
     <Compile Include="Common\Util.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\InschrijvingenController.cs" />
     <Compile Include="Controllers\NewsletterController.cs" />
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Controllers\OudFaqController.cs" />
@@ -193,8 +194,8 @@
     <Compile Include="Models\Newsletter\NewsletterSubscribeViewModel.cs" />
     <Compile Include="Models\Newsletter\NewsletterViewModel.cs" />
     <Compile Include="Models\Newsletter\SendPersonalNewsletterViewModel.cs" />
-    <Compile Include="Models\ScrapeNtbIEntryModel.cs" />
-    <Compile Include="Models\ScrapeNtbIRepository.cs" />
+    <Compile Include="Models\InschrijvingModel.cs" />
+    <Compile Include="Models\InschrijvingenRepository.cs" />
     <Compile Include="Models\ScrapeNtbIModel.cs" />
     <Compile Include="Models\VolonteerModel.cs" />
     <Compile Include="NewsletterSubscription.aspx.cs">
@@ -708,8 +709,8 @@
     <Content Include="Views\Home\Partners.cshtml" />
     <Content Include="Views\Meedoen\Aanmeldingen.cshtml" />
     <Content Include="Views\Video\Uitslagen.cshtml" />
-    <Content Include="Views\ScrapeNtb\Index.cshtml" />
-    <Content Include="Views\ScrapeNtb\Edit.cshtml" />
+    <Content Include="Views\Inschrijvingen\Index.cshtml" />
+    <Content Include="Views\Inschrijvingen\Edit.cshtml" />
     <Content Include="Views\Shared\_SubscribeForm.cshtml" />
     <Content Include="Views\Meedoen\EarlyBird.cshtml" />
     <Content Include="Views\Meedoen\AangemeldNieuwsbrief.cshtml" />

@@ -126,7 +126,7 @@ namespace HRE.Controllers {
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult EarlyBird(ScrapeNtbIEntryModel model) {
+        public ActionResult EarlyBird(InschrijvingModel model) {
             return View(model);
         }
 

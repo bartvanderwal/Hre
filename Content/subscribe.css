@@ -1,20 +1,20 @@
 /* Source: http://codepen.io/ryanseddon/pen/BqJhf */
 /* General style to make original checkboxes and radio's invisible. */
-.editor-field:not(#foo) > input[type="checkbox"],
-.editor-field:not(#foo) > input[type="radio"]  { 
+:root .editor-field > input[type="checkbox"],
+:root .editor-field > input[type="radio"]  { 
 	padding: 0;
 	margin: 0;
 	height: 30px;
-	width: 15px;
+	width: 40px;
 	float: left;
 	position: absolute;
-	left: 0;
+	left: 300;
 	opacity: 0;
 }
 
 
 /* General background image and display mode for inputs. */
-.editor-field:not(#foo) > input + label:before {
+:root .editor-field > input ~ label:before {
 	background: url('/Content/img/InschrijvenHREIconSet.png') -35px -214px no-repeat;
 	content: "";
 	display: inline-block;
@@ -23,103 +23,121 @@
 	margin-right: 6px;
 }
 
-/* Checkbox image size. */
-.editor-field:not(#foo) > input[type="checkbox"] + label:before {
+/* Checkbox image size (default). */
+:root .editor-field > input[type="checkbox"] ~ label:before {
 	height: 30px;
-	width: 48px;
+	width: 46px;
 }
+
+/* Has MyLaps chop checkbox image size (less wide than default). */
+:root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"] ~ label:before {
+	width: 30px;
+}
+
 			
 /* Radio button image size. */
-.editor-field:not(#foo) > input[type="radio"] + label:before {
+:root .editor-field > input[type="radio"] ~ label:before {
 	height: 30px;
 	width: 25px;
 }
 			
 /****** Gender ***/
 /* Unchecked male radio button. */
-.editor-field:not(#foo) > input[type="radio"][value="M"] + label:before {
+:root .editor-field > input[type="radio"][value="M"] ~ label:before {
 	background-position: -30px -214px;
 }
 
 /* Unchecked female radio button. */
-.editor-field:not(#foo) > input[type="radio"][value="V"] + label:before {
+:root .editor-field > input[type="radio"][value="V"] ~ label:before {
 	background-position: -5px -214px;
     color: white;
 }
 
 /* Checked male radio button. */
-.editor-field:not(#foo) > input[type="radio"][value="M"]:checked + label:before {
+:root .editor-field > input[type="radio"][value="M"]:checked ~ label:before {
 	background-position: -93px -214px;
 }
 
 /* Checked female radio button. */
-.editor-field:not(#foo) > input[type="radio"][value="V"]:checked + label:before {
+:root .editor-field > input[type="radio"][value="V"]:checked ~ label:before {
 	background-position: -67px -214px;
 }
 
 /****** Serie ***/
 /* Unchecked recreatieve serie radio button. */
-.editor-field:not(#foo) > input[type="radio"][value="R"] + label:before {
+:root .editor-field > input[type="radio"][value="R"] ~ label:before {
 	background-position: -684px -214px;
 }
 
 /* Unchecked top serie radio button. */
-.editor-field:not(#foo) > input[type="radio"][value="W"] + label:before {
+:root .editor-field > input[type="radio"][value="W"] ~ label:before {
 	background-position: -655px -214px;
 }
 
 /* Checked recreatieve serie radio button. */
-.editor-field:not(#foo) > input[type="radio"][value="R"]:checked + label:before {
+:root .editor-field > input[type="radio"][value="R"]:checked ~ label:before {
 	background-position: -621px -214px;
 }
 
 /* Checked top serie radio button. */
-.editor-field:not(#foo) > input[type="radio"][value="W"]:checked + label:before {
+:root .editor-field > input[type="radio"][value="W"]:checked ~ label:before {
 	background-position: -592px -214px;
 }
 			
 /****** Parc Fermé  ***/
 /* Unchecked bike checkbox. */
-.editor-field:not(#foo) > input[type="checkbox"][name="bike"] + label:before { 
+:root .editor-field > input[type="checkbox"][name="bike"] ~ label:before { 
 	background-position: -382px -211px;
 }
 
 /* Checked bike checkbox. */
-.editor-field:not(#foo) > input[type="checkbox"][name="bike"]:checked + label:before {
+:root .editor-field > input[type="checkbox"][name="bike"]:checked ~ label:before {
 	background-position: -440px -212px;
 }
 
 /****** NTB licentie ***/
 /* Unchecked NTB license checkbox. */
-.editor-field:not(#foo) > input[type="checkbox"][name="ntb"] + label:before { 
+:root .editor-field > input[type="checkbox"][name="HasLicentieNummer"] ~ label:before { 
 	background-position: -544px -216px;
 }
 
 /* Checked NTB license checkbox. */
-.editor-field:not(#foo) > input[type="checkbox"][name="ntb"]:checked + label:before {
+:root .editor-field > input[type="checkbox"][name="HasLicentieNummer"]:checked ~ label:before {
 	background-position: -497px -216px;
+}
+
+
+/****** MyLaps chip ***/
+/* Unchecked MyLaps chip checkbox. */
+:root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"] ~ label:before { 
+	background-position: -755px -216px;
+}
+
+/* Checked MyLaps chip checkbox. */
+:root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"]:checked ~ label:before {
+	background-position: -720px -216px;
 }
 
 
 /****** Eten ***/
 /* Unchecked food checkbox. */
-.editor-field:not(#foo) > input[type="checkbox"][name="food"] + label:before { 
+:root .editor-field > input[type="checkbox"][name="food"] + label:before { 
 	background-position: -131px -212px;
 }
 
 /* Checked food checkbox. */
-.editor-field:not(#foo) > input[type="checkbox"][name="food"]:checked + label:before{ 
+:root .editor-field > input[type="checkbox"][name="food"]:checked + label:before{ 
 	background-position: -194px -212px;
 }
 
 /****** Kamperen ***/
 /* Unchecked camp checkbox. */
-.editor-field:not(#foo) > input[type="checkbox"][name="camp"] + label:before { 
+:root .editor-field > input[type="checkbox"][name="camp"] + label:before { 
 	background-position: -254px -212px;
 }
 
 /* Checked camp checkbox. */
-.editor-field:not(#foo) > input[type="checkbox"][name="camp"]:checked + label:before { 
+:root .editor-field > input[type="checkbox"][name="camp"]:checked + label:before { 
 	background-position: -316px -211px;
 }
 
@@ -127,3 +145,136 @@
 .ui-datepicker {
     font-size: 0.9em;
 }
+
+/* Start subscription. */
+.editor-label {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    float: left;
+    width: 150px;
+    text-align: right;
+    margin: 10px 5px 5px 5px;
+    color: #406A80; 
+    vertical-align: middle;
+}
+
+.editor-field {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    /* float: left; */
+    width: 400px;
+    text-align: left;
+    margin: 10px 5px 5px 5px;
+    color: #406A80; 
+}
+
+input.save[type=submit] {
+    float: right;
+    background: url("/Content/img/InschrijvenHREIconSet.png") no-repeat -617px -152px;
+    height: 43px;
+    width: 185px; 
+}
+
+.editor-images {
+    float: left;
+    height: 1200px;
+    width: 60px;
+}
+
+.editor-image,
+.editor-spacer {
+    float: left;
+    height: 60px;
+    width: 60px;
+    display: inline;
+    background: #ffffff url('/Content/img/InschrijvenHREIconSet.png') no-repeat;
+}
+
+.editor-image.back {
+    background-position: -557px -150px; 
+    float: right;
+}
+
+.editor-image.name {
+    background-position: 0px -150px; 
+}
+
+.editor-image.address {
+    background-position: -62px -150px; 
+}
+
+.editor-image.email {
+    background-position: -124px -150px; 
+}
+
+.editor-image.amount {
+    background-position: -186px -150px; 
+}
+
+.editor-image.speaker {
+    background-position: -248px -150px; 
+}
+
+.editor-image.social {
+    background-position: -310px -150px; 
+}
+
+.editor-image. {
+    background-position: -124px -150px; 
+}
+
+.editor-spacer {
+    background-position: 62px 62px; 
+}
+
+.editor-spacer.name {
+    height: 260px;
+}
+
+.editor-spacer.address {
+    height: 150px;
+}
+
+.editor-spacer.email {
+    height: 42px;
+}
+
+.editor-spacer.amount {
+    height: 106px;
+}
+
+.editor-spacer.speaker {
+    height: 95px;
+}
+
+.editor-spacer.social {
+    height: 40px;
+}
+
+/* Start validation markup */
+.validation-summary-errors {
+    color: Red;
+}
+
+input.input-validation-error {
+    border: 1px solid #e80c4d;
+    outline: 1px solid #e80c4d;
+}
+
+.field-validation-error {
+    color: #e80c4d;
+    font-weight: bold;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+
+/* End validation markup */
+
+/* End subscription. */
+
+
