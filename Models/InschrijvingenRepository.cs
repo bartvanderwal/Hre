@@ -206,7 +206,7 @@ namespace HRE.Models {
         /// <param name="eventDate"></param>
         /// <returns></returns>
         private static sportsevent GetOrCreateEvent(string eventNumber, string serieNumber, string eventName, DateTime eventDate) {
-            sportsevent hreEvent = (from e in DB.sportsevent where e.ExternalEventIdentifier==eventNumber select e).FirstOrDefault();
+            sportsevent hreEvent = GetEvent(eventNumber);
             if (hreEvent==null) {
                 hreEvent = new sportsevent();
                 hreEvent.Name=HRE_NAME;
@@ -220,6 +220,15 @@ namespace HRE.Models {
                 DB.SaveChanges();
             }
             return hreEvent;
+        }
+
+
+        /// <summary>
+        /// Gets an event by external=eventNumber, or creates it in the database if it doesn't exist yet.
+        /// </summary>
+        /// <param name="eventNumber"></param>
+        public static sportsevent GetEvent(string eventNumber) {
+            return (from e in DB.sportsevent where e.ExternalEventIdentifier==eventNumber select e).FirstOrDefault();
         }
 
 
@@ -278,15 +287,16 @@ namespace HRE.Models {
                 user.PrimaryAddress = address; 
                 user.Save();
 
-                // TODO BW 2012-12-24: Allow the user to set the current event ID from the interface (right now it's static always 2012).
-                int eventId = GetHreEvent().Id;
+                int eventId = InschrijvingenRepository.GetEvent(eventNumber).Id;
 
                 // Create the sportsparticipation.
-                sportseventparticipation participation = (from p in DB.sportseventparticipation where p.UserId==user.ID && p.ExternalIdentifier == inschrijving.ExternalIdentifier select p).FirstOrDefault();
+                sportseventparticipation participation = (from p in DB.sportseventparticipation where p.UserId==user.ID && p.SportsEventId ==  eventId select p).FirstOrDefault();
 
                 if (participation==null) {
                     participation = new sportseventparticipation();
                     participation.DateCreated=DateTime.Now;
+                    SportsEventDal sportsevent = SportsEventDal.GetByExternalId(eventNumber);
+                    participation.SportsEventId = sportsevent.ID;
                 }
 
                 if (isScrape) {
@@ -297,12 +307,17 @@ namespace HRE.Models {
                     participation.DateUpdated=participation.DateLastScraped.Value;
                 } else {
                     participation.DateUpdated=DateTime.Now;
+                    participation.DateRegistered = participation.DateUpdated;
                 }
                 participation.DateRegistered=inschrijving.RegistrationDate;
-                participation.ExternalIdentifier=inschrijving.ExternalIdentifier;
-                participation.SportsEventId = eventId;
+                if (isScrape) {
+                    participation.ExternalIdentifier=inschrijving.ExternalIdentifier;
+                }
+                participation.SportsEventId = (from sportsevent se in DB.sportsevent 
+                                                where se.ExternalEventIdentifier==eventNumber 
+                                                select se.Id).First();
                 participation.UserId = user.ID;
-                    
+
                 participation.SpeakerRemarks = inschrijving.OpmerkingenTbvSpeaker;
                 participation.IsInterestedToSleepOver = inschrijving.InteresseOvernachtenNaWedstrijd;
                 participation.TShirtSize = inschrijving.MaatTshirt;

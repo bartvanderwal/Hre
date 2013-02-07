@@ -10,7 +10,7 @@
 	<link rel="apple-touch-icon" href="/Content/img/favicon57.png">	
 	<link rel="apple-touch-icon" sizes="72x72" href="/Content/img/favicon72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="/Content/img/favicon114.png">
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	@*<script type="text/javascript" src="https://www.google.com/jsapi"></script> *@
 	<script type="text/javascript">
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-28452151-1']);
@@ -60,7 +60,6 @@
 	    });
 	</script>
   
-	<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
     @RenderSection("JavaScript", required: false)
 </head>
 <body>
@@ -71,18 +70,17 @@
                 <a href="/"><img src="/Content/img/3Aug2013.png" alt="3 aug 2013" title="Home" /></a>
             </div>
 	        <div id="top">
-                @*
+                <div class="login-out-form">
                 @if (Request.IsAuthenticated) {
-        	        <div class="logoutForm" id="logoutForm">
-                        @User.Identity.Name.Substring(0, User.Identity.Name.IndexOf('@')) 
-                        @using (Html.BeginForm("LogUit", "Account")) {
-                            @Html.AntiForgeryToken()
-                            <a href="javascript:document.getElementById('logoutForm').submit()" class="logout">Uitloggen</a>
-                        }
-                    </div>
+                    using (Html.BeginForm("LogUit", "Account", new { returnUrl = "/" }, FormMethod.Post, new { id = "logoutForm" })) {
+                        @*User.Identity.Name.Substring(0, User.Identity.Name.IndexOf('@')) *@
+                        @Html.AntiForgeryToken()
+                        <a href="javascript:document.getElementById('logoutForm').submit()" class="logout">Uitloggen</a>
+                     }
+                } else {
+                        <a href="/Account/Login" class="login">Inloggen</a>
                 }
-                *@
-
+                </div>
 		        <div id="social-media">
 			        <!-- Twitter -->
 			        <div id="twitter"><a href="https://twitter.com/#!/trondjeeilanden" target="_blank"><img src="/Content/img/twitter_smaller.png" alt="Twitter" title="Volg ons op Twitter" id="twitter-logo"></a></div>
@@ -105,7 +103,7 @@
                      }	
 			        @if (HRE.Common.HreSettings.ShowGooglePlusOneButton) {
                         <!-- Google plus one button -->
-                        <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>         
+                        <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 			            <div id="plusone"><g:plusone data-size="small"></g:plusone></div>
                     }
                 </div>

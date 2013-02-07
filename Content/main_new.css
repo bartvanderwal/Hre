@@ -99,7 +99,7 @@ a:active {
 	padding: 0px 0px 0px 0px;
 	width: 100px;
     height: 60px;
-    top: 60px;
+    top: 27px;
     left: 700px;
     *display: inline;
     zoom: 1;
@@ -132,6 +132,7 @@ a:active {
 	display: inline-block;
     *display: inline;
     zoom: 1;
+
 }
 
 #plusone {
@@ -183,14 +184,18 @@ span.like {
     display: inline;
 }
 
-
-#logoutForm {
+.login-out-form {
     height: 60px;
-    left: 800px;
+    left: 830px;
     position: absolute;
-    top: 150px;
+    top: 120px;
     width: 200px;
-    color: #000000;
+    color: #ffffff;
+}
+
+.login-out-form form {
+    margin: 0px !important;
+    padding: 0px !important;
 }
 
 #container {
@@ -604,7 +609,13 @@ table.deelname-kosten td.col {
 }
 
 .deelnemers {
+    margin: 10px 30px;
+    color: #406A80;
+}
+
+.deelnemers.admin-view {
     font-size: x-small;
+    margin: 10px 20px;
 }
 
 /* Einde registreer. */
@@ -625,3 +636,10 @@ table.deelname-kosten td.col {
     font-style: italic;
 }
 
+#select-edition {
+    display: inline-block;
+}
+
+#scrape {
+    display: inline-block;
+}

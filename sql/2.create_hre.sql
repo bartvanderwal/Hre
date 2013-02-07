@@ -202,3 +202,6 @@ ALTER TABLE LogonUser
   ON DELETE cascade
   ON UPDATE cascade
   , ADD INDEX PrimaryAddress(PrimaryAddressId ASC);
+
+alter table SportsEventParticipation 
+    add constraint uc_UserId unique (UserId, SportsEventId);

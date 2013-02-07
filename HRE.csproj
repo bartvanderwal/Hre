@@ -608,7 +608,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\WijzigWW.cshtml" />
     <Content Include="Views\Account\WijzigWWBevestiging.cshtml" />
-    <Content Include="Views\Account\LogIn.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Eilanders.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -730,6 +730,7 @@
     <Content Include="Views\Newsletter\_ViewStart.cshtml" />
     <Content Include="Views\Account\EarlyBird.cshtml" />
     <Content Include="Views\Account\Inschrijven.cshtml" />
+    <Content Include="Views\Inschrijvingen\Reglementen.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

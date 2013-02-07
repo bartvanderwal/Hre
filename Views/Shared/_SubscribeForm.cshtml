@@ -9,9 +9,33 @@
     @{Html.BeginForm("Register");}
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Email)
-        @Html.ValidationSummary("Nog een paar stappen en je hebt je aangemeld:")
+        @Html.ValidationSummary()
 
+        @if (Model.IsEditAllowed) {
+            <p>Welkom @Model.Voornaam!</p>
+            <div class="inschrijf-formulier-uitleg">
+                <p>Hieronder het inschrijfformulier. Nog een paar stappen en je bent ingeschreven!</p>
+                <p><a id="toon-uitleg">Uitleg en voorwaarden</a></p>
+                <ul id="uitleg" style="display: none;">
+                    <li class="test">Klik hiernaast: </li>
+                    <div class="editor-field test">
+                        <input id="test-checkbox" type="checkbox" name="test-checkbox" value="test-checkbox">
+			            <label for="test-checkbox" title="Klik hier!"></label>
+                        <span id="test-checkbox-span" class="optText"><b>Jes, zo moet dat! Je kan hem ook weer uitklikken...</b></span>
+                        <span id="test-checkbox-span-weer-uit" class="optText" style="display: none;"><b>De buttons hieronder werken ook zo...</b></span>
+                    </div>
+                    <li>Geef via deze buttons aan of je mee wilt eten, blijft kamperen en eventueel op de fiets wilt komen</li>
+                    <li>De overige gegevens zijn al door ons vooringevuld, corrigeer als er iets gewijzigd is t.o.v. 2012</li>
+                    <li>Maak voor de &euro;7,50 Early Bird&trade; korting voor 1 maart het inschrijfgeld over!</li>
+                    <li>Met inschrijving ga je akkoord met de algemene inschrijfvoorwaarden, klik <a href="/Inschrijvingen/Reglementen" target="_blank">hier</a> (nieuwe tab)</li>
+                    <li>Kom later nog eens terug naar deze persoonlijke pagina! (uitnodiging volgt via Flessenpost&trade;)</li>
+                </ul>
+            </div>
+        }
         <div class="editor-images">
+            @if (Model.IsEditAllowed) {
+                <div class="editor-spacer initial"></div>
+            }
             <div class="editor-image name"></div><div class="editor-spacer name"></div>
             @if (Model.IsEditAllowed) {
                 <div class="editor-image address"></div><div class="editor-spacer address"></div>
@@ -23,12 +47,18 @@
         </div>
 
         @if (Model.IsEditAllowed) {
+            <div class="editor-label"></div>
+		    <div class="editor-field"></div>
+                
+            <div class="editor-label"></div>
+		    <div class="editor-field"></div>
+            
+            
             <div class="editor-label">Licentie</div>
-		    <div class="editor-field">
-			    @*<input id="is-ntb-lid" type="checkbox" name="ntb" value="Ntb" @(string.IsNullOrEmpty(Model.LicentieNummer) ? string.Empty : "checked=\"checked\"")> *@
-			    @Html.CheckBoxFor(m => m.HasLicentieNummer, new { @id="is-ntb-lid"})
+	    	<div class="editor-field">
+		    	@Html.CheckBoxFor(m => m.HasLicentieNummer, new { @id="is-ntb-lid"})
                 <label for="is-ntb-lid" title="Heb je een NTB licentie? (of KNZB of KNWU?)"></label>
-                <span id="licentie-nummer-span" class="optText">Ja, mijn licentie nummer is @Html.TextBoxFor(m => m.LicentieNummer, new { @id="licentie-nummer", @placeholder="Licentienummer..." }) @*<input id="licentie-nummer" name="LicentieNummer" type="text" tabindex="1" maxlength="12" value="@Model.LicentieNummer" placeholder="Licentienummer...">*@</span>
+                <span id="licentie-nummer-span" class="optText">@Html.TextBoxFor(m => m.LicentieNummer, new { @id="licentie-nummer", @placeholder="Licentienummer..." }) @*<input id="licentie-nummer" name="LicentieNummer" type="text" tabindex="1" maxlength="12" value="@Model.LicentieNummer" placeholder="Licentienummer...">*@</span>
 		    </div>
             <div class="editor-label">@Html.LabelFor(m => m.GeboorteDatum)</div>
             <div class="editor-field">@Html.TextBoxFor(m => m.GeboorteDatum, new { @placeholder = "Geboortedatum", @readonly = false, @class = "datePicker", @tabindex="1", @Value = string.Format("{0:dd/MM/yyyy}", Model.GeboorteDatum)})</div>
@@ -36,9 +66,10 @@
 		    <div class="editor-field">
 			    @Html.CheckBoxFor(m => m.HasMyLapsChipNummer)
 			    <label for="HasMyLapsChipNummer" title="Heb je een eigen MyLaps chip?"></label>
-                <span id="mylaps-chip-span" class="optText">Ja, mijn MyLaps nummer is @Html.TextBoxFor(m => m.MyLapsChipNummer, new { @tabindex="14", @placeholder="MyLaps chipnr..." } )</span>
+                <span id="mylaps-chip-span" class="optText">@Html.TextBoxFor(m => m.MyLapsChipNummer, new { @tabindex="14", @placeholder="MyLaps chipnr..." } )</span>
             </div>
         }
+
         <div class="editor-label">Voornaam</div>
 		<div class="editor-field">
             @*<input name="Voornaam" type="text" tabindex="2" maxlength="20" value="@Model.Voornaam" placeholder="Voornaam">*@
@@ -53,7 +84,7 @@
             @*<input name="Achternaam" type="text" tabindex="4" value="@Model.Achternaam" maxlength="50" placeholder="Achternaam">*@
             @Html.TextBoxFor(m => m.Achternaam, new { @tabindex="4", @maxLength=50, @placeholder="Achternaam" } )    
         </div>
-        <div class="editor-label">Geslacht</div>
+        <div class="editor-label">Vrouw/Man?</div>
 		<div class="editor-field">
             <input name="Geslacht" id="V" type="radio" value="V" tabindex="5" @(Model.Geslacht=="V" ? "checked=\"checked\"" : string.Empty)>
             <label for="V" title="Vrouw"></label>
@@ -108,17 +139,17 @@
 		    <div class="editor-field"></div>
         }
         
-        <div class="editor-label">Mee-eten</div>
+        <div class="editor-label">Mee-eten?</div>
 		<div class="editor-field">
 			<input id="food" type="checkbox" name="food" tabindex="15" value="Food">
 			<label for="food" title="Interesse om na afloop mee te eten? (vrijblijvende reservering)"></label>
 		</div>
-		<div class="editor-label">Kamperen</div>
+		<div class="editor-label">Kamperen?</div>
 		<div class="editor-field">
 			<input id="camp" type="checkbox" name="camp" tabindex="16" value="Camp">
 			<label for="camp" title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"></label>
 		</div>
-		<div class="editor-label">Parc Fermé</div>
+		<div class="editor-label">Kom je evt. op de fiets?</div>
 		<div class="editor-field">
 			<input id="bike" type="checkbox" name="bike" tabindex="17" value="Bike">
 			<label for="bike" title="Interesse op de fiets te komen en deze veilig te kunnen stallen? (vrijblijvende reservering)"></label>
@@ -187,13 +218,24 @@
             $.datepicker.setDefaults($.datepicker.regional['nl']);
             $datePicker = $(".datePicker");
             $datePicker.datepicker();
-            //$datePicker.datepicker({
-            //   beforeShow: function(input, inst) {
-            //       inst.dpDiv.css({marginTop: -input.offsetHeight + 'px', marginLeft: input.offsetWidth + 'px'});
-            //   }
-            //});
-            $datePicker.click(function () {
+            $datePicker.click(function() {
                 $('.datePicker').datepicker('setDate', $('#GeboorteDatum').val());
+            });
+
+            if ($('#test-checkbox').attr('checked')) {
+                $("#test-checkbox-span").show();
+                $("#test-checkbox-span-weer-uit").hide();
+            } else {
+                $("#test-checkbox-span").hide();
+            }
+            $('#test-checkbox').change(function() {
+                if ($(this).is(":checked")) {
+                    $("#test-checkbox-span").show();
+                    $("#test-checkbox-span-weer-uit").hide();
+                } else {
+                    $("#test-checkbox-span").hide();
+                    $("#test-checkbox-span-weer-uit").show();
+                }
             });
 
             if ($('#is-ntb-lid').attr('checked')) {
@@ -201,7 +243,7 @@
             } else {
                 $("#licentie-nummer-span").hide();
             }
-            $('#is-ntb-lid').change(function () {
+            $('#is-ntb-lid').change(function() {
                 if ($(this).is(":checked")) {
                     $("#licentie-nummer-span").show();
                 } else {
@@ -214,12 +256,16 @@
             } else {
                 $("#mylaps-chip-span").hide();
             }
-            $('#HasMyLapsChipNummer').change(function () {
+            $('#HasMyLapsChipNummer').change(function() {
                 if ($(this).is(":checked")) {
                     $("#mylaps-chip-span").show();
                 } else {
                     $("#mylaps-chip-span").hide();
                 }
+            });
+
+            $('#toon-uitleg').click(function () {
+                $('ul#uitleg').slideToggle();
             });
 
             // Disable all editing unless this is users subscription (or user is admin).

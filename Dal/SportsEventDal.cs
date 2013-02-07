@@ -97,6 +97,19 @@ namespace HRE.Dal {
             }
         }
 
+
+        /// <summary>
+        /// Return the item with the given ExternalId.
+        /// </summary>
+        public static SportsEventDal GetByExternalId(string id) {
+            sportsevent sportsevent = DB.sportsevent.Where(n => n.ExternalEventIdentifier == id).FirstOrDefault();
+            if (sportsevent != null) { 
+                return new SportsEventDal(sportsevent);
+            } else {
+                return null;
+            }
+        }
+        
         #endregion :: Methods
     }
 }

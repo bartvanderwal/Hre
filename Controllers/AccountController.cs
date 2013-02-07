@@ -23,7 +23,7 @@ namespace HRE.Controllers {
             get { 
                 List<string> subMenuItems = new List<string> {
                     AppConstants.AccountWelkom,
-                    AppConstants.AccountLogIn,
+                    AppConstants.AccountLogin,
                     AppConstants.AccountRegistreer,
                 };
 
@@ -38,7 +38,7 @@ namespace HRE.Controllers {
         //
         // GET: /Account/LogOn
         //
-        public ActionResult LogIn(string id) {
+        public ActionResult Login(string id) {
             string email = System.Web.HttpUtility.UrlDecode(id);
             if (!string.IsNullOrEmpty(id)) {
                 try {
@@ -50,12 +50,13 @@ namespace HRE.Controllers {
                 LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(email);
 
                 if (user!=null) {
-                    InschrijvingModel entryModel = new InschrijvingModel(user);
-                    RedirectToAction("EarlyBird", "Meedoen", new { model = entryModel } );
+                    InschrijvingModel inschrijving = new InschrijvingModel(user);
+                    FormsAuthentication.SetAuthCookie(user.UserName, false);
+                    RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier} );
                 }
             }
 
-            Initialise(AppConstants.AccountLogIn);
+            Initialise(AppConstants.AccountLogin);
             return View();
         }
 
@@ -64,7 +65,7 @@ namespace HRE.Controllers {
         [HttpPost]
         public ActionResult LogIn(LogOnModel model, string returnUrl) {
             string login = string.Empty;
-            Initialise(AppConstants.AccountLogIn);
+            Initialise(AppConstants.AccountLogin);
             if (ModelState.IsValid) {
                 if (!model.EmailAddress.Contains('@')) {
                     MembershipUserCollection members = Membership.FindUsersByEmail(model.EmailAddress + "@%");

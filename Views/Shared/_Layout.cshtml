@@ -138,8 +138,11 @@
                 </script>
 			</div>
 	
-			<!-- Google plus one button -->
-			<div id="plusone"><g:plusone data-size="small"></g:plusone></div>
+			@if (HRE.Common.HreSettings.ShowGooglePlusOneButton) {
+                <!-- Google plus one button -->
+		        <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>	    
+                <div id="plusone"><g:plusone data-size="small"></g:plusone></div>
+            }
         </div>
 	</div>
     <div id="topshadow"></div>

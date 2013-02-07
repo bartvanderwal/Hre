@@ -8,7 +8,7 @@
         public const string Account = "Account";
 
         public const string AccountWelkom = "Welkom";
-        public const string AccountLogIn = "LogIn";
+        public const string AccountLogin = "Login";
         public const string AccountWijzigWW = "WijzigWW";
         public const string AccountRegistreer = "Registreer";
         

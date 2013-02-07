@@ -30,6 +30,13 @@ namespace HRE.Controllers {
         }
 
 
+        [HttpPost]
+        public ActionResult Index(ScrapeNtbIModel model) {
+            model.Entries = InschrijvingenRepository.GetEntries(model.EventNumber);
+            return View(model);
+        }
+
+
         public const string NTBI_SESSION_CODE_KEY = "SessionCode";
 
 
@@ -335,7 +342,7 @@ namespace HRE.Controllers {
                     }
 
                     // Save the entry (Determine if the entry aready exists using externalIdentifier and then update, otherwise insert).
-                    InschrijvingenRepository.SaveEntry(raceEntry, InschrijvingenRepository.HRE_EVENTNR, true, model.OverrideLocallyUpdated);
+                    InschrijvingenRepository.SaveEntry(raceEntry, CurrentEvenementNumber, true, model.OverrideLocallyUpdated);
                     raceEntries.Add(raceEntry);
 
                     if (counter>=maxNumberOfItemsToScrape) {
@@ -376,14 +383,20 @@ namespace HRE.Controllers {
         public ActionResult Edit(string externalId) {
             InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, InschrijvingenRepository.HRE_EVENTNR);
             
-            
             if (model==null) {
                 return HttpNotFound();
             }
             // Reset de opmerkingen velden, deze zijn voor 2013 NIET voorgevuld met gegevens uit 2012 zoals de overige velden.
             model.OpmerkingenTbvSpeaker = string.Empty;
             model.Bijzonderheden = string.Empty;
+            model.ExternalEventIdentifier = string.Empty;
+            model.ExternalEventSerieIdentifier = string.Empty;
             return View("Edit", model);
+        }
+
+
+        public ActionResult Reglementen() {
+            return View();
         }
 
 
@@ -395,23 +408,27 @@ namespace HRE.Controllers {
         [HttpPost]
         public ActionResult Edit(InschrijvingModel model) {
             // Run server side validations.
-            if (model.HasMyLapsChipNummer && (string.IsNullOrEmpty(model.MyLapsChipNummer) || !Regex.IsMatch(model.LicentieNummer, @"^\w\w-*\d\d[\d\w][\d\w]\d$"))) {
-                ModelState.AddModelError("MyLapsChipNummer", "Als je een eigen MyLaps chip hebt, vul dan het nummer in");
+            if (model.HasMyLapsChipNummer && (string.IsNullOrEmpty(model.MyLapsChipNummer) || !Regex.IsMatch(model.MyLapsChipNummer, @"^\w\w-*[\d\w][\d\w][\d\w][\d\w]\d$"))) {
+                ModelState.AddModelError("MyLapsChipNummer", "Als je een eigen MyLaps chip hebt, vul dan het correcte nummer in");
             }
             if (model.HasLicentieNummer && (string.IsNullOrEmpty(model.LicentieNummer) || !Regex.IsMatch(model.LicentieNummer, @"^\d\d[LA]\d\d\d\d\d[MV]\d\d\d$"))) {
                 ModelState.AddModelError("LicentieNummer", "Als je lid bent van NTB, KNWU of KNZB vul dan een correct licentienummer in");
             }
-
+            if (!string.IsNullOrEmpty(model.Postcode) && !Regex.IsMatch(model.Postcode, @"^\d{4}\s*\w{2}$")) {
+                ModelState.AddModelError("Postcode", "Geen geldige postcode!");
+            }
             // Store the race entry in the local database.
             if (ModelState.IsValid) {
+                // Set the eventIdentifier to the event of 2013.
+                model.ExternalIdentifier = null;
+                model.ExternalEventIdentifier = InschrijvingenRepository.GetH2reEvent().ExternalEventIdentifier;
+                model.ExternalEventSerieIdentifier = InschrijvingenRepository.GetH2reEvent().ExternalEventSerieIdentifier;
                 InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H2RE_EVENTNR, false);
-
                 // TODO BW 2013-02-04: Synchronize the data to NTB inschrijvingen.
                 if (model.ExternalIdentifier!=null) {
                     // The data is not yet in NTB inschrijvingen, write it to a new form.
-
                 } else {
-                    // The entry is already in NTB inschrijvingen, open and edit the existing entry.
+                    // The entry is already in NTB inschr and edit the existing entry.
                 }
 
                 // Set the model as updated and synchronized/scraped if it was written to NTB inschrijvingen.

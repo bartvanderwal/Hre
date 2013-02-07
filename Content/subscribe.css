@@ -30,7 +30,9 @@
 }
 
 /* Has MyLaps chop checkbox image size (less wide than default). */
-:root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"] ~ label:before {
+:root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"] ~ label:before,
+:root .editor-field > input[type="checkbox"][name="test-checkbox"] ~ label:before 
+ {
 	width: 30px;
 }
 
@@ -43,23 +45,23 @@
 			
 /****** Gender ***/
 /* Unchecked male radio button. */
-:root .editor-field > input[type="radio"][value="M"] ~ label:before {
+:root .editor-field > input[type="radio"][value="M"] + label:before {
 	background-position: -30px -214px;
 }
 
 /* Unchecked female radio button. */
-:root .editor-field > input[type="radio"][value="V"] ~ label:before {
+:root .editor-field > input[type="radio"][value="V"] + label:before {
 	background-position: -5px -214px;
     color: white;
 }
 
 /* Checked male radio button. */
-:root .editor-field > input[type="radio"][value="M"]:checked ~ label:before {
+:root .editor-field > input[type="radio"][value="M"]:checked + label:before {
 	background-position: -93px -214px;
 }
 
 /* Checked female radio button. */
-:root .editor-field > input[type="radio"][value="V"]:checked ~ label:before {
+:root .editor-field > input[type="radio"][value="V"]:checked + label:before {
 	background-position: -67px -214px;
 }
 
@@ -83,16 +85,50 @@
 :root .editor-field > input[type="radio"][value="W"]:checked ~ label:before {
 	background-position: -592px -214px;
 }
+
+
+li.test,
+.editor-field.test {
+    display: inline-block;
+    *display: block;
+    zoom: 1;
+}
+
+li.test:before {
+    content: '\2022';
+    margin: 0px 6px 0px -16px;
+    font-size: larger;
+}
+
+li.test {
+    margin-right: 0px !important;
+}
+
+.editor-field.test {
+    margin: 0px !important;
+}
+
+
+/****** Test checkbox ***/
+/* Unchecked test checkbox. */
+:root .editor-field > input[type="checkbox"][name="test-checkbox"] ~ label:before { 
+	background-position: -133px -251px;
+}
+
+/* Checked bike checkbox. */
+:root .editor-field > input[type="checkbox"][name="test-checkbox"]:checked ~ label:before {
+	background-position: -197px -251px;
+}
 			
 /****** Parc Fermé  ***/
 /* Unchecked bike checkbox. */
 :root .editor-field > input[type="checkbox"][name="bike"] ~ label:before { 
-	background-position: -382px -211px;
+	background-position: -382px -217px;
 }
 
 /* Checked bike checkbox. */
 :root .editor-field > input[type="checkbox"][name="bike"]:checked ~ label:before {
-	background-position: -440px -212px;
+	background-position: -440px -218px;
 }
 
 /****** NTB licentie ***/
@@ -122,28 +158,48 @@
 /****** Eten ***/
 /* Unchecked food checkbox. */
 :root .editor-field > input[type="checkbox"][name="food"] + label:before { 
-	background-position: -131px -212px;
+	background-position: -131px -218px;
 }
 
 /* Checked food checkbox. */
 :root .editor-field > input[type="checkbox"][name="food"]:checked + label:before{ 
-	background-position: -194px -212px;
+	background-position: -194px -218px;
 }
 
 /****** Kamperen ***/
 /* Unchecked camp checkbox. */
 :root .editor-field > input[type="checkbox"][name="camp"] + label:before { 
-	background-position: -254px -212px;
+	background-position: -254px -218px;
 }
 
 /* Checked camp checkbox. */
 :root .editor-field > input[type="checkbox"][name="camp"]:checked + label:before { 
-	background-position: -316px -211px;
+	background-position: -316px -217px;
 }
 
 /* Override of jQuery ui font-size in date picker */
 .ui-datepicker {
     font-size: 0.9em;
+}
+
+
+.inschrijf-formulier-uitleg {
+    color: #406A80;
+    border: 1px solid;
+    border-color: #406A80;
+    margin: 0px 10px 10px 30px;
+    font-size: smaller;
+    padding: 0px 0px 25px 0px;
+}
+
+.inschrijf-formulier-uitleg li {
+    margin: 0px 40px;
+    padding: 0px;
+    background-color: transparent;
+}
+
+.inschrijf-formulier-uitleg p {
+    margin: 20px 20px 0px 20px;
 }
 
 /* Start subscription. */
@@ -229,12 +285,16 @@ input.save[type=submit] {
     background-position: 62px 62px; 
 }
 
+.editor-spacer.initial {
+    height: 50px;
+}
+
 .editor-spacer.name {
     height: 260px;
 }
 
 .editor-spacer.address {
-    height: 150px;
+    height: 146px;
 }
 
 .editor-spacer.email {
@@ -242,7 +302,7 @@ input.save[type=submit] {
 }
 
 .editor-spacer.amount {
-    height: 106px;
+    height: 96px;
 }
 
 .editor-spacer.speaker {
@@ -274,6 +334,7 @@ input.input-validation-error {
 
 
 /* End validation markup */
+
 
 /* End subscription. */
 

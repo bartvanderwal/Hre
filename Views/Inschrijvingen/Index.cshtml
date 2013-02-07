@@ -7,31 +7,47 @@
     Layout = "~/Views/Shared/_NewLayout.cshtml";
 }
 
-@{Html.BeginForm("Scrape", "Inschrijvingen");}
-    @Html.AntiForgeryToken()
-    Maximaal aantal te scrapen items:
-    @Html.DropDownList("maxNumberOfScrapedItems", 
-        new SelectList(new Dictionary<string, int> { {"Alles", 0}, {"5", 5}, {"10", 10}, {"20", 20}, {"50", 50}, 
-                                                     {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
-                                                     {"1000", 1000}}, "Value", "Key"))
-    @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"} ) Overschrijf lokale updates
-    <input type="submit" value="Scrape NTB" />
-@{Html.EndForm();}
-<br /><br />
+@if (Model.IsAdmin) {
+    using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="select-edition" } )) {
+        @Html.DropDownList("EventNumber",
+            new SelectList(new Dictionary<string, string> {
+                {"2013", HRE.Models.InschrijvingenRepository.H2RE_EVENTNR},
+                {"2012", HRE.Models.InschrijvingenRepository.HRE_EVENTNR}
+            },
+            "Value", "Key"))
+         <input type="submit" value="Update" />
+    }
+    
+    using(Html.BeginForm("Scrape", "Inschrijvingen", FormMethod.Post, new { @id="scrape" } )) {
+        @Html.AntiForgeryToken();
+        <text>Scrape:</text>
+        @Html.DropDownList("maxNumberOfScrapedItems",
+            new SelectList(new Dictionary<string, int> { {"Alles", 0}, {"5", 5}, {"10", 10}, {"20", 20}, {"50", 50}, 
+                                                         {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
+                                                         {"1000", 1000}}, "Value", "Key"));
+        @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"});
+        <text>Overwrite</text>
+        <input type="submit" value="Scrape NTBi" />
+    }
+}
 
+<h1>Deelnemerslijst H2RE</h1>
+<p>Wie racet er rond de eilanden op zaterdag 3 aug 2013?</p>
 @if (Model==null || Model.Entries==null || Model.Entries.Count==0) {
-    <span>Er zijn nog geen deelnemers. Update de lijst vanuit NTB inschrijvingen!</span>
+    <span>Er zijn nog geen deelnemers.</span>
 } else {
-    <table class="deelnemers">
+    <table class="deelnemers@(Model.IsAdmin ? " admin-view" : string.Empty)">
         <tr>
             <th>Deelnemer</th>
             <th>Woonplaats</th>
-            <th>E-mail adres</th>
-            <th>Geb. datum</th>
-            <th>Ingeschreven</th>
-            <th>Eerst gescraped</th>
-            <th>Laatst gescraped</th>
-            <th>Updated</th>
+            @if (Model.IsAdmin) {
+                <th>E-mail adres</th>
+                <th>Geb. datum</th>
+                <th>Ingeschreven</th>
+                <th>Eerst gescraped</th>
+                <th>Laatst gescraped</th>
+                <th>Updated</th>
+            }
         </tr>
 
         @foreach (var entry in Model.Entries) {
@@ -39,13 +55,20 @@
             <tr>
                 <td>@Html.ActionLink(entry.FullName, "Edit", new { externalId = entry.ExternalIdentifier })</td>
                 <td>@entry.Woonplaats</td>
-                <td><a href="mailto:@entry.Email">@entry.Email</a></td>
-                <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td>
-                <td>@string.Format("{0:dd-MM-yyyy}", entry.RegistrationDate)</td>
-                <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstSynchronized.HasValue ? entry.DateFirstSynchronized.Value.RelativeDateDescription() : "-")</td>
-                <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastSynchronized.HasValue ? entry.DateLastSynchronized.Value.RelativeDateDescription()  : "-")</td>
-                <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>
-            </tr>
+                @if (Model.IsAdmin) {
+                    <td><a href="mailto:@entry.Email">@entry.Email</a></td>
+                    <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td>
+                    <td>@string.Format("{0:dd-MM-yyyy}", entry.RegistrationDate)</td>
+                    <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstSynchronized.HasValue ? entry.DateFirstSynchronized.Value.RelativeDateDescription() : "-")</td>
+                    <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastSynchronized.HasValue ? entry.DateLastSynchronized.Value.RelativeDateDescription()  : "-")</td>
+                    <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>
+                }
+                </tr>
         }
     </table>
 }
+<script type="text/javascript">
+    $('#EventNumber.').change(function () {
+        document.getElementById('select-edition').submit()
+    });
+</script>
