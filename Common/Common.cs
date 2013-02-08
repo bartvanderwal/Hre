@@ -17,7 +17,7 @@ using System.Collections.Specialized;
 
 namespace HRE.Common {
     
-    public class Util {
+    public class Common {
         
         
         /// <summary>
@@ -129,6 +129,14 @@ namespace HRE.Common {
             catch (Exception up) {
                 throw up;
             }
+        }
+
+
+        /// <summary>
+        /// Returns the domain base of the URL for the current environment: local, test or production.
+        /// </summary>
+        public static string GetDomainBase() {
+            return HreSettings.IsProduction ? "http://www.hetrondjeeilanden.nl" : HreSettings.IsDevelopment ? "http://localhost:63647/" : "http://test.hetrondjeeilanden.nl";
         }
 
     }

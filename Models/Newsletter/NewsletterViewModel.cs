@@ -17,15 +17,15 @@ namespace HRE.Models.Newsletters {
 
         [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")] 
         [Display(Name = "Datum van aanmaken")]
-        public DateTime Created { get; set; }
+        public DateTime DateCreated { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")] 
         [Display(Name = "Datum laatst bijgewerkt")]
-        public DateTime? Updated { get; set; }
+        public DateTime? DateUpdated { get; set; }
         
         [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")] 
         [Display(Name = "Datum van verzenden")]
-        public DateTime? Sent { get; set; }
+        public DateTime? DateSent { get; set; }
         
         [Display(Name = "Land/Localisatie")]
         public int Culture { get; set; }
@@ -38,8 +38,6 @@ namespace HRE.Models.Newsletters {
 
         [Display(Name = "Toevoegen persoonlijke inlog link?")]
         public bool IncludeLoginLink { get; set; }
-
-        public bool IsEmail { get; set; }
 
         [Display(Name = "Sturen naar?")]
         /// <summary>

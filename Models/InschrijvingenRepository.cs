@@ -270,8 +270,8 @@ namespace HRE.Models {
                 if (address==null) {
                     throw new ArgumentException("address is null. This should not occur. This code should be able to be deleted :P.");
                     // Create an address.
-                    address = new address();
-                    address.DateCreated = DateTime.Now;
+                    // address = new address();
+                    // address.DateCreated = DateTime.Now;
                 }
                 address.DateUpdated = DateTime.Now;
                 address.City = inschrijving.Woonplaats;
@@ -290,7 +290,7 @@ namespace HRE.Models {
                 int eventId = InschrijvingenRepository.GetEvent(eventNumber).Id;
 
                 // Create the sportsparticipation.
-                sportseventparticipation participation = (from p in DB.sportseventparticipation where p.UserId==user.ID && p.SportsEventId ==  eventId select p).FirstOrDefault();
+                sportseventparticipation participation = (from p in DB.sportseventparticipation where p.UserId==user.Id && p.SportsEventId ==  eventId select p).FirstOrDefault();
 
                 if (participation==null) {
                     participation = new sportseventparticipation();
@@ -316,7 +316,7 @@ namespace HRE.Models {
                 participation.SportsEventId = (from sportsevent se in DB.sportsevent 
                                                 where se.ExternalEventIdentifier==eventNumber 
                                                 select se.Id).First();
-                participation.UserId = user.ID;
+                participation.UserId = user.Id;
 
                 participation.SpeakerRemarks = inschrijving.OpmerkingenTbvSpeaker;
                 participation.IsInterestedToSleepOver = inschrijving.InteresseOvernachtenNaWedstrijd;

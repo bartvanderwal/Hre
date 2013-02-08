@@ -6,6 +6,8 @@ using System.Net.Mail;
 using HRE.Business;
 using HRE.Data;
 using System.Web.Security;
+using System.Web.Mvc;
+using HRE.Models;
 
 namespace HRE.Dal {
     public class LogonUserDal : ObjectDal {
@@ -33,7 +35,7 @@ namespace HRE.Dal {
         /// <summary>
         /// The unique identifier / primary key of the user.
         /// </summary>
-        public int ID {
+        public int Id {
             get { return _user.Id; }
         }
 		
@@ -239,7 +241,7 @@ namespace HRE.Dal {
         /// </summary>
         public void Save() {
             // Add entity if it has no primary key yet.
-            if (ID==0) {
+            if (Id==0) {
                 DB.AddTologonuser(_user);
             }
             // Add address entity if it has no primary key yet.
@@ -539,5 +541,29 @@ namespace HRE.Dal {
                     select p
                     ).Count();
         }
+
+
+        /// <summary>
+        /// For testing purposes this gets that part of the registered admin users who were also subscribed 
+        /// for HRE 2012 (inserted for testing in NTB inschrijvingen).
+        /// </summary>
+        /// <returns></returns>
+        public static List<SelectListItem> GetAdminRunners() {
+            List<SelectListItem> result = new List<SelectListItem>();
+            
+            List<LogonUserDal> adminUsers = new List<LogonUserDal>();
+            foreach (string adminUserName in Roles.GetUsersInRole("Admin")) {
+                adminUsers.Add(LogonUserDal.GetByEmailAddress(adminUserName));
+            }
+
+            foreach(LogonUserDal user in adminUsers) {
+                if (SportsEventParticipationDal.GetByUserIDEventId(user.Id, InschrijvingenRepository.GetHreEvent().Id)!=null) {
+                    result.Add(new SelectListItem() { Text = user.EmailAddress, Value = user.Id.ToString()});
+                }
+            }
+
+            return result;
+        }
+
     }
 }

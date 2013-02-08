@@ -33,9 +33,9 @@ namespace HRE.Controllers {
         public ActionResult CreateNewsletter(string id) {
             if (string.IsNullOrEmpty(id)) {
                 NewsletterViewModel nvm = new NewsletterViewModel();
-                nvm.Created = DateTime.Now;
-                nvm.Sent = null;
-                nvm.Updated = null;
+                nvm.DateCreated = DateTime.Now;
+                nvm.DateSent = null;
+                nvm.DateUpdated = null;
                 nvm.SequenceNumber = 1;
 
                 nvm.Items = new List<NewsletterItemViewModel>() {
@@ -56,13 +56,10 @@ namespace HRE.Controllers {
 
 
         [Authorize(Roles="Admin")]
-        public ActionResult SendNewsletter(int newsletterId, int logonUserId) {
-            // NewsletterViewModel nvm = NewsletterRepository.GetByID(id);
+        public ActionResult SendNewsletter(int newsletterId) {
             SendPersonalNewsletterViewModel snl = new SendPersonalNewsletterViewModel() {
-                NewsletterId = newsletterId,
-                LogonUserId = logonUserId,
+                NewsletterId = newsletterId
             };
-            snl.Newsletter.IsEmail = true;
             return View(snl);
         }
 
@@ -71,27 +68,28 @@ namespace HRE.Controllers {
         [HttpPost]
         public ActionResult SendNewsletter(SendPersonalNewsletterViewModel spnvm) {
             // NewsletterViewModel nvm = NewsletterRepository.GetByID(snlvm.NewsletterId);
-            string Newsletter = this.RenderNewsletterViewToString("NewsletterLocalizations/NewsletterLayout", spnvm);
+            spnvm.IsEmail=true;
+            string Newsletter = this.RenderNewsletterViewToString("NewsletterTemplates/NewsletterTemplate", spnvm);
 
             MailMessage message = new MailMessage();
             message.From = new MailAddress(HreSettings.ReplyToAddress, HreSettings.ReplyToAddress);
-            message.To.Add(new MailAddress(spnvm.TestEmail));
+            message.To.Add(new MailAddress(LogonUserDal.GetByID(spnvm.UserId).EmailAddress));
             message.Subject = spnvm.Newsletter.Title;
             message.IsBodyHtml = true;
             message.Body = Newsletter;
-            EmailSender.SendEmail(message, EmailCategory.Newsletter, spnvm.NewsletterId, spnvm.LogonUserId);
+            EmailSender.SendEmail(message, EmailCategory.Newsletter, spnvm.NewsletterId, spnvm.UserId);
 
             return View(spnvm);
         }
 
 
         [Authorize(Roles="Admin")]
-        public ActionResult Sent(int Id) {
+        public ActionResult SendAll(int Id) {
             SendPersonalNewsletterViewModel spnvm = new SendPersonalNewsletterViewModel();
             spnvm.NewsletterId = Id;
-            spnvm.Newsletter.IsEmail = true;
+            spnvm.IsEmail = true;
 
-            if (spnvm.Newsletter.Sent == null) {
+            if (spnvm.Newsletter.DateSent == null) {
                 List<LogonUserDal> users = LogonUserDal.GetNewsletterReceivers(spnvm.Newsletter.Audience);
                 MailMessage mm = new MailMessage();
                 mm.From = new MailAddress(HreSettings.ReplyToAddress);
@@ -99,13 +97,13 @@ namespace HRE.Controllers {
                 mm.IsBodyHtml = true;
 
                 foreach (LogonUserDal user in users) {
-                    spnvm.LogonUserId = user.ID;
-                    mm.Body = this.RenderNewsletterViewToString("NewsletterLocalizations/NewsletterLayout", spnvm);
+                    spnvm.UserId = user.Id;
+                    mm.Body = this.RenderNewsletterViewToString("NewsletterTemplates/NewsletterTemplate", spnvm);
                     mm.To.Clear();
                     mm.To.Add(new MailAddress(user.EmailAddress));
-                    EmailSender.SendEmail(mm, EmailCategory.Newsletter, spnvm.Newsletter.ID, spnvm.LogonUserId);                   
+                    EmailSender.SendEmail(mm, EmailCategory.Newsletter, spnvm.Newsletter.ID, spnvm.UserId);                   
                 }
-                spnvm.Newsletter.Sent = DateTime.Now;
+                spnvm.Newsletter.DateSent = DateTime.Now;
                 NewsletterRepository.UpdateNewsletter(spnvm.Newsletter);
                 ViewBag.message = "E-mails met succes verstuurd!";                
             } else {
@@ -120,7 +118,7 @@ namespace HRE.Controllers {
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult CreateNewsletter(NewsletterViewModel nvm) {
-            nvm.Updated = DateTime.Now;
+            nvm.DateUpdated = DateTime.Now;
 
             if (ModelState.IsValid) {
                 if (nvm.ID == 0) {
@@ -139,7 +137,7 @@ namespace HRE.Controllers {
         [ValidateInput(false)]
         public ActionResult PreviewNewsletter(NewsletterViewModel nvm) {
             ViewBag.IsEmail = false;
-            return View("NewsletterLocalizations/NewsletterLayout", nvm);
+            return View("NewsletterTemplates/NewsletterTemplate", nvm);
         }
 
 
@@ -154,11 +152,10 @@ namespace HRE.Controllers {
         public ActionResult Display(int newsletterId) {
             NewsletterViewModel nvm = NewsletterRepository.GetByID(newsletterId);
             if (nvm != null) {
-                nvm.IsEmail = false;
                 SendPersonalNewsletterViewModel spnvm = new SendPersonalNewsletterViewModel();
                 spnvm.NewsletterId = newsletterId;
-                spnvm.LogonUserId = LogonUserDal.GetByEmailAddress("bart@hetrondjeeilanden.nl").ID;
-                return View("NewsletterLocalizations/NewsletterLayout", spnvm);
+                spnvm.UserId = LogonUserDal.GetByEmailAddress("bart@hetrondjeeilanden.nl").Id;
+                return View("NewsletterTemplates/NewsletterTemplate", spnvm);
             } else {
                 return RedirectToAction("Index", "Home");
             }
@@ -169,7 +166,7 @@ namespace HRE.Controllers {
         public ActionResult Unsubscribe(string id) {
             string email = id;
             try {
-                email = Util.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
+                email = Common.Common.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
             } catch (Exception) {
                 ViewBag.Message = "Ongeldig e-mail adres";
                 return View();

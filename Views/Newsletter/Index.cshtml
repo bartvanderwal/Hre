@@ -16,8 +16,8 @@
         var SentDate = "-";
         var row = "";
         
-        if (item.Sent != null) {
-            DateTime dt = (DateTime)item.Sent;
+        if (item.DateSent != null) {
+            DateTime dt = (DateTime)item.DateSent;
             SentDate = dt.ToString("dd-MM-yyyy");
         }
         
@@ -28,9 +28,9 @@
         <tr class="@Html.Raw(row)">
             @{ string title = item.Title ?? "- no title -"; }
             <td>@Html.ActionLink(title, "CreateNewsletter", new { id = item.ID })</td>
-            <td>@item.Created.ToString("dd-MM-yyyy")</td>
+            <td>@item.DateCreated.ToString("dd-MM-yyyy")</td>
             <td>@Html.ActionLink("Bekijk", "Display", new { newsletterId = item.ID })</td>
-            <td>@if (SentDate == "-") { @Html.ActionLink("Versturen", "SendNewsletter", new { newsletterId = item.ID, logonUserId = 1 }) } else { @Html.Raw("Verstuurd") }</td>
+            <td>@if (SentDate == "-") { @Html.ActionLink("Versturen", "SendNewsletter", new { newsletterId = item.ID}) } else { @Html.Raw("Verstuurd") }</td>
         </tr>
         i++;
     }

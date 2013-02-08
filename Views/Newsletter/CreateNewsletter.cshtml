@@ -43,26 +43,26 @@
                     </tr>
                     <tr>
                         <td>
-                            @Html.LabelFor(m => Model.Created)
+                            @Html.LabelFor(m => Model.DateCreated)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => Model.Created)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.LabelFor(m => Model.Updated)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(m => Model.Updated)
+                            @Html.DisplayFor(m => Model.DateCreated)
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            @Html.LabelFor(m => Model.Sent)
+                            @Html.LabelFor(m => Model.DateUpdated)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => Model.Sent)
+                            @Html.DisplayFor(m => Model.DateUpdated)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(m => Model.DateSent)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => Model.DateSent)
                         </td>
                     </tr>
             </table>
@@ -84,9 +84,9 @@
 
 <div id="dialog-modal" title="Nieuwsbrief Preview"></div>
 
-@Html.TextBoxFor(m => Model.Created, new { @style = "display: none" })
-@Html.TextBoxFor(m => Model.Updated, new { @style = "display: none" })
-@Html.TextBoxFor(m => Model.Sent, new { @style = "display: none" })
+@Html.TextBoxFor(m => Model.DateCreated, new { @style = "display: none" })
+@Html.TextBoxFor(m => Model.DateUpdated, new { @style = "display: none" })
+@Html.TextBoxFor(m => Model.DateSent, new { @style = "display: none" })
 <input id="ID" name="ID" style="display: none" type="text" value="@Model.ID">
 @Html.TextBoxFor(m => Model.SequenceNumber, new { @style = "display: none" })
 

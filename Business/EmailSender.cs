@@ -17,7 +17,7 @@ namespace HRE.Business {
         /// Sends an e-mail (and creates an e-mail audit record).
         /// </summary>
         public static void SendEmail(MailMessage message, EmailCategory? category, int? relatedEntityID, int? userIdReceiver = null) {
-            EmailAuditDal emailAuditDal = new EmailAuditDal(message, category, LogonUserDal.GetCurrentUser().ID, userIdReceiver, relatedEntityID);
+            EmailAuditDal emailAuditDal = new EmailAuditDal(message, category, LogonUserDal.GetCurrentUser().Id, userIdReceiver, relatedEntityID);
 
             SmtpClient smtpClient = new SmtpClient();
             
@@ -105,7 +105,7 @@ namespace HRE.Business {
             MailDefinition mailDefinition = new MailDefinition();
             string filePath = string.Format("{0}\\{1}.html", HttpContext.Current.Request.PhysicalApplicationPath,
                                                                 emailPathName);
-            mailDefinition.BodyFileName = Common.Util.RetrievePhysicalFilename(filePath);
+            mailDefinition.BodyFileName = Common.Common.RetrievePhysicalFilename(filePath);
             LiteralControl dummy = new LiteralControl();
             MailMessage message = mailDefinition.CreateMailMessage(toAddress, replacements, dummy);
             message.From = new MailAddress(HreSettings.ReplyToAddress, HreSettings.ReplyToAddress);

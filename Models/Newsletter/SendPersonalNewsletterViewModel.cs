@@ -9,13 +9,11 @@ using HRE.Dal;
 namespace HRE.Models.Newsletters {
     public class SendPersonalNewsletterViewModel {
         
-        [Required(ErrorMessage = "Vul een e-mail adres in.")]
+        [Required(ErrorMessage = "Kies een test geadresseerde.")]
         [Display(Name = "Test email adres:")]
-        public string TestEmail { get; set; }
+        public int UserId { get; set; }
         
         public int NewsletterId { get; set; }
-        
-        public int LogonUserId { get; set; }
 
 
         public NewsletterViewModel Newsletter {
@@ -24,16 +22,17 @@ namespace HRE.Models.Newsletters {
             }
         }
 
-        public LogonUserDal LogonUser { 
+        public LogonUserDal User { 
             get {
-                return LogonUserDal.GetByID(LogonUserId);
+                return LogonUserDal.GetByID(UserId);
             }
         }
 
+        public bool IsEmail { get; set; }
 
         public string PersonalLoginLink {
             get {
-                return Util.RC2Encryption(LogonUserDal.GetByID(LogonUserId).EmailAddress, HreSettings.EmaCypher, HreSettings.HiddenCypher);
+                return Common.Common.RC2Encryption(LogonUserDal.GetByID(UserId).EmailAddress, HreSettings.EmaCypher, HreSettings.HiddenCypher);
             }
         }
 

@@ -10,7 +10,7 @@
 @{ Html.BeginForm(); }
 @if (!ViewData.ModelState.IsValid) { Html.RenderPartial("_MessageBox"); } 
 
-@Html.LabelFor(m => m.TestEmail) @Html.TextBoxFor(m => m.TestEmail)
+@Html.LabelFor(m => m.UserId) @Html.DropDownListFor(m => m.UserId, HRE.Dal.LogonUserDal.GetAdminRunners())
 @Html.TextBoxFor(m => m.Newsletter.ID, new { @style = "display: none" })
 <input type="submit" value="Verzenden" /><br /><br />
 

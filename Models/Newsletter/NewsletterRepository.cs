@@ -53,9 +53,9 @@ namespace HRE.Models.Newsletters {
                                   orderby n.DateCreated
                                   select new NewsletterViewModel {
                                       ID = n.Id,
-                                      Created = n.DateCreated,
-                                      Sent = (DateTime)n.DateSent,
-                                      Updated = (DateTime)n.DateUpdated,
+                                      DateCreated = n.DateCreated,
+                                      DateSent = (DateTime)n.DateSent,
+                                      DateUpdated = (DateTime)n.DateUpdated,
                                       SequenceNumber = n.SequenceNumber,
                                       Audience = n.Audience.HasValue ? (NewsletterAudience) n.Audience : NewsletterAudience.OnlyToMembers,
                                       Title = n.Title
@@ -65,9 +65,9 @@ namespace HRE.Models.Newsletters {
                                   orderby n.DateCreated
                                   select new NewsletterViewModel {
                                       ID = n.Id,
-                                      Created = n.DateCreated,
-                                      Sent = (DateTime)n.DateSent,
-                                      Updated = (DateTime)n.DateUpdated,
+                                      DateCreated = n.DateCreated,
+                                      DateSent = (DateTime)n.DateSent,
+                                      DateUpdated = (DateTime)n.DateUpdated,
                                       SequenceNumber = n.SequenceNumber,
                                       Title = n.Title
                                   }).ToList();
@@ -87,9 +87,9 @@ namespace HRE.Models.Newsletters {
 
             NewsletterViewModel nivm = new NewsletterViewModel {
                 ID = nl.Id,
-                Created = nl.DateCreated,
-                Updated = nl.DateUpdated,
-                Sent = nl.DateSent,
+                DateCreated = nl.DateCreated,
+                DateUpdated = nl.DateUpdated,
+                DateSent = nl.DateSent,
                 Title = nl.Title,
                 IncludeLoginLink = nl.AddPersonalLoginLink.HasValue && nl.AddPersonalLoginLink.Value,
                 Audience = nl.Audience.HasValue ? (NewsletterAudience) nl.Audience.Value : NewsletterAudience.OnlyToMembers
@@ -150,7 +150,7 @@ namespace HRE.Models.Newsletters {
             newsletter nl = DB.newsletter.Where(n => n.Id == nvm.ID).Single();
 
             nl.DateUpdated = DateTime.Now;
-            nl.DateSent = nvm.Sent;
+            nl.DateSent = nvm.DateSent;
             nl.SequenceNumber = nvm.SequenceNumber;
             nl.Title = nvm.Title;
             nl.AddPersonalLoginLink = nvm.IncludeLoginLink;

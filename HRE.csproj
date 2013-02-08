@@ -114,7 +114,7 @@
     <Compile Include="Common\Helpers.cs" />
     <Compile Include="Common\HreSettings.cs" />
     <Compile Include="Common\SettingsBase.cs" />
-    <Compile Include="Common\Util.cs" />
+    <Compile Include="Common\Common.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\InschrijvingenController.cs" />
@@ -720,7 +720,7 @@
     <Content Include="Views\Newsletter\SendNewsletter.cshtml" />
     <Content Include="Views\Newsletter\Unsubscribe.cshtml" />
     <Content Include="Views\Newsletter\_NewsletterAdresses.cshtml" />
-    <Content Include="Views\Newsletter\NewsletterLocalizations\NewsletterLayout.cshtml">
+    <Content Include="Views\Newsletter\NewsletterTemplates\NewsletterTemplate.cshtml">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Views\Newsletter\EditorTemplates\NewsletterItemViewModel.cshtml" />

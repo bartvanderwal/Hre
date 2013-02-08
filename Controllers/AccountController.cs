@@ -42,7 +42,7 @@ namespace HRE.Controllers {
             string email = System.Web.HttpUtility.UrlDecode(id);
             if (!string.IsNullOrEmpty(id)) {
                 try {
-                    email = Util.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
+                    email = Common.Common.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
                 } catch (Exception) {
                     ViewBag.Message = "Ongeldige of verlopen inlog link";
                     return View();
@@ -219,7 +219,7 @@ namespace HRE.Controllers {
         public ActionResult EarlyBird(string id) {
             string email = id;
             try {
-                email = Util.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
+                email = Common.Common.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
             } catch (Exception) {
                 ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
                 return View();

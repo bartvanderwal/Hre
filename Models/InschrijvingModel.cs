@@ -224,9 +224,9 @@ namespace HRE.Models {
 
         // Construct an InschrijvingModel from a user.
         public InschrijvingModel(LogonUserDal logonUser) {
-            logonuser user = (from logonuser u in DB.logonuser where u.Id==logonUser.ID select u).FirstOrDefault();
+            logonuser user = (from logonuser u in DB.logonuser where u.Id==logonUser.Id select u).FirstOrDefault();
             
-            InschrijvingenRepository.SelectEntries(null, logonUser.ID);
+            InschrijvingenRepository.SelectEntries(null, logonUser.Id);
         }
 
         /// <summary>

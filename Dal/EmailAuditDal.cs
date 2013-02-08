@@ -67,7 +67,8 @@ namespace HRE.Dal {
             get { return _emailAudit.Subject; }
             set { _emailAudit.Subject = value; }
         }
-		
+
+
         /// <summary>
         /// The body of the audited e-mail.
         /// </summary>
@@ -75,13 +76,15 @@ namespace HRE.Dal {
             get { return _emailAudit.Body; }
             set { _emailAudit.Body = value; }
         }
-		
+
+
         /// <summary>
         /// The shortened body of the audited e-mail.
         /// </summary>
 		public string BodyShort {
             get { return Body.Shorten(300); }
         }
+
 
         /// <summary>
         /// The status of the audited e-mail: unsent, sent or send error.
@@ -90,7 +93,8 @@ namespace HRE.Dal {
             get { return (EmailStatus) _emailAudit.EmailStatusId; }
             set { _emailAudit.EmailStatusId = (int) value; }
         }
-		
+
+
         /// <summary>
         /// Optional text message when status is SendError.
         /// </summary>
@@ -99,6 +103,7 @@ namespace HRE.Dal {
             set { _emailAudit.StatusMessage = value; }
         }
 
+
         /// <summary>
         /// The date(time) this e-mail audit was sent (last time e-mail succceeded send attempt).
         /// </summary>
@@ -106,6 +111,7 @@ namespace HRE.Dal {
             get { return _emailAudit.DateSent; }
             set { _emailAudit.DateSent = value; }
         }
+
 
         /// <summary>
         /// The date(time) this e-mail audit was first created (first time e-mail send attempt).

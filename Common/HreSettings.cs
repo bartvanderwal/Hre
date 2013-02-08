@@ -228,6 +228,6 @@ namespace HRE.Common {
                 return ReadIntSetting("HoogteEarlyBirdKorting", 750);
             }
         }
-        
+       
     }
 }
