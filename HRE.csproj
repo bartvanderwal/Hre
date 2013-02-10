@@ -117,6 +117,7 @@
     <Compile Include="Common\Common.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\InschrijvingenController.cs" />
     <Compile Include="Controllers\NewsletterController.cs" />
     <Compile Include="Controllers\VideoController.cs" />
@@ -187,7 +188,6 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BaseRepository.cs" />
     <Compile Include="Models\ContactViewModel.cs" />
-    <Compile Include="Models\EarlyBirdViewModel.cs" />
     <Compile Include="Models\MeedoenModel.cs" />
     <Compile Include="Models\Newsletter\NewsletterItemViewModel.cs" />
     <Compile Include="Models\Newsletter\NewsletterRepository.cs" />
@@ -237,7 +237,6 @@
     <Content Include="Content\img\YouTube.png" />
     <Content Include="Content\img\YouTube_smaller.png" />
     <Content Include="Content\main_new.css" />
-    <Content Include="Content\Copy of main.css" />
     <Content Include="Content\img\2DParcours-rechtsom.png" />
     <Content Include="Content\img\2DParcours-rechtsom_org.png" />
     <Content Include="Content\img\2DParcours-rechtsom_thumb.png" />
@@ -585,6 +584,10 @@
     <Content Include="sql\2.create_hre.sql" />
     <Content Include="sql\0.undo_script.sql" />
     <Content Include="sql\3.insert_roles.sql" />
+    <None Include="Views\Errors\DefaultError.cshtml" />
+    <None Include="Views\Errors\NotAuthorized.cshtml" />
+    <None Include="Views\Errors\_401.cshtml" />
+    <None Include="Views\Errors\_404.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -616,6 +619,7 @@
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Inschrijvingen\ikdoemee.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -626,12 +630,11 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\Copy of _LogOnPartial.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="App_Code\TwitterGoodies.cshtml" />
     <Content Include="App_Code\Facebook.cshtml" />
-    <Content Include="Configuration\Prod\AppSettings.config" />
+    <Content Include="Configuration\Prod\AppSettings.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Configuration\Prod\Compilation.config" />
     <Content Include="Configuration\PreProd\ConnectionStrings.config">
       <SubType>Designer</SubType>
@@ -641,7 +644,9 @@
     </Content>
     <Content Include="Configuration\Prod\HealthMonitoring.config" />
     <Content Include="Configuration\Prod\SmtpSettings.config" />
-    <Content Include="Configuration\PreProd\AppSettings.config" />
+    <Content Include="Configuration\PreProd\AppSettings.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Configuration\PreProd\SmtpSettings.config" />
     <Content Include="Configuration\PreProd\Compilation.config">
       <SubType>Designer</SubType>
@@ -711,8 +716,7 @@
     <Content Include="Views\Video\Uitslagen.cshtml" />
     <Content Include="Views\Inschrijvingen\Index.cshtml" />
     <Content Include="Views\Inschrijvingen\Edit.cshtml" />
-    <Content Include="Views\Shared\_SubscribeForm.cshtml" />
-    <Content Include="Views\Meedoen\EarlyBird.cshtml" />
+    <Content Include="Views\Shared\__SubscribeForm.cshtml" />
     <Content Include="Views\Meedoen\AangemeldNieuwsbrief.cshtml" />
     <Content Include="Views\Newsletter\CreateNewsletter.cshtml" />
     <Content Include="Views\Newsletter\Index.cshtml" />
@@ -728,7 +732,7 @@
     <Content Include="Views\Shared\_NewLayout.cshtml" />
     <Content Include="Views\Account\_ViewStart.cshtml" />
     <Content Include="Views\Newsletter\_ViewStart.cshtml" />
-    <Content Include="Views\Account\EarlyBird.cshtml" />
+    <Content Include="Views\Account\FlessenPostLink.cshtml" />
     <Content Include="Views\Account\Inschrijven.cshtml" />
     <Content Include="Views\Inschrijvingen\Reglementen.cshtml" />
   </ItemGroup>
@@ -748,8 +752,8 @@
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>63647</DevelopmentServerPort>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>59162</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:50310/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

@@ -3105,24 +3105,72 @@ namespace HRE.Data
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Boolean> IsInterestedToSleepOver
+        public Nullable<global::System.Boolean> Food
         {
             get
             {
-                return _IsInterestedToSleepOver;
+                return _Food;
             }
             set
             {
-                OnIsInterestedToSleepOverChanging(value);
-                ReportPropertyChanging("IsInterestedToSleepOver");
-                _IsInterestedToSleepOver = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("IsInterestedToSleepOver");
-                OnIsInterestedToSleepOverChanged();
+                OnFoodChanging(value);
+                ReportPropertyChanging("Food");
+                _Food = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Food");
+                OnFoodChanged();
             }
         }
-        private Nullable<global::System.Boolean> _IsInterestedToSleepOver;
-        partial void OnIsInterestedToSleepOverChanging(Nullable<global::System.Boolean> value);
-        partial void OnIsInterestedToSleepOverChanged();
+        private Nullable<global::System.Boolean> _Food;
+        partial void OnFoodChanging(Nullable<global::System.Boolean> value);
+        partial void OnFoodChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> Camp
+        {
+            get
+            {
+                return _Camp;
+            }
+            set
+            {
+                OnCampChanging(value);
+                ReportPropertyChanging("Camp");
+                _Camp = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Camp");
+                OnCampChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _Camp;
+        partial void OnCampChanging(Nullable<global::System.Boolean> value);
+        partial void OnCampChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> Bike
+        {
+            get
+            {
+                return _Bike;
+            }
+            set
+            {
+                OnBikeChanging(value);
+                ReportPropertyChanging("Bike");
+                _Bike = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Bike");
+                OnBikeChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _Bike;
+        partial void OnBikeChanging(Nullable<global::System.Boolean> value);
+        partial void OnBikeChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

@@ -123,12 +123,5 @@ namespace HRE.Controllers {
             return View("Index");
         }
 
-
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public ActionResult EarlyBird(InschrijvingModel model) {
-            return View(model);
-        }
-
     }
 }

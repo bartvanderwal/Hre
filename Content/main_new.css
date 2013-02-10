@@ -41,8 +41,11 @@ a:visited {
 a:active {
 }
 
-#content a:hover {
-    background-color: White;
+
+a:hover,
+input[type="checkbox"],
+input[type="radio"] {
+    cursor: pointer;
 }
 
 #left {
@@ -636,10 +639,68 @@ table.deelname-kosten td.col {
     font-style: italic;
 }
 
-#select-edition {
+
+.parallel-form {
     display: inline-block;
 }
 
-#scrape {
-    display: inline-block;
+.bank-account {
+    margin: 0px 3px 0px 3px;
+    float: right;
+    font-size: smaller;
+    border: 1px solid #a0a0a0;
+}
+
+.bank-account td:first {
+    text-align: right;
+}
+
+.like {
+    float: right;
+}
+
+ul.personal-links li {
+    margin-left: 40px;
+}
+
+p.personal-links {
+    margin: 0px 20px 0px 30px;
+    padding: 0px;
+}
+
+.quotable {
+    /* background-color: #A0A0A0; */
+    font: courier, monospace;
+    margin: 0px 3px 0px 3px;
+}
+
+.badge {
+    float: right;
+    border: 1px solid #505050;
+    background-color: #A0A0A0;
+    margin: 30px 0px 30px 0px;
+    padding: 5px 10px;
+    font-size: small;
+    /* width: 300px;
+    height: 100px; */
+    text-align: center;
+    color: #ffffff;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+
+}
+
+#content img.left {
+    float: left !important;
+}
+
+tr.test-user td a {
+    font-style: italic;
+    color: Red;
+}
+
+tr.is-me {
+    background-color: #b0b0b0;
+    font-weight: bolder;
 }

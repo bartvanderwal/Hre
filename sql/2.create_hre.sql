@@ -74,7 +74,9 @@ create table SportsEventParticipation (
   ParticipationAmountInEuroCents int NULL, --  Te betalen inschrijfgeld (afhankelijk van NTB lidmaatschap, eigen chip of niet en tijdstip van betalen ivm tussentijdse prijsverhogingen.
   ParticipationAmountPaidInEuroCents int NULL, -- Totale betaalde bedrag. Zou gelijk moeten zijn aan te bet
   TShirtSize varchar(6) NULL,
-  IsInterestedToSleepOver bit,
+  Food bit,
+  Camp bit,
+  Bike bit,
   HasPaid bit,
   StartNumber int NULL,
   PaymentType int NULL,

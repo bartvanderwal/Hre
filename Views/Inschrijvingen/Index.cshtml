@@ -5,10 +5,17 @@
 @{
     ViewBag.Title = "Scrape NTB";
     Layout = "~/Views/Shared/_NewLayout.cshtml";
+    List<int> testParticipants = HRE.Dal.LogonUserDal.GetTestParticipantIds();
+    
+    var currentUser = HRE.Dal.LogonUserDal.GetCurrentUser();
+    int currentUserId = 0;
+    if (currentUser!=null) {
+        currentUserId = currentUser.Id;
+    }
 }
 
 @if (Model.IsAdmin) {
-    using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="select-edition" } )) {
+    using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="select-edition", @class="parallel-form" } )) {
         @Html.DropDownList("EventNumber",
             new SelectList(new Dictionary<string, string> {
                 {"2013", HRE.Models.InschrijvingenRepository.H2RE_EVENTNR},
@@ -18,7 +25,12 @@
          <input type="submit" value="Update" />
     }
     
-    using(Html.BeginForm("Scrape", "Inschrijvingen", FormMethod.Post, new { @id="scrape" } )) {
+    using(@Html.BeginForm("DeleteTestUser", "Inschrijvingen", FormMethod.Post, new { @id="deleteTestUser", @class="parallel-form"} )) {
+        @Html.DropDownListFor(m => m.UserIdToDelete, HRE.Dal.LogonUserDal.GetTestParticipantsAsSelectList());
+        <input type="submit" value="Delete" />
+    }
+    
+    using(Html.BeginForm("Scrape", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) {
         @Html.AntiForgeryToken();
         <text>Scrape:</text>
         @Html.DropDownList("maxNumberOfScrapedItems",
@@ -27,12 +39,17 @@
                                                          {"1000", 1000}}, "Value", "Key"));
         @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"});
         <text>Overwrite</text>
-        <input type="submit" value="Scrape NTBi" />
+        <input type="submit" value="Scrape" />
     }
 }
 
-<h1>Deelnemerslijst H2RE</h1>
-<p>Wie racet er rond de eilanden op zaterdag 3 aug 2013?</p>
+@if(!string.IsNullOrEmpty(Model.Message)) {
+    <div class="message">@Model.Message</div>
+}
+
+<h1>@(Model.EventNumber==HRE.Models.InschrijvingenRepository.HRE_EVENTNR ? 
+        "Deelnemerslijst HRE 2012" :
+        "Deelnemerslijst H2RE 2013")</h1>
 @if (Model==null || Model.Entries==null || Model.Entries.Count==0) {
     <span>Er zijn nog geen deelnemers.</span>
 } else {
@@ -40,10 +57,10 @@
         <tr>
             <th>Deelnemer</th>
             <th>Woonplaats</th>
+            <th>Aangemeld</th>
             @if (Model.IsAdmin) {
                 <th>E-mail adres</th>
                 <th>Geb. datum</th>
-                <th>Ingeschreven</th>
                 <th>Eerst gescraped</th>
                 <th>Laatst gescraped</th>
                 <th>Updated</th>
@@ -52,13 +69,15 @@
 
         @foreach (var entry in Model.Entries) {
             string participant = entry.Achternaam;
-            <tr>
-                <td>@Html.ActionLink(entry.FullName, "Edit", new { externalId = entry.ExternalIdentifier })</td>
+            bool isTestUser = testParticipants.Contains(entry.UserId);
+            bool isMe = currentUserId==entry.UserId;
+            <tr class="@(isTestUser ? "test-user" : "") @(isMe ? "is-me" : "")">
+                <td>@Html.ActionLink(entry.VolledigeNaam, "Edit", new { externalId = entry.ExternalIdentifier, eventNr = entry.ExternalEventIdentifier })</td>
                 <td>@entry.Woonplaats</td>
+                <td>@string.Format("{0:dd-MM-yyyy}", entry.RegistrationDate)</td>
                 @if (Model.IsAdmin) {
                     <td><a href="mailto:@entry.Email">@entry.Email</a></td>
                     <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td>
-                    <td>@string.Format("{0:dd-MM-yyyy}", entry.RegistrationDate)</td>
                     <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstSynchronized.HasValue ? entry.DateFirstSynchronized.Value.RelativeDateDescription() : "-")</td>
                     <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastSynchronized.HasValue ? entry.DateLastSynchronized.Value.RelativeDateDescription()  : "-")</td>
                     <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>

@@ -132,6 +132,16 @@ namespace HRE.Common {
 
 
         /// <summary>
+        /// The address to CC subscription mails to, as a backup :). 
+        /// </summary>
+        public static string ConfirmationsCCAddress {
+            get {
+                return ReadStringSetting("ConfirmationsCCAddress", "info@hetrondjeeilanden.nl");
+            }
+        }
+
+
+        /// <summary>
         /// The *hidden* key for encryption, it doesnt really have to super secure because there are multiple salts
         /// Default: yordiisdaman!.
         /// </summary>
@@ -203,7 +213,7 @@ namespace HRE.Common {
         /// </summary>
         public static int KostenDagLicentie {
             get {
-                return ReadIntSetting("KostenDagLicentie", 230);
+                return ReadIntSetting("KostenDagLicentie", 220);
             }
         }
 
@@ -214,7 +224,7 @@ namespace HRE.Common {
         /// </summary>
         public static int KostenHuurMyLapsChipGeel {
             get {
-                return ReadIntSetting("KostenHuurMyLapsChipGeel", 250);
+                return ReadIntSetting("KostenHuurMyLapsChipGeel", 200);
             }
         }
 

@@ -16,9 +16,18 @@ namespace HRE.Models.Newsletters {
         public int NewsletterId { get; set; }
 
 
+        private NewsletterViewModel _newsletter;
+
+
         public NewsletterViewModel Newsletter {
             get {
-                return NewsletterRepository.GetByID(NewsletterId);
+                if(_newsletter==null && NewsletterId!=0) {
+                    _newsletter = NewsletterRepository.GetByID(NewsletterId);
+                }
+                return _newsletter;
+            }
+            set {
+                _newsletter = value;
             }
         }
 

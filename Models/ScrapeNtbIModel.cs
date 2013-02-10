@@ -10,7 +10,11 @@ namespace HRE.Models {
     public class ScrapeNtbIModel {
 
         public ScrapeNtbIModel() {
-            EventNumber = InschrijvingenRepository.HRE_EVENTNR;
+            if(IsAdmin) {
+                EventNumber = InschrijvingenRepository.HRE_EVENTNR;
+            } else {
+                EventNumber = InschrijvingenRepository.H2RE_EVENTNR;
+            }
         }
 
         public List<InschrijvingModel> Entries { get; set; }
@@ -20,6 +24,10 @@ namespace HRE.Models {
         public bool OverrideLocallyUpdated { get; set; }
 
         public string EventNumber { get; set; }
+
+        public int UserIdToDelete { get; set; }
+
+        public string Message { get; set; }
 
         public bool IsAdmin { 
             get {

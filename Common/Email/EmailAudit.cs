@@ -1,4 +1,4 @@
-﻿using MeaMedicaMVC.Models;
+﻿using HRE.Models;
 using System;
 using System.Linq;
 using System.Net.Mail;

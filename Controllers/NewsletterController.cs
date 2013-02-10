@@ -202,15 +202,15 @@ namespace HRE.Controllers {
 
 
 public static partial class ControllerExtensions {
-    public static string RenderNewsletterViewToString(this ControllerBase controller, string Path, object model, bool IsEmail = true) {
-        if (string.IsNullOrEmpty(Path))
-            Path = controller.ControllerContext.RouteData.GetRequiredString("action");
+    public static string RenderNewsletterViewToString(this ControllerBase controller, string path, object model, bool IsEmail = true) {
+        if (string.IsNullOrEmpty(path))
+            path = controller.ControllerContext.RouteData.GetRequiredString("action");
 
         controller.ViewData.Model = model;
         controller.ViewBag.IsEmail = IsEmail;
 
         using (StringWriter sw = new StringWriter()) {
-            ViewEngineResult viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, Path);
+            ViewEngineResult viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, path);
             ViewContext viewContext = new ViewContext(controller.ControllerContext, viewResult.View, controller.ViewData, controller.TempData, sw);
             // copy model state items to the html helper 
             foreach (var item in viewContext.Controller.ViewData.ModelState)

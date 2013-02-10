@@ -96,39 +96,30 @@ namespace HRE.Common {
 
         
         public static string RC2Encryption(string strInput, string strKey, string strIV) {
-            try {
-                byte[] byteInput = Encoding.UTF8.GetBytes(strInput);
-                byte[] byteKey = Encoding.ASCII.GetBytes(strKey);
-                byte[] byteIV = Encoding.ASCII.GetBytes(strIV);
-                MemoryStream MS = new MemoryStream();
-                RC2CryptoServiceProvider CryptoMethod = new RC2CryptoServiceProvider();
-                CryptoStream CS = new CryptoStream(MS, CryptoMethod.CreateEncryptor(byteKey, byteIV), CryptoStreamMode.Write);
-                CS.Write(byteInput, 0, byteInput.Length);
-                CS.FlushFinalBlock();
-                return HttpUtility.UrlEncode(Convert.ToBase64String(MS.ToArray()));
-            }
-            catch (Exception up) {
-                throw up;
-            }
+            byte[] byteInput = Encoding.UTF8.GetBytes(strInput);
+            byte[] byteKey = Encoding.ASCII.GetBytes(strKey);
+            byte[] byteIV = Encoding.ASCII.GetBytes(strIV);
+            MemoryStream MS = new MemoryStream();
+            RC2CryptoServiceProvider CryptoMethod = new RC2CryptoServiceProvider();
+            CryptoStream CS = new CryptoStream(MS, CryptoMethod.CreateEncryptor(byteKey, byteIV), CryptoStreamMode.Write);
+            CS.Write(byteInput, 0, byteInput.Length);
+            CS.FlushFinalBlock();
+            return HttpUtility.UrlEncode(Convert.ToBase64String(MS.ToArray()));
         }
 
 
         public static string RC2Decryption(string strInput, string strKey, string strIV) {
-            try {
-                strInput = HttpUtility.UrlDecode(strInput); // .Replace(" ","+");
-                byte[] byteInput = Convert.FromBase64String(strInput);
-                byte[] byteKey = Encoding.ASCII.GetBytes(strKey);
-                byte[] byteIV = Encoding.ASCII.GetBytes(strIV);
-                MemoryStream MS = new MemoryStream();
-                RC2CryptoServiceProvider RC2 = new RC2CryptoServiceProvider();
-                CryptoStream CS = new CryptoStream(MS, RC2.CreateDecryptor(byteKey, byteIV), CryptoStreamMode.Write);
-                CS.Write(byteInput, 0, byteInput.Length);
-                CS.FlushFinalBlock();
-                return Encoding.UTF8.GetString(MS.ToArray());
-            }
-            catch (Exception up) {
-                throw up;
-            }
+            strInput = HttpUtility.UrlDecode(strInput).Replace(" ","+");
+            byte[] byteInput = Convert.FromBase64String(strInput);
+            byte[] byteKey = Encoding.ASCII.GetBytes(strKey);
+            byte[] byteIV = Encoding.ASCII.GetBytes(strIV);
+            MemoryStream MS = new MemoryStream();
+            RC2CryptoServiceProvider RC2 = new RC2CryptoServiceProvider();
+            CryptoStream CS = new CryptoStream(MS, RC2.CreateDecryptor(byteKey, byteIV), CryptoStreamMode.Write);
+            CS.Write(byteInput, 0, byteInput.Length);
+            CS.FlushFinalBlock();
+            string result = Encoding.UTF8.GetString(MS.ToArray());
+            return result;
         }
 
 
@@ -136,7 +127,7 @@ namespace HRE.Common {
         /// Returns the domain base of the URL for the current environment: local, test or production.
         /// </summary>
         public static string GetDomainBase() {
-            return HreSettings.IsProduction ? "http://www.hetrondjeeilanden.nl" : HreSettings.IsDevelopment ? "http://localhost:63647/" : "http://test.hetrondjeeilanden.nl";
+            return HreSettings.IsProduction ? "http://www.hetrondjeeilanden.nl" : HreSettings.IsDevelopment ? "http://localhost:59162" : "http://test.hetrondjeeilanden.nl";
         }
 
     }

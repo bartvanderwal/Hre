@@ -10,9 +10,9 @@
 @{ Html.BeginForm(); }
 @if (!ViewData.ModelState.IsValid) { Html.RenderPartial("_MessageBox"); } 
 
-@Html.LabelFor(m => m.UserId) @Html.DropDownListFor(m => m.UserId, HRE.Dal.LogonUserDal.GetAdminRunners())
+@Html.LabelFor(m => m.UserId) @Html.DropDownListFor(m => m.UserId, HRE.Dal.LogonUserDal.GetTestParticipantsAsSelectList())
 @Html.TextBoxFor(m => m.Newsletter.ID, new { @style = "display: none" })
-<input type="submit" value="Verzenden" /><br /><br />
+<input type="submit" value="Verzend test" /><br /><br />
 
 <div>
     @Html.ActionLink("Naar index", "Index")

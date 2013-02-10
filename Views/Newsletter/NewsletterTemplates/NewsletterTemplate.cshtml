@@ -115,10 +115,12 @@
 				</tr>
             } else {
                 <tr class="item-content">
-					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 14pt;">@Html.Raw(@Item.Text)</td>
-                    @if (Model.IsEmail && Model.Newsletter.IncludeLoginLink) {
-				        <a style="color: #ffffff; background-color: #2483B3;" href="@HRE.Common.Common.GetDomainBase() /Account/EarlyBird/@Model.PersonalLoginLink">Klik hier voor jouw persoonlijke toegang tot de HRE site ></a>
-                    }
+					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 14pt;">
+                        @Html.Raw(@Item.Text)
+                        @if (Model.IsEmail && Model.Newsletter.IncludeLoginLink) {
+				            <a style="color: #ffffff; background-color: #2483B3; text-align: right; float: right;" href="@HRE.Common.Common.GetDomainBase()/Account/FlessenPostLink/@Model.PersonalLoginLink">Klik hier voor jouw persoonlijke toegang tot de HRE site ></a>
+                        }
+                    </td>
 				</tr>
             }
             </table>

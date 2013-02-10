@@ -22,10 +22,6 @@ namespace HRE.Dal {
         
         private MembershipUser _membershipUser;
 
-        // private List<SportsEventParticipationDal> _eventParticipations;
-
-        private SportsEventParticipationDal _HRE2012Participation;
-
         private address _primaryAddress;
 
         #endregion :: Members
@@ -81,16 +77,6 @@ namespace HRE.Dal {
 		public string ExternalId {
             get { return _user.ExternalId; }
             set { _user.ExternalId = value; }
-        }
-
-
-        public SportsEventParticipationDal HRE2012Participation {
-            get {
-                if (_HRE2012Participation==null) {
-                    _HRE2012Participation = new SportsEventParticipationDal(DB.sportseventparticipation.Where(ep => ep.SportsEventId == SportsEventDal.HRE2012Id && ep.UserId == _user.Id).FirstOrDefault());
-                }
-                return _HRE2012Participation;
-            }
         }
 
 
@@ -537,7 +523,7 @@ namespace HRE.Dal {
         /// <returns></returns>
         public static int DetermineNumberOfParticipants(bool earlyBirdsOnly) {
             return (from p in DB.sportseventparticipation 
-                    where p.SportsEventId==SportsEventDal.HRE2012Id && (!earlyBirdsOnly || (p.EarlyBird.HasValue && p.EarlyBird.Value))
+                    where p.SportsEventId==SportsEventDal.Hre2012Id && (!earlyBirdsOnly || (p.EarlyBird.HasValue && p.EarlyBird.Value))
                     select p
                     ).Count();
         }
@@ -548,7 +534,7 @@ namespace HRE.Dal {
         /// for HRE 2012 (inserted for testing in NTB inschrijvingen).
         /// </summary>
         /// <returns></returns>
-        public static List<SelectListItem> GetAdminRunners() {
+        public static List<LogonUserDal> GetTestParticipants() {
             List<SelectListItem> result = new List<SelectListItem>();
             
             List<LogonUserDal> adminUsers = new List<LogonUserDal>();
@@ -556,13 +542,26 @@ namespace HRE.Dal {
                 adminUsers.Add(LogonUserDal.GetByEmailAddress(adminUserName));
             }
 
-            foreach(LogonUserDal user in adminUsers) {
+            return adminUsers;
+        }
+
+
+        public static List<SelectListItem> GetTestParticipantsAsSelectList() {
+            List<SelectListItem> result = new List<SelectListItem>();
+            
+            foreach(LogonUserDal user in GetTestParticipants()) {
                 if (SportsEventParticipationDal.GetByUserIDEventId(user.Id, InschrijvingenRepository.GetHreEvent().Id)!=null) {
-                    result.Add(new SelectListItem() { Text = user.EmailAddress, Value = user.Id.ToString()});
+                    string text = user.UserName.Substring(0, user.UserName.IndexOf('@'));
+                    result.Add(new SelectListItem() { Text = text, Value = user.Id.ToString()});
                 }
             }
 
             return result;
+        }
+
+
+        public static List<int> GetTestParticipantIds() {
+            return (from ps in GetTestParticipants() select ps.Id).ToList();
         }
 
     }

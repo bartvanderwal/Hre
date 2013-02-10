@@ -680,3 +680,8 @@ table.deelname-kosten td.col {
 .placeholder {
     font-style: italic;
 }
+
+#content img.left {
+    float: left;
+    margin-left: 30px;
+}

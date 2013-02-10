@@ -50,7 +50,7 @@ namespace HRE.Controllers {
                 LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(email);
 
                 if (user!=null) {
-                    InschrijvingModel inschrijving = new InschrijvingModel(user);
+                    InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.HRE_EVENTNR);
                     FormsAuthentication.SetAuthCookie(user.UserName, false);
                     RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier} );
                 }
@@ -59,6 +59,7 @@ namespace HRE.Controllers {
             Initialise(AppConstants.AccountLogin);
             return View();
         }
+
 
         //
         // POST: /Account/LogOn
@@ -216,24 +217,31 @@ namespace HRE.Controllers {
         }
 
 
-        public ActionResult EarlyBird(string id) {
+        public ActionResult FlessenPostLink(string id) {
             string email = id;
             try {
                 email = Common.Common.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
             } catch (Exception) {
-                ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
+                ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal nog niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
                 return View();
             }
 
-            EarlyBirdViewModel birdModel = new EarlyBirdViewModel();
-            birdModel.User = LogonUserDal.CreateOrRetrieveUser(email);
-
-            if (birdModel.User==null) {
-                ViewBag.Message = "Ongeldige Early Bird™ link! <br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je nieuwsbrief helemaal niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
+            LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(email);
+            
+            if (user==null) {
+                ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal nog niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
                 return View();
+            }
+
+            // Log de gebruiker in (op basis van de e-mail link dus).
+            // TODO BW 2013-02-10: In geencrypte key nog expiration date zetten!
+            FormsAuthentication.SetAuthCookie(email, false);
+            InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.H2RE_EVENTNR);
+            if (inschrijving==null) {
+                inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.HRE_EVENTNR);
+                return RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier });
             } else {
-                InschrijvingModel scrapeModel = new InschrijvingModel(birdModel.User);
-                return View(scrapeModel);
+                return RedirectToAction("ikdoemee", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier});
             }
         }
 

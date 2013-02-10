@@ -5,19 +5,32 @@ using System.Text;
 using System.Net.Mail;
 using HRE.Business;
 using HRE.Data;
+using HRE.Models;
 
 namespace HRE.Dal {
     public class SportsEventDal : ObjectDal {
 
+
+        public static int Hre2012Id {
+            get {
+                return InschrijvingenRepository.GetEvent(InschrijvingenRepository.HRE_EVENTNR).Id;
+            }
+        }
+
+
+        public static int Hre2013Id {
+            get {
+                return InschrijvingenRepository.GetEvent(InschrijvingenRepository.H2RE_EVENTNR).Id;
+            }
+        }
+
+        
         #region :: Members
         
         /// <summary>
         ///  Connection to the Database class.
         /// </summary>
         private sportsevent _sportsEvent;
-        
-        public const int HRE2012Id = 1;
-
 
 
         #endregion :: Members
@@ -35,7 +48,7 @@ namespace HRE.Dal {
         /// <summary>
         /// The date(time) this e-mail audit was sent (last time e-mail succceeded send attempt).
         /// </summary>
-        public DateTime? EventDate{
+        public DateTime? EventDate {
             get { return _sportsEvent.EventDate; }
             set { _sportsEvent.EventDate = value; }
         }
@@ -44,11 +57,6 @@ namespace HRE.Dal {
         #endregion :: Properties
         
         #region :: Methods
-
-        public SportsEventDal GetCurrentEvent() {
-            // TODO BW 2012-07-04: Make user configurable through UI.
-            return GetById(HRE2012Id);
-        }
 
 
         /// <summary>

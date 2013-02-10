@@ -18,6 +18,8 @@ using System.Diagnostics;
 using System.Threading;
 using HRE.Common;
 using HRE.Dal;
+using System.Net.Mail;
+using HRE.Models.Newsletters;
 
 namespace HRE.Controllers {
 
@@ -25,14 +27,14 @@ namespace HRE.Controllers {
 
         public ActionResult Index() {
             ScrapeNtbIModel model = new ScrapeNtbIModel();
-            model.Entries = InschrijvingenRepository.GetEntries(InschrijvingenRepository.HRE_EVENTNR);
+            model.Entries = InschrijvingenRepository.GetEntries(model.EventNumber, model.IsAdmin);
             return View(model);
         }
 
 
         [HttpPost]
         public ActionResult Index(ScrapeNtbIModel model) {
-            model.Entries = InschrijvingenRepository.GetEntries(model.EventNumber);
+            model.Entries = InschrijvingenRepository.GetEntries(model.EventNumber, model.IsAdmin);
             return View(model);
         }
 
@@ -77,6 +79,35 @@ namespace HRE.Controllers {
         /// <returns></returns>
         [Authorize(Roles="Admin")]
         public ActionResult Scrape() {
+            return RedirectToAction("Index");
+        }
+
+
+
+        [Authorize]
+        public ActionResult ikdoemee(string externalId) {
+            InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, InschrijvingenRepository.HRE_EVENTNR);
+            return View(model);
+        }
+
+
+        /// <summary>
+        /// Non http post variant of ikdoemee
+        /// </summary>
+        [Authorize]
+        [HttpPost]
+        public ActionResult ikdoemee(InschrijvingModel model) {
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteTestUser(ScrapeNtbIModel model) {
+            int eventId = SportsEventDal.GetByExternalId(model.EventNumber).ID;
+            int userId = model.UserIdToDelete;
+            SportsEventParticipationDal participation = SportsEventParticipationDal.GetByUserIDEventId(userId, eventId);
+            model.Message = string.Format("Inschrijving gebruiker {0} verwijderd voor event {1}.", userId, eventId);
+            participation.Delete();
+            
             return RedirectToAction("Index");
         }
 
@@ -360,8 +391,7 @@ namespace HRE.Controllers {
                 }
             }
             
-            model.Entries = InschrijvingenRepository.GetEntries(InschrijvingenRepository.HRE_EVENTNR);
-            return View("Index", model);
+            return RedirectToAction("Index");
         }
 
 
@@ -380,17 +410,32 @@ namespace HRE.Controllers {
         /// </summary>
         /// <param name="externalId"></param>
         /// <returns></returns>
-        public ActionResult Edit(string externalId) {
-            InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, InschrijvingenRepository.HRE_EVENTNR);
+        public ActionResult Edit(string externalId, string eventNr="") {
+            if (string.IsNullOrEmpty(eventNr)) {
+                eventNr=InschrijvingenRepository.HRE_EVENTNR;
+            }
+            InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, eventNr);
             
             if (model==null) {
                 return HttpNotFound();
             }
-            // Reset de opmerkingen velden, deze zijn voor 2013 NIET voorgevuld met gegevens uit 2012 zoals de overige velden.
-            model.OpmerkingenTbvSpeaker = string.Empty;
-            model.Bijzonderheden = string.Empty;
-            model.ExternalEventIdentifier = string.Empty;
-            model.ExternalEventSerieIdentifier = string.Empty;
+
+            // The user gets the Early Bird discount if he was a participant in 2012 and is again in 2013 and is with the first 200.
+            model.IsEarlyBird = 
+                eventNr==InschrijvingenRepository.HRE_EVENTNR
+                && SportsEventParticipationDal.GetByUserIDEventId(model.UserId, SportsEventDal.Hre2012Id)!=null
+                && LogonUserDal.DetermineNumberOfParticipants(true) < HreSettings.AantalEarlyBirdStartPlekken;
+            
+            // Reset de gegevens 2013 indien deze zijn voorgeladen uit die van 2012.
+            if (eventNr==InschrijvingenRepository.HRE_EVENTNR) {
+                model.OpmerkingenTbvSpeaker = string.Empty;
+                model.Bijzonderheden = string.Empty;
+                model.ExternalEventIdentifier = string.Empty;
+                model.ExternalEventSerieIdentifier = string.Empty;
+                model.ExternalIdentifier = string.Empty;
+                model.DateRegistered = DateTime.MinValue;
+            }
+
             return View("Edit", model);
         }
 
@@ -420,25 +465,80 @@ namespace HRE.Controllers {
             // Store the race entry in the local database.
             if (ModelState.IsValid) {
                 // Set the eventIdentifier to the event of 2013.
-                model.ExternalIdentifier = null;
+                // TODO BW 2013-02-10: Refactor "HRE" to prefix constant.
+                model.ExternalIdentifier = "HRE" + model.ParticipationId;
                 model.ExternalEventIdentifier = InschrijvingenRepository.GetH2reEvent().ExternalEventIdentifier;
                 model.ExternalEventSerieIdentifier = InschrijvingenRepository.GetH2reEvent().ExternalEventSerieIdentifier;
-                InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H2RE_EVENTNR, false);
+                
+                // Sla op!
+                InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
+                
                 // TODO BW 2013-02-04: Synchronize the data to NTB inschrijvingen.
-                if (model.ExternalIdentifier!=null) {
+                if (string.IsNullOrEmpty(model.ExternalIdentifier) || model.ExternalIdentifier.StartsWith("HRE")) {
                     // The data is not yet in NTB inschrijvingen, write it to a new form.
                 } else {
                     // The entry is already in NTB inschr and edit the existing entry.
                 }
 
-                // Set the model as updated and synchronized/scraped if it was written to NTB inschrijvingen.
+                // TODO BW 2013-02-10: Set the model as updated and synchronized/scraped if it was written to NTB inschrijvingen.
                 // model.DateUpdated=DateTime.Now;
                 // model.DateLastScraped=model.DateUpdated;
-                if (!model.DateFirstSynchronized.HasValue) {
-                    model.DateFirstSynchronized=model.DateUpdated;
-                }
+                // if (!model.DateFirstSynchronized.HasValue) {
+                //    model.DateFirstSynchronized=model.DateUpdated;
+                // }
             }
-            return View("Edit", model);
+            // Opgeslagen model gegevens ophalen.
+            model = InschrijvingenRepository.GetInschrijving(LogonUserDal.GetByID(model.UserId), model.ExternalEventIdentifier); //(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
+
+            SendSubscriptionConfirmationMail(model);
+
+            return View("ikdoemee", model);
+        }
+
+
+        /// <summary>
+        /// Stuurt een bevestigingsmail van inschrijving naar de gebruiker.
+        /// Hiervoor wordt de nieuwsbrief template gebruikt.
+        /// </summary>
+        /// <param name="model"></param>
+        private void SendSubscriptionConfirmationMail(InschrijvingModel model) {
+            NewsletterViewModel newsletter = new NewsletterViewModel();
+            newsletter.Items = new List<NewsletterItemViewModel>();
+
+            NewsletterItemViewModel item1 = new NewsletterItemViewModel();
+            item1.Text = string.Format("Je hebt je zojuist aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief als je inschrijfgeld van {0} voldaan hebt. Voor je Early Bird korting dien je dit voor 1 maart over te maken!", model.InschrijfGeldFormatted);
+            newsletter.Items.Add(item1);
+
+            NewsletterItemViewModel item2 = new NewsletterItemViewModel();
+            item2.Title = "Meld je nu aan";
+            item2.SubTitle = "voor Hét 2e Rondje Eilanden";
+            item2.HeadingHtmlColour = "208900";
+            item2.Text = string.Format("Check je gegevens door in te loggen via je persoonlijke link hierboven. <br/><br/>Inschrijfgeld graag overmaken naar:<br/>Bank rekening 1684.92.059 (Rabobank) ten name van Stichting Woelig Water (te Vinkeveen) onder vermelding van: 'Inschrijfgeld H2RE {0}", model.VolledigeNaam);
+            item2.ImagePath = "News_2013.png";
+            item2.IconImagePath = "News_TileEB.png";
+            newsletter.Items.Add(item2);
+
+            NewsletterItemViewModel item3 = new NewsletterItemViewModel();
+            item3.Text = string.Format("");
+            newsletter.Items.Add(item1);
+
+
+            SendPersonalNewsletterViewModel spnvm = new SendPersonalNewsletterViewModel();
+            spnvm.IsEmail = true;
+            spnvm.Newsletter = newsletter;
+
+            MailMessage mm = new MailMessage();
+            mm.From = new MailAddress(HreSettings.ReplyToAddress);
+            mm.To.Add(new MailAddress(model.Email));
+            
+            // Send the confirmation mail to an appsetting defined admin email address for backup purposes.
+            mm.CC.Add(new MailAddress(HreSettings.ConfirmationsCCAddress));
+
+            mm.Subject = "Aanmeldbevestiging deelname Het 2e Rondje Eilanden" + model.VolledigeNaam;
+            mm.IsBodyHtml = true;
+            spnvm.UserId = model.UserId;
+            mm.Body = this.RenderNewsletterViewToString("../Newsletter/NewsletterTemplates/NewsletterTemplate", spnvm);
+            EmailSender.SendEmail(mm, EmailCategory.SubscriptionConfirmation, spnvm.Newsletter.ID, model.UserId);
         }
 
 
@@ -466,4 +566,5 @@ namespace HRE.Controllers {
         // Licentienummer koppeling
         // URL: http://ntbinschrijvingen.nl/Inschrijvingen/inschrijving_toevoegen_individueel.asp?Evenement=2005881&Serie=4549&Oorsprong=kalender
     }
+
 }

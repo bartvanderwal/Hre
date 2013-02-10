@@ -22,7 +22,7 @@ namespace HRE.Models {
 
         public const string HRE_NAME = "HRE";
 
-        public const string HRE_EVENTNR="2005881";
+        public const string HRE_EVENTNR = "2005881";
 
         public const string HRE_SERIENR = "4549";
 
@@ -102,7 +102,7 @@ namespace HRE.Models {
 
         
         public static sportsevent GetH2reEvent() {
-            return GetOrCreateEvent(H2RE_EVENTNR, HRE_SERIENR, H2RE_NAME, H2RE_DATE);
+            return GetOrCreateEvent(H2RE_EVENTNR, H2RE_SERIENR, H2RE_NAME, H2RE_DATE);
         }
 
 
@@ -112,7 +112,7 @@ namespace HRE.Models {
         /// <param name="externalId"></param>
         /// <returns></returns>
         public static InschrijvingModel GetByExternalIdentifier(string externalId, string eventNr) {
-            var currentEntry = (from entry in SelectEntries(eventNr)
+            var currentEntry = (from entry in SelectEntries(eventNr, true)
                                 where entry.ExternalIdentifier==externalId
                                 select entry
                 ).FirstOrDefault();
@@ -124,8 +124,14 @@ namespace HRE.Models {
         /// </summary>
         /// <param name="eventNr"></param>
         /// <returns></returns>
-        public static List<InschrijvingModel> GetEntries(string eventNr) {
-            return SelectEntries(eventNr).ToList();
+        public static List<InschrijvingModel> GetEntries(string eventNr, bool addTestParticipants = false) {
+            return SelectEntries(eventNr, addTestParticipants).ToList();
+        }
+
+
+        // Retrieve an InschrijvingModel for a user and a certain event (determined by externalIdentifier).
+        public static InschrijvingModel GetInschrijving(LogonUserDal logonUser, string eventNr) {
+            return SelectEntries(eventNr, true, logonUser.Id).FirstOrDefault();
         }
 
 
@@ -134,14 +140,16 @@ namespace HRE.Models {
         /// </summary>
         /// <param name="eventNr"></param>
         /// <returns></returns>
-        public static IEnumerable<InschrijvingModel> SelectEntries(string eventNr, int userId = 0) {
+        public static IEnumerable<InschrijvingModel> SelectEntries(string eventNr, bool addTestParticipants = false, int userId = 0) {
             hreEntities DB = DBConnection.GetHreContext();
             
+            List<int> testParticipantIds = (from LogonUserDal user in LogonUserDal.GetTestParticipants() select user.Id).ToList();
+
             var raceEntries = from sportseventparticipation p in DB.sportseventparticipation
                 join sportsevent e in DB.sportsevent on p.SportsEventId equals e.Id
                 join logonuser u in DB.logonuser on p.UserId equals u.Id 
                 join address a in DB.address on u.PrimaryAddressId equals a.Id
-                where e.ExternalEventIdentifier == eventNr
+                where e.ExternalEventIdentifier == eventNr && (addTestParticipants || !testParticipantIds.Contains(u.Id))
                 select new InschrijvingModel() {
                     // User data.    
                     UserId = u.Id,
@@ -169,6 +177,8 @@ namespace HRE.Models {
                     ExternalEventSerieIdentifier = e.ExternalEventSerieIdentifier,
                 
                     // Sportseventparticipation data.
+                    ParticipationId = p.Id,
+
                     ExternalIdentifier = p.ExternalIdentifier,
                     RegistrationDate = p.DateRegistered,
                     
@@ -178,22 +188,28 @@ namespace HRE.Models {
                     DateLastSynchronized = p.DateLastScraped,
                     // END TODO
 
+                    DateRegistered = p.DateRegistered,
+
                     DateCreated = p.DateCreated,
                     DateUpdated = p.DateUpdated,
                     MyLapsChipNummer = p.MyLapsChipIdentifier,
                     MaatTshirt = p.TShirtSize,
-                    InteresseOvernachtenNaWedstrijd = p.IsInterestedToSleepOver,
+                    InteresseOvernachtenNaWedstrijd = p.Camp,
                     OpmerkingenTbvSpeaker = p.SpeakerRemarks,
                     Bijzonderheden = p.Notes,
                     
                     IsEarlyBird = p.EarlyBird.HasValue && p.EarlyBird.Value
-                    
                 };
 
             if (userId!=0) {
                 raceEntries = raceEntries.Where(e => e.UserId==userId);
             }
 
+            // Zet de volgorde om, voor laatst ingeschrevenen eerst.
+            if(addTestParticipants) {
+                raceEntries = raceEntries.OrderByDescending(e => e.DateRegistered);
+            }
+            
             return raceEntries;
         }
 
@@ -283,7 +299,6 @@ namespace HRE.Models {
                 address.Insertion = inschrijving.Tussenvoegsel;
                 address.Lastname = inschrijving.Achternaam;
                 address.PostalCode = inschrijving.Postcode;
-                // DB.SaveChanges();
                 user.PrimaryAddress = address; 
                 user.Save();
 
@@ -299,27 +314,29 @@ namespace HRE.Models {
                     participation.SportsEventId = sportsevent.ID;
                 }
 
-                if (isScrape) {
-                    if (!participation.DateFirstScraped.HasValue) {
-                        participation.DateFirstScraped = DateTime.Now;
-                    }
-                    participation.DateLastScraped = DateTime.Now;
-                    participation.DateUpdated=participation.DateLastScraped.Value;
-                } else {
-                    participation.DateUpdated=DateTime.Now;
-                    participation.DateRegistered = participation.DateUpdated;
-                }
-                participation.DateRegistered=inschrijving.RegistrationDate;
+                participation.DateUpdated = DateTime.Now;
                 if (isScrape) {
                     participation.ExternalIdentifier=inschrijving.ExternalIdentifier;
+                    if (!participation.DateFirstScraped.HasValue) {
+                        participation.DateFirstScraped = participation.DateUpdated;
+                    }
+                    participation.DateLastScraped = participation.DateUpdated;
+                    participation.DateRegistered=inschrijving.RegistrationDate;
+                } else {
+                    participation.ExternalIdentifier = inschrijving.ExternalIdentifier;
+                    participation.DateRegistered = participation.DateUpdated;
+                    participation.ParticipationAmountInEuroCents = inschrijving.InschrijfGeld;
                 }
+
                 participation.SportsEventId = (from sportsevent se in DB.sportsevent 
                                                 where se.ExternalEventIdentifier==eventNumber 
                                                 select se.Id).First();
                 participation.UserId = user.Id;
 
                 participation.SpeakerRemarks = inschrijving.OpmerkingenTbvSpeaker;
-                participation.IsInterestedToSleepOver = inschrijving.InteresseOvernachtenNaWedstrijd;
+                participation.Camp = inschrijving.InteresseOvernachtenNaWedstrijd;
+                participation.Food = inschrijving.BlijftEten;
+                participation.Bike = inschrijving.WilParcFermee;
                 participation.TShirtSize = inschrijving.MaatTshirt;
                 participation.ParticipationStatus = 1;
                 participation.MyLapsChipIdentifier = inschrijving.HasMyLapsChipNummer ? inschrijving.MyLapsChipNummer : string.Empty;
@@ -335,7 +352,6 @@ namespace HRE.Models {
         }
 
 
-
         public class AutoCreatedUser {
 
             public string UserNameAndEmail { get; private set; } 
@@ -347,7 +363,6 @@ namespace HRE.Models {
                 Password = password;
             }
         }
-
 
     }
 }

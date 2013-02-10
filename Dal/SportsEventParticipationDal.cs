@@ -132,6 +132,17 @@ namespace HRE.Dal {
 
 
         /// <summary>
+        /// Delete the participation.
+        /// </summary>
+        public void Delete() {
+            // Add entity if it has no primary key yet.
+  		    DB.DeleteObject(_sportseventparticipation);
+  		    DB.SaveChanges();
+        }
+
+
+
+        /// <summary>
         /// Return all users.
         /// </summary>
         public static List<SportsEventParticipationDal> GetAll() {
@@ -161,6 +172,8 @@ namespace HRE.Dal {
             sportseventparticipation participation = DB.sportseventparticipation.Where(p => p.UserId == userId && p.SportsEventId == eventId).FirstOrDefault();
             return participation!=null ? new SportsEventParticipationDal(participation) : null;
         }
+
+
 
         #endregion :: Methods
     }

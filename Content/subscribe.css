@@ -182,24 +182,41 @@ li.test {
     font-size: 0.9em;
 }
 
-
-.inschrijf-formulier-uitleg {
-    color: #406A80;
+#inschrijf-formulier-uitleg {
+    /* color: #406A80;
+    border-color: #406A80; */
     border: 1px solid;
-    border-color: #406A80;
-    margin: 0px 10px 10px 30px;
-    font-size: smaller;
-    padding: 0px 0px 25px 0px;
+    color: #ffffff;
+    margin: 0px 0px 50px;
+    font-size: small;
+    padding: 2px 8px 25px;
+    background-color: #5AA247;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
 }
 
-.inschrijf-formulier-uitleg li {
+#inschrijf-formulier-uitleg li {
     margin: 0px 40px;
     padding: 0px;
     background-color: transparent;
 }
 
-.inschrijf-formulier-uitleg p {
+#inschrijf-formulier-uitleg p {
     margin: 20px 20px 0px 20px;
+}
+
+#inschrijf-formulier-uitleg #uitleg {
+    background-color: #ffffff;
+    color: #406A80;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+ul#uitleg {
+    margin: 10px 17px 0px 17px;
+    padding: 10px 5px 20px 5px;
 }
 
 /* Start subscription. */
@@ -207,12 +224,11 @@ li.test {
     display: inline-block;
     *display: inline;
     zoom: 1;
-    float: left;
+    /* float: left; */
     width: 150px;
     text-align: right;
     margin: 10px 5px 5px 5px;
-    color: #406A80; 
-    vertical-align: middle;
+    color: #406A80;
 }
 
 .editor-field {
@@ -224,6 +240,10 @@ li.test {
     text-align: left;
     margin: 10px 5px 5px 5px;
     color: #406A80; 
+}
+
+.edit-allowed .editor-field {
+    width: 222px !important;
 }
 
 input.save[type=submit] {
@@ -286,7 +306,7 @@ input.save[type=submit] {
 }
 
 .editor-spacer.initial {
-    height: 50px;
+    height: 10px;
 }
 
 .editor-spacer.name {
@@ -334,6 +354,37 @@ input.input-validation-error {
 
 
 /* End validation markup */
+
+.costs {
+    float: right;
+    color: #FFFFFF;
+    padding: 10px 10px;
+    margin: 10px 0px 800px 0px;
+    /* border: 2px solid #A0A0A0; */
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #80D4FF;
+}
+
+.costs tr td {
+    padding: 0px 10px;
+}
+
+.costs tr td:first {
+    text-align: right;
+}
+
+tr.total td {
+    font-weight: bold;
+}
+
+tr.total td:last-child {
+    border-top: 1px solid #ffffff;
+}
 
 
 /* End subscription. */

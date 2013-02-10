@@ -76,7 +76,7 @@ namespace HRE.Business {
 
             if (daysApart<30) {
                 switch (daysApart) {
-            	    case 0: return "vandaag";
+            	    case 0: return RelativeDateTimeDescription(date);
             	    case 1: return "gisteren";
             	    case 2: return "eergisteren";
                     default: return string.Format("{0} dagen geleden ({1})", daysApart, date.NoYearMonthAsLetters());
@@ -119,13 +119,11 @@ namespace HRE.Business {
             int numberOfSecondsAgo = date.NumberOfSecondsAgo();
 
             // See if the date dt is within the last hour...
-            if (numberOfSecondsAgo < 10)
-                return "Seconden geleden...";
-            if (numberOfSecondsAgo < 60)
-                return "Minder dan een minuut geleden...";
+            if (numberOfSecondsAgo < 120)
+                return "zojuist";
             if (numberOfSecondsAgo < 3600)
-                return string.Format("{0:N0} minuten geleden...", numberOfSecondsAgo / 60 + 1);
-            return string.Format("{0:N0} uur geleden...", numberOfSecondsAgo / 3600 + 1);
+                return string.Format("{0:N0} minuten geleden", numberOfSecondsAgo / 60 + 1);
+            return string.Format("{0:N0} uur geleden", numberOfSecondsAgo / 3600 + 1);
         }
 
 

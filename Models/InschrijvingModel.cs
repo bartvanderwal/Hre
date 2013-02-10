@@ -8,6 +8,7 @@ using System.Linq;
 using HRE.Data;
 using HRE.Dal;
 using HRE.Common;
+using HRE.Business;
 
 namespace HRE.Models {
 
@@ -44,6 +45,8 @@ namespace HRE.Models {
         // The external identifier for the event serie (ntbI serie number; note that for now assume only 1 serie per event).
         public string  ExternalEventSerieIdentifier { get; set; }
 
+
+        public int ParticipationId { get; set; } 
 
         [Required(ErrorMessage = "Geef je voornaam aan")]
         [Display(Name = "Voornaam")]
@@ -199,18 +202,32 @@ namespace HRE.Models {
             }
         }
 
+        public bool BlijftEten { get; set; }
+
         public bool BlijftKamperen { get; set; }
+
+        public bool WilParcFermee { get; set; }
 
         [StringLength(12)]
         public string YouTubeVideoCode { get; set; }
 
+        // Calculated values (only getter, based on above properties). ////////////
+
         // Calculated values (only getter, based on above properties).
-        public string FullName {
+        public string VolledigeNaam {
             get {
-                return ((Geslacht=="M") ? "Mr." : "Mevr.") + " " + Voornaam + " " + Tussenvoegsel + " " + Achternaam;
+                return Voornaam + " " + Tussenvoegsel + " " + Achternaam;
             }
         }
 
+
+        public string VolledigeNaamMetAanhef {
+            get {
+                return ((Geslacht=="M") ? "Mr." : "Mevr.") + " " + VolledigeNaam;
+            }
+        }
+        
+        
         public string InschrijfGeldFormatted {
             get { 
                 return InschrijfGeld.HasValue ? string.Format("&euro; {0}", (((double) InschrijfGeld.Value)/100).ToString()) : "-";
@@ -222,13 +239,6 @@ namespace HRE.Models {
         }
 
 
-        // Construct an InschrijvingModel from a user.
-        public InschrijvingModel(LogonUserDal logonUser) {
-            logonuser user = (from logonuser u in DB.logonuser where u.Id==logonUser.Id select u).FirstOrDefault();
-            
-            InschrijvingenRepository.SelectEntries(null, logonUser.Id);
-        }
-
         /// <summary>
         /// Geeft aan of editen toegestaan is of niet. Wordt gebruikt in de GUI.
         /// Editen is alleen toegestaan voor admin gebruikers of als dit de huidige gebruikers eigen inschrijving is.
@@ -236,9 +246,41 @@ namespace HRE.Models {
         public bool IsEditAllowed {
             get {
                 var currentUser = LogonUserDal.GetCurrentUser();
-                return  Roles.IsUserInRole("Admin") || (currentUser!=null && currentUser.EmailAddress==Email);
+                return  IsAdmin || (currentUser!=null && currentUser.EmailAddress==Email);
             }
         }
+
+
+
+        /// <summary>
+        /// Geeft aan of de gebruiker admin rechten heeft.
+        /// </summary>
+        public bool IsAdmin {
+            get {
+                return Roles.IsUserInRole("Admin");
+            }
+        }
+
+        public DateTime DateRegistered { get; set; }
+
+
+        /// <summary>
+        /// The Human Readable/mensvriendelijke versie van de inschrijfdatum.
+        /// </summary>
+        public string DateRegisteredHR { 
+            get {
+                return DateRegistered.RelativeDateDescription();
+            }
+        }
+
+        /// <summary>
+        /// Geeft aan of de inschrijving nieuw is.
+        /// </summary>
+        public bool IsNew { 
+            get {
+                return (DateRegistered==null || DateRegistered==DateTime.MinValue);
+            }
+        }        
 
     }
 }

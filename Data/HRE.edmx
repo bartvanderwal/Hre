@@ -112,9 +112,9 @@
           <Property Name="DateSent" Type="datetime" />
           <Property Name="SequenceNumber" Type="int" Nullable="false" />
           <Property Name="AddPersonalLoginLink" Type="bit" />
+          <Property Name="Audience" Type="int" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
-          <Property Name="Audience" Type="int" />
         </EntityType>
         <EntityType Name="newsletteritem">
           <Key>
@@ -127,8 +127,8 @@
           <Property Name="ItemText" Type="text" />
           <Property Name="PictureURL" Type="varchar" MaxLength="256" />
           <Property Name="IconPictureURL" Type="varchar" MaxLength="256" />
-          <Property Name="SequenceNumber" Type="int" Nullable="false" />
           <Property Name="HeadingHtmlColour" Type="varchar" MaxLength="8" />
+          <Property Name="SequenceNumber" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="paymenttype">
           <Key>
@@ -171,7 +171,9 @@
           <Property Name="ParticipationAmountInEuroCents" Type="int" />
           <Property Name="ParticipationAmountPaidInEuroCents" Type="int" />
           <Property Name="TShirtSize" Type="varchar" MaxLength="6" />
-          <Property Name="IsInterestedToSleepOver" Type="bit" />
+          <Property Name="Food" Type="bit" />
+          <Property Name="Camp" Type="bit" />
+          <Property Name="Bike" Type="bit" />
           <Property Name="HasPaid" Type="bit" />
           <Property Name="StartNumber" Type="int" />
           <Property Name="PaymentType" Type="int" />
@@ -516,7 +518,9 @@
           <Property Type="Int32" Name="ParticipationAmountInEuroCents" />
           <Property Type="Int32" Name="ParticipationAmountPaidInEuroCents" />
           <Property Type="String" Name="TShirtSize" />
-          <Property Type="Boolean" Name="IsInterestedToSleepOver" />
+          <Property Type="Boolean" Name="Food" />
+          <Property Type="Boolean" Name="Camp" />
+          <Property Type="Boolean" Name="Bike" />
           <Property Type="Boolean" Name="HasPaid" />
           <Property Type="Int32" Name="StartNumber" />
           <Property Type="Int32" Name="PaymentType" />
@@ -701,7 +705,9 @@
                 <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
                 <ScalarProperty Name="StartNumber" ColumnName="StartNumber" />
                 <ScalarProperty Name="HasPaid" ColumnName="HasPaid" />
-                <ScalarProperty Name="IsInterestedToSleepOver" ColumnName="IsInterestedToSleepOver" />
+                <ScalarProperty Name="Bike" ColumnName="Bike" />
+                <ScalarProperty Name="Camp" ColumnName="Camp" />
+                <ScalarProperty Name="Food" ColumnName="Food" />
                 <ScalarProperty Name="TShirtSize" ColumnName="TShirtSize" />
                 <ScalarProperty Name="ParticipationAmountPaidInEuroCents" ColumnName="ParticipationAmountPaidInEuroCents" />
                 <ScalarProperty Name="ParticipationAmountInEuroCents" ColumnName="ParticipationAmountInEuroCents" />
@@ -752,12 +758,12 @@
           <ConnectorPoint PointX="2.75" PointY="5.6054996744791659" />
         </AssociationConnector>
         <AssociationConnector Association="hreModel.UserIdReceiver" >
-          <ConnectorPoint PointX="4.25" PointY="7.0316709947192679" />
-          <ConnectorPoint PointX="6" PointY="7.0316709947192679" />
+          <ConnectorPoint PointX="4.25" PointY="7.0316710067534265" />
+          <ConnectorPoint PointX="6" PointY="7.0316710067534265" />
         </AssociationConnector>
         <AssociationConnector Association="hreModel.UserIdSender" >
-          <ConnectorPoint PointX="4.25" PointY="5.3908354973596335" />
-          <ConnectorPoint PointX="6" PointY="5.3908354973596335" />
+          <ConnectorPoint PointX="4.25" PointY="5.3908355033767137" />
+          <ConnectorPoint PointX="6" PointY="5.3908355033767137" />
         </AssociationConnector>
         <EntityTypeShape EntityType="hreModel.sportsevent" Width="1.5" PointX="5.375" PointY="9.125" Height="2.7494921875000031" />
         <EntityTypeShape EntityType="hreModel.newsletteritem" Width="1.5" PointX="11" PointY="0.875" Height="2.9417936197916674" />
@@ -766,14 +772,14 @@
           <ConnectorPoint PointX="10.25" PointY="2.3458968098958333" />
           <ConnectorPoint PointX="11" PointY="2.3458968098958333" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="hreModel.sportseventparticipation" Width="1.5" PointX="8.625" PointY="4.625" Height="6.4032194010416674" />
+        <EntityTypeShape EntityType="hreModel.sportseventparticipation" Width="1.5" PointX="8.625" PointY="5.5" Height="6.7878222656250031" />
         <AssociationConnector Association="hreModel.User" >
           <ConnectorPoint PointX="4.25" PointY="8.7710579427083335" />
           <ConnectorPoint PointX="8.625" PointY="8.7710579427083335" />
         </AssociationConnector>
         <AssociationConnector Association="hreModel.sportevent" >
-          <ConnectorPoint PointX="6.875" PointY="10.076609700520834" />
-          <ConnectorPoint PointX="8.625" PointY="10.076609700520834" />
+          <ConnectorPoint PointX="6.875" PointY="10.49974609375" />
+          <ConnectorPoint PointX="8.625" PointY="10.49974609375" />
         </AssociationConnector>
         </Diagram>
     </Diagrams>
