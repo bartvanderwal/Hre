@@ -3387,6 +3387,54 @@ namespace HRE.Data
         private Nullable<global::System.Boolean> _FreeStarter;
         partial void OnFreeStarterChanging(Nullable<global::System.Boolean> value);
         partial void OnFreeStarterChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String NotesToAll
+        {
+            get
+            {
+                return _NotesToAll;
+            }
+            set
+            {
+                OnNotesToAllChanging(value);
+                ReportPropertyChanging("NotesToAll");
+                _NotesToAll = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("NotesToAll");
+                OnNotesToAllChanged();
+            }
+        }
+        private global::System.String _NotesToAll;
+        partial void OnNotesToAllChanging(global::System.String value);
+        partial void OnNotesToAllChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String EmailAddressOfFriend
+        {
+            get
+            {
+                return _EmailAddressOfFriend;
+            }
+            set
+            {
+                OnEmailAddressOfFriendChanging(value);
+                ReportPropertyChanging("EmailAddressOfFriend");
+                _EmailAddressOfFriend = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("EmailAddressOfFriend");
+                OnEmailAddressOfFriendChanged();
+            }
+        }
+        private global::System.String _EmailAddressOfFriend;
+        partial void OnEmailAddressOfFriendChanging(global::System.String value);
+        partial void OnEmailAddressOfFriendChanged();
 
         #endregion
     

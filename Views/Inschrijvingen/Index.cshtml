@@ -4,7 +4,6 @@
 
 @{
     ViewBag.Title = "Scrape NTB";
-    Layout = "~/Views/Shared/_NewLayout.cshtml";
     List<int> testParticipants = HRE.Dal.LogonUserDal.GetTestParticipantIds();
     
     var currentUser = HRE.Dal.LogonUserDal.GetCurrentUser();
@@ -14,44 +13,54 @@
     }
 }
 
+@Html.Raw(Model.IsAdmin ? "<div id=\"admin-panel\">" : "")
 @if (Model.IsAdmin) {
-    using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="select-edition", @class="parallel-form" } )) {
-        @Html.DropDownList("EventNumber",
-            new SelectList(new Dictionary<string, string> {
-                {"2013", HRE.Models.InschrijvingenRepository.H2RE_EVENTNR},
-                {"2012", HRE.Models.InschrijvingenRepository.HRE_EVENTNR}
-            },
-            "Value", "Key"))
-         <input type="submit" value="Update" />
-    }
+        <div id="admin-panel-header">Admin panel</div>
+        using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="select-edition", @class="parallel-form" } )) {
+            @Html.DropDownList("EventNumber",
+                new SelectList(new Dictionary<string, string> {
+                    {"2013", HRE.Models.InschrijvingenRepository.H2RE_EVENTNR},
+                    {"2012", HRE.Models.InschrijvingenRepository.HRE_EVENTNR}
+                },
+                "Value", "Key"))
+             <input type="submit" value="Update" />
+        }
     
-    using(@Html.BeginForm("DeleteTestUser", "Inschrijvingen", FormMethod.Post, new { @id="deleteTestUser", @class="parallel-form"} )) {
-        @Html.DropDownListFor(m => m.UserIdToDelete, HRE.Dal.LogonUserDal.GetTestParticipantsAsSelectList());
-        <input type="submit" value="Delete" />
-    }
+        using(@Html.BeginForm("DeleteTestUser", "Inschrijvingen", FormMethod.Post, new { @id="deleteTestUser", @class="parallel-form"} )) {
+            @Html.DropDownListFor(m => m.UserIdToDelete, HRE.Dal.LogonUserDal.GetTestParticipantsAsSelectList());
+            <input type="submit" value="Delete" />
+        }
     
-    using(Html.BeginForm("Scrape", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) {
-        @Html.AntiForgeryToken();
-        <text>Scrape:</text>
-        @Html.DropDownList("maxNumberOfScrapedItems",
-            new SelectList(new Dictionary<string, int> { {"Alles", 0}, {"5", 5}, {"10", 10}, {"20", 20}, {"50", 50}, 
-                                                         {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
-                                                         {"1000", 1000}}, "Value", "Key"));
-        @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"});
-        <text>Overwrite</text>
-        <input type="submit" value="Scrape" />
-    }
+        using(Html.BeginForm("Scrape", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) {
+            @Html.AntiForgeryToken();
+            <text>Scrape:</text>
+            @Html.DropDownList("maxNumberOfScrapedItems",
+                new SelectList(new Dictionary<string, int> { {"Alles", 0}, {"5", 5}, {"10", 10}, {"20", 20}, {"50", 50}, 
+                                                             {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
+                                                             {"1000", 1000}}, "Value", "Key"));
+            @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"});
+            <text>Overwrite</text>
+            <input type="submit" value="Scrape" />
+        }
 }
+@Html.Raw(Model.IsAdmin ? "</div>" : "")
 
 @if(!string.IsNullOrEmpty(Model.Message)) {
     <div class="message">@Model.Message</div>
 }
 
+<marquee>@Model.ParticipantRemarks</marquee>
+
 <h1>@(Model.EventNumber==HRE.Models.InschrijvingenRepository.HRE_EVENTNR ? 
         "Deelnemerslijst HRE 2012" :
         "Deelnemerslijst H2RE 2013")</h1>
+
+    @if (!Model.IsAdmin && !User.Identity.IsAuthenticated) {
+        <p>Op de inschrijvingspagina's alvast een voorproefje van de nieuwe layout we gaande 2013 zullen krijgen!</p>
+    }
+
 @if (Model==null || Model.Entries==null || Model.Entries.Count==0) {
-    <span>Er zijn nog geen deelnemers.</span>
+    <p>Er zijn nog geen deelnemers.</p>
 } else {
     <table class="deelnemers@(Model.IsAdmin ? " admin-view" : string.Empty)">
         <tr>

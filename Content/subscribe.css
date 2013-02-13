@@ -29,12 +29,12 @@
 	width: 46px;
 }
 
-/* Has MyLaps chop checkbox image size (less wide than default). */
+/* Has MyLaps chop checkbox image size (less wide than default). 
 :root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"] ~ label:before,
 :root .editor-field > input[type="checkbox"][name="test-checkbox"] ~ label:before 
  {
 	width: 30px;
-}
+} */
 
 			
 /* Radio button image size. */
@@ -122,12 +122,12 @@ li.test {
 			
 /****** Parc Fermé  ***/
 /* Unchecked bike checkbox. */
-:root .editor-field > input[type="checkbox"][name="bike"] ~ label:before { 
+:root .editor-field > input[type="checkbox"][name="Bike"] ~ label:before { 
 	background-position: -382px -217px;
 }
 
 /* Checked bike checkbox. */
-:root .editor-field > input[type="checkbox"][name="bike"]:checked ~ label:before {
+:root .editor-field > input[type="checkbox"][name="Bike"]:checked ~ label:before {
 	background-position: -440px -218px;
 }
 
@@ -146,34 +146,34 @@ li.test {
 /****** MyLaps chip ***/
 /* Unchecked MyLaps chip checkbox. */
 :root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"] ~ label:before { 
-	background-position: -755px -216px;
+	background-position: -749px -216px;
 }
 
 /* Checked MyLaps chip checkbox. */
 :root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"]:checked ~ label:before {
-	background-position: -720px -216px;
+	background-position: -715px -216px;
 }
 
 
 /****** Eten ***/
 /* Unchecked food checkbox. */
-:root .editor-field > input[type="checkbox"][name="food"] + label:before { 
+:root .editor-field > input[type="checkbox"][name="Food"] ~ label:before { 
 	background-position: -131px -218px;
 }
 
 /* Checked food checkbox. */
-:root .editor-field > input[type="checkbox"][name="food"]:checked + label:before{ 
+:root .editor-field > input[type="checkbox"][name="Food"]:checked ~ label:before{ 
 	background-position: -194px -218px;
 }
 
 /****** Kamperen ***/
 /* Unchecked camp checkbox. */
-:root .editor-field > input[type="checkbox"][name="camp"] + label:before { 
+:root .editor-field > input[type="checkbox"][name="Camp"] ~ label:before { 
 	background-position: -254px -218px;
 }
 
 /* Checked camp checkbox. */
-:root .editor-field > input[type="checkbox"][name="camp"]:checked + label:before { 
+:root .editor-field > input[type="checkbox"][name="Camp"]:checked ~ label:before { 
 	background-position: -316px -217px;
 }
 
@@ -246,11 +246,26 @@ ul#uitleg {
     width: 222px !important;
 }
 
-input.save[type=submit] {
+.editor-field input {
+    width: 195px;    
+}
+
+.editor-field .optText input {
+    width: 140px;
+}
+
+input[type=submit] {
     float: right;
+}
+
+input.save[type=submit] {
     background: url("/Content/img/InschrijvenHREIconSet.png") no-repeat -617px -152px;
     height: 43px;
     width: 185px; 
+}
+
+#save-button-div {
+    margin-top: 50px;
 }
 
 .editor-images {
@@ -355,11 +370,11 @@ input.input-validation-error {
 
 /* End validation markup */
 
-.costs {
+#costs {
     float: right;
     color: #FFFFFF;
     padding: 10px 10px;
-    margin: 10px 0px 800px 0px;
+    margin: 10px 0px 770px 0px;
     /* border: 2px solid #A0A0A0; */
     display: inline-block;
     *display: inline;
@@ -370,11 +385,11 @@ input.input-validation-error {
     background-color: #80D4FF;
 }
 
-.costs tr td {
+#costs tr td {
     padding: 0px 10px;
 }
 
-.costs tr td:first {
+#costs tr td:first {
     text-align: right;
 }
 
@@ -386,6 +401,11 @@ tr.total td:last-child {
     border-top: 1px solid #ffffff;
 }
 
+.welcome {
+    margin-left: 10px !important;
+    color: #406A80;
+    font-weight: bold;
+}
 
 /* End subscription. */
 

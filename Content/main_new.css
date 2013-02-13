@@ -43,8 +43,8 @@ a:active {
 
 
 a:hover,
-input[type="checkbox"],
-input[type="radio"] {
+input[type="checkbox"]:not([disabled]),
+input[type="radio"]:not([disabled]) {
     cursor: pointer;
 }
 
@@ -639,9 +639,10 @@ table.deelname-kosten td.col {
     font-style: italic;
 }
 
-
-.parallel-form {
+form.parallel-form {
     display: inline-block;
+    margin: 10px 10px 10px 20px;
+    padding: 5px;
 }
 
 .bank-account {
@@ -697,10 +698,57 @@ p.personal-links {
 
 tr.test-user td a {
     font-style: italic;
-    color: Red;
+    color: Orange;
 }
 
-tr.is-me {
-    background-color: #b0b0b0;
+tr.is-me td a {
+    border: 1px solid #303030;
     font-weight: bolder;
+    padding: 0px 5px 0px 5px;
+}
+
+#admin-panel {
+    border: 1px dashed Orange;
+}
+
+#admin-panel-header {
+    text-align: center;
+    font-weight: bold;
+    color: Orange;
+}
+
+marquee {
+  /* width: 200px; */
+  height: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  overflow-x:-webkit-marquee;
+  -webkit-marquee-direction: backwards;
+  -webkit-marquee-style: scroll;
+  -webkit-marquee-speed: fast;
+  -webkit-marquee-increment: small;
+  -webkit-marquee-repetition: 5;
+  overflow-x: marquee-line;
+  marquee-direction: forward;
+  marquee-style: scroll;
+  marquee-speed: normal;
+  marquee-play-count: 5;
+}
+
+.share-text {
+    text-align: center;
+    color: #808080;
+}
+
+span.tweet-this {
+    float: right;
+}
+
+.facebook-comments {
+    margin-left: 113px;
+    padding: 0px;
+}
+
+.facebook-comments + h2 {
+    margin-top: 5px !important;
 }

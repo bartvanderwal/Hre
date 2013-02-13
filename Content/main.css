@@ -84,7 +84,7 @@ a:active {
 }
 
 #countdown { 
-   left: 738px; 
+   left: 683px; 
    top: 16px;
 }
 
@@ -113,7 +113,7 @@ a:active {
 #socialmedia {
 	display: inline-block;
     height: 40px;
-	left: 511px;
+	left: 460px;
     top: -6px;
     margin: 15px 20px 0px 0px;
 	width: 120px;
@@ -684,4 +684,12 @@ table.deelname-kosten td.col {
 #content img.left {
     float: left;
     margin-left: 30px;
+}
+
+.login {
+    top: -20px;
+    left: 877px;
+    color: #ffffff;
+    display: inline-block;
+    position: relative;
 }

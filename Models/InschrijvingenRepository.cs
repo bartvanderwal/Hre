@@ -143,7 +143,7 @@ namespace HRE.Models {
         public static IEnumerable<InschrijvingModel> SelectEntries(string eventNr, bool addTestParticipants = false, int userId = 0) {
             hreEntities DB = DBConnection.GetHreContext();
             
-            List<int> testParticipantIds = (from LogonUserDal user in LogonUserDal.GetTestParticipants() select user.Id).ToList();
+            List<int> testParticipantIds = LogonUserDal.GetTestParticipantIds();
 
             var raceEntries = from sportseventparticipation p in DB.sportseventparticipation
                 join sportsevent e in DB.sportsevent on p.SportsEventId equals e.Id
@@ -194,7 +194,8 @@ namespace HRE.Models {
                     DateUpdated = p.DateUpdated,
                     MyLapsChipNummer = p.MyLapsChipIdentifier,
                     MaatTshirt = p.TShirtSize,
-                    InteresseOvernachtenNaWedstrijd = p.Camp,
+                    Camp = p.Camp.HasValue && p.Camp.Value,
+                    HebJeErZinIn = p.NotesToAll,
                     OpmerkingenTbvSpeaker = p.SpeakerRemarks,
                     Bijzonderheden = p.Notes,
                     
@@ -334,9 +335,9 @@ namespace HRE.Models {
                 participation.UserId = user.Id;
 
                 participation.SpeakerRemarks = inschrijving.OpmerkingenTbvSpeaker;
-                participation.Camp = inschrijving.InteresseOvernachtenNaWedstrijd;
-                participation.Food = inschrijving.BlijftEten;
-                participation.Bike = inschrijving.WilParcFermee;
+                participation.Camp = inschrijving.Camp;
+                participation.Food = inschrijving.Food;
+                participation.Bike = inschrijving.Bike;
                 participation.TShirtSize = inschrijving.MaatTshirt;
                 participation.ParticipationStatus = 1;
                 participation.MyLapsChipIdentifier = inschrijving.HasMyLapsChipNummer ? inschrijving.MyLapsChipNummer : string.Empty;

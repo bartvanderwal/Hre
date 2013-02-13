@@ -91,17 +91,15 @@
         <!-- <a href="/Account/Welkom"><img class="signup" src="/Content/img/sign_up4.png" alt="Inloggen" title="Inloggen" /></a> -->
         *@
 
-        @*
         @if (Request.IsAuthenticated) {
-        	<div class="logoutForm" id="logoutForm">
-                Welkom <br /><b>@User.Identity.Name</b><br />
-                @using (Html.BeginForm("LogUit", "Account")) {
-                    @Html.AntiForgeryToken()
-                    <a href="javascript:document.getElementById('logoutForm').submit()" class="logout">Uitloggen</a>
+            using (Html.BeginForm("LogUit", "Account", new { returnUrl = "/" }, FormMethod.Post, new { id = "logoutForm" })) {
+                @*User.Identity.Name.Substring(0, User.Identity.Name.IndexOf('@')) *@
+                @Html.AntiForgeryToken()
+                <a href="javascript:document.getElementById('logoutForm').submit()" class="logout">Uitloggen</a>
                 }
-            </div>
+        } else {
+                <a href="/Account/Login" class="login">Inloggen</a>
         }
-        *@
 
         <!-- <div id="partners">
             <a href="/Home/Partners#FiveFingers"><img class="partner fivefingers" src="/Content/img/FiveFingers_medium.png" alt="Vibram Fivefingers NL" title="Vibram NL - Twelve Islands? Five Fingers!" /></a>

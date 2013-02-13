@@ -123,8 +123,6 @@ namespace HRE.Models {
 
         public bool? InteresseNieuwsbrief { get; set; }
 
-        public bool? InteresseOvernachtenNaWedstrijd { get; set; }
-
         [Required(ErrorMessage = "Geef je geslacht aan")]
         public string Geslacht { get; set; }
         
@@ -154,6 +152,9 @@ namespace HRE.Models {
         [Required(ErrorMessage = "Geef je e-mail adres")]
         public string Email { get; set; }
         
+        [StringLength(100)]
+        public string HebJeErZinIn { get; set; }
+
         [StringLength(255)]
         public string OpmerkingenTbvSpeaker { get; set; }
         
@@ -164,6 +165,45 @@ namespace HRE.Models {
 
         private int? _inschrijfGeld { get; set; }
 
+       
+        public int EarlyBirdKorting {
+            get {
+                return IsEarlyBird ? HreSettings.HoogteEarlyBirdKorting : 0;
+            }
+        }
+
+
+        /// <summary>
+        /// Voor niet NTB leden en leden die GEEN wedstrijd/atleten 'A' licentie hebben zijn er de kosten voor een daglicentie.
+        /// </summary>
+        public int KostenDagLicentie {
+            get {
+                if (string.IsNullOrEmpty(LicentieNummer) || (LicentieNummer.Substring(2,1)!="A" && LicentieNummer.Substring(2,1)!="a")) {
+                    return HreSettings.KostenDagLicentie;
+                } else {
+                    return 0;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Voor wie geen eigen (MyLaps) chip heeft komt er nog kosten van huur bij.
+        /// </summary>
+        public int KostenChip {
+            get {
+                return (string.IsNullOrEmpty(MyLapsChipNummer)) ? HreSettings.KostenHuurMyLapsChipGeel : 0;
+            }
+        }
+
+
+        public int? BasisKosten { 
+            get {
+                return HreSettings.HuidigeDeelnameBedrag;
+            }
+        }
+
+
         public int? InschrijfGeld { 
             get {
                 // Voor HRE 2012 geef het uit NTB inschrijvingen eventueel gelezen bedrag terug.
@@ -171,26 +211,9 @@ namespace HRE.Models {
                     return _inschrijfGeld;
                 }
 
-                // Voor HRE 2012 bepaal het bedrag afhankelijk van gebruikersgegevens en vaste bedragen in de appsettings.
-                // Bepaal de kosten. Dit wordt hier geheel herberekend - idem als in client side JavaScript - om 'hackmogelijkheden' uit te sluiten.
-                int bedrag = HreSettings.HuidigeDeelnameBedrag;
-                
-                // Early birds krijgen korting.
-                if (IsEarlyBird) {
-                    bedrag = Math.Max(0, bedrag-HreSettings.HoogteEarlyBirdKorting);
-                }
-
-                // Voor niet NTB leden en leden die GEEN wedstrijd 'W' licentie hebben komt er de kosten voor daglicentie bij:
-                if (string.IsNullOrEmpty(LicentieNummer) || LicentieNummer.Substring(2,1)!="A") {
-                    bedrag += HreSettings.KostenDagLicentie;
-                }
-
-                // Voor wie geen eigen MyLaps chip heeft komt er nog kosten van huur bij:
-                if (string.IsNullOrEmpty(MyLapsChipNummer)) {
-                    bedrag += HreSettings.KostenHuurMyLapsChipGeel;
-                }
-
-                return bedrag;
+                // Voor HRE 2013 wordt het bedrag bepaald afhankelijk van gebruikersgegevens en vaste bedragen in de appsettings.
+                // Dit gebeurd dus analoog aan maar apart van berekening in client side JavaScript om 'hackmogelijkheden' uit te sluiten.
+                return BasisKosten + KostenDagLicentie + KostenChip - EarlyBirdKorting;
             }
 
             set {
@@ -202,11 +225,15 @@ namespace HRE.Models {
             }
         }
 
-        public bool BlijftEten { get; set; }
 
-        public bool BlijftKamperen { get; set; }
+        public bool Food { get; set; }
 
-        public bool WilParcFermee { get; set; }
+
+        public bool Camp { get; set; }
+
+
+        public bool Bike { get; set; }
+
 
         [StringLength(12)]
         public string YouTubeVideoCode { get; set; }
@@ -224,13 +251,6 @@ namespace HRE.Models {
         public string VolledigeNaamMetAanhef {
             get {
                 return ((Geslacht=="M") ? "Mr." : "Mevr.") + " " + VolledigeNaam;
-            }
-        }
-        
-        
-        public string InschrijfGeldFormatted {
-            get { 
-                return InschrijfGeld.HasValue ? string.Format("&euro; {0}", (((double) InschrijfGeld.Value)/100).ToString()) : "-";
             }
         }
 

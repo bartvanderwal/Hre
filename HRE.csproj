@@ -87,13 +87,6 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\Dashboard.aspx.cs">
-      <DependentUpon>Dashboard.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Dashboard.aspx.designer.cs">
-      <DependentUpon>Dashboard.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Business\AppConstants.cs" />
     <Compile Include="Business\EmailSender.cs" />
     <Compile Include="Business\EncDec.cs" />
@@ -208,7 +201,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Admin\Dashboard.aspx" />
     <Content Include="Content\accid-wf.svg" />
     <Content Include="Content\admin.css" />
     <Content Include="Content\ckeditor\contents.css" />
@@ -229,6 +221,11 @@
     <Content Include="Content\ckeditor\images\close.png" />
     <Content Include="Content\ckeditor\images\mini.png" />
     <Content Include="Content\admin_new.css" />
+    <Content Include="Content\img\delete.png" />
+    <Content Include="Content\img\HreFinaleConcept.png" />
+    <Content Include="Content\img\MyLaps.jpg" />
+    <Content Include="Content\img\NtbIcon.png" />
+    <Content Include="Content\img\SpeakersAndOrganisation.png" />
     <Content Include="Content\newsletter.css" />
     <Content Include="Content\img\Cup.png" />
     <Content Include="Content\subscribe.css" />
@@ -591,12 +588,6 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -619,7 +610,8 @@
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Inschrijvingen\ikdoemee.cshtml" />
+    <Content Include="Views\Inschrijvingen\MijnRondjeEilanden.cshtml" />
+    <Content Include="Views\Inschrijvingen\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -716,7 +708,6 @@
     <Content Include="Views\Video\Uitslagen.cshtml" />
     <Content Include="Views\Inschrijvingen\Index.cshtml" />
     <Content Include="Views\Inschrijvingen\Edit.cshtml" />
-    <Content Include="Views\Shared\__SubscribeForm.cshtml" />
     <Content Include="Views\Meedoen\AangemeldNieuwsbrief.cshtml" />
     <Content Include="Views\Newsletter\CreateNewsletter.cshtml" />
     <Content Include="Views\Newsletter\Index.cshtml" />
@@ -730,7 +721,6 @@
     <Content Include="Views\Newsletter\EditorTemplates\NewsletterItemViewModel.cshtml" />
     <Content Include="Views\Shared\_MessageBox.cshtml" />
     <Content Include="Views\Shared\_NewLayout.cshtml" />
-    <Content Include="Views\Account\_ViewStart.cshtml" />
     <Content Include="Views\Newsletter\_ViewStart.cshtml" />
     <Content Include="Views\Account\FlessenPostLink.cshtml" />
     <Content Include="Views\Account\Inschrijven.cshtml" />

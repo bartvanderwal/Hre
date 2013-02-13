@@ -168,11 +168,10 @@ namespace HRE.Dal {
         /// <summary>
         /// Return by userId and event Id combination.
         /// </summary>
-        public static SportsEventParticipationDal GetByUserIDEventId(int userId, int eventId) {
+        public static SportsEventParticipationDal GetByUserIdEventId(int userId, int eventId) {
             sportseventparticipation participation = DB.sportseventparticipation.Where(p => p.UserId == userId && p.SportsEventId == eventId).FirstOrDefault();
             return participation!=null ? new SportsEventParticipationDal(participation) : null;
         }
-
 
 
         #endregion :: Methods

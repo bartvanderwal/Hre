@@ -1,0 +1,60 @@
+﻿@model HRE.Models.InschrijvingModel
+
+@using HRE.Business
+
+@{
+    ViewBag.Title = (Model==null) ? "Mijn Rondje Eilanden" : Model.VolledigeNaam + " - Mijn " + (Model.IsEarlyBird ? "2e " : "") + "Rondje Eilanden!";
+    Layout = "~/Views/Shared/_NewLayout.cshtml";
+    string shareText = string.IsNullOrEmpty(Model.HebJeErZinIn) ? "Ik heb me zojuist aangemeld voor Hét 2e Rondje Eilanden!" : Model.HebJeErZinIn;
+}
+
+<div id="fb-root"></div>
+<script type="text/javascript"> type="text/javascript"
+(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/nl_NL/all.js#xfbml=1&appId=389310264453412";
+    fjs.parentNode.insertBefore(js, fjs);
+} (document, 'script', 'facebook-jssdk'));
+</script>
+
+@if (Model!=null && Model.IsEditAllowed) {
+    
+    <div class="badge">- Persoonlijke Pagina -<br /> Míjn @(Model.IsEarlyBird ? "2e " : "")Rondje Eilanden<br />-<i> Za 3 aug 2013 </i>-</div>
+    <h1>@Model.VolledigeNaam</h1>
+    <h2>Proficiat!</h2>
+    <p>Je hebt je @Model.DateRegisteredHR aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief als je het inschrijfgeld voldaan hebt.</p>
+    <table class="bank-account">
+        <tr><td>Inschrijfgeld</td><td><span class="quotable">@Model.InschrijfGeld.AsAmount()</span></td></tr>
+        <tr><td>Bank rek nr</td><td><span class="quotable">1684.92.059</span> (Rabobank)</td></tr>
+        <tr><td>Ten name van </td><td><span class="quotable">Stichting Woelig Water</span> (te Vinkeveen)</td></tr>
+        <tr><td>Onder vermelding van</td><td><span class="quotable">H2RE @Model.VolledigeNaam</span></td></tr>
+    </table>
+    @(Model.IsEarlyBird ? "<p>Let op: om je Early Bird korting te verzilveren dien je het inschrijfgeld voor 1 maart over te maken!</p>" : "")
+
+    <br clear="all"/>
+    <h2>Deel met je vrienden</h2>
+    <span class="tweet-this">
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.hetrondjeeilanden.nl" data-text="@shareText" data-via="trondjeeilanden" data-lang="nl" data-hashtags="h2re">Tweeten</a>
+        <script type="text/javascript">
+            !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = "//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } } (document, "script", "twitter-wjs");
+        </script>
+    </span>
+
+    <div class="share-text">@("\"" + shareText + "\"")</div>
+    <p>Op de volgende verjaardag moet je natuurlijk wel even luid aankondigen melden dat je Het Rondje Eilanden gaat doen!
+    Dergelijke extrovert gedrag moedigen wij als organisatie zeker aan :P. En wellicht ben je ook actief op social media... </p>
+    <div class="facebook-comments">
+        <div class="fb-comments" data-href="http://www.hetrondjeeilanden.nl" data-width="470" data-num-posts="6"></div>
+    </div>
+    <h2>Persoonlijke links</h2>
+    <ul class="personal-links">
+        <li><a href="/Inschrijvingen/Edit?externalId=@Model.ExternalIdentifier&eventNr=@Model.ExternalEventIdentifier">Inschrijfgegevens</a></li>
+        <li><a href="/Inschrijvingen">Deelnemers tot nu</a></li>
+        <li>Binnenkort meer...</li>
+    </ul>
+} else {
+    <h1>Persoonlijke Pagina</h1>
+    <p>Probleem met openen Persoonlijke Pagina. Wijzigen niet toegestaan!<br /><br />Er ging iets mis met inloggen...</p>
+}

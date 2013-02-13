@@ -85,18 +85,18 @@ namespace HRE.Controllers {
 
 
         [Authorize]
-        public ActionResult ikdoemee(string externalId) {
+        public ActionResult MijnRondjeEilanden(string externalId) {
             InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, InschrijvingenRepository.HRE_EVENTNR);
             return View(model);
         }
 
 
         /// <summary>
-        /// Non http post variant of ikdoemee
+        /// Non http post variant of MijnRondjeEilanden.
         /// </summary>
         [Authorize]
         [HttpPost]
-        public ActionResult ikdoemee(InschrijvingModel model) {
+        public ActionResult MijnRondjeEilanden(InschrijvingModel model) {
             return View(model);
         }
 
@@ -104,7 +104,7 @@ namespace HRE.Controllers {
         public ActionResult DeleteTestUser(ScrapeNtbIModel model) {
             int eventId = SportsEventDal.GetByExternalId(model.EventNumber).ID;
             int userId = model.UserIdToDelete;
-            SportsEventParticipationDal participation = SportsEventParticipationDal.GetByUserIDEventId(userId, eventId);
+            SportsEventParticipationDal participation = SportsEventParticipationDal.GetByUserIdEventId(userId, eventId);
             model.Message = string.Format("Inschrijving gebruiker {0} verwijderd voor event {1}.", userId, eventId);
             participation.Delete();
             
@@ -320,7 +320,7 @@ namespace HRE.Controllers {
                     raceEntry.InteresseNieuwsbrief = raceEntryDetails[4].SelectSingleNode("./td[3]/table/tr[4]/td[2]").InnerText.TrimThisShit()=="Ja";
 
                     // 7. Interesse in overnachten na de wedstrijd
-                    raceEntry.InteresseOvernachtenNaWedstrijd = raceEntryDetails[4].SelectSingleNode("./td[3]/table/tr[5]/td[2]").InnerText.TrimThisShit()=="Ja";
+                    raceEntry.Camp = raceEntryDetails[4].SelectSingleNode("./td[3]/table/tr[5]/td[2]").InnerText.TrimThisShit()=="Ja";
 
                     // C. In de 10 <tr>'s van de zesde en tot en met de laatste - 16e - <tr> pak je telkens de content die staat tussen de 2e <td> en </td>. Dan krijg je achtereenvolgens:
                     // 8. Geslacht.
@@ -423,7 +423,7 @@ namespace HRE.Controllers {
             // The user gets the Early Bird discount if he was a participant in 2012 and is again in 2013 and is with the first 200.
             model.IsEarlyBird = 
                 eventNr==InschrijvingenRepository.HRE_EVENTNR
-                && SportsEventParticipationDal.GetByUserIDEventId(model.UserId, SportsEventDal.Hre2012Id)!=null
+                && SportsEventParticipationDal.GetByUserIdEventId(model.UserId, SportsEventDal.Hre2012Id)!=null
                 && LogonUserDal.DetermineNumberOfParticipants(true) < HreSettings.AantalEarlyBirdStartPlekken;
             
             // Reset de gegevens 2013 indien deze zijn voorgeladen uit die van 2012.
@@ -434,6 +434,9 @@ namespace HRE.Controllers {
                 model.ExternalEventSerieIdentifier = string.Empty;
                 model.ExternalIdentifier = string.Empty;
                 model.DateRegistered = DateTime.MinValue;
+                model.Bike = false;
+                model.Camp = false;
+                model.Food = false;
             }
 
             return View("Edit", model);
@@ -486,13 +489,16 @@ namespace HRE.Controllers {
                 // if (!model.DateFirstSynchronized.HasValue) {
                 //    model.DateFirstSynchronized=model.DateUpdated;
                 // }
+
+                // Opgeslagen model gegevens herladen.
+                model = InschrijvingenRepository.GetInschrijving(LogonUserDal.GetByID(model.UserId), model.ExternalEventIdentifier); //(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
+
+                SendSubscriptionConfirmationMail(model);
+
+                return View("MijnRondjeEilanden", model);
             }
-            // Opgeslagen model gegevens ophalen.
-            model = InschrijvingenRepository.GetInschrijving(LogonUserDal.GetByID(model.UserId), model.ExternalEventIdentifier); //(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
 
-            SendSubscriptionConfirmationMail(model);
-
-            return View("ikdoemee", model);
+            return View(model);
         }
 
 
@@ -503,25 +509,35 @@ namespace HRE.Controllers {
         /// <param name="model"></param>
         private void SendSubscriptionConfirmationMail(InschrijvingModel model) {
             NewsletterViewModel newsletter = new NewsletterViewModel();
+            newsletter.IncludeLoginLink = true;
             newsletter.Items = new List<NewsletterItemViewModel>();
 
             NewsletterItemViewModel item1 = new NewsletterItemViewModel();
-            item1.Text = string.Format("Je hebt je zojuist aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief als je inschrijfgeld van {0} voldaan hebt. Voor je Early Bird korting dien je dit voor 1 maart over te maken!", model.InschrijfGeldFormatted);
+            item1.Text = string.Format("Je hebt je zojuist aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief na betaling van het inschrijfgeld.");
+            if (model.IsEarlyBird) {
+                item1.Text += "Voor Early Bird korting maak het voor 1 maart over!";
+            }
             newsletter.Items.Add(item1);
 
             NewsletterItemViewModel item2 = new NewsletterItemViewModel();
-            item2.Title = "Meld je nu aan";
+            item2.Title = "You're in!";
             item2.SubTitle = "voor Hét 2e Rondje Eilanden";
             item2.HeadingHtmlColour = "208900";
-            item2.Text = string.Format("Check je gegevens door in te loggen via je persoonlijke link hierboven. <br/><br/>Inschrijfgeld graag overmaken naar:<br/>Bank rekening 1684.92.059 (Rabobank) ten name van Stichting Woelig Water (te Vinkeveen) onder vermelding van: 'Inschrijfgeld H2RE {0}", model.VolledigeNaam);
-            item2.ImagePath = "News_2013.png";
+            item2.Text = string.Format("Check je gegevens door in te loggen via je persoonlijke link hierboven. <br/><br/>");
+                            item2.ImagePath = "News_2013.png";
             item2.IconImagePath = "News_TileEB.png";
             newsletter.Items.Add(item2);
 
             NewsletterItemViewModel item3 = new NewsletterItemViewModel();
             item3.Text = string.Format("");
-            newsletter.Items.Add(item1);
+                item3.Text += string.Format("<table class=\"bank-account\">");
+                item3.Text += string.Format("<table class=\"bank-account\">");
+                item3.Text += string.Format("<tr><td>Inschrijfgeld</td><td><span class=\"quotable\">{0}</span></td></tr>", model.InschrijfGeld.AsAmount());
+                item3.Text += string.Format("<tr><td>Bank rek nr</td><td><span class=\"quotable\">1684.92.059</span> (Rabobank)</td></tr>");
+                item3.Text += string.Format("<tr><td>Ten name van </td><td><span class=\"quotable\">Stichting Woelig Water</span> (te Vinkeveen)</td></tr>");
+                item3.Text += string.Format("<tr><td>Onder vermelding van</td><td><span class=\"quotable\">H2RE {1}</span></td></tr></table>", model.VolledigeNaam);
 
+            newsletter.Items.Add(item3);
 
             SendPersonalNewsletterViewModel spnvm = new SendPersonalNewsletterViewModel();
             spnvm.IsEmail = true;
@@ -532,7 +548,7 @@ namespace HRE.Controllers {
             mm.To.Add(new MailAddress(model.Email));
             
             // Send the confirmation mail to an appsetting defined admin email address for backup purposes.
-            mm.CC.Add(new MailAddress(HreSettings.ConfirmationsCCAddress));
+            mm.Bcc.Add(new MailAddress(HreSettings.ConfirmationsCCAddress));
 
             mm.Subject = "Aanmeldbevestiging deelname Het 2e Rondje Eilanden" + model.VolledigeNaam;
             mm.IsBodyHtml = true;

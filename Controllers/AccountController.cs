@@ -241,7 +241,7 @@ namespace HRE.Controllers {
                 inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.HRE_EVENTNR);
                 return RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier });
             } else {
-                return RedirectToAction("ikdoemee", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier});
+                return RedirectToAction("MijnRondjeEilanden", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier});
             }
         }
 

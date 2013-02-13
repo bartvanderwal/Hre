@@ -126,20 +126,57 @@ namespace HRE.Business {
             return string.Format("{0:N0} uur geleden", numberOfSecondsAgo / 3600 + 1);
         }
 
+        /// <summary>
+        /// Turns 340 into 3,40 and 500 into € 5,- and so on.
+        /// </summary>
+        /// <param name="bedragInCenten">int amount to convert to formatted euro amount</param>
+        /// <returns></returns>
+        public static string AsAmount(this int bedragInCenten) {
+            string result = string.Format("{0:F}", ((double) bedragInCenten)/100);
+            result = result.Replace(".",",");
+            result = result.Replace(",00",",- ");
+            return "€ " + result;
+        }
 
+
+        /// <summary>
+        /// Turns 340 into 3,40 and 500 into € 5,- and so on.
+        /// </summary>
+        /// <param name="bedragInCenten">int amount to convert to formatted euro amount</param>
+        /// <returns></returns>
+        public static string AsAmount(this int? bedragInCenten) {
+            return bedragInCenten.HasValue ? bedragInCenten.Value.AsAmount() : "?";
+        }
+
+        /// <summary>
+        /// Returns the number of days that a certain day is ago from the current (system) date.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public static int NumberOfDaysAgo(this DateTime date) {
              return Convert.ToInt32(DateTime.Now.Date.Subtract(date.Date).TotalDays);
         }
 
 
+        /// <summary>
+        /// Returns the date that was the given number of days ago from the current (system) date.
+        /// </summary>
         public static DateTime DateThisNumberOfDaysAgo(this int numberOfDaysAgo) {
              return DateTime.Now.AddDays(-numberOfDaysAgo);
         }
 
+        /// <summary>
+        /// Returns the number of seconds that a certain datetime is ago from the current (system) datetime.
+        /// <param name="date"></param>
+        /// <returns></returns>
         public static int NumberOfSecondsAgo(this DateTime date) {
             return Convert.ToInt32(DateTime.Now.Subtract(date).TotalSeconds);
         }
 
+
+        /// <summary>
+        /// Returns the number of hours that a certain datetime is ago from the current (system) datetime.
+        /// <param name="date"></param>
         public static int NumberOfHoursAgo(this DateTime date) {
             return Convert.ToInt32(DateTime.Now.Subtract(date).TotalHours);
         }

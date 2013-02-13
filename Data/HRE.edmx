@@ -183,6 +183,8 @@
           <Property Name="Source" Type="int" />
           <Property Name="EarlyBird" Type="bit" />
           <Property Name="FreeStarter" Type="bit" />
+          <Property Name="NotesToAll" Type="varchar" MaxLength="100" />
+          <Property Name="EmailAddressOfFriend" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="usersecondaryaddress">
           <Key>
@@ -530,6 +532,8 @@
           <Property Type="Int32" Name="Source" />
           <Property Type="Boolean" Name="EarlyBird" />
           <Property Type="Boolean" Name="FreeStarter" />
+          <Property Type="String" Name="NotesToAll" />
+          <Property Type="String" Name="EmailAddressOfFriend" />
           <NavigationProperty Name="logonuser" Relationship="hreModel.User" FromRole="sportseventparticipation" ToRole="logonuser" />
           <NavigationProperty Name="sportsevent" Relationship="hreModel.sportevent" FromRole="sportseventparticipation" ToRole="sportsevent" />
         </EntityType>
@@ -696,6 +700,8 @@
           <EntitySetMapping Name="sportseventparticipation">
             <EntityTypeMapping TypeName="hreModel.sportseventparticipation">
               <MappingFragment StoreEntitySet="sportseventparticipation">
+                <ScalarProperty Name="EmailAddressOfFriend" ColumnName="EmailAddressOfFriend" />
+                <ScalarProperty Name="NotesToAll" ColumnName="NotesToAll" />
                 <ScalarProperty Name="FreeStarter" ColumnName="FreeStarter" />
                 <ScalarProperty Name="EarlyBird" ColumnName="EarlyBird" />
                 <ScalarProperty Name="Source" ColumnName="Source" />
@@ -758,12 +764,12 @@
           <ConnectorPoint PointX="2.75" PointY="5.6054996744791659" />
         </AssociationConnector>
         <AssociationConnector Association="hreModel.UserIdReceiver" >
-          <ConnectorPoint PointX="4.25" PointY="7.0316710067534265" />
-          <ConnectorPoint PointX="6" PointY="7.0316710067534265" />
+          <ConnectorPoint PointX="4.25" PointY="7.03167100694146" />
+          <ConnectorPoint PointX="6" PointY="7.03167100694146" />
         </AssociationConnector>
         <AssociationConnector Association="hreModel.UserIdSender" >
-          <ConnectorPoint PointX="4.25" PointY="5.3908355033767137" />
-          <ConnectorPoint PointX="6" PointY="5.3908355033767137" />
+          <ConnectorPoint PointX="4.25" PointY="5.39083550347073" />
+          <ConnectorPoint PointX="6" PointY="5.39083550347073" />
         </AssociationConnector>
         <EntityTypeShape EntityType="hreModel.sportsevent" Width="1.5" PointX="5.375" PointY="9.125" Height="2.7494921875000031" />
         <EntityTypeShape EntityType="hreModel.newsletteritem" Width="1.5" PointX="11" PointY="0.875" Height="2.9417936197916674" />
@@ -772,7 +778,7 @@
           <ConnectorPoint PointX="10.25" PointY="2.3458968098958333" />
           <ConnectorPoint PointX="11" PointY="2.3458968098958333" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="hreModel.sportseventparticipation" Width="1.5" PointX="8.625" PointY="5.5" Height="6.7878222656250031" />
+        <EntityTypeShape EntityType="hreModel.sportseventparticipation" Width="1.5" PointX="8.625" PointY="5.25" Height="7.1724251302083317" />
         <AssociationConnector Association="hreModel.User" >
           <ConnectorPoint PointX="4.25" PointY="8.7710579427083335" />
           <ConnectorPoint PointX="8.625" PointY="8.7710579427083335" />

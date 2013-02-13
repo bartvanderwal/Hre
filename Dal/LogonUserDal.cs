@@ -534,12 +534,16 @@ namespace HRE.Dal {
         /// for HRE 2012 (inserted for testing in NTB inschrijvingen).
         /// </summary>
         /// <returns></returns>
-        public static List<LogonUserDal> GetTestParticipants() {
-            List<SelectListItem> result = new List<SelectListItem>();
-            
+        public static IEnumerable<LogonUserDal> GetTestParticipants() {
             List<LogonUserDal> adminUsers = new List<LogonUserDal>();
             foreach (string adminUserName in Roles.GetUsersInRole("Admin")) {
-                adminUsers.Add(LogonUserDal.GetByEmailAddress(adminUserName));
+                LogonUserDal user = LogonUserDal.GetByUserName(adminUserName);
+                if(user!=null) {
+                    SportsEventParticipationDal participation = SportsEventParticipationDal.GetByUserIdEventId(user.Id, InschrijvingenRepository.GetHreEvent().Id);
+                    if (participation!=null) {
+                        adminUsers.Add(user);
+                    }
+                }
             }
 
             return adminUsers;
@@ -550,10 +554,8 @@ namespace HRE.Dal {
             List<SelectListItem> result = new List<SelectListItem>();
             
             foreach(LogonUserDal user in GetTestParticipants()) {
-                if (SportsEventParticipationDal.GetByUserIDEventId(user.Id, InschrijvingenRepository.GetHreEvent().Id)!=null) {
-                    string text = user.UserName.Substring(0, user.UserName.IndexOf('@'));
-                    result.Add(new SelectListItem() { Text = text, Value = user.Id.ToString()});
-                }
+                string text = user.UserName.Substring(0, user.UserName.IndexOf('@'));
+                result.Add(new SelectListItem() { Text = text, Value = user.Id.ToString()});
             }
 
             return result;
@@ -561,7 +563,15 @@ namespace HRE.Dal {
 
 
         public static List<int> GetTestParticipantIds() {
-            return (from ps in GetTestParticipants() select ps.Id).ToList();
+            List<int> result = new List<int>();
+            
+            foreach(LogonUserDal user in GetTestParticipants()) {
+                result.Add(user.Id);
+            }
+
+            return result;
+
+            // return (from ps in GetTestParticipants() select ps.Id).ToList();
         }
 
     }

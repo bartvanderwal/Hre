@@ -20,7 +20,6 @@
 				padding: 10px 30px 10px 30px;
 				border: 0px 0px 0px 0px;
                 color: #406A80;
-                text-align: justify;
 			}
 			
             .footer td,
@@ -118,7 +117,7 @@
 					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 14pt;">
                         @Html.Raw(@Item.Text)
                         @if (Model.IsEmail && Model.Newsletter.IncludeLoginLink) {
-				            <a style="color: #ffffff; background-color: #2483B3; text-align: right; float: right;" href="@HRE.Common.Common.GetDomainBase()/Account/FlessenPostLink/@Model.PersonalLoginLink">Klik hier voor jouw persoonlijke toegang tot de HRE site ></a>
+				            <a style="color: #ffffff; background-color: #2483B3; text-align: right; float: right; padding: 5px; margin: 10px; border: 1px solid #303030;" href="@HRE.Common.Common.GetDomainBase()/Account/FlessenPostLink/@Model.PersonalLoginLink">Log mij nu in! > </a>
                         }
                     </td>
 				</tr>
