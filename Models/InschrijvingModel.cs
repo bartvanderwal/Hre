@@ -161,14 +161,32 @@ namespace HRE.Models {
         [StringLength(255)]
         public string Bijzonderheden { get; set; }
 
-        public bool IsEarlyBird { get; set; }
+        /* private bool? _isEarlyBird; */
+
+        /// <summary>
+        /// The user gets the Early Bird discount if he/she was a participant in 2012 and is again in 2013 and is with the first 200.
+        /// </summary>
+        public bool? IsEarlyBird { get; set; }
+            /* get {
+                if (!_isEarlyBird.HasValue) {
+                    _isEarlyBird = ExternalEventIdentifier==InschrijvingenRepository.HRE_EVENTNR
+                        && SportsEventParticipationDal.GetByUserIdEventId(UserId, SportsEventDal.Hre2012Id)!=null
+                        && LogonUserDal.DetermineNumberOfParticipants(true) < HreSettings.AantalEarlyBirdStartPlekken;
+                }
+                return _isEarlyBird.Value;
+            }
+            set {
+                _isEarlyBird = value;
+            }
+        } */
+
 
         private int? _inschrijfGeld { get; set; }
 
        
         public int EarlyBirdKorting {
             get {
-                return IsEarlyBird ? HreSettings.HoogteEarlyBirdKorting : 0;
+                return IsEarlyBird.HasValue && IsEarlyBird.Value ? HreSettings.HoogteEarlyBirdKorting : 0;
             }
         }
 

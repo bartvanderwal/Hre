@@ -36,7 +36,6 @@ namespace HRE.Controllers {
                 nvm.DateCreated = DateTime.Now;
                 nvm.DateSent = null;
                 nvm.DateUpdated = null;
-                nvm.SequenceNumber = 1;
 
                 nvm.Items = new List<NewsletterItemViewModel>() {
                     new NewsletterItemViewModel {

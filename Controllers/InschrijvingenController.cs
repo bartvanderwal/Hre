@@ -410,35 +410,34 @@ namespace HRE.Controllers {
         /// </summary>
         /// <param name="externalId"></param>
         /// <returns></returns>
-        public ActionResult Edit(string externalId, string eventNr="") {
-            if (string.IsNullOrEmpty(eventNr)) {
+        public ActionResult Edit(string externalId, string eventNr) {
+            /*if (string.IsNullOrEmpty(eventNr)) {
                 eventNr=InschrijvingenRepository.HRE_EVENTNR;
-            }
+            } */
             InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, eventNr);
             
-            if (model==null) {
-                return HttpNotFound();
+            // Als inladen is mislukt en het gaat om inschrijving voor 2013.
+            if (model==null && eventNr==InschrijvingenRepository.H2RE_EVENTNR) {
+                // Probeer dan de gegevens voor te laden uit het jaar ervoor (2012)
+                model = InschrijvingenRepository.GetByExternalIdentifier(externalId, InschrijvingenRepository.HRE_EVENTNR);
+                if (model!=null) {
+                    // Reset de gegevens uit 2012.
+                    model.InschrijfGeld = null;
+                    model.OpmerkingenTbvSpeaker = string.Empty;
+                    model.Bijzonderheden = string.Empty;
+                    model.ExternalEventIdentifier = string.Empty;
+                    model.ExternalEventSerieIdentifier = string.Empty;
+                    model.ExternalIdentifier = string.Empty;
+                    model.DateRegistered = DateTime.MinValue;
+                    model.Bike = false;
+                    model.Camp = false;
+                    model.Food = false;
+                    model.IsEarlyBird = LogonUserDal.DetermineNumberOfParticipants(true) < HreSettings.AantalEarlyBirdStartPlekken;
+                } else {
+                    return HttpNotFound();
+                }
             }
-
-            // The user gets the Early Bird discount if he was a participant in 2012 and is again in 2013 and is with the first 200.
-            model.IsEarlyBird = 
-                eventNr==InschrijvingenRepository.HRE_EVENTNR
-                && SportsEventParticipationDal.GetByUserIdEventId(model.UserId, SportsEventDal.Hre2012Id)!=null
-                && LogonUserDal.DetermineNumberOfParticipants(true) < HreSettings.AantalEarlyBirdStartPlekken;
             
-            // Reset de gegevens 2013 indien deze zijn voorgeladen uit die van 2012.
-            if (eventNr==InschrijvingenRepository.HRE_EVENTNR) {
-                model.OpmerkingenTbvSpeaker = string.Empty;
-                model.Bijzonderheden = string.Empty;
-                model.ExternalEventIdentifier = string.Empty;
-                model.ExternalEventSerieIdentifier = string.Empty;
-                model.ExternalIdentifier = string.Empty;
-                model.DateRegistered = DateTime.MinValue;
-                model.Bike = false;
-                model.Camp = false;
-                model.Food = false;
-            }
-
             return View("Edit", model);
         }
 
@@ -514,7 +513,7 @@ namespace HRE.Controllers {
 
             NewsletterItemViewModel item1 = new NewsletterItemViewModel();
             item1.Text = string.Format("Je hebt je zojuist aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief na betaling van het inschrijfgeld.");
-            if (model.IsEarlyBird) {
+            if (model.IsEarlyBird.HasValue && model.IsEarlyBird.Value) {
                 item1.Text += "Voor Early Bird korting maak het voor 1 maart over!";
             }
             newsletter.Items.Add(item1);
@@ -530,12 +529,15 @@ namespace HRE.Controllers {
 
             NewsletterItemViewModel item3 = new NewsletterItemViewModel();
             item3.Text = string.Format("");
-                item3.Text += string.Format("<table class=\"bank-account\">");
-                item3.Text += string.Format("<table class=\"bank-account\">");
-                item3.Text += string.Format("<tr><td>Inschrijfgeld</td><td><span class=\"quotable\">{0}</span></td></tr>", model.InschrijfGeld.AsAmount());
-                item3.Text += string.Format("<tr><td>Bank rek nr</td><td><span class=\"quotable\">1684.92.059</span> (Rabobank)</td></tr>");
-                item3.Text += string.Format("<tr><td>Ten name van </td><td><span class=\"quotable\">Stichting Woelig Water</span> (te Vinkeveen)</td></tr>");
-                item3.Text += string.Format("<tr><td>Onder vermelding van</td><td><span class=\"quotable\">H2RE {1}</span></td></tr></table>", model.VolledigeNaam);
+            item3.Text += string.Format("<table>");
+                item3.Text += string.Format("<tr><td></td><td>{0}</span></td></tr>");
+                item3.Text += string.Format("<tr><td><table class=\"bank-account\">");
+                        item3.Text += string.Format("<tr><td>Inschrijfgeld</td><td><span class=\"quotable\">{0}</span></td></tr>", model.InschrijfGeld.AsAmount());
+                        item3.Text += string.Format("<tr><td>Bank rek nr</td><td><span class=\"quotable\">1684.92.059</span> (Rabobank)</td></tr>");
+                        item3.Text += string.Format("<tr><td>Ten name van </td><td><span class=\"quotable\">Stichting Woelig Water</span> (te Vinkeveen)</td></tr>");
+                        item3.Text += string.Format("<tr><td>Onder vermelding van</td><td><span class=\"quotable\">H2RE {1}</span></td></tr>", model.VolledigeNaam);
+                    item3.Text += string.Format("</table></td></tr>");
+                item3.Text += string.Format("</table>");
 
             newsletter.Items.Add(item3);
 

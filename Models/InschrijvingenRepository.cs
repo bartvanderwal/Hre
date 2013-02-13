@@ -151,7 +151,7 @@ namespace HRE.Models {
                 join address a in DB.address on u.PrimaryAddressId equals a.Id
                 where e.ExternalEventIdentifier == eventNr && (addTestParticipants || !testParticipantIds.Contains(u.Id))
                 select new InschrijvingModel() {
-                    // User data.    
+                    // User data.
                     UserId = u.Id,
                     UserName = u.UserName,
                     GeboorteDatum = u.DateOfBirth,
@@ -199,7 +199,8 @@ namespace HRE.Models {
                     OpmerkingenTbvSpeaker = p.SpeakerRemarks,
                     Bijzonderheden = p.Notes,
                     
-                    IsEarlyBird = p.EarlyBird.HasValue && p.EarlyBird.Value
+                    IsEarlyBird = p.EarlyBird,
+                    InschrijfGeld = p.ParticipationAmountInEuroCents
                 };
 
             if (userId!=0) {

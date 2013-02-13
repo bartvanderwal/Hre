@@ -56,7 +56,7 @@ namespace HRE.Models.Newsletters {
                                       DateCreated = n.DateCreated,
                                       DateSent = (DateTime)n.DateSent,
                                       DateUpdated = (DateTime)n.DateUpdated,
-                                      SequenceNumber = n.SequenceNumber,
+                                      IntroText = n.IntroText,
                                       Audience = n.Audience.HasValue ? (NewsletterAudience) n.Audience : NewsletterAudience.OnlyToMembers,
                                       Title = n.Title
                                   }).ToList();
@@ -68,7 +68,7 @@ namespace HRE.Models.Newsletters {
                                       DateCreated = n.DateCreated,
                                       DateSent = (DateTime)n.DateSent,
                                       DateUpdated = (DateTime)n.DateUpdated,
-                                      SequenceNumber = n.SequenceNumber,
+                                      IntroText = n.IntroText,
                                       Title = n.Title
                                   }).ToList();
             }
@@ -91,6 +91,7 @@ namespace HRE.Models.Newsletters {
                 DateUpdated = nl.DateUpdated,
                 DateSent = nl.DateSent,
                 Title = nl.Title,
+                IntroText = nl.IntroText,
                 IncludeLoginLink = nl.AddPersonalLoginLink.HasValue && nl.AddPersonalLoginLink.Value,
                 Audience = nl.Audience.HasValue ? (NewsletterAudience) nl.Audience.Value : NewsletterAudience.OnlyToMembers
             };
@@ -121,7 +122,7 @@ namespace HRE.Models.Newsletters {
                 DateUpdated = DateTime.Now,
                 DateSent = null,
                 AddPersonalLoginLink = nvm.IncludeLoginLink,
-                SequenceNumber = nvm.SequenceNumber,
+                IntroText = nvm.IntroText,
                 Title = nvm.Title,
                 Audience = (int) nvm.Audience
             };
@@ -151,7 +152,7 @@ namespace HRE.Models.Newsletters {
 
             nl.DateUpdated = DateTime.Now;
             nl.DateSent = nvm.DateSent;
-            nl.SequenceNumber = nvm.SequenceNumber;
+            nl.IntroText = nvm.IntroText;
             nl.Title = nvm.Title;
             nl.AddPersonalLoginLink = nvm.IncludeLoginLink;
             nl.Audience = (int) nvm.Audience;
@@ -178,7 +179,6 @@ namespace HRE.Models.Newsletters {
 
             DB.SaveChanges();
         }
-
 
     }
 }

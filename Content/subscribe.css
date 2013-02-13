@@ -229,6 +229,7 @@ ul#uitleg {
     text-align: right;
     margin: 10px 5px 5px 5px;
     color: #406A80;
+    vertical-align: top;
 }
 
 .editor-field {
@@ -374,8 +375,7 @@ input.input-validation-error {
     float: right;
     color: #FFFFFF;
     padding: 10px 10px;
-    margin: 10px 0px 770px 0px;
-    /* border: 2px solid #A0A0A0; */
+    margin: 10px 0px 775px 0px;
     display: inline-block;
     *display: inline;
     zoom: 1;
@@ -405,6 +405,16 @@ tr.total td:last-child {
     margin-left: 10px !important;
     color: #406A80;
     font-weight: bold;
+}
+
+.jqEasyCounterMsg {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+}
+
+#HebJeErZinIn {
+    ;
 }
 
 /* End subscription. */

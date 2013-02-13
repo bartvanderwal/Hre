@@ -21,9 +21,9 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("hreModel", "PrimaryAddress", "address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.address), "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.logonuser), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdReceiver", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdSender", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
-[assembly: EdmRelationshipAttribute("hreModel", "Newsletter1", "newsletter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HRE.Data.newsletter), "newsletteritem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.newsletteritem), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "User", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "sportevent", "sportsevent", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.sportsevent), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
+[assembly: EdmRelationshipAttribute("hreModel", "Newsletter1", "newsletter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HRE.Data.newsletter), "newsletteritem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.newsletteritem), true)]
 
 #endregion
 
@@ -174,22 +174,6 @@ namespace HRE.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<newsletteritem> newsletteritem
-        {
-            get
-            {
-                if ((_newsletteritem == null))
-                {
-                    _newsletteritem = base.CreateObjectSet<newsletteritem>("newsletteritem");
-                }
-                return _newsletteritem;
-            }
-        }
-        private ObjectSet<newsletteritem> _newsletteritem;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<newsletter> newsletter
         {
             get
@@ -218,6 +202,22 @@ namespace HRE.Data
             }
         }
         private ObjectSet<sportseventparticipation> _sportseventparticipation;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<newsletteritem> newsletteritem
+        {
+            get
+            {
+                if ((_newsletteritem == null))
+                {
+                    _newsletteritem = base.CreateObjectSet<newsletteritem>("newsletteritem");
+                }
+                return _newsletteritem;
+            }
+        }
+        private ObjectSet<newsletteritem> _newsletteritem;
 
         #endregion
         #region AddTo Methods
@@ -271,14 +271,6 @@ namespace HRE.Data
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the newsletteritem EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTonewsletteritem(newsletteritem newsletteritem)
-        {
-            base.AddObject("newsletteritem", newsletteritem);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the newsletter EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTonewsletter(newsletter newsletter)
@@ -292,6 +284,14 @@ namespace HRE.Data
         public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
         {
             base.AddObject("sportseventparticipation", sportseventparticipation);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the newsletteritem EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTonewsletteritem(newsletteritem newsletteritem)
+        {
+            base.AddObject("newsletteritem", newsletteritem);
         }
 
         #endregion
@@ -2002,6 +2002,30 @@ namespace HRE.Data
         private Nullable<global::System.Int32> _Audience;
         partial void OnAudienceChanging(Nullable<global::System.Int32> value);
         partial void OnAudienceChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String IntroText
+        {
+            get
+            {
+                return _IntroText;
+            }
+            set
+            {
+                OnIntroTextChanging(value);
+                ReportPropertyChanging("IntroText");
+                _IntroText = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("IntroText");
+                OnIntroTextChanged();
+            }
+        }
+        private global::System.String _IntroText;
+        partial void OnIntroTextChanging(global::System.String value);
+        partial void OnIntroTextChanged();
 
         #endregion
     
@@ -2234,30 +2258,6 @@ namespace HRE.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 SequenceNumber
-        {
-            get
-            {
-                return _SequenceNumber;
-            }
-            set
-            {
-                OnSequenceNumberChanging(value);
-                ReportPropertyChanging("SequenceNumber");
-                _SequenceNumber = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("SequenceNumber");
-                OnSequenceNumberChanged();
-            }
-        }
-        private global::System.Int32 _SequenceNumber;
-        partial void OnSequenceNumberChanging(global::System.Int32 value);
-        partial void OnSequenceNumberChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String HeadingHtmlColour
@@ -2278,6 +2278,30 @@ namespace HRE.Data
         private global::System.String _HeadingHtmlColour;
         partial void OnHeadingHtmlColourChanging(global::System.String value);
         partial void OnHeadingHtmlColourChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 SequenceNumber
+        {
+            get
+            {
+                return _SequenceNumber;
+            }
+            set
+            {
+                OnSequenceNumberChanging(value);
+                ReportPropertyChanging("SequenceNumber");
+                _SequenceNumber = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("SequenceNumber");
+                OnSequenceNumberChanged();
+            }
+        }
+        private global::System.Int32 _SequenceNumber;
+        partial void OnSequenceNumberChanging(global::System.Int32 value);
+        partial void OnSequenceNumberChanged();
 
         #endregion
     

@@ -115,6 +115,7 @@
           <Property Name="Audience" Type="int" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
+          <Property Name="IntroText" Type="varchar" MaxLength="512" />
         </EntityType>
         <EntityType Name="newsletteritem">
           <Key>
@@ -304,12 +305,7 @@
             <End Role="emailaudit" EntitySet="emailaudit" />
           </AssociationSet>
           <EntitySet Name="sportsevent" EntityType="hreModel.sportsevent" />
-          <EntitySet Name="newsletteritem" EntityType="hreModel.newsletteritem" />
           <EntitySet Name="newsletter" EntityType="hreModel.newsletter" />
-          <AssociationSet Name="Newsletter1" Association="hreModel.Newsletter1">
-            <End Role="newsletter" EntitySet="newsletter" />
-            <End Role="newsletteritem" EntitySet="newsletteritem" />
-          </AssociationSet>
           <EntitySet Name="sportseventparticipation" EntityType="hreModel.sportseventparticipation" />
           <AssociationSet Name="User" Association="hreModel.User">
             <End Role="logonuser" EntitySet="logonuser" />
@@ -318,6 +314,11 @@
           <AssociationSet Name="sportevent" Association="hreModel.sportevent">
             <End Role="sportsevent" EntitySet="sportsevent" />
             <End Role="sportseventparticipation" EntitySet="sportseventparticipation" />
+          </AssociationSet>
+          <EntitySet Name="newsletteritem" EntityType="hreModel.newsletteritem" />
+          <AssociationSet Name="Newsletter1" Association="hreModel.Newsletter1">
+            <End Role="newsletter" EntitySet="newsletter" />
+            <End Role="newsletteritem" EntitySet="newsletteritem" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="address">
@@ -458,21 +459,6 @@
           <Property Type="String" Name="ExternalEventSerieIdentifier" />
           <NavigationProperty Name="sportseventparticipation" Relationship="hreModel.sportevent" FromRole="sportsevent" ToRole="sportseventparticipation" />
         </EntityType>
-        <EntityType Name="newsletteritem">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="NewsletterId" Nullable="false" />
-          <Property Type="String" Name="ItemTitle" />
-          <Property Type="String" Name="ItemSubTitle" />
-          <Property Type="String" Name="ItemText" />
-          <Property Type="String" Name="PictureURL" />
-          <Property Type="String" Name="IconPictureURL" />
-          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
-          <Property Type="String" Name="HeadingHtmlColour" />
-          <NavigationProperty Name="newsletter" Relationship="hreModel.Newsletter1" FromRole="newsletteritem" ToRole="newsletter" />
-        </EntityType>
         <EntityType Name="newsletter">
           <Key>
             <PropertyRef Name="Id" />
@@ -486,20 +472,9 @@
           <Property Type="DateTime" Name="DateCreated" Nullable="false" />
           <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
           <Property Type="Int32" Name="Audience" />
+          <Property Type="String" Name="IntroText" />
           <NavigationProperty Name="newsletteritem" Relationship="hreModel.Newsletter1" FromRole="newsletter" ToRole="newsletteritem" />
         </EntityType>
-        <Association Name="Newsletter1">
-          <End Type="hreModel.newsletter" Role="newsletter" Multiplicity="1" />
-          <End Type="hreModel.newsletteritem" Role="newsletteritem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="newsletter">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="newsletteritem">
-              <PropertyRef Name="NewsletterId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="sportseventparticipation">
           <Key>
             <PropertyRef Name="Id" />
@@ -558,6 +533,33 @@
             </Principal>
             <Dependent Role="sportseventparticipation">
               <PropertyRef Name="SportsEventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="newsletteritem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="NewsletterId" Nullable="false" />
+          <Property Type="String" Name="ItemTitle" />
+          <Property Type="String" Name="ItemSubTitle" />
+          <Property Type="String" Name="ItemText" />
+          <Property Type="String" Name="PictureURL" />
+          <Property Type="String" Name="IconPictureURL" />
+          <Property Type="String" Name="HeadingHtmlColour" />
+          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
+          <NavigationProperty Name="newsletter" Relationship="hreModel.Newsletter1" FromRole="newsletteritem" ToRole="newsletter" />
+        </EntityType>
+        <Association Name="Newsletter1">
+          <End Type="hreModel.newsletter" Role="newsletter" Multiplicity="1" />
+          <End Type="hreModel.newsletteritem" Role="newsletteritem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="newsletter">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="newsletteritem">
+              <PropertyRef Name="NewsletterId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -667,24 +669,10 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="newsletteritem">
-            <EntityTypeMapping TypeName="hreModel.newsletteritem">
-              <MappingFragment StoreEntitySet="newsletteritem">
-                <ScalarProperty Name="HeadingHtmlColour" ColumnName="HeadingHtmlColour" />
-                <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
-                <ScalarProperty Name="IconPictureURL" ColumnName="IconPictureURL" />
-                <ScalarProperty Name="PictureURL" ColumnName="PictureURL" />
-                <ScalarProperty Name="ItemText" ColumnName="ItemText" />
-                <ScalarProperty Name="ItemSubTitle" ColumnName="ItemSubTitle" />
-                <ScalarProperty Name="ItemTitle" ColumnName="ItemTitle" />
-                <ScalarProperty Name="NewsletterId" ColumnName="NewsletterId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="newsletter">
             <EntityTypeMapping TypeName="hreModel.newsletter">
               <MappingFragment StoreEntitySet="newsletter">
+                <ScalarProperty Name="IntroText" ColumnName="IntroText" />
                 <ScalarProperty Name="Audience" ColumnName="Audience" />
                 <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
@@ -733,6 +721,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="newsletteritem">
+            <EntityTypeMapping TypeName="hreModel.newsletteritem">
+              <MappingFragment StoreEntitySet="newsletteritem">
+                <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
+                <ScalarProperty Name="HeadingHtmlColour" ColumnName="HeadingHtmlColour" />
+                <ScalarProperty Name="IconPictureURL" ColumnName="IconPictureURL" />
+                <ScalarProperty Name="PictureURL" ColumnName="PictureURL" />
+                <ScalarProperty Name="ItemText" ColumnName="ItemText" />
+                <ScalarProperty Name="ItemSubTitle" ColumnName="ItemSubTitle" />
+                <ScalarProperty Name="ItemTitle" ColumnName="ItemTitle" />
+                <ScalarProperty Name="NewsletterId" ColumnName="NewsletterId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -772,12 +775,7 @@
           <ConnectorPoint PointX="6" PointY="5.39083550347073" />
         </AssociationConnector>
         <EntityTypeShape EntityType="hreModel.sportsevent" Width="1.5" PointX="5.375" PointY="9.125" Height="2.7494921875000031" />
-        <EntityTypeShape EntityType="hreModel.newsletteritem" Width="1.5" PointX="11" PointY="0.875" Height="2.9417936197916674" />
         <EntityTypeShape EntityType="hreModel.newsletter" Width="1.5" PointX="8.75" PointY="0.875" Height="2.9417936197916674" />
-        <AssociationConnector Association="hreModel.Newsletter1" >
-          <ConnectorPoint PointX="10.25" PointY="2.3458968098958333" />
-          <ConnectorPoint PointX="11" PointY="2.3458968098958333" />
-        </AssociationConnector>
         <EntityTypeShape EntityType="hreModel.sportseventparticipation" Width="1.5" PointX="8.625" PointY="5.25" Height="7.1724251302083317" />
         <AssociationConnector Association="hreModel.User" >
           <ConnectorPoint PointX="4.25" PointY="8.7710579427083335" />
@@ -786,6 +784,11 @@
         <AssociationConnector Association="hreModel.sportevent" >
           <ConnectorPoint PointX="6.875" PointY="10.49974609375" />
           <ConnectorPoint PointX="8.625" PointY="10.49974609375" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="hreModel.newsletteritem" Width="1.5" PointX="11" PointY="1" Height="2.9417936197916674" />
+        <AssociationConnector Association="hreModel.Newsletter1" >
+          <ConnectorPoint PointX="10.25" PointY="2.4708968098958337" />
+          <ConnectorPoint PointX="11" PointY="2.4708968098958337" />
         </AssociationConnector>
         </Diagram>
     </Diagrams>

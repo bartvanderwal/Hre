@@ -15,15 +15,13 @@
         @Html.ActionLink(" ", "Index", null, new { @class="editor-image back", @title="Terug naar overzicht", @alt="Back" })
         <br/><br/>
     }
-    
 
-    @{Html.BeginForm("Register");}
+    @{Html.BeginForm();}
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Email)
         @Html.ValidationSummary()
 
         @if (Model.IsEditAllowed) {
-            
             <p class="welcome">Welkom @Model.Voornaam!</p>
             <div id="inschrijf-formulier-uitleg">
                 @if (Model.IsNew) {
@@ -70,6 +68,7 @@
                 </div>
             </div>
         }
+        
             
         <div class="editor-images">
             @if (Model.IsEditAllowed) {
@@ -85,15 +84,16 @@
             }
         </div>
 
+        
         @if (Model.IsEditAllowed) {
             @Html.HiddenFor(m => m.UserId)
             @Html.HiddenFor(m => m.UserName)
             @Html.HiddenFor(m => m.RegistrationDate)
             <div class="editor-label">Licentie</div>
 	    	<div class="editor-field thin">
-		    	@Html.CheckBoxFor(m => m.HasLicentieNummer, new { @tabindex="1", )
+		    	@Html.CheckBoxFor(m => m.HasLicentieNummer, new { @tabindex="1"} )
                 <label for="HasLicentieNummer" title="Heb je een NTB licentie? (of KNZB of KNWU?)"></label>
-                <span id="LicentieNummerSpan" class="optText">@Html.TextBoxFor(m => m.LicentieNummer, new { @placeholder="Licentienummer...", @maxlength="12", @tabindex="2" }) 
+                <span id="LicentieNummerSpan" class="optText">@Html.TextBoxFor(m => m.LicentieNummer, new { @placeholder="Licentienummer...", @maxlength="12", @tabindex="2" }) </span>
 		    </div>
             <div class="editor-label">@Html.LabelFor(m => m.GeboorteDatum)</div>
             <div class="editor-field thin">@Html.TextBoxFor(m => m.GeboorteDatum, new { @placeholder = "Geboortedatum", @readonly = false, @class = "datePicker", @tabindex="3", @Value = string.Format("{0:dd/MM/yyyy}", Model.GeboorteDatum)})</div>
@@ -104,6 +104,7 @@
                 <span id="mylaps-chip-span" class="optText">@Html.TextBoxFor(m => m.MyLapsChipNummer, new { @tabindex="5", @placeholder="MyLaps chipnr..." } )</span>
             </div>
         }
+        
 
         <div class="editor-label">Voornaam</div>
 		<div class="editor-field thin">
@@ -211,11 +212,11 @@
             <div id="meer-opmerkingen">
                 <div class="editor-label">Opmerkingen voor de speaker<br /></div>
 		        <div class="editor-field">
-                    @Html.TextAreaFor(m => m.OpmerkingenTbvSpeaker, new { @cols="50", @rows="2", @tabindex="21", @maxlength="1024", @placeholder="Deze informatie krijgt (alleen) de speaker. Er is geen garantie, maar als je hem/haar iets leuks te melden geeft..."} )
+                    @Html.TextAreaFor(m => m.OpmerkingenTbvSpeaker, new { @cols="50", @rows="2", @tabindex="21", @maxlength="1024", @placeholder="Voorzie de speaker(s) van wat extra info.."} )
                 </div>
                 <div class="editor-label">Opmerkingen aan de organisatie</div>
                 <div class="editor-field">
-                    @Html.TextAreaFor(m => m.Bijzonderheden, new { @cols="50", @rows="2", @tabindex="22", @maxlength="1024", @placeholder="Deze informatie gaat (alleen) naar de organisatie. Wil je heb iets kwijt; prangende vragen, opbouwende kritiek of enthousiaste opmerkingen..."} )
+                    @Html.TextAreaFor(m => m.Bijzonderheden, new { @cols="50", @rows="2", @tabindex="22", @maxlength="1024", @placeholder="Opmerkingen of vragen aan de organisatie.."} )
                 </div>
             </div>
             <div id="save-button-div"><input class="@(Model.IsNew ? "save" : "save-button")" name="submit" type="submit" tabindex="23" value="@(Model.IsNew ? "" : "Opslaan")" /></div>
@@ -228,6 +229,7 @@
     @{Html.EndForm();}
 
     @if(Model.IsEditAllowed) {
+        <script type="text/javascript" language="javascript" src="/Scripts/jquery.jqEasyCharCounter.min.js"></script>
         <script type="text/javascript" lang="javascript">
             function determineAndDisplayCosts() {
                 var isEarlyBird = '@Model.IsEarlyBird' == 'True';
@@ -237,7 +239,7 @@
                 var basicCosts = @HreSettings.HuidigeDeelnameBedrag / 100;
                 var licenseCosts = isNtbWedstrijdLid ? 0 : @HreSettings.KostenDagLicentie / 100;
                 var chipCosts = hasMyLaps ? 0 : @HreSettings.KostenHuurMyLapsChipGeel / 100;
-                var reduction = isEarlyBird ? @HreSettings.HoogteEarlyBirdKorting / 100 : 0;
+                var reduction = !isEarlyBird ? 0 : @HreSettings.HoogteEarlyBirdKorting / 100;
                 var totalCosts = basicCosts + licenseCosts + chipCosts - reduction;
                 $('#basic').html(euroBedrag(basicCosts));
                 $('#license').html(euroBedrag(licenseCosts));
@@ -253,7 +255,7 @@
                 return "€ " + result;
             }
 
-            $(function () {
+            $(function() {
                 $('#toon-uitleg').click(function () {
                     $('ul#uitleg').slideToggle();
                 });
@@ -316,7 +318,7 @@
                     $("#test-checkbox-span").hide();
                 }
 
-                $('#test-checkbox').change(function () {
+                $('#test-checkbox').change(function() {
                     if ($(this).is(":checked")) {
                         $("#test-checkbox-span").show();
                         $("#test-checkbox-span-weer-uit").hide();
@@ -332,7 +334,7 @@
                     $("#LicentieNummerSpan").hide();
                 }
             
-                $('#HasLicentieNummer').change(function () {
+                $('#HasLicentieNummer').change(function() {
                     determineAndDisplayCosts();
                     if ($(this).is(":checked")) {
                         $("#LicentieNummerSpan").show();
@@ -346,13 +348,25 @@
                 } else {
                     $("#mylaps-chip-span").hide();
                 }
-                $('#HasMyLapsChipNummer').change(function () {
+                
+                $('#HasMyLapsChipNummer').change(function() {
                     determineAndDisplayCosts();
                     if ($(this).is(":checked")) {
                         $("#mylaps-chip-span").show();
                     } else {
                         $("#mylaps-chip-span").hide();
                     }
+                });
+                
+                $('#HebJeErZinIn').jqEasyCounter({
+                    'maxChars': 100,
+                    'maxCharsWarning': 100,
+                    'msgFontSize': '12px',
+                    'msgFontColor': '#000',
+                    'msgFontFamily': 'Arial',
+                    'msgTextAlign': 'right',
+                    'msgWarningColor': '#F00',
+                    'msgAppendMethod': 'insertAfter'
                 });
             });
         </script>
@@ -367,7 +381,7 @@
 
     @section Scripts {
         <script type="text/javascript">
-            $('.jq-runCode').click(function () {
+            $('.jq-runCode').click(function() {
                 var parent = $(this).parent();
                 var code = parent.find('code').text();
                 if (!code) {

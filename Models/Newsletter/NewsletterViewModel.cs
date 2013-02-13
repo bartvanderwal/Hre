@@ -30,8 +30,8 @@ namespace HRE.Models.Newsletters {
         [Display(Name = "Land/Localisatie")]
         public int Culture { get; set; }
         
-        [Display(Name = "Volgnummer")]
-        public int SequenceNumber { get; set; }
+        [Display(Name = "Intro tekst")]
+        public string IntroText { get; set; }
         
         [Display(Name = "Nieuwsbrief items")]
         public List<NewsletterItemViewModel> Items { get; set; } 

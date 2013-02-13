@@ -2,6 +2,7 @@
 
 @using HRE.Business
 
+
 @{
     ViewBag.Title = "Scrape NTB";
     List<int> testParticipants = HRE.Dal.LogonUserDal.GetTestParticipantIds();
@@ -13,8 +14,8 @@
     }
 }
 
-@Html.Raw(Model.IsAdmin ? "<div id=\"admin-panel\">" : "")
-@if (Model.IsAdmin) {
+<div id="admin-panel">
+    @if (Model.IsAdmin) {
         <div id="admin-panel-header">Admin panel</div>
         using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="select-edition", @class="parallel-form" } )) {
             @Html.DropDownList("EventNumber",
@@ -23,7 +24,7 @@
                     {"2012", HRE.Models.InschrijvingenRepository.HRE_EVENTNR}
                 },
                 "Value", "Key"))
-             <input type="submit" value="Update" />
+            <input type="submit" value="Update" />
         }
     
         using(@Html.BeginForm("DeleteTestUser", "Inschrijvingen", FormMethod.Post, new { @id="deleteTestUser", @class="parallel-form"} )) {
@@ -36,14 +37,15 @@
             <text>Scrape:</text>
             @Html.DropDownList("maxNumberOfScrapedItems",
                 new SelectList(new Dictionary<string, int> { {"Alles", 0}, {"5", 5}, {"10", 10}, {"20", 20}, {"50", 50}, 
-                                                             {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
-                                                             {"1000", 1000}}, "Value", "Key"));
+                                                                {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
+                                                                {"1000", 1000}}, "Value", "Key"));
             @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"});
             <text>Overwrite</text>
             <input type="submit" value="Scrape" />
         }
-}
-@Html.Raw(Model.IsAdmin ? "</div>" : "")
+    }
+</div>
+
 
 @if(!string.IsNullOrEmpty(Model.Message)) {
     <div class="message">@Model.Message</div>
@@ -55,9 +57,9 @@
         "Deelnemerslijst HRE 2012" :
         "Deelnemerslijst H2RE 2013")</h1>
 
-    @if (!Model.IsAdmin && !User.Identity.IsAuthenticated) {
-        <p>Op de inschrijvingspagina's alvast een voorproefje van de nieuwe layout we gaande 2013 zullen krijgen!</p>
-    }
+@if (!Model.IsAdmin && !User.Identity.IsAuthenticated) {
+    <p>Op de inschrijvingspagina's alvast een voorproefje van de nieuwe layout we gaande 2013 zullen krijgen!</p>
+}
 
 @if (Model==null || Model.Entries==null || Model.Entries.Count==0) {
     <p>Er zijn nog geen deelnemers.</p>
@@ -91,10 +93,11 @@
                     <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastSynchronized.HasValue ? entry.DateLastSynchronized.Value.RelativeDateDescription()  : "-")</td>
                     <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>
                 }
-                </tr>
+            </tr>
         }
     </table>
 }
+
 <script type="text/javascript">
     $('#EventNumber.').change(function () {
         document.getElementById('select-edition').submit()

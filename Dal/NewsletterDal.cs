@@ -82,9 +82,9 @@ namespace HRE.Dal {
         /// <summary>
         /// The sequence number of this newsletter.
         /// </summary>
-		public int SequenceNumber {
-            get { return _newsletter.SequenceNumber; }
-            set { _newsletter.SequenceNumber = value; }
+		public string IntroText {
+            get { return _newsletter.IntroText; }
+            set { _newsletter.IntroText = value; }
         }
 
         /// <summary>

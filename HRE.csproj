@@ -571,6 +571,8 @@
     <Content Include="Scripts\jquery.countdown.package-1.5.11\jquery.countdown.pack.js" />
     <Content Include="Scripts\jquery.jqdock.js" />
     <Content Include="Scripts\jquery.jqdock.min.js" />
+    <Content Include="Scripts\jquery.jqEasyCharCounter.js" />
+    <Content Include="Scripts\jquery.jqEasyCharCounter.min.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
