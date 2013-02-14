@@ -530,8 +530,27 @@ namespace HRE.Controllers {
             NewsletterItemViewModel item3 = new NewsletterItemViewModel();
             item3.Text = string.Format("");
             item3.Text += string.Format("<table>");
-                item3.Text += string.Format("<tr><td></td><td>{0}</span></td></tr>");
+                item3.Text += string.Format("<tr><td>Licentie</td><td>{0}</span></td></tr>", string.IsNullOrEmpty(model.LicentieNummer) ? "- (+" + model.KostenDagLicentie.AsAmount() + ")": model.LicentieNummer);
+                item3.Text += string.Format("<tr><td>Licentie</td><td>{0}</span></td></tr>", string.IsNullOrEmpty(model.LicentieNummer) ? "- (+" + model.KostenChip.AsAmount() + ")": model.MyLapsChipNummer);
+                if (model.IsEarlyBird.HasValue && model.IsEarlyBird.Value) {
+                    item3.Text += string.Format("<tr><td>Early Bird™ korting</td><td>{0}</span></td></tr>", string.IsNullOrEmpty(model.LicentieNummer) ? "- (+" + model.KostenDagLicentie.AsAmount() + ")": model.LicentieNummer);
+                }
+                item3.Text += string.Format("<tr><td>Geboortedatum</td><td>{0}</span></td></tr>", model.GeboorteDatum.HasValue ? model.GeboorteDatum.Value.ToShortDateString() : "-");
+                item3.Text += string.Format("<tr><td>Geslacht</td><td>{0}</span></td></tr>", model.Geslacht ?? "-");
+                item3.Text += string.Format("<tr><td>Straat</td><td>{0}</span></td></tr>", model.Straat ?? "-");
+                item3.Text += string.Format("<tr><td>Huisnummer</td><td>{0}</span></td></tr>", model.Huisnummer ?? "-");
+                item3.Text += string.Format("<tr><td>Toevoeging</td><td>{0}</span></td></tr>", model.HuisnummerToevoeging ?? "-");
+                item3.Text += string.Format("<tr><td>Postcode</td><td>{0}</span></td></tr>", model.Postcode ?? "-");
+                item3.Text += string.Format("<tr><td>Woonplaats</td><td>{0}</span></td></tr>", model.Woonplaats?? "-");
+                item3.Text += string.Format("<tr><td>E-mail adres</td><td>{0}</span></td></tr>", model.Email ?? "-");
+                item3.Text += string.Format("<tr><td>Meeeten?</td><td>{0}</span></td></tr>", model.Food ? "Interesse" : "Geen interesse");
+                item3.Text += string.Format("<tr><td>Kamperen</td><td>{0}</span></td></tr>", model.Camp ? "Interesse" : "Geen interesse");
+                item3.Text += string.Format("<tr><td>Fiets stallen</td><td>{0}</span></td></tr>", model.Bike ? "Interesse" : "Geen interesse");
+                item3.Text += string.Format("<tr><td>Opmerkingen</td><td>{0}</span></td></tr>", model.HebJeErZinIn ?? "-");
+                item3.Text += string.Format("<tr><td>Opmerkingen voor speaker</td><td>{0}</span></td></tr>", model.OpmerkingenTbvSpeaker?? "-");
+                item3.Text += string.Format("<tr><td>Opmerkingen voor organisatie</td><td>{0}</span></td></tr>", model.Bijzonderheden ?? "-");
                 item3.Text += string.Format("<tr><td><table class=\"bank-account\">");
+                        item3.Text += string.Format("<tr><th colspan=\"2\">Inschrijfkosten</th></tr>");
                         item3.Text += string.Format("<tr><td>Inschrijfgeld</td><td><span class=\"quotable\">{0}</span></td></tr>", model.InschrijfGeld.AsAmount());
                         item3.Text += string.Format("<tr><td>Bank rek nr</td><td><span class=\"quotable\">1684.92.059</span> (Rabobank)</td></tr>");
                         item3.Text += string.Format("<tr><td>Ten name van </td><td><span class=\"quotable\">Stichting Woelig Water</span> (te Vinkeveen)</td></tr>");

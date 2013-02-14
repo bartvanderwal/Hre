@@ -161,24 +161,24 @@ namespace HRE.Models {
         [StringLength(255)]
         public string Bijzonderheden { get; set; }
 
-        /* private bool? _isEarlyBird; */
+        private bool? _isEarlyBird;
 
         /// <summary>
         /// The user gets the Early Bird discount if he/she was a participant in 2012 and is again in 2013 and is with the first 200.
         /// </summary>
-        public bool? IsEarlyBird { get; set; }
-            /* get {
+        public bool? IsEarlyBird { 
+            get {
                 if (!_isEarlyBird.HasValue) {
-                    _isEarlyBird = ExternalEventIdentifier==InschrijvingenRepository.HRE_EVENTNR
-                        && SportsEventParticipationDal.GetByUserIdEventId(UserId, SportsEventDal.Hre2012Id)!=null
-                        && LogonUserDal.DetermineNumberOfParticipants(true) < HreSettings.AantalEarlyBirdStartPlekken;
+                        _isEarlyBird = ExternalEventIdentifier==InschrijvingenRepository.H2RE_EVENTNR 
+                            && SportsEventParticipationDal.GetByUserIdEventId(UserId, SportsEventDal.Hre2012Id)!=null
+                            && LogonUserDal.DetermineNumberOfParticipants(true) < HreSettings.AantalEarlyBirdStartPlekken;
                 }
                 return _isEarlyBird.Value;
             }
             set {
                 _isEarlyBird = value;
             }
-        } */
+        }
 
 
         private int? _inschrijfGeld { get; set; }
@@ -225,7 +225,7 @@ namespace HRE.Models {
         public int? InschrijfGeld { 
             get {
                 // Voor HRE 2012 geef het uit NTB inschrijvingen eventueel gelezen bedrag terug.
-                if (ExternalEventIdentifier==InschrijvingenRepository.GetHreEvent().ExternalEventIdentifier) {
+                if (ExternalEventIdentifier==InschrijvingenRepository.HRE_EVENTNR) {
                     return _inschrijfGeld;
                 }
 
@@ -235,11 +235,7 @@ namespace HRE.Models {
             }
 
             set {
-                if (ExternalEventIdentifier==InschrijvingenRepository.GetHreEvent().ExternalEventIdentifier) {
-                    _inschrijfGeld = value;
-                } else {
-                    throw new ArgumentException("Het inschrijfgeld kan niet ingesteld worden, maar wordt binnen Model berekend.");
-                }
+                _inschrijfGeld = value;
             }
         }
 
