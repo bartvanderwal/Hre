@@ -625,7 +625,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Code\TwitterGoodies.cshtml" />
-    <Content Include="App_Code\Facebook.cshtml" />
     <Content Include="Configuration\Prod\AppSettings.config">
       <SubType>Designer</SubType>
     </Content>
