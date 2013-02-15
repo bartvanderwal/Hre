@@ -30,7 +30,7 @@ namespace HRE.Models {
 
         public const string H2RE_NAME = "H2RE";
 
-        public const string H2RE_EVENTNR="2005971";
+        public const string H2RE_EVENTNR = "2005971";
 
         public const string H2RE_SERIENR = "5089";
 
@@ -188,13 +188,13 @@ namespace HRE.Models {
                     DateLastSynchronized = p.DateLastScraped,
                     // END TODO
 
-                    DateRegistered = p.DateRegistered,
-
                     DateCreated = p.DateCreated,
                     DateUpdated = p.DateUpdated,
                     MyLapsChipNummer = p.MyLapsChipIdentifier,
                     MaatTshirt = p.TShirtSize,
                     Camp = p.Camp.HasValue && p.Camp.Value,
+                    Food = p.Food.HasValue && p.Food.Value,
+                    Bike = p.Bike.HasValue && p.Bike.Value,
                     HebJeErZinIn = p.NotesToAll,
                     OpmerkingenTbvSpeaker = p.SpeakerRemarks,
                     Bijzonderheden = p.Notes,
@@ -209,9 +209,9 @@ namespace HRE.Models {
 
             // Zet de volgorde om, voor laatst ingeschrevenen eerst.
             if(addTestParticipants) {
-                raceEntries = raceEntries.OrderByDescending(e => e.DateRegistered);
+                raceEntries = raceEntries.OrderByDescending(e => e.RegistrationDate);
             }
-            
+
             return raceEntries;
         }
 
@@ -311,12 +311,19 @@ namespace HRE.Models {
 
                 if (participation==null) {
                     participation = new sportseventparticipation();
-                    participation.DateCreated=DateTime.Now;
                     SportsEventDal sportsevent = SportsEventDal.GetByExternalId(eventNumber);
                     participation.SportsEventId = sportsevent.ID;
+                    participation.EarlyBird = inschrijving.IsEarlyBird;
                 }
 
                 participation.DateUpdated = DateTime.Now;
+                // If datecreated wasn't set (e.g. it is new) then set it identical to dateCreated.
+                if (participation.DateCreated==DateTime.MinValue) {
+                    participation.DateCreated=participation.DateUpdated;
+                }
+                
+                participation.MyLapsChipIdentifier = inschrijving.HasMyLapsChipNummer ? inschrijving.MyLapsChipNummer : string.Empty;
+
                 if (isScrape) {
                     participation.ExternalIdentifier=inschrijving.ExternalIdentifier;
                     if (!participation.DateFirstScraped.HasValue) {
@@ -326,7 +333,9 @@ namespace HRE.Models {
                     participation.DateRegistered=inschrijving.RegistrationDate;
                 } else {
                     participation.ExternalIdentifier = inschrijving.ExternalIdentifier;
-                    participation.DateRegistered = participation.DateUpdated;
+                    if(inschrijving.IsNew) {
+                        participation.DateRegistered = participation.DateUpdated;
+                    }
                     participation.ParticipationAmountInEuroCents = inschrijving.InschrijfGeld;
                 }
 
@@ -341,15 +350,15 @@ namespace HRE.Models {
                 participation.Bike = inschrijving.Bike;
                 participation.TShirtSize = inschrijving.MaatTshirt;
                 participation.ParticipationStatus = 1;
-                participation.MyLapsChipIdentifier = inschrijving.HasMyLapsChipNummer ? inschrijving.MyLapsChipNummer : string.Empty;
                 participation.Notes = inschrijving.Bijzonderheden;
-
-                participation.ParticipationAmountInEuroCents = inschrijving.InschrijfGeld;
+                participation.NotesToAll = inschrijving.HebJeErZinIn;
 
                 if (participation.Id==0) {
                     DB.AddTosportseventparticipation(participation);
                 }
                 DB.SaveChanges();
+                inschrijving.ParticipationId = participation.Id;
+                inschrijving.RegistrationDate = participation.DateRegistered;
             }
         }
 

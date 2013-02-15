@@ -10,7 +10,8 @@ namespace HRE.Models {
     public class ScrapeNtbIModel {
 
         public ScrapeNtbIModel() {
-            EventNumber = IsAdmin ? InschrijvingenRepository.HRE_EVENTNR : InschrijvingenRepository.H2RE_EVENTNR;
+            // Default to HRE 2013!
+            EventNumber = InschrijvingenRepository.H2RE_EVENTNR;
         }
 
         public List<InschrijvingModel> Entries { get; set; }
@@ -40,14 +41,14 @@ namespace HRE.Models {
                 string result = "";
                 foreach (var entry in Entries) {
                     if (!string.IsNullOrEmpty(entry.HebJeErZinIn)) {
-                        result += entry.VolledigeNaam + ", " + entry.Woonplaats + ": \"" + entry.HebJeErZinIn + "\" - ";
+                        result += entry.VolledigeNaam + ", <b>" + entry.Woonplaats + "</b>: '" + entry.HebJeErZinIn + "' - ";
                     }
                 }
 
                 if(string.IsNullOrEmpty(result)) {
                     return "";
                 } else {
-                    return "We vroegen de H2RE Early Birds™ of ze er al zin in hebben. Hier volgen wat reacties... *** " + result + " ***";
+                    return "Hebben de H2RE Early Birds™ er al zin in? " + result;
                 }
             }
         }

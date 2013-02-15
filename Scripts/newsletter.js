@@ -96,7 +96,7 @@
             [{ 
                 text: 'Ja',
                 click: function () {
-                    location.href = "/Newsletter/SendAll/" + $("#Newsletter_ID").val();
+                    location.href = "/Newsletter/Sent/" + $("#Newsletter_ID").val();
                 } 
             }, { 
                 text: 'Nee',

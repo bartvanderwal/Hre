@@ -682,14 +682,16 @@ p.personal-links {
     margin: 30px 0px 30px 0px;
     padding: 5px 10px;
     font-size: small;
-    /* width: 300px;
-    height: 100px; */
     text-align: center;
     color: #ffffff;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
+}
 
+.badge li { 
+    text-align: left;
+    margin-left: 5px;
 }
 
 #content img.left {

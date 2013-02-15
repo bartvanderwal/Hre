@@ -40,7 +40,7 @@ create table LogonUser (
   Gender bit,
   DateOfBirth datetime,
   PrimaryAddressId int references Address(Id),
-  NtbLicenseNumber varchar(16) unique,
+  NtbLicenseNumber varchar(16),
   DateCreated datetime NOT NULL,
   DateUpdated datetime NOT NULL,
   UserName varchar(64) NOT NULL

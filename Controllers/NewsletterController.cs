@@ -83,7 +83,7 @@ namespace HRE.Controllers {
 
 
         [Authorize(Roles="Admin")]
-        public ActionResult SendAll(int Id) {
+        public ActionResult Sent(int Id) {
             SendPersonalNewsletterViewModel spnvm = new SendPersonalNewsletterViewModel();
             spnvm.NewsletterId = Id;
             spnvm.IsEmail = true;

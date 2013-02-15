@@ -1,11 +1,12 @@
 ﻿@model HRE.Models.InschrijvingModel
 @using HRE.Common;
 @using HRE.Dal;
+@using HRE.Models;
 
 @{
     ViewBag.Title = "Bekijken/wijzigen inschrijving";
-    int nrOfEarlyBirds = LogonUserDal.DetermineNumberOfParticipants(true);
-    bool isEarlyBird = nrOfEarlyBirds < HreSettings.AantalEarlyBirdStartPlekken;
+    int nrOfEarlyBirds = LogonUserDal.DetermineNumberOfEarlyBirds();
+    bool isEarlyBird = Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value;
 }
 
 <div @(Model.IsEditAllowed ? "class=edit-allowed" : "")>
@@ -18,17 +19,16 @@
 
     @{Html.BeginForm();}
         @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.Email)
         @Html.ValidationSummary()
 
-        @if (Model.IsEditAllowed) {
+        @if (Model.IsEditAllowed && Model.ExternalEventIdentifier == InschrijvingenRepository.H2RE_EVENTNR) {
             <p class="welcome">Welkom @Model.Voornaam!</p>
             <div id="inschrijf-formulier-uitleg">
                 @if (Model.IsNew) {
                     <p>@if(isEarlyBird) { <text>Proficiat Early Bird™! Je bent inschrijver numero @(nrOfEarlyBirds+1) en hebt net als de andere @HreSettings.AantalEarlyBirdStartPlekken recht op korting!<br /></text> }
                     Meldt je nu aan via onderstaand formulier. Nog slechts een paar stappen. Het meeste is al vooringevuld...</p>
                 } else {
-                   <p>Welkom terug! Je kunt hier zelf je inschrijfgegevens nog wijzigen tot enige tijd voor de wedstrijd.</p>
+                   <p>Welkom terug! Je kunt hier zelf je inschrijfgegevens nog wijzigen tot enige tijd voor het evenement.</p>
                 }
                 <p><a id="toon-uitleg">Wat nu?</a></p>
                 <ul id="uitleg">
@@ -55,21 +55,22 @@
                     <li>We zien je hier later graag terug! Uitnodiging volgt via de Flessenpost&trade;.</li>
                 </ul>
             </div>
+        }
         
-            <div id="costs">
-                <div id="costs-inner" style="display: none;">
-                    <table>
-                        <tr><td>Deelname</td><td><span id="basic">@Model.InschrijfGeld.AsAmount()</span></td></tr>
+        <div id="costs">
+            <div id="costs-inner" style="display: none;">
+                <table>
+                    @if (Model.IsEditAllowed) {
+                        <tr><td>Deelname</td><td><span id="basic">@Model.BasisKosten.AsAmount()</span></td></tr>
                         <tr><td>NTB daglicentie</td><td><span id="license">@Model.KostenDagLicentie.AsAmount()</span></td></tr>
                         <tr><td>MyLaps chip</td><td><span id="chip">@Model.KostenChip.AsAmount()</span></td></tr>
                         <tr><td>Early Bird™<span id="minus" style="text-align: right; font-weight: 900; float: right;">-</span></td><td><span id="reduction">@Model.EarlyBirdKorting.AsAmount()</span></td></tr>
-                        <tr class="total"><td>Totaal</td><td><span id="total">@Model.InschrijfGeld.Value.AsAmount()</span></td></tr>
-                    </table>
-                </div>
+                    }
+                    <tr class="total"><td>Totaal</td><td><span id="total">@Model.InschrijfGeld.Value.AsAmount()</span></td></tr>
+                </table>
             </div>
-        }
-        
-            
+        </div>
+
         <div class="editor-images">
             @if (Model.IsEditAllowed) {
                 <div class="editor-spacer initial"></div>
@@ -86,20 +87,31 @@
 
         
         @if (Model.IsEditAllowed) {
+            @* Include a number of hidden fields in the view to prevent these fields from getting emptied.
+                Be wary of hacking possibilities with this do do NOT include amounts and reduction oppurtunities and such,
+                but compute these on the server side with some logic.
+                TODO BW 2013-02-15: The e-mail address should actually be removed here. *@
             @Html.HiddenFor(m => m.UserId)
             @Html.HiddenFor(m => m.UserName)
             @Html.HiddenFor(m => m.RegistrationDate)
+            @Html.HiddenFor(m => m.DateCreated)
+            @Html.HiddenFor(m => m.DateUpdated)
+            @Html.HiddenFor(m => m.Email)
+            @Html.HiddenFor(m => m.ExternalEventIdentifier)
+            @Html.HiddenFor(m => m.ExternalEventSerieIdentifier)
+            @Html.HiddenFor(m => m.ExternalIdentifier)
+
             <div class="editor-label">Licentie</div>
 	    	<div class="editor-field thin">
-		    	@Html.CheckBoxFor(m => m.HasLicentieNummer, new { @tabindex="1"} )
-                <label for="HasLicentieNummer" title="Heb je een NTB licentie? (of KNZB of KNWU?)"></label>
+		    	@Html.CheckBoxFor(m => m.HasLicentieNummer, new { @tabindex="1", @title="Heb je een NTB licentie?" } )
+                <label for="HasLicentieNummer" title="Heb je een NTB licentie?"></label>
                 <span id="LicentieNummerSpan" class="optText">@Html.TextBoxFor(m => m.LicentieNummer, new { @placeholder="Licentienummer...", @maxlength="12", @tabindex="2" }) </span>
 		    </div>
             <div class="editor-label">@Html.LabelFor(m => m.GeboorteDatum)</div>
             <div class="editor-field thin">@Html.TextBoxFor(m => m.GeboorteDatum, new { @placeholder = "Geboortedatum", @readonly = false, @class = "datePicker", @tabindex="3", @Value = string.Format("{0:dd/MM/yyyy}", Model.GeboorteDatum)})</div>
-            <div class="editor-label">MyLaps chipcode</div>
+            <div class="editor-label">Persoonlijke MyLaps/Champion chip</div>
 		    <div class="editor-field thin">
-			    @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4" })
+			    @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4", @title="Heb je een eigen chip?" })
 			    <label for="HasMyLapsChipNummer" title="Heb je een eigen MyLaps chip?"></label>
                 <span id="mylaps-chip-span" class="optText">@Html.TextBoxFor(m => m.MyLapsChipNummer, new { @tabindex="5", @placeholder="MyLaps chipnr..." } )</span>
             </div>
@@ -120,9 +132,9 @@
         </div>
         <div class="editor-label">Vrouw/Man?</div>
 		<div class="editor-field">
-            <input name="Geslacht" id="V" type="radio" value="V" tabindex="9" @(Model.Geslacht=="V" ? "checked=\"checked\"" : string.Empty)>
+            <input name="Geslacht" id="V" type="radio" value="V" tabindex="9" @(Model.Geslacht=="V" ? "checked=\"checked\"" : string.Empty) title="Vrouw">
             <label for="V" title="Vrouw"></label>
-            <input name="Geslacht" id="M" type="radio" value="M" tabindex="9" @(Model.Geslacht=="M" ? "checked=\"checked\"" : string.Empty)>
+            <input name="Geslacht" id="M" type="radio" value="M" tabindex="9" @(Model.Geslacht=="M" ? "checked=\"checked\"" : string.Empty) title="Man">
             <label for="M" title="Man"></label>
         </div>
 
@@ -168,17 +180,17 @@
         
         <div class="editor-label">Mee-eten?</div>
 		<div class="editor-field">
-            @Html.CheckBoxFor(m => m.Food, new { @tabindex="17" })
+            @Html.CheckBoxFor(m => m.Food, new { @tabindex="17", @title="Interesse om na afloop mee te eten? (vrijblijvende reservering)" })
 			<label for="food" title="Interesse om na afloop mee te eten? (vrijblijvende reservering)"></label>
 		</div>
 		<div class="editor-label">Kamperen?</div>
 		<div class="editor-field">
-			@Html.CheckBoxFor(m => m.Camp, new { @tabindex="18" })
+			@Html.CheckBoxFor(m => m.Camp, new { @tabindex="18", @title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"})
 			<label for="Camp" title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"></label>
 		</div>
 		<div class="editor-label">Fiets stallen?</div>
 		<div class="editor-field">
-			@Html.CheckBoxFor(m => m.Bike, new { @tabindex="19" })
+			@Html.CheckBoxFor(m => m.Bike, new { @tabindex="19", @title="Interesse op de fiets te komen en deze veilig te kunnen stallen? (vrijblijvende reservering)" })
 			<label for="Bike" title="Interesse op de fiets te komen en deze veilig te kunnen stallen? (vrijblijvende reservering)"></label>
 		</div>
         @*<div class="editor-label">Gewenste serie</div>
@@ -232,7 +244,7 @@
         <script type="text/javascript" language="javascript" src="/Scripts/jquery.jqEasyCharCounter.min.js"></script>
         <script type="text/javascript" lang="javascript">
             function determineAndDisplayCosts() {
-                var isEarlyBird = '@Model.IsEarlyBird' == 'True';
+                var isEarlyBird = '@(Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value)' == 'True';
                 var isNtbWedstrijdLid = $('#HasLicentieNummer').is(":checked") 
                             && ($('#LicentieNummer').val().substring(2,3)=='a' || $('#LicentieNummer').val().substring(2,3)=='A');
                 var hasMyLaps = $('#HasMyLapsChipNummer').is(":checked");

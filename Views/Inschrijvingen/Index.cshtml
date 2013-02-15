@@ -14,44 +14,43 @@
     }
 }
 
-<div id="admin-panel">
-    @if (Model.IsAdmin) {
-        <div id="admin-panel-header">Admin panel</div>
-        using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="select-edition", @class="parallel-form" } )) {
-            @Html.DropDownList("EventNumber",
-                new SelectList(new Dictionary<string, string> {
-                    {"2013", HRE.Models.InschrijvingenRepository.H2RE_EVENTNR},
-                    {"2012", HRE.Models.InschrijvingenRepository.HRE_EVENTNR}
-                },
-                "Value", "Key"))
-            <input type="submit" value="Update" />
-        }
-    
-        using(@Html.BeginForm("DeleteTestUser", "Inschrijvingen", FormMethod.Post, new { @id="deleteTestUser", @class="parallel-form"} )) {
-            @Html.DropDownListFor(m => m.UserIdToDelete, HRE.Dal.LogonUserDal.GetTestParticipantsAsSelectList());
-            <input type="submit" value="Delete" />
-        }
-    
-        using(Html.BeginForm("Scrape", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) {
-            @Html.AntiForgeryToken();
-            <text>Scrape:</text>
-            @Html.DropDownList("maxNumberOfScrapedItems",
-                new SelectList(new Dictionary<string, int> { {"Alles", 0}, {"5", 5}, {"10", 10}, {"20", 20}, {"50", 50}, 
-                                                                {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
-                                                                {"1000", 1000}}, "Value", "Key"));
-            @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"});
-            <text>Overwrite</text>
-            <input type="submit" value="Scrape" />
-        }
+@if (Model.IsAdmin) {
+    <div id="admin-panel-header">Admin panel</div>
+    using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="select-edition", @class="parallel-form" } )) {
+        @Html.DropDownList("EventNumber",
+            new SelectList(new Dictionary<string, string> {
+                {"2013", HRE.Models.InschrijvingenRepository.H2RE_EVENTNR},
+                {"2012", HRE.Models.InschrijvingenRepository.HRE_EVENTNR}
+            },
+            "Value", "Key"))
+        <input type="submit" value="Update" />
     }
-</div>
+    
+    using(@Html.BeginForm("DeleteTestUser", "Inschrijvingen", FormMethod.Post, new { @id="deleteTestUser", @class="parallel-form"} )) {
+        @Html.DropDownListFor(m => m.UserIdToDelete, HRE.Dal.LogonUserDal.GetTestParticipantsAsSelectList());
+        <input type="submit" value="Delete" />
+    }
+    
+    using(Html.BeginForm("Scrape", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) {
+        @Html.AntiForgeryToken();
+        <text>Scrape:</text>
+        @Html.DropDownList("maxNumberOfScrapedItems",
+            new SelectList(new Dictionary<string, int> { {"Alles", 0}, {"5", 5}, {"10", 10}, {"20", 20}, {"50", 50}, 
+                                                            {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
+                                                            {"1000", 1000}}, "Value", "Key"));
+        @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"});
+        <text>Overwrite</text>
+        <input type="submit" value="Scrape" />
+    }
+}
+
 
 
 @if(!string.IsNullOrEmpty(Model.Message)) {
     <div class="message">@Model.Message</div>
 }
 
-<marquee>@Model.ParticipantRemarks</marquee>
+<marquee>@Html.Raw(Model.ParticipantRemarks)</marquee>
 
 <h1>@(Model.EventNumber==HRE.Models.InschrijvingenRepository.HRE_EVENTNR ? 
         "Deelnemerslijst HRE 2012" :

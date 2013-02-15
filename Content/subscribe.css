@@ -104,8 +104,9 @@ li.test {
     margin-right: 0px !important;
 }
 
-.editor-field.test {
+.edit-allowed .editor-field.test {
     margin: 0px !important;
+    width: auto !important;
 }
 
 
@@ -375,7 +376,7 @@ input.input-validation-error {
     float: right;
     color: #FFFFFF;
     padding: 10px 10px;
-    margin: 10px 0px 775px 0px;
+    margin: 10px 0px 840px 0px;
     display: inline-block;
     *display: inline;
     zoom: 1;

@@ -256,7 +256,7 @@ namespace HRE.Dal {
         public static LogonUserDal CreateOrRetrieveUser(string emailAddressAndUsername, string password="", string externalSubscriptionIdentifier = null) {
             
             // If an non 'HRE' external identifier (meaning a real ext. id) was given, then try to retrieve the user via this.
-            if (!string.IsNullOrEmpty(externalSubscriptionIdentifier) && externalSubscriptionIdentifier.StartsWith("HRE")) {
+            if (!string.IsNullOrEmpty(externalSubscriptionIdentifier) && !externalSubscriptionIdentifier.StartsWith("HRE")) {
                 int? userId = (from p in DB.sportseventparticipation where p.ExternalIdentifier == externalSubscriptionIdentifier select p.UserId).FirstOrDefault();
                 if (userId.HasValue) {
                     logonuser u = (from logonUser in DB.logonuser where logonUser.Id==userId.Value select logonUser).FirstOrDefault();
@@ -521,9 +521,9 @@ namespace HRE.Dal {
         /// Determines the number of participants or early birds in the 2013 HRE event.
         /// </summary>
         /// <returns></returns>
-        public static int DetermineNumberOfParticipants(bool earlyBirdsOnly) {
+        public static int DetermineNumberOfEarlyBirds() {
             return (from p in DB.sportseventparticipation 
-                    where p.SportsEventId==SportsEventDal.Hre2012Id && (!earlyBirdsOnly || (p.EarlyBird.HasValue && p.EarlyBird.Value))
+                    where p.SportsEventId==SportsEventDal.Hre2013Id && (p.EarlyBird.HasValue && p.EarlyBird.Value)
                     select p
                     ).Count();
         }

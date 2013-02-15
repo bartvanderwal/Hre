@@ -119,8 +119,10 @@ namespace HRE.Business {
             int numberOfSecondsAgo = date.NumberOfSecondsAgo();
 
             // See if the date dt is within the last hour...
-            if (numberOfSecondsAgo < 120)
+            if (numberOfSecondsAgo < 60)
                 return "zojuist";
+            if (numberOfSecondsAgo < 120)
+                return "een minuut geleden";
             if (numberOfSecondsAgo < 3600)
                 return string.Format("{0:N0} minuten geleden", numberOfSecondsAgo / 60 + 1);
             return string.Format("{0:N0} uur geleden", numberOfSecondsAgo / 3600 + 1);

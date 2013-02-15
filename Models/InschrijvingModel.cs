@@ -36,8 +36,30 @@ namespace HRE.Models {
 
         public DateTime DateUpdated { get; set; }
 
-        // The external identifier for the entry (ntbI number).
-        public string ExternalIdentifier { get; set; }
+        private string _externalIdentifier;
+
+        private static string HRE_EXT_ID_PREFIX = "HRE";
+
+        
+        /// <summary>
+        /// The external identifier is the one from NTB inschrijvingen or 'HRE+ParticipationId'</Participation>(not stored but calculated, so this can be changed later).
+        /// </summary>
+        public string ExternalIdentifier { 
+            get {
+                if (string.IsNullOrEmpty(_externalIdentifier)) {
+                    return  HRE_EXT_ID_PREFIX + ParticipationId;
+                } else {
+                    return _externalIdentifier; 
+                }
+            }
+            set {
+                // Set the value, but prevent if it is a computed value.
+                if (string.IsNullOrEmpty(value) && !value.StartsWith(HRE_EXT_ID_PREFIX)) {
+                    _externalIdentifier = value;
+                }
+            }
+        }
+
 
         // The external identifier for the event (ntbI event number; note that for now assume only 1 serie per event).
         public string ExternalEventIdentifier { get; set; }
@@ -171,7 +193,7 @@ namespace HRE.Models {
                 if (!_isEarlyBird.HasValue) {
                         _isEarlyBird = ExternalEventIdentifier==InschrijvingenRepository.H2RE_EVENTNR 
                             && SportsEventParticipationDal.GetByUserIdEventId(UserId, SportsEventDal.Hre2012Id)!=null
-                            && LogonUserDal.DetermineNumberOfParticipants(true) < HreSettings.AantalEarlyBirdStartPlekken;
+                            && LogonUserDal.DetermineNumberOfEarlyBirds() < HreSettings.AantalEarlyBirdStartPlekken;
                 }
                 return _isEarlyBird.Value;
             }
@@ -210,7 +232,7 @@ namespace HRE.Models {
         /// </summary>
         public int KostenChip {
             get {
-                return (string.IsNullOrEmpty(MyLapsChipNummer)) ? HreSettings.KostenHuurMyLapsChipGeel : 0;
+                return (!HasMyLapsChipNummer || string.IsNullOrEmpty(MyLapsChipNummer)) ? HreSettings.KostenHuurMyLapsChipGeel : 0;
             }
         }
 
@@ -295,26 +317,15 @@ namespace HRE.Models {
             }
         }
 
-        public DateTime DateRegistered { get; set; }
-
-
-        /// <summary>
-        /// The Human Readable/mensvriendelijke versie van de inschrijfdatum.
-        /// </summary>
-        public string DateRegisteredHR { 
-            get {
-                return DateRegistered.RelativeDateDescription();
-            }
-        }
 
         /// <summary>
         /// Geeft aan of de inschrijving nieuw is.
         /// </summary>
         public bool IsNew { 
             get {
-                return (DateRegistered==null || DateRegistered==DateTime.MinValue);
+                return (RegistrationDate==null || RegistrationDate==DateTime.MinValue);
             }
-        }        
+        }
 
     }
 }

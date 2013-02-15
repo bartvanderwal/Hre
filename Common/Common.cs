@@ -104,13 +104,12 @@ namespace HRE.Common {
             CryptoStream CS = new CryptoStream(MS, CryptoMethod.CreateEncryptor(byteKey, byteIV), CryptoStreamMode.Write);
             CS.Write(byteInput, 0, byteInput.Length);
             CS.FlushFinalBlock();
-            return HttpUtility.UrlEncode(Convert.ToBase64String(MS.ToArray()));
+            return HttpServerUtility.UrlTokenEncode(MS.ToArray());
         }
 
 
         public static string RC2Decryption(string strInput, string strKey, string strIV) {
-            strInput = HttpUtility.UrlDecode(strInput).Replace(" ","+");
-            byte[] byteInput = Convert.FromBase64String(strInput);
+            byte[] byteInput = HttpServerUtility.UrlTokenDecode(strInput);
             byte[] byteKey = Encoding.ASCII.GetBytes(strKey);
             byte[] byteIV = Encoding.ASCII.GetBytes(strIV);
             MemoryStream MS = new MemoryStream();
@@ -118,8 +117,7 @@ namespace HRE.Common {
             CryptoStream CS = new CryptoStream(MS, RC2.CreateDecryptor(byteKey, byteIV), CryptoStreamMode.Write);
             CS.Write(byteInput, 0, byteInput.Length);
             CS.FlushFinalBlock();
-            string result = Encoding.UTF8.GetString(MS.ToArray());
-            return result;
+            return Encoding.UTF8.GetString(MS.ToArray());
         }
 
 
