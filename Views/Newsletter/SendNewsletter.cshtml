@@ -16,7 +16,9 @@
 
 <div>
     @Html.ActionLink("Naar index", "Index")
-    <a class="nice-button send" style="margin: 5px;" href="#">Verstuur nieuwsbrief</a>
+    @if (!Model.Newsletter.DateSent.HasValue) {
+        <a class="nice-button send" style="margin: 5px;" href="#">Verstuur nieuwsbrief</a>
+    }
     <a class="nice-button adresses" style="margin: 5px;" href="#">Toon geaddresseerden</a>
 </div>
 @Html.HiddenFor(m => m.Newsletter.ID)

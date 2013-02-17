@@ -50,14 +50,17 @@
     <div class="message">@Model.Message</div>
 }
 
-<marquee>@Html.Raw(Model.ParticipantRemarks)</marquee>
+<div id="marquee-div">
+    <div id="marquee-label">Hebben de Early Birds™ er zin in?</div> 
+    <marquee>@Html.Raw(Model.ParticipantRemarks)</marquee>
+</div>
 
 <h1>@(Model.EventNumber==HRE.Models.InschrijvingenRepository.HRE_EVENTNR ? 
         "Deelnemerslijst HRE 2012" :
         "Deelnemerslijst H2RE 2013")</h1>
 
 @if (!Model.IsAdmin && !User.Identity.IsAuthenticated) {
-    <p>Op de inschrijvingspagina's alvast een voorproefje van de nieuwe layout we gaande 2013 zullen krijgen!</p>
+    <p>Op de inschrijvingspagina's alvast een voorproefje van de nieuwe layout die we gaande 2013 zullen krijgen!</p>
 }
 
 @if (Model==null || Model.Entries==null || Model.Entries.Count==0) {
@@ -65,8 +68,7 @@
 } else {
     <table class="deelnemers@(Model.IsAdmin ? " admin-view" : string.Empty)">
         <tr>
-            <th>Deelnemer</th>
-            <th>Woonplaats</th>
+            <th>Deelnemer</th>            <th>Woonplaats</th>
             <th>Aangemeld</th>
             @if (Model.IsAdmin) {
                 <th>E-mail adres</th>

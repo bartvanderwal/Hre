@@ -95,8 +95,10 @@ namespace HRE.Controllers {
             int eventId = SportsEventDal.GetByExternalId(model.EventNumber).ID;
             int userId = model.UserIdToDelete;
             SportsEventParticipationDal participation = SportsEventParticipationDal.GetByUserIdEventId(userId, eventId);
-            model.Message = string.Format("Inschrijving gebruiker {0} verwijderd voor event {1}.", userId, eventId);
-            participation.Delete();
+            if (participation!=null) {
+                participation.Delete();
+                model.Message = string.Format("Inschrijving van gebruiker {0} voor event {1} verwijderd.", userId, eventId);
+            }
             
             return RedirectToAction("Index");
         }
@@ -444,25 +446,30 @@ namespace HRE.Controllers {
         [HttpPost]
         public ActionResult Edit(InschrijvingModel model) {
             // Run server side validations.
-            if (model.HasMyLapsChipNummer && (string.IsNullOrEmpty(model.MyLapsChipNummer) || !Regex.IsMatch(model.MyLapsChipNummer, @"^\w\w-*[\d\w][\d\w][\d\w][\d\w]\d$"))) {
+            if (model.HasLicentieNummer && (string.IsNullOrEmpty(model.LicentieNummer) || !Regex.IsMatch(model.LicentieNummer, @"^\d\d[LA]\d\d\d\d\d[MV]\d\d\d$"))) {
+                ModelState.AddModelError("LicentieNummer", "Als je lid bent van de NTB vul dan een correct licentienummer in");
+            }
+            // 4R-YGF8T 
+            if (model.HasMyLapsChipNummer && (string.IsNullOrEmpty(model.MyLapsChipNummer) || !Regex.IsMatch(model.MyLapsChipNummer, @"^[\d\w][\d\w]-*[\d\w][\d\w][\d\w][\d\w][\d\w]$"))) {
                 ModelState.AddModelError("MyLapsChipNummer", "Als je een eigen MyLaps chip hebt, vul dan het correcte nummer in");
             }
-            if (model.HasLicentieNummer && (string.IsNullOrEmpty(model.LicentieNummer) || !Regex.IsMatch(model.LicentieNummer, @"^\d\d[LA]\d\d\d\d\d[MV]\d\d\d$"))) {
-                ModelState.AddModelError("LicentieNummer", "Als je lid bent van NTB, KNWU of KNZB vul dan een correct licentienummer in");
-            }
-            if (!string.IsNullOrEmpty(model.Postcode) && !Regex.IsMatch(model.Postcode, @"^\d{4}\s*\w{2}$")) {
-                ModelState.AddModelError("Postcode", "Geen geldige postcode!");
-            }
+
+            // if (!string.IsNullOrEmpty(model.Postcode) && !Regex.IsMatch(model.Postcode, @"^\d{4}\s*\w{2}$")) {
+            //    ModelState.AddModelError("Postcode", "Geen geldige postcode!");
+            // }
             // Store the race entry in the local database.
             if (ModelState.IsValid) {
                 // Set the eventIdentifier to the event of 2013.
                 // TODO BW 2013-02-10: Refactor "HRE" to prefix constant.
                 // model.ExternalIdentifier = "HRE" + model.ParticipationId;
                 
+                if (!model.DateConfirmationSend.HasValue) {
+                    SendSubscriptionConfirmationMail(model);
+                    model.DateConfirmationSend = DateTime.Now;
+                }
+
                 // Sla op!
                 InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
-                
-
 
                 // TODO BW 2013-02-04: Synchronize the data to NTB inschrijvingen.
                 if (string.IsNullOrEmpty(model.ExternalIdentifier) || model.ExternalIdentifier.StartsWith("HRE")) {
@@ -481,10 +488,6 @@ namespace HRE.Controllers {
                 // Opgeslagen model gegevens herladen.
                 // model = InschrijvingenRepository.GetInschrijving(LogonUserDal.GetByID(model.UserId), model.ExternalEventIdentifier); //(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
 
-                if (model.IsNew) {
-                    SendSubscriptionConfirmationMail(model);
-                }
-
                 return RedirectToAction("MijnRondjeEilanden", new { externalId=model.ExternalIdentifier, eventNr=model.ExternalEventIdentifier });
             }
 
@@ -502,78 +505,74 @@ namespace HRE.Controllers {
             newsletter.IncludeLoginLink = true;
             newsletter.Items = new List<NewsletterItemViewModel>();
 
-            NewsletterItemViewModel item1 = new NewsletterItemViewModel();
-            item1.Text = string.Format("Je bent aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief na betaling van het inschrijfgeld.");
+            newsletter.IntroText = string.Format("Je bent aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief na betaling van het inschrijfgeld. ");
             if (model.IsEarlyBird.HasValue && model.IsEarlyBird.Value) {
-                item1.Text += "Voor Early Bird korting maak het voor 1 maart over!";
+                newsletter.IntroText += "Voor Early Bird korting maak het voor 1 maart over!";
             }
-            newsletter.Items.Add(item1);
+            newsletter.IntroText += "<br/>Hieronder je inschrijfgegevens. Graag even controleren. Als er iets niet klopt kunt je dit zelf wijzigen op onze site door in te loggen via de persoonlijke link hierboven.";
 
-            NewsletterItemViewModel item2 = new NewsletterItemViewModel();
-            item2.Title = "You're in!";
-            item2.SubTitle = "voor Hét 2e Rondje Eilanden";
-            item2.HeadingHtmlColour = "208900";
-            item2.Text = string.Format("Check je gegevens hieronder. Je kunt deze zelf wijzigen door in te loggen via je persoonlijke link hierboven. <br/><br/>");
-            item2.ImagePath = "News_2013.png";
-            item2.IconImagePath = "News_TileEB.png";
-            newsletter.Items.Add(item2);
+            NewsletterItemViewModel item1 = new NewsletterItemViewModel();
+            item1.Title = "You're in!";
+            item1.SubTitle = "voor Hét 2e Rondje Eilanden";
+            item1.HeadingHtmlColour = "208900";
+            item1.ImagePath = "News_2013.png";
+            item1.IconImagePath = "News_TileEB.png";
 
-            NewsletterItemViewModel item3 = new NewsletterItemViewModel();
-            item3.Text = string.Format("");
-            item3.Text += string.Format("<table>");
-                item3.Text += string.Format("<tr><td></td></tr>");
-                item3.Text += string.Format("<tr><th colspan=\"2\"><b>Inschrijfgegevens</b></th></tr>");
+            item1.Text = string.Format("");
+            item1.Text += string.Format("<table>");
+                item1.Text += string.Format("<tr><td></td></tr>");
+                item1.Text += string.Format("<tr><th colspan=\"2\"><b>Inschrijfgegevens</b></th></tr>");
 
-                item3.Text += string.Format("<tr><td>NTB Licentie</td><td>{0}</span></td></tr>", string.IsNullOrEmpty(model.LicentieNummer) ? " - " : model.LicentieNummer);
-                item3.Text += string.Format("<tr><td>Geboortedatum</td><td>{0}</span></td></tr>", model.GeboorteDatum.HasValue ? model.GeboorteDatum.Value.ToShortDateString() : "-");
-                item3.Text += string.Format("<tr><td>Persoonlijke MyLaps Chip</td><td>{0}</span></td></tr>", string.IsNullOrEmpty(model.LicentieNummer) ? " - " : model.MyLapsChipNummer);
+                item1.Text += string.Format("<tr><td>NTB Licentie</td><td>{0}</span></td></tr>", string.IsNullOrEmpty(model.LicentieNummer) ? " - " : model.LicentieNummer);
+                item1.Text += string.Format("<tr><td>Geboortedatum</td><td>{0}</span></td></tr>", model.GeboorteDatum.HasValue ? model.GeboorteDatum.Value.ToShortDateString() : "-");
+                item1.Text += string.Format("<tr><td>Persoonlijke MyLaps Chip</td><td>{0}</span></td></tr>", string.IsNullOrEmpty(model.LicentieNummer) ? " - " : model.MyLapsChipNummer);
                 
-                item3.Text += string.Format("<tr><td></td></tr>");
-                item3.Text += string.Format("<tr><th colspan=\"2\"><b>Persoonsgegevens</b></th></tr>");
+                item1.Text += string.Format("<tr><td></td></tr>");
+                item1.Text += string.Format("<tr><th colspan=\"2\"><b>Persoonsgegevens</b></th></tr>");
 
-                item3.Text += string.Format("<tr><td>Geslacht</td><td>{0}</span></td></tr>", model.Geslacht ?? "-");
-                item3.Text += string.Format("<tr><td>Straat</td><td>{0}</span></td></tr>", model.Straat ?? "-");
-                item3.Text += string.Format("<tr><td>Huisnummer</td><td>{0}</span></td></tr>", model.Huisnummer ?? "-");
-                item3.Text += string.Format("<tr><td>Toevoeging</td><td>{0}</span></td></tr>", model.HuisnummerToevoeging ?? "-");
-                item3.Text += string.Format("<tr><td>Postcode</td><td>{0}</span></td></tr>", model.Postcode ?? "-");
-                item3.Text += string.Format("<tr><td>Woonplaats</td><td>{0}</span></td></tr>", model.Woonplaats?? "-");
-                item3.Text += string.Format("<tr><td>E-mail adres</td><td>{0}</span></td></tr>", model.Email ?? "-");
+                item1.Text += string.Format("<tr><td>Geslacht</td><td>{0}</span></td></tr>", model.Geslacht ?? "-");
+                item1.Text += string.Format("<tr><td>Straat</td><td>{0}</span></td></tr>", model.Straat ?? "-");
+                item1.Text += string.Format("<tr><td>Huisnummer</td><td>{0}</span></td></tr>", model.Huisnummer ?? "-");
+                item1.Text += string.Format("<tr><td>Toevoeging</td><td>{0}</span></td></tr>", model.HuisnummerToevoeging ?? "-");
+                item1.Text += string.Format("<tr><td>Postcode</td><td>{0}</span></td></tr>", model.Postcode ?? "-");
+                item1.Text += string.Format("<tr><td>Woonplaats</td><td>{0}</span></td></tr>", model.Woonplaats?? "-");
+                item1.Text += string.Format("<tr><td>E-mail adres</td><td>{0}</span></td></tr>", model.Email ?? "-");
 
-                item3.Text += string.Format("<tr><td></td></tr>");
-                item3.Text += string.Format("<tr><th colspan=\"2\"><b>Extra's</b></th></tr>");
+                item1.Text += string.Format("<tr><td></td></tr>");
+                item1.Text += string.Format("<tr><th colspan=\"2\"><b>Extra's</b></th></tr>");
 
-                item3.Text += string.Format("<tr><td>Meeeten?</td><td>{0}</span></td></tr>", model.Food ? "Interesse" : "Geen interesse");
-                item3.Text += string.Format("<tr><td>Kamperen</td><td>{0}</span></td></tr>", model.Camp ? "Interesse" : "Geen interesse");
-                item3.Text += string.Format("<tr><td>Fiets stallen</td><td>{0}</span></td></tr>", model.Bike ? "Interesse" : "Geen interesse");
+                item1.Text += string.Format("<tr><td>Meeeten?</td><td>{0}</span></td></tr>", model.Food ? "Interesse" : "Geen interesse");
+                item1.Text += string.Format("<tr><td>Kamperen</td><td>{0}</span></td></tr>", model.Camp ? "Interesse" : "Geen interesse");
+                item1.Text += string.Format("<tr><td>Fiets stallen</td><td>{0}</span></td></tr>", model.Bike ? "Interesse" : "Geen interesse");
                 
-                item3.Text += string.Format("<tr><td></td></tr>");
-                item3.Text += string.Format("<tr><th colspan=\"2\"><b>Opmerkingen</b></th></tr>");
+                item1.Text += string.Format("<tr><td></td></tr>");
+                item1.Text += string.Format("<tr><th colspan=\"2\"><b>Opmerkingen</b></th></tr>");
 
-                item3.Text += string.Format("<tr><td>Opmerkingen</td><td>{0}</span></td></tr>", model.HebJeErZinIn ?? "-");
-                item3.Text += string.Format("<tr><td>Opmerkingen voor speaker</td><td>{0}</span></td></tr>", model.OpmerkingenTbvSpeaker?? "-");
-                item3.Text += string.Format("<tr><td>Opmerkingen voor organisatie</td><td>{0}</span></td></tr>", model.Bijzonderheden ?? "-");
+                item1.Text += string.Format("<tr><td>Opmerkingen</td><td>{0}</span></td></tr>", model.HebJeErZinIn ?? "-");
+                item1.Text += string.Format("<tr><td>Opmerkingen voor speaker</td><td>{0}</span></td></tr>", model.OpmerkingenTbvSpeaker?? "-");
+                item1.Text += string.Format("<tr><td>Opmerkingen voor organisatie</td><td>{0}</span></td></tr>", model.Bijzonderheden ?? "-");
 
-                item3.Text += string.Format("<tr><td></td></tr>");
-                item3.Text += string.Format("<tr><th colspan=\"2\"><b>Inschrijfkosten</b></th></tr>");
-                item3.Text += string.Format("<tr><td>Inschrijfgeld</td><td>{0}</span></td></tr>", model.BasisKosten.AsAmount() );    
-                item3.Text += string.Format("<tr><td>NTB Licentie</td><td>{0}</span></td></tr>", model.KostenDagLicentie.AsAmount() );
-                item3.Text += string.Format("<tr><td>MyLaps Chip</td><td>{0}</span></td></tr>", model.KostenChip.AsAmount());
+                item1.Text += string.Format("<tr><td></td></tr>");
+                item1.Text += string.Format("<tr><th colspan=\"2\"><b>Inschrijfkosten</b></th></tr>");
+                item1.Text += string.Format("<tr><td>Inschrijfgeld</td><td>{0}</span></td></tr>", model.BasisKosten.AsAmount() );    
+                item1.Text += string.Format("<tr><td>NTB Licentie</td><td>{0}</span></td></tr>", model.KostenDagLicentie.AsAmount() );
+                item1.Text += string.Format("<tr><td>MyLaps Chip</td><td>{0}</span></td></tr>", model.KostenChip.AsAmount());
                 if (model.IsEarlyBird.HasValue && model.IsEarlyBird.Value) {
-                    item3.Text += string.Format("<tr><td>Early Bird™ korting</td><td>{0}</span></td></tr>", model.EarlyBirdKorting.AsAmount());
+                    item1.Text += string.Format("<tr><td>Early Bird™ korting</td><td>{0}</span></td></tr>", model.EarlyBirdKorting.AsAmount());
                 }
-                item3.Text += string.Format("<tr><td><b></b></td><td><span class=\"quotable\">------</span></td></tr>");
-                item3.Text += string.Format("<tr><td><b>Totaal</b></td><td><span class=\"quotable\">{0}</span></td></tr>", model.InschrijfGeld.AsAmount());
+                item1.Text += string.Format("<tr><td><b></b></td><td><span class=\"quotable\">------</span></td></tr>");
+                item1.Text += string.Format("<tr><td><b>Totaal</b></td><td><span class=\"quotable\">{0}</span></td></tr>", model.InschrijfGeld.AsAmount());
 
-                item3.Text += string.Format("<tr><td></td></tr>");
-                item3.Text += string.Format("<tr><th colspan=\"2\"><b>Overmaken naar</b></th></tr>");
+                item1.Text += string.Format("<tr><td></td></tr>");
+                item1.Text += string.Format("<tr><th colspan=\"2\"><b>Overmaken naar</b></th></tr>");
 
-                item3.Text += string.Format("<tr><td>Bank rek nr</td><td><span class=\"quotable\">'1684.92.059'</span> (Rabobank)</td></tr>");
-                item3.Text += string.Format("<tr><td>Ten name van </td><td><span class=\"quotable\">'Stichting Woelig Water'</span> (te Vinkeveen)</td></tr>");
-                item3.Text += string.Format("<tr><td>Onder vermelding van</td><td><span class=\"quotable\">'H2RE {0}'</span></td></tr>", model.VolledigeNaam);
-                item3.Text += string.Format("</table></td></tr>");
-                item3.Text += string.Format("</table>");
+                item1.Text += string.Format("<tr><td>Bank rek nr</td><td><span class=\"quotable\">'1684.92.059'</span> (Rabobank)</td></tr>");
+                item1.Text += string.Format("<tr><td>Ten name van </td><td><span class=\"quotable\">'Stichting Woelig Water'</span> (te Vinkeveen)</td></tr>");
+                item1.Text += string.Format("<tr><td>Onder vermelding van</td><td><span class=\"quotable\">'H2RE {0}'</span></td></tr>", model.VolledigeNaam);
+                item1.Text += string.Format("</table></td></tr>");
+                item1.Text += string.Format("</table>");
 
-            newsletter.Items.Add(item3);
+            newsletter.Items.Add(item1);
 
             SendPersonalNewsletterViewModel spnvm = new SendPersonalNewsletterViewModel();
             spnvm.IsEmail = true;
@@ -590,7 +589,7 @@ namespace HRE.Controllers {
             mm.IsBodyHtml = true;
             spnvm.UserId = model.UserId;
             mm.Body = this.RenderNewsletterViewToString("../Newsletter/NewsletterTemplates/NewsletterTemplate", spnvm);
-            EmailSender.SendEmail(mm, EmailCategory.SubscriptionConfirmation, spnvm.Newsletter.ID, model.UserId);
+            EmailSender.SendEmail(mm, EmailCategory.SubscriptionConfirmation, model.ParticipationId, model.UserId);
         }
 
 

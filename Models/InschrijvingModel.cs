@@ -54,7 +54,7 @@ namespace HRE.Models {
             }
             set {
                 // Set the value, but prevent if it is a computed value.
-                if (string.IsNullOrEmpty(value) && !value.StartsWith(HRE_EXT_ID_PREFIX)) {
+                if (!string.IsNullOrEmpty(value) && !value.StartsWith(HRE_EXT_ID_PREFIX)) {
                     _externalIdentifier = value;
                 }
             }
@@ -168,6 +168,7 @@ namespace HRE.Models {
         public string Land { get; set; }
 
         [StringLength(15)]
+        [Required(ErrorMessage = "Geef je telefoonnummer")]
         public string Telefoon { get; set; }
 
         [StringLength(50)]
@@ -184,6 +185,8 @@ namespace HRE.Models {
         public string Bijzonderheden { get; set; }
 
         private bool? _isEarlyBird;
+
+        public DateTime? DateConfirmationSend { get; set; }
 
         /// <summary>
         /// The user gets the Early Bird discount if he/she was a participant in 2012 and is again in 2013 and is with the first 200.

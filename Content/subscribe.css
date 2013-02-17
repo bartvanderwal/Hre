@@ -252,7 +252,39 @@ ul#uitleg {
     width: 195px;    
 }
 
-.editor-field .optText input {
+.ui-dialog .ui-widget {
+    font-family: calibri, Sans-Serif, Verdana;
+    font-size: 0.8em;
+}
+
+.ui-dialog {
+    font-family: calibri, Sans-Serif, Verdana;
+    font-size: 0.8em;
+}
+
+.ui-widget {
+    font-family: calibri, Sans-Serif, Verdana;
+    font-size: 0.8em;
+}
+
+
+.opt-text .small {
+    font-size: 13px;
+    vertical-align: top;
+    color: #808080;
+    float: right;
+    font-weight: normal;
+}
+
+.opt-text {
+    font-size: 15px;
+    font-weight: bold;
+    vertical-align: top;
+    color: #406A80;
+    float: none;
+}
+
+.editor-field .opt-text input {
     width: 140px;
 }
 

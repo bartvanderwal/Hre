@@ -200,7 +200,9 @@ namespace HRE.Models {
                     Bijzonderheden = p.Notes,
                     
                     IsEarlyBird = p.EarlyBird,
-                    InschrijfGeld = p.ParticipationAmountInEuroCents
+                    InschrijfGeld = p.ParticipationAmountInEuroCents,
+
+                    DateConfirmationSend = p.DateConfirmationSend
                 };
 
             if (userId!=0) {
@@ -352,6 +354,7 @@ namespace HRE.Models {
                 participation.ParticipationStatus = 1;
                 participation.Notes = inschrijving.Bijzonderheden;
                 participation.NotesToAll = inschrijving.HebJeErZinIn;
+                participation.DateConfirmationSend = inschrijving.DateConfirmationSend;
 
                 if (participation.Id==0) {
                     DB.AddTosportseventparticipation(participation);

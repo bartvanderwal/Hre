@@ -19,8 +19,11 @@
 
     @{Html.BeginForm();}
         @Html.AntiForgeryToken()
-        @Html.ValidationSummary()
-
+        
+        @if (!ViewData.ModelState.IsValid) {
+            <div id="errorMessagePopup" style="display:none;" title="Corrigeer het volgende voordat je kunt inschrijven">@Html.ValidationSummary()</div>
+        }
+        
         @if (Model.IsEditAllowed && Model.ExternalEventIdentifier == InschrijvingenRepository.H2RE_EVENTNR) {
             <p class="welcome">Welkom @Model.Voornaam!</p>
             <div id="inschrijf-formulier-uitleg">
@@ -36,8 +39,8 @@
                     <div class="editor-field test">
                         <input id="test-checkbox" type="checkbox" name="test-checkbox" value="test-checkbox">
 			            <label for="test-checkbox" title="Klik hier!"></label>
-                        <span id="test-checkbox-span" class="optText"><b>Jes, zo moet dat! Klik weer uit...</b></span>
-                        <span id="test-checkbox-span-weer-uit" class="optText" style="display: none;"><b>Doe dit hieronder ook...</b></span>
+                        <span id="test-checkbox-span" class="opt-text"><b>Jes, zo moet dat! Klik weer uit...</b></span>
+                        <span id="test-checkbox-span-weer-uit" class="opt-text" style="display: none;"><b>Doe dit hieronder ook...</b></span>
                     </div>
                     <li>Met de buttons geef je aan:
                         <ul>
@@ -49,7 +52,9 @@
                         </ul>
                     </li>
                     <li>Waar mogelijk zijn gegevens al vooringevuld. Maar corrigeer als er iets gewijzigd is t.o.v. 2012.</li>
-                    <li>Maak voor 1 maart het inschrijfgeld over om de &euro;7,50 Early Bird&trade; korting te krijgen!</li>
+                    <li>Druk als je alles ingevuld op de knop 'Get me a ticket' onderaan om je aanmelding te versturen.</li>
+                    <li>Als er nog iets niet klopt of ontbreekt krijg je vanzelf validatie meldingen. Corrigeren deze eerst voordat je kunt versturen.</li>
+                    <li>Maak voor 15 maart het inschrijfgeld over om de &euro;7,50 Early Bird&trade; korting te krijgen!</li>
                     <li>Bij inschrijving ga je akkoord met de <a href="/Inschrijvingen/Reglementen" target="_blank">inschrijfvoorwaarden en algemene regelementen</a>.</li>
                     <li>Werkt iets niet of is iets onduidelijk? Mail naar <a href="mailto:bart@hetrondjeeilanden.nl">info@hetrondjeeilanden.nl</a>.</li>
                     <li>We zien je hier later graag terug! Uitnodiging volgt via de Flessenpost&trade;.</li>
@@ -100,26 +105,27 @@
             @Html.HiddenFor(m => m.ExternalEventIdentifier)
             @Html.HiddenFor(m => m.ExternalEventSerieIdentifier)
             @Html.HiddenFor(m => m.ExternalIdentifier)
+            @Html.HiddenFor(m => m.DateConfirmationSend)
 
             <div class="editor-label">Licentie</div>
-	    	<div class="editor-field thin">
+	    	<div class="editor-field">
 		    	@Html.CheckBoxFor(m => m.HasLicentieNummer, new { @tabindex="1", @title="Heb je een NTB licentie?" } )
                 <label for="HasLicentieNummer" title="Heb je een NTB licentie?"></label>
-                <span id="LicentieNummerSpan" class="optText">@Html.TextBoxFor(m => m.LicentieNummer, new { @placeholder="Licentienummer...", @maxlength="12", @tabindex="2" }) </span>
+                <span id="LicentieNummerSpan" class="opt-text">@Html.TextBoxFor(m => m.LicentieNummer, new { @placeholder="Licentienummer...", @maxlength="12", @tabindex="2" }) </span>
 		    </div>
             <div class="editor-label">@Html.LabelFor(m => m.GeboorteDatum)</div>
-            <div class="editor-field thin">@Html.TextBoxFor(m => m.GeboorteDatum, new { @placeholder = "Geboortedatum", @readonly = false, @class = "datePicker", @tabindex="3", @Value = string.Format("{0:dd/MM/yyyy}", Model.GeboorteDatum)})</div>
+            <div class="editor-field">@Html.TextBoxFor(m => m.GeboorteDatum, new { @placeholder = "Geboortedatum", @readonly = false, @class = "datePicker", @tabindex="3", @Value = string.Format("{0:dd/MM/yyyy}", Model.GeboorteDatum)})</div>
             <div class="editor-label">Persoonlijke MyLaps/Champion chip</div>
-		    <div class="editor-field thin">
+		    <div class="editor-field">
 			    @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4", @title="Heb je een eigen chip?" })
 			    <label for="HasMyLapsChipNummer" title="Heb je een eigen MyLaps chip?"></label>
-                <span id="mylaps-chip-span" class="optText">@Html.TextBoxFor(m => m.MyLapsChipNummer, new { @tabindex="5", @placeholder="MyLaps chipnr..." } )</span>
+                <span id="mylaps-chip-span" class="opt-text">@Html.TextBoxFor(m => m.MyLapsChipNummer, new { @tabindex="5", @placeholder="MyLaps chipnr..." } )</span>
             </div>
         }
         
 
         <div class="editor-label">Voornaam</div>
-		<div class="editor-field thin">
+		<div class="editor-field">
             @Html.TextBoxFor(m => m.Voornaam, new { @tabindex="6", @placeholder="Voornaam..." } )
         </div>
         <div class="editor-label">Tussenvoegsels</div>
@@ -182,16 +188,19 @@
 		<div class="editor-field">
             @Html.CheckBoxFor(m => m.Food, new { @tabindex="17", @title="Interesse om na afloop mee te eten? (vrijblijvende reservering)" })
 			<label for="food" title="Interesse om na afloop mee te eten? (vrijblijvende reservering)"></label>
+            <span id="food-span" class="opt-text" style="display: none;">Ja! <span class="small">(Dit jaar grotere porties ;)</span></span>
 		</div>
 		<div class="editor-label">Kamperen?</div>
 		<div class="editor-field">
 			@Html.CheckBoxFor(m => m.Camp, new { @tabindex="18", @title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"})
 			<label for="Camp" title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"></label>
+            <span id="camp-span" class="opt-text" style="display: none;">Ja! <span class="small">(Info volgt nog..)</span></span>
 		</div>
 		<div class="editor-label">Fiets stallen?</div>
 		<div class="editor-field">
 			@Html.CheckBoxFor(m => m.Bike, new { @tabindex="19", @title="Interesse op de fiets te komen en deze veilig te kunnen stallen? (vrijblijvende reservering)" })
 			<label for="Bike" title="Interesse op de fiets te komen en deze veilig te kunnen stallen? (vrijblijvende reservering)"></label>
+            <span id="bike-span" class="opt-text" style="display: none;">Ja! <span class="small">(PF bij genoeg animo)</span></span>
 		</div>
         @*<div class="editor-label">Gewenste serie</div>
 		<div class="editor-field">
@@ -271,7 +280,6 @@
                 $('#toon-uitleg').click(function () {
                     $('ul#uitleg').slideToggle();
                 });
-
 
                 $('#toon-meer-opmerkingen').click(function () {
                     $('#meer-opmerkingen').slideToggle();
@@ -370,6 +378,49 @@
                     }
                 });
                 
+                if ($('#Food').attr('checked')) {
+                    $("#food-span").show();
+                } else {
+                    $("#food-span").hide();
+                }
+
+                if ($('#Bike').attr('checked')) {
+                    $("#bike-span").show();
+                } else {
+                    $("#bike-span").hide();
+                }
+
+                if ($('#Camp').attr('checked')) {
+                    $("#camp-span").show();
+                } else {
+                    $("#camp-span").hide();
+                }
+
+                $('#Food').change(function() {
+                    if ($(this).is(":checked")) {
+                        $("#food-span").show('800');
+                    } else {
+                        $("#food-span").hide();
+                    }
+                });
+
+                $('#Bike').change(function() {
+                    if ($(this).is(":checked")) {
+                        $("#bike-span").show('800');
+                    } else {
+                        $("#bike-span").hide();
+                    }
+                });
+
+                $('#Camp').change(function() {
+                    if ($(this).is(":checked")) {
+                        $("#camp-span").show('800');
+                    } else {
+                        $("#camp-span").hide();
+                    }
+                });
+
+
                 $('#HebJeErZinIn').jqEasyCounter({
                     'maxChars': 100,
                     'maxCharsWarning': 100,
@@ -384,7 +435,7 @@
         </script>
     } else {
         <script type="text/javascript" lang="javascript">
-            // Disable all editing unless this is users subscription (or user is admin).
+            // Disable all editing unless this is the current users' subscription (or user is admin).
             if ('@(Model.IsEditAllowed)' == 'False') {
                 $("input,select").prop('disabled', true);
             }

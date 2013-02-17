@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
+using HRE.Business;
 
 namespace HRE.Models {
 
@@ -41,15 +42,11 @@ namespace HRE.Models {
                 string result = "";
                 foreach (var entry in Entries) {
                     if (!string.IsNullOrEmpty(entry.HebJeErZinIn)) {
-                        result += entry.VolledigeNaam + ", <b>" + entry.Woonplaats + "</b>: '" + entry.HebJeErZinIn + "' - ";
+                        result += "<span class=\"marquee-athlete-remark\">“ " + entry.HebJeErZinIn + " ”</span> <span class=\"marquee-athlete\"> - " + entry.Voornaam + ", " + entry.Woonplaats.ToLower().UppercaseFirst() + "&nbsp&nbsp&nbsp&nbsp</span>";
                     }
                 }
 
-                if(string.IsNullOrEmpty(result)) {
-                    return "";
-                } else {
-                    return "Hebben de H2RE Early Birds™ er al zin in? " + result;
-                }
+                return result;
             }
         }
     }

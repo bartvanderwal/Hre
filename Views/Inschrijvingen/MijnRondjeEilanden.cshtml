@@ -5,7 +5,7 @@
 @{
     ViewBag.Title = (Model==null) ? "Mijn Rondje Eilanden" : Model.VolledigeNaam + " - Mijn " + (Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value ? "2e " : "") + "Rondje Eilanden!";
     Layout = "~/Views/Shared/_NewLayout.cshtml";
-    string shareText = string.IsNullOrEmpty(Model.HebJeErZinIn) ? "Ik heb me zojuist aangemeld voor Hét 2e Rondje Eilanden!" : Model.HebJeErZinIn;
+    string shareText = string.IsNullOrEmpty(Model.HebJeErZinIn) ? "Ik heb me zojuist als vroege vogel aangemeld voor Hét 2e Rondje Eilanden! #H2RE" : Model.HebJeErZinIn;
 }
 
 <div id="fb-root"></div>
@@ -30,7 +30,7 @@
     </div>
     <h1>@Model.VolledigeNaam</h1>
     <h2>Proficiat!</h2>
-    <p>Je hebt je @* TODO BW 2013-02-15 Fix Model.RegistrationDate.RelativeDateTimeDescription()*@ aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief als je het inschrijfgeld voldaan hebt.</p>
+    <p>Je hebt je @Model.RegistrationDate.RelativeDateTimeDescription() aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief als je het inschrijfgeld voldaan hebt.</p>
     <table class="bank-account">
         <tr><td>Inschrijfgeld</td><td><span class="quotable">@Model.InschrijfGeld.AsAmount()</span></td></tr>
         <tr><td>Bank rek nr</td><td><span class="quotable">1684.92.059</span> (Rabobank)</td></tr>

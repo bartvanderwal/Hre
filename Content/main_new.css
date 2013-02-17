@@ -43,9 +43,13 @@ a:active {
 
 
 a:hover,
-input[type="checkbox"]:not([disabled]),
-input[type="radio"]:not([disabled]) {
+input:not([disabled]) {
     cursor: pointer;
+}
+
+input[type="submit"]:hover:not([disabled]) {
+    border: 2px solid #2483B2;
+
 }
 
 #left {
@@ -56,7 +60,7 @@ input[type="radio"]:not([disabled]) {
     width: 1920px;
 	top: 0px;
 	left: 0px;
-	z-index: 2;
+	/* z-index: 1; */
     position: fixed;
 }
 
@@ -67,15 +71,7 @@ input[type="radio"]:not([disabled]) {
     padding: 0px 0px 0px 0px;
     width: 800px;
 	top: 0px;
-	z-index: 3;
-}
-
-#rightshadow {
-	background: url("img/Shadow_Grass.png") repeat-y left top; 
-    float: right;
-    padding: 0px 0px 0px 0px;
-    width: 15px;
-	z-index: 3;
+	/* z-index: 3; */
 }
 
 .countdown { 
@@ -84,8 +80,8 @@ input[type="radio"]:not([disabled]) {
    zoom: 1;
    height: 50px;
    position: fixed;
-   width: 190px;
-   z-index: 3;
+   width: 200px;
+   /* z-index: 1; */
    left: 5px; 
    top: 70px;
 }
@@ -102,7 +98,7 @@ input[type="radio"]:not([disabled]) {
 	padding: 0px 0px 0px 0px;
 	width: 100px;
     height: 60px;
-    top: 27px;
+    top: 60px;
     left: 700px;
     *display: inline;
     zoom: 1;
@@ -209,7 +205,7 @@ span.like {
     width: 800px;
 	top: 94px;
 	left: 200px;
-	z-index: 2;
+	/* z-index: 2; */
 }
 
 #content {
@@ -219,7 +215,7 @@ span.like {
 	position: relative;
 	text-align: left;
 	width: 740px;
-    z-index: 2;
+    /* z-index: 2; */
     *display: inline;
     zoom: 1;
 }
@@ -270,20 +266,6 @@ img.signup {
 .twtr-widget {
     margin-left: 21px;
     margin-top: 1px;
-}
-
-#content iframe.bigframe {
-    z-index: 10;
-    background-color: #FFFFFF;
-    padding: 10px 10px 10px 10px;
-
-    -moz-border-radius: 12px;
-    -webkit-border-radius: 12px;
-    border-radius: 12px;
-
-    -moz-box-shadow: 4px 4px 14px #000;
-    -webkit-box-shadow: 4px 4px 14px #000;
-    box-shadow: 4px 4px 14px #000;
 }
 
 #frmNTBInschrijvingen {
@@ -398,9 +380,9 @@ p.partnerlink {
     /* height: 55px; */
 }
 
-#menu .submenu a {
+/* #menu .submenu a {
     z-index: 4;
-}
+} */
 
 .menu-button {
 	/* background: url("img/menu_button.png") no-repeat left top; */
@@ -524,7 +506,7 @@ fieldset p input {
     float: right;
     margin: 0px 10px 0px 0px;
     width: 250px;
-    z-index: 3;
+    /* z-index: 3; */
     *display: inline;
     zoom: 1;
 }
@@ -719,9 +701,25 @@ tr.is-me td a {
     color: Orange;
 }
 
+#marquee-div {
+    color: #406A80;
+    background-color: Transparent;
+    border: 1px solid #202020;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    padding: 5px;
+    margin: 10px 20px 10px 20px;
+}
+
+#marquee-label {
+    color: #A0A0A0;
+    text-align: center;
+}
+
 marquee {
   /* width: 200px; */
-  height: 50px;
+  /* height: 50px; */
   white-space: nowrap;
   overflow: hidden;
   overflow-x:-webkit-marquee;
@@ -735,6 +733,16 @@ marquee {
   marquee-style: scroll;
   marquee-speed: normal;
   marquee-play-count: 5;
+}
+
+.marquee-athlete {
+    font-size: small;
+    color: #808080;
+}
+
+marquee-athlete-remark {
+    font-weight: bolder;
+    font-size: large;
 }
 
 .share-text {

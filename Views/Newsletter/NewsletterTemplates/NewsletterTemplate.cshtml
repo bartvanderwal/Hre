@@ -39,7 +39,7 @@
 			
 			p {
 				font-family: Calibri, sans serif; 
-				font-size: 14pt;
+				font-size: 12pt;
 				text-align: left;
 			}
 			
@@ -87,14 +87,14 @@
             <tbody>
 				@if (Model.IsEmail) {
 				<tr>
-					<td><p>Hallo @(Model.User.PrimaryAddress.Firstname)!</p></td>
+					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 12pt;">Hallo @(Model.User.PrimaryAddress.Firstname)!</td>
 				</tr>
                 }
                 @if (Model.IsEmail && (Model.Newsletter.IncludeLoginLink || !string.IsNullOrEmpty(Model.Newsletter.IntroText))) {
                 <tr class="item-content">
-					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 14pt;">
+					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 12pt;">
                         @if (!string.IsNullOrEmpty(Model.Newsletter.IntroText)) {
-    				        <text>@Model.Newsletter.IntroText</text>
+    				        @Html.Raw(Model.Newsletter.IntroText)
                         }
                         @if (Model.Newsletter.IncludeLoginLink) {
     				        <a style="color: #ffffff; background-color: #2483B3; text-align: right; float: right; padding: 5px; margin: 10px; border: 1px solid #303030;" href="@HRE.Common.Common.GetDomainBase()/Account/FlessenPostLink/@Model.PersonalLoginLink">Log mij nu in! > </a>
@@ -113,8 +113,8 @@
                         <td class="icon" style="width: 150px; background-color: #@Item.HeadingHtmlColour;"><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/@Item.IconImagePath" alt="@Item.Title" /></td>
     					<td class="spacer" style="width: 20px; padding: 0px; margin: 0px"></td>
 	    				<td class="header-text" style="width: 600px; background-color: #@Item.HeadingHtmlColour; padding: 10px 30px 10px 30px;">
-                        <span class="header-title" style="font-size: 45px; color: White; border-width: 30px; font-weight: bolder;">@Item.Title</span><br />
-                        <span class="header-sub-title" style="font-size: 20px; color: White;">@Item.SubTitle</span>
+                        <span class="header-title" style="font-size: 55px; color: White; border-width: 30px; font-weight: bolder;">@Item.Title</span><br />
+                        <span class="header-sub-title" style="font-size: 25px; color: White;">@Item.SubTitle</span>
                         </td>
 			    	</tr>
                 </table>
@@ -122,12 +122,12 @@
             <table border="0" cellspacing="0" cellpadding="0" style="width: 800px; border: 0px; margin: 0px; padding: 0px;">
             @if (!string.IsNullOrEmpty(Item.ImagePath)) {
                 <tr class="item-content">
-					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 14pt;">@Html.Raw(@Item.Text)</td>
+					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 12pt;">@Html.Raw(@Item.Text)</td>
 					<td><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/@Item.ImagePath" alt="@Item.Title" /></td>
 				</tr>
             } else {
                 <tr class="item-content">
-					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 14pt;">@Html.Raw(@Item.Text)</td>
+					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 12pt;">@Html.Raw(@Item.Text)</td>
 				</tr>
             }
             </table>
@@ -141,8 +141,8 @@
 				<td><a href="http://www.facebook.com/HetRondjeEilanden" target="_other"><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/News_Facebook.png" alt="Facebook" title="Facebook"></td>
 			</tr>
             @if(Model.IsEmail) {
-				<tr class="unsubscribe-link" style="text-align: center; font-size: small;"><td colspan="4"><p><a href="@(HRE.Common.Common.GetDomainBase())/NewsLetter/Unsubscribe/@Model.UnsubscribeLink" target="_blank">Klik hier om je af te melden voor de nieuwsbrief</a></p></td></tr>
-            }
+				<tr class="unsubscribe-link" style="font-family: Calibri, sans serif; color: #406A80; text-align: center; font-size: small;"><td colspan="4"><p><a href="@(HRE.Common.Common.GetDomainBase())/NewsLetter/Unsubscribe/@Model.UnsubscribeLink" target="_blank">Klik hier om je af te melden voor de nieuwsbrief</a></p></td></tr>
+                }
 		</table>
 	</body>
 </html>

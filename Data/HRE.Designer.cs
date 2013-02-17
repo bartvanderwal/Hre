@@ -8,12 +8,13 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
@@ -21,9 +22,9 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("hreModel", "PrimaryAddress", "address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.address), "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.logonuser), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdReceiver", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdSender", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
+[assembly: EdmRelationshipAttribute("hreModel", "Newsletter1", "newsletter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HRE.Data.newsletter), "newsletteritem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.newsletteritem), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "User", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "sportevent", "sportsevent", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.sportsevent), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
-[assembly: EdmRelationshipAttribute("hreModel", "Newsletter1", "newsletter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HRE.Data.newsletter), "newsletteritem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.newsletteritem), true)]
 
 #endregion
 
@@ -190,22 +191,6 @@ namespace HRE.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<sportseventparticipation> sportseventparticipation
-        {
-            get
-            {
-                if ((_sportseventparticipation == null))
-                {
-                    _sportseventparticipation = base.CreateObjectSet<sportseventparticipation>("sportseventparticipation");
-                }
-                return _sportseventparticipation;
-            }
-        }
-        private ObjectSet<sportseventparticipation> _sportseventparticipation;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<newsletteritem> newsletteritem
         {
             get
@@ -218,8 +203,25 @@ namespace HRE.Data
             }
         }
         private ObjectSet<newsletteritem> _newsletteritem;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<sportseventparticipation> sportseventparticipation
+        {
+            get
+            {
+                if ((_sportseventparticipation == null))
+                {
+                    _sportseventparticipation = base.CreateObjectSet<sportseventparticipation>("sportseventparticipation");
+                }
+                return _sportseventparticipation;
+            }
+        }
+        private ObjectSet<sportseventparticipation> _sportseventparticipation;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -279,27 +281,27 @@ namespace HRE.Data
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the sportseventparticipation EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
-        {
-            base.AddObject("sportseventparticipation", sportseventparticipation);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the newsletteritem EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTonewsletteritem(newsletteritem newsletteritem)
         {
             base.AddObject("newsletteritem", newsletteritem);
         }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the sportseventparticipation EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
+        {
+            base.AddObject("sportseventparticipation", sportseventparticipation);
+        }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
@@ -328,6 +330,7 @@ namespace HRE.Data
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -646,6 +649,7 @@ namespace HRE.Data
         partial void OnDateUpdatedChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -672,6 +676,7 @@ namespace HRE.Data
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -704,6 +709,7 @@ namespace HRE.Data
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1118,6 +1124,7 @@ namespace HRE.Data
         partial void OnEmailCategoryIdChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1198,6 +1205,7 @@ namespace HRE.Data
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1228,6 +1236,7 @@ namespace HRE.Data
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1642,6 +1651,7 @@ namespace HRE.Data
         partial void OnTelephoneNumberChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1750,6 +1760,7 @@ namespace HRE.Data
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1782,6 +1793,7 @@ namespace HRE.Data
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2028,6 +2040,7 @@ namespace HRE.Data
         partial void OnIntroTextChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2054,6 +2067,7 @@ namespace HRE.Data
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2082,6 +2096,7 @@ namespace HRE.Data
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2304,6 +2319,7 @@ namespace HRE.Data
         partial void OnSequenceNumberChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2346,6 +2362,7 @@ namespace HRE.Data
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2374,6 +2391,7 @@ namespace HRE.Data
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2452,6 +2470,7 @@ namespace HRE.Data
         partial void OnNameChanged();
 
         #endregion
+
     
     }
     
@@ -2481,6 +2500,7 @@ namespace HRE.Data
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2679,6 +2699,7 @@ namespace HRE.Data
         partial void OnExternalEventSerieIdentifierChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2705,6 +2726,7 @@ namespace HRE.Data
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2735,6 +2757,7 @@ namespace HRE.Data
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3459,8 +3482,33 @@ namespace HRE.Data
         private global::System.String _EmailAddressOfFriend;
         partial void OnEmailAddressOfFriendChanging(global::System.String value);
         partial void OnEmailAddressOfFriendChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> DateConfirmationSend
+        {
+            get
+            {
+                return _DateConfirmationSend;
+            }
+            set
+            {
+                OnDateConfirmationSendChanging(value);
+                ReportPropertyChanging("DateConfirmationSend");
+                _DateConfirmationSend = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("DateConfirmationSend");
+                OnDateConfirmationSendChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _DateConfirmationSend;
+        partial void OnDateConfirmationSendChanging(Nullable<global::System.DateTime> value);
+        partial void OnDateConfirmationSendChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3541,6 +3589,7 @@ namespace HRE.Data
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3569,6 +3618,7 @@ namespace HRE.Data
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3719,9 +3769,11 @@ namespace HRE.Data
         partial void OnDateUpdatedChanged();
 
         #endregion
+
     
     }
 
     #endregion
+
     
 }
