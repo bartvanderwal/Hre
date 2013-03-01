@@ -219,6 +219,22 @@ namespace HRE.Data
             }
         }
         private ObjectSet<sportseventparticipation> _sportseventparticipation;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<my_aspnet_users> my_aspnet_users
+        {
+            get
+            {
+                if ((_my_aspnet_users == null))
+                {
+                    _my_aspnet_users = base.CreateObjectSet<my_aspnet_users>("my_aspnet_users");
+                }
+                return _my_aspnet_users;
+            }
+        }
+        private ObjectSet<my_aspnet_users> _my_aspnet_users;
 
         #endregion
 
@@ -294,6 +310,14 @@ namespace HRE.Data
         public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
         {
             base.AddObject("sportseventparticipation", sportseventparticipation);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the my_aspnet_users EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTomy_aspnet_users(my_aspnet_users my_aspnet_users)
+        {
+            base.AddObject("my_aspnet_users", my_aspnet_users);
         }
 
         #endregion
@@ -1761,6 +1785,165 @@ namespace HRE.Data
 
         #endregion
 
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="hreModel", Name="my_aspnet_users")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class my_aspnet_users : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new my_aspnet_users object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="applicationId">Initial value of the applicationId property.</param>
+        /// <param name="name">Initial value of the name property.</param>
+        /// <param name="isAnonymous">Initial value of the isAnonymous property.</param>
+        public static my_aspnet_users Createmy_aspnet_users(global::System.Int32 id, global::System.Int32 applicationId, global::System.String name, global::System.Boolean isAnonymous)
+        {
+            my_aspnet_users my_aspnet_users = new my_aspnet_users();
+            my_aspnet_users.id = id;
+            my_aspnet_users.applicationId = applicationId;
+            my_aspnet_users.name = name;
+            my_aspnet_users.isAnonymous = isAnonymous;
+            return my_aspnet_users;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 applicationId
+        {
+            get
+            {
+                return _applicationId;
+            }
+            set
+            {
+                OnapplicationIdChanging(value);
+                ReportPropertyChanging("applicationId");
+                _applicationId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("applicationId");
+                OnapplicationIdChanged();
+            }
+        }
+        private global::System.Int32 _applicationId;
+        partial void OnapplicationIdChanging(global::System.Int32 value);
+        partial void OnapplicationIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean isAnonymous
+        {
+            get
+            {
+                return _isAnonymous;
+            }
+            set
+            {
+                OnisAnonymousChanging(value);
+                ReportPropertyChanging("isAnonymous");
+                _isAnonymous = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("isAnonymous");
+                OnisAnonymousChanged();
+            }
+        }
+        private global::System.Boolean _isAnonymous;
+        partial void OnisAnonymousChanging(global::System.Boolean value);
+        partial void OnisAnonymousChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> lastActivityDate
+        {
+            get
+            {
+                return _lastActivityDate;
+            }
+            set
+            {
+                OnlastActivityDateChanging(value);
+                ReportPropertyChanging("lastActivityDate");
+                _lastActivityDate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("lastActivityDate");
+                OnlastActivityDateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _lastActivityDate;
+        partial void OnlastActivityDateChanging(Nullable<global::System.DateTime> value);
+        partial void OnlastActivityDateChanged();
+
+        #endregion
+
+    
     }
     
     /// <summary>

@@ -93,4 +93,15 @@
         OnlyToNonMembers = 2 // OnlyToNotify, or if forgotten previously
     }
 
+
+    /// <summary>
+    /// The status of a logonuser.
+    /// </summary>
+    public enum LogonUserStatus {
+        Undetermined = 0,   // Undetermined, for records created before this Enum was added :P
+        New = 1, // A new user, with unconfirmed (or no) e-mail address.
+        EmailAddressConfirmed = 2, // THe e-mail address was confirmed
+        FullAccount = 3  // The user has a password
+    }
+
 }

@@ -32,6 +32,12 @@ namespace HRE.Business {
             return Shorten(s, 100);
         }
 
+
+        /// <summary>
+        /// Trim the string, and even remove leading and trailing non-breaking-spaces (&nbsp;'s). 
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static string TrimThisShit(this string s) {
             return s.Replace("&nbsp;", " ").Trim();
         }

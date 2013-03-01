@@ -128,5 +128,35 @@ namespace HRE.Common {
             return HreSettings.IsProduction ? "http://www.hetrondjeeilanden.nl" : HreSettings.IsDevelopment ? "http://localhost:59162" : "http://test.hetrondjeeilanden.nl";
         }
 
+
+        /// <summary>
+        /// Reorder a list in random order.
+        /// Source: http://stackoverflow.com/questions/6294671/asp-net-list-order-by-random
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="originalList"></param>
+        /// <returns>The list but now in random order</returns>
+        public static List<T> RandomizeList<T>(IList<T> originalList) {
+            List<T> randomList = new List<T>();
+            Random random = new Random();
+            T value = default(T);
+
+            //now loop through all the values in the list
+            while (originalList.Count() > 0) {
+                //pick a random item from th original list
+                var nextIndex = random.Next(0, originalList.Count());
+                //get the value for that random index
+                value = originalList[nextIndex];
+                //add item to the new randomized list
+                randomList.Add(value);
+                //remove value from original list (prevents
+                //getting duplicates
+                originalList.RemoveAt(nextIndex);
+            }
+
+            //return the randomized list
+            return randomList;
+        }
+
     }
 }

@@ -101,7 +101,16 @@ namespace HRE.Dal {
         /// </summary>
 		public string EmailAddress {
             get { return _user.EmailAddress; }
-            set { _user.EmailAddress = value; }
+            set { 
+                if (Membership.GetUser().ProviderUserKey.ToString() == _user.ExternalId) {
+                    throw new ArgumentException("Het e-mail adres van de gebruiker kan NIET gewijzigd worden als deze momenteel ingelogd is/de huidige gebruiker is.");
+                }
+                _user.EmailAddress = value;
+                MembershipUser.Email = value;
+                if (_user.UserName!=EmailAddress) {
+                    ChangeUserName(int.Parse(ExternalId), value);
+                }
+            }
         }
 
 		/// <summary>
@@ -222,6 +231,36 @@ namespace HRE.Dal {
         }
 
         
+        public LogonUserStatus Status {
+            get {
+                return (LogonUserStatus) (_user.StatusId.HasValue ? _user.StatusId.Value : 0);
+            }
+            set {
+                _user.StatusId=(int) value;
+            }
+        }
+
+
+        /// <summary>
+        /// This method should be called on existing logon users (stored in database) on receiving confirmation of the users email address.
+        /// This sets the user status from undetermined or new to confirmed email address.
+        /// </summary>
+        /// <returns>Returns true when the e-mail address was not confirmed before (but is now), otherwise returns false.</returns>
+        public bool ConfirmEmailAddress() {
+            if (Id!=0 && IsEmailAddressUnconfirmed) {
+                Status = LogonUserStatus.EmailAddressConfirmed;
+                Save();
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsEmailAddressUnconfirmed {
+            get {
+                return Status==LogonUserStatus.Undetermined || Status==LogonUserStatus.New;
+            }
+        }
+
         /// <summary>
         /// Store the user object in the database.
         /// </summary>
@@ -230,6 +269,12 @@ namespace HRE.Dal {
             if (Id==0) {
                 DB.AddTologonuser(_user);
             }
+
+            // Set the user status to new, if it does not have a value yet.
+            if (!_user.StatusId.HasValue) {
+                Status=LogonUserStatus.New;
+            }
+
             // Add address entity if it has no primary key yet.
             if (PrimaryAddress.Id==0) {
                 // Add address entity if it has no primary key yet.
@@ -306,7 +351,7 @@ namespace HRE.Dal {
                 user.UserName = emailAddressAndUsername;
                 user.EmailAddress = emailAddressAndUsername;
                 user.DateCreated = DateTime.Now;
-                user.DateCreated = user.DateCreated;
+                user.DateUpdated = user.DateCreated;
                 DB.AddTologonuser(user);
             } else {
                 user.DateUpdated = DateTime.Now;
@@ -521,7 +566,7 @@ namespace HRE.Dal {
         /// Determines the number of participants or early birds in the 2013 HRE event.
         /// </summary>
         /// <returns></returns>
-        public static int DetermineNumberOfEarlyBirds() {
+        public static int AantalIngeschrevenEarlyBirds() {
             return (from p in DB.sportseventparticipation 
                     where p.SportsEventId==SportsEventDal.Hre2013Id && (p.EarlyBird.HasValue && p.EarlyBird.Value)
                     select p
@@ -529,24 +574,41 @@ namespace HRE.Dal {
         }
 
 
+                /// <summary>
+        /// Determines the number of participants or early birds in the 2013 HRE event.
+        /// </summary>
+        /// <returns></returns>
+        public static int AantalIngeschrevenDeelnemers() {
+            return (from p in DB.sportseventparticipation 
+                    where p.SportsEventId==SportsEventDal.Hre2013Id
+                    select p
+                    ).Count();
+        }
         /// <summary>
         /// For testing purposes this gets that part of the registered admin users who were also subscribed 
         /// for HRE 2012 (inserted for testing in NTB inschrijvingen).
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<LogonUserDal> GetTestParticipants() {
-            List<LogonUserDal> adminUsers = new List<LogonUserDal>();
-            foreach (string adminUserName in Roles.GetUsersInRole("Admin")) {
+            List<LogonUserDal> adminAndSpeakerUsers = new List<LogonUserDal>();
+
+            List<string> adminUserNames = Roles.GetUsersInRole(InschrijvingenRepository.ADMIN_ROLE_NAME).ToList();
+            List<string> speakerUserNames = Roles.GetUsersInRole(InschrijvingenRepository.ADMIN_ROLE_NAME).ToList();
+
+            List<string> adminAndSpeakerUserNames = adminUserNames;
+            adminAndSpeakerUserNames.AddRange(speakerUserNames);
+
+            foreach (string adminUserName in adminAndSpeakerUserNames) {
                 LogonUserDal user = LogonUserDal.GetByUserName(adminUserName);
                 if(user!=null) {
                     SportsEventParticipationDal participation = SportsEventParticipationDal.GetByUserIdEventId(user.Id, InschrijvingenRepository.GetHreEvent().Id);
                     if (participation!=null) {
-                        adminUsers.Add(user);
+                        adminAndSpeakerUsers.Add(user);
                     }
                 }
             }
 
-            return adminUsers;
+            return adminAndSpeakerUsers;
         }
 
 
@@ -570,8 +632,120 @@ namespace HRE.Dal {
             }
 
             return result;
+        }
 
-            // return (from ps in GetTestParticipants() select ps.Id).ToList();
+
+        /// <summary>
+        /// Constructor for list. Construct a list of objects based on a list of DB objects.
+        /// </summary>
+        public static List<LogonUserDal> MakeList(List<logonuser> items) {
+            List<LogonUserDal> dals = new List<LogonUserDal>(items.Count());
+            foreach (logonuser item in items) {
+                dals.Add(new LogonUserDal(item));
+            }
+            return dals;
+        }
+
+
+        /// <summary>
+        /// Return all entities.
+        /// </summary>
+        public static List<LogonUserDal> GetAll() {             
+            return MakeList(DB.logonuser.ToList());
+        }
+
+
+        /// <summary>
+        /// Return all entities.
+        /// </summary>
+        public static List<SelectListItem> GetAllAsSelectList() {
+            List<SelectListItem> result = new List<SelectListItem>();
+            
+            List<int> testParticipants = GetTestParticipantIds();
+
+            foreach(LogonUserDal user in GetAll()) {
+                if (!testParticipants.Contains(user.Id)) {
+                    result.Add(new SelectListItem() { Text = user.EmailAddress, Value = user.Id.ToString()});
+                }
+            }
+
+            return result;
+        }
+            
+
+
+        /// <summary>
+        /// Source: http://stackoverflow.com/questions/2141952/manually-changing-username-in-asp-net-membership
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="newUserName"></param>
+        /// <returns></returns>
+        public static bool ChangeUserName(int externalUserId, string newUserName) {
+            bool success = false;
+            newUserName = newUserName.Trim();
+
+            // Make sure there is no user with the new username.
+            if (Membership.GetUser(newUserName) == null) {
+                MembershipUser u = Membership.GetUser(externalUserId);
+                string oldUsername = u.UserName;
+                // get current application
+
+                my_aspnet_users userToChange = (from user in DB.my_aspnet_users
+                                    where user.id == externalUserId
+                                    select user).FirstOrDefault();
+
+                if (userToChange != null) {
+                    userToChange.name = newUserName;
+
+                    DB.SaveChanges();
+
+                    /*
+                    // ASP.NET Issues a cookie with the user name. 
+                    // When a request is made with the specified cookie, 
+                    // ASP.NET creates a row in aspnet_users table.
+                    // To prevent this sign out the user and then sign it in
+                    string cookieName = FormsAuthentication.FormsCookieName;
+                    HttpCookie authCookie = HttpContext.Current.Request.Cookies[cookieName];
+
+                    FormsAuthenticationTicket authTicket = null;
+
+                    try {
+                        authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+
+                        FormsIdentity formsIdentity = new FormsIdentity(
+                                new FormsAuthenticationTicket(
+                                    authTicket.Version, 
+                                    newUserName, 
+                                    authTicket.IssueDate, 
+                                    authTicket.Expiration, 
+                                    authTicket.IsPersistent, 
+                                    authTicket.UserData));
+
+                        string y = HttpContext.Current.User.Identity.Name;
+                        string[] roles = authTicket.UserData.Split(new char[] { '|' });
+                        System.Security.Principal.GenericPrincipal genericPrincipal = 
+                            new System.Security.Principal.GenericPrincipal(
+                                                                formsIdentity, 
+                                                                roles);
+
+                        HttpContext.Current.User = genericPrincipal;
+                    }
+                    catch (ArgumentException ex) {
+                        // Handle exceptions
+                    }
+                    catch( NullReferenceException ex) {
+                        // Handle exceptions
+                    }
+
+                    FormsAuthentication.SignOut();
+                    HttpContext.Current.Session.Abandon();
+                    FormsAuthentication.SetAuthCookie(newUserName, false);
+                    */
+                    success = true;
+                }
+            }
+
+            return success;
         }
 
     }

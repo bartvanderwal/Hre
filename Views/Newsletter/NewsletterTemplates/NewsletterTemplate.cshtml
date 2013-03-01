@@ -7,76 +7,8 @@
 <html>
 	<head>
         <link href="http://www.hetrondjeeilanden.nl/Content/newsletter.css" rel="stylesheet" type="text/css">
-		<style TYPE="text/css">
-			
-			tr.header,
-			tr.footer {
-				background-color: #2483B3;
-                color: #ffffff;
-			}
-			
-			tbody, td, th {
-				margin: 0px;
-				padding: 10px 30px 10px 30px;
-				border: 0px 0px 0px 0px;
-                color: #406A80;
-			}
-			
-            .footer td,
-            .header th {
-				padding: 0px;
-            }
-
-            .item-content td {
-				padding: 10px 0px 10px 0px;
-            }
-
-			img {
-				margin: 0px;
-				padding: 0px;
-				border: 0;
-			}
-			
-			p {
-				font-family: Calibri, sans serif; 
-				font-size: 12pt;
-				text-align: left;
-			}
-			
-			tr.header img {
-				margin: 0px;
-			}
-			
-            tr.item-content img	{
-				margin: 0px 0px 0px 0px;
-            }
-
-			tr.item-header img, 
-			tr.item-content p {
-				margin: 20px 20px 15px 20px;
-			}
-			
-			.item-header td {
-				font-family: accid, Arial, sans serif;
-                color: #ffffff;
-				border: 0px;
-			}
-			
-			.item-header td.icon {
-				text-align: left;
-			}
-
-			.item-content td {
-				text-align: right;
-				vertical-align: top;
-			}
-			
-			.item-content td p {
-				text-align: left;
-			}
-
-		</style>
-	</head>
+	    <title>@Model.Newsletter.Title</title>
+    </head>
 	<body>
 		<table border="0" cellspacing="0" cellpadding="0" style="width: 800px; border: 0px; margin: 0px; padding: 0px;">
             <thead>
@@ -90,11 +22,14 @@
 					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 12pt;">Hallo @(Model.User.PrimaryAddress.Firstname)!</td>
 				</tr>
                 }
-                @if (Model.IsEmail && (Model.Newsletter.IncludeLoginLink || !string.IsNullOrEmpty(Model.Newsletter.IntroText))) {
+                @if (Model.IsEmail && Model.User!=null && (Model.Newsletter.IncludeLoginLink || !string.IsNullOrEmpty(Model.Newsletter.IntroText))) {
                 <tr class="item-content">
 					<td style="color: #406A80; padding: 10px 30px 10px 30px; font-family: Calibri, sans serif; font-size: 12pt;">
                         @if (!string.IsNullOrEmpty(Model.Newsletter.IntroText)) {
     				        @Html.Raw(Model.Newsletter.IntroText)
+                        }
+                        @if (Model.User.IsEmailAddressUnconfirmed) {
+    				        <text>Je e-mail adres - @Model.User.EmailAddress - is nog niet bevestigd. Log minstens éénmaal in via de link hieronder om deze adres te bevestigen. Pas daarna kan je inschrijving definitief gemaakt worden.</text>
                         }
                         @if (Model.Newsletter.IncludeLoginLink) {
     				        <a style="color: #ffffff; background-color: #2483B3; text-align: right; float: right; padding: 5px; margin: 10px; border: 1px solid #303030;" href="@HRE.Common.Common.GetDomainBase()/Account/FlessenPostLink/@Model.PersonalLoginLink">Log mij nu in! > </a>

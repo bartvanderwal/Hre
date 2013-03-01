@@ -10,7 +10,6 @@ using HRE.Models;
 namespace HRE.Dal {
     public class SportsEventDal : ObjectDal {
 
-
         public static int Hre2012Id {
             get {
                 return InschrijvingenRepository.GetEvent(InschrijvingenRepository.HRE_EVENTNR).Id;
@@ -51,6 +50,42 @@ namespace HRE.Dal {
         public DateTime? EventDate {
             get { return _sportsEvent.EventDate; }
             set { _sportsEvent.EventDate = value; }
+        }
+
+
+        /// <summary>
+        /// The name of the event.
+        /// </summary>
+        public string Name {
+            get { return _sportsEvent.Name; }
+            set { _sportsEvent.Name = value; }
+        }
+
+
+        /// <summary>
+        /// The external event identifier from NTB inschrijvingen.
+        /// </summary>
+        public string ExternalEventIdentifier {
+            get { return _sportsEvent.ExternalEventIdentifier; }
+            set { _sportsEvent.ExternalEventIdentifier = value; }
+        }
+
+
+        /// <summary>
+        /// The external event serie identifier from NTB inschrijvingen.
+        /// </summary>
+        public string ExternalEventSerieIdentifier {
+            get { return _sportsEvent.ExternalEventSerieIdentifier; }
+            set { _sportsEvent.ExternalEventSerieIdentifier = value; }
+        }
+
+
+        /// <summary>
+        /// The place the event takes ehm... place.
+        /// </summary>
+        public string EventPlace {
+            get { return _sportsEvent.EventPlace; }
+            set { _sportsEvent.EventPlace = value; }
         }
 
 

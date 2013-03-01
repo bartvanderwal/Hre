@@ -17,7 +17,12 @@ namespace HRE.Business {
         /// Sends an e-mail (and creates an e-mail audit record).
         /// </summary>
         public static void SendEmail(MailMessage message, EmailCategory? category, int? relatedEntityID, int? userIdReceiver = null) {
-            EmailAuditDal emailAuditDal = new EmailAuditDal(message, category, LogonUserDal.GetCurrentUser().Id, userIdReceiver, relatedEntityID);
+            int? currentUserId = null;
+            if (LogonUserDal.GetCurrentUser()!=null) {
+                currentUserId = LogonUserDal.GetCurrentUser().Id;
+            }
+
+            EmailAuditDal emailAuditDal = new EmailAuditDal(message, category, currentUserId, userIdReceiver, relatedEntityID);
 
             SmtpClient smtpClient = new SmtpClient();
             

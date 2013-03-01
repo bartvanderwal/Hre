@@ -11,6 +11,15 @@ namespace HRE.Models {
 
         [Required(ErrorMessage="Vul een geldig e-mail adres in!")]
         public string Email { get; set; }
+
+
+        /// <summary>
+        /// Geeft aan of de algemene inschrijving al geopend is, afhankelijk van de startdatum in de appsettings.
+        /// </summary>
+        /// <returns></returns>
+        public static bool AlgemeneInschrijvingGeopend() {
+            return DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving)>0;
+        }
     }
 
 

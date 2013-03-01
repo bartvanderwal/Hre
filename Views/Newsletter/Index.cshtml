@@ -30,7 +30,7 @@
             <td>@Html.ActionLink(title, "CreateNewsletter", new { id = item.ID })</td>
             <td>@item.DateCreated.ToString("dd-MM-yyyy")</td>
             <td>@Html.ActionLink("Bekijk", "Display", new { newsletterId = item.ID })</td>
-            <td>@if (SentDate == "-") { @Html.ActionLink("Versturen", "SendNewsletter", new { newsletterId = item.ID}) } else { @Html.Raw("Verstuurd") }</td>
+            <td>@Html.ActionLink("Versturen", "SendNewsletter", new { newsletterId = item.ID})</td>
         </tr>
         i++;
     }

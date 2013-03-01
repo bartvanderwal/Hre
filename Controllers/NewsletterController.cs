@@ -96,7 +96,7 @@ namespace HRE.Controllers {
                 mm.IsBodyHtml = true;
 
                 foreach (LogonUserDal user in users) {
-                    spnvm.UserId = user.Id;
+                    spnvm.TestUserId = user.Id;
                     mm.Body = this.RenderNewsletterViewToString("NewsletterTemplates/NewsletterTemplate", spnvm);
                     mm.To.Clear();
                     mm.To.Add(new MailAddress(user.EmailAddress));

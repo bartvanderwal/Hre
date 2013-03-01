@@ -363,7 +363,7 @@ input.save[type=submit] {
 }
 
 .editor-spacer.address {
-    height: 146px;
+    height: 185px;
 }
 
 .editor-spacer.email {
@@ -446,8 +446,21 @@ tr.total td:last-child {
     zoom: 1;
 }
 
-#HebJeErZinIn {
-    ;
+.make-it-personal {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    height: 78px;
+    width: 325px;
+	background: url('/Content/img/InschrijvenHREIconSet.png') 0px 0px no-repeat;
+}
+
+.make-it-personal.speaker {
+    background-position: 0px -295px;
+}
+
+.make-it-personal.organisatie {
+    background-position: -0px -375px;
 }
 
 /* End subscription. */

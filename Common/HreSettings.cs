@@ -197,6 +197,26 @@ namespace HRE.Common {
 
 
         /// <summary>
+        /// De einddatum waarna er geen Early Bird korting meer wordt gegeven.
+        /// </summary>
+        public static DateTime EindDatumEarlyBirdKorting {
+            get {
+                return ReadDateTimeSetting("EindDatumEarlyBirdKorting", "15-03-2013");
+            }
+        }
+
+
+        /// <summary>
+        /// Openingsdatum algemene inschrijving.
+        /// </summary>
+        public static DateTime OpeningsdatumAlgemeneInschrijving {
+            get {
+                return ReadDateTimeSetting("OpeningsdatumAlgemeneInschrijving", "01-03-2013");
+            }
+        }
+
+
+        /// <summary>
         /// Het huidige - kale - deelnamebedrag (exclusief korting zoals early bird, en extra kosten zoals chip/licentie).
         /// Default: 2750.
         /// </summary>
@@ -238,6 +258,46 @@ namespace HRE.Common {
                 return ReadIntSetting("HoogteEarlyBirdKorting", 750);
             }
         }
+
+
+        /// <summary>
+        /// Sisow password.
+        /// </summary>
+        public static string SisowPassword {
+            get {
+                return ReadStringSetting("SisowPassword");
+            }
+        }
+
+        
+        /// <summary>
+        /// Sisow Merchant id.
+        /// </summary>
+        public static string SisowMerchantId {
+            get {
+                return ReadStringSetting("SisowMerchantId");
+            }
+        }
+
        
+        /// <summary>
+        /// Sisow Merchant key.
+        /// </summary>
+        public static string SisowMerchantKey {
+            get {
+                return ReadStringSetting("SisowMerchantKey");
+            }
+        }
+
+
+        /// <summary>
+        /// Sisow Merchant key.
+        /// </summary>
+        public static string MailAddressSecretary {
+            get {
+                return ReadStringSetting("MailAddressSecretary", "pieter@hetrondjeeilanden.nl");
+            }
+        }
+
     }
 }

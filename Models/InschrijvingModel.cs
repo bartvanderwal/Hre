@@ -16,16 +16,33 @@ namespace HRE.Models {
         
         /// <summary>
         /// The user id.
-        /// Warning; do NOT set the username from the User form, only initally on scraping/creation.
+        /// Warning; do NOT set the UserId from the User form, only initally on scraping/creation.
         /// </summary>
         public int UserId { get; set; }
 
         /// <summary>
         /// The user name.
-        /// Warning; do NOT set the username from the User form, only initally on scraping/creation.
+        /// Warning; do NOT set the UserName from the User form, only initally on scraping/creation.
         /// </summary>
         public string UserName { get; set; }
  
+        
+        /// <summary>
+        /// Geeft aan of de inschrijving voor een nieuwe gebruiker is.
+        /// </summary>
+        public bool IsNewUser {
+            get {
+                return UserId==0;
+            }
+        }
+
+
+        public LogonUserDal User {
+            get {
+                return LogonUserDal.GetByID(UserId);
+            }
+        }
+
         public DateTime RegistrationDate { get; set; }
 
         public DateTime? DateFirstSynchronized { get; set; }
@@ -157,22 +174,23 @@ namespace HRE.Models {
 
         public string HuisnummerToevoeging { get; set; }
 
-        [Required(ErrorMessage = "Geef je postcode")]
+        [Required(ErrorMessage = "Geef je postcode op")]
         public string Postcode { get; set; }
         
         [StringLength(50)]
-        [Required(ErrorMessage = "Geef je woonplaats")]
+        [Required(ErrorMessage = "Geef je woonplaats aan")]
         public string Woonplaats { get; set; }
 
         [StringLength(50)]
+        [Required(ErrorMessage = "Selecteer een land")]
         public string Land { get; set; }
 
         [StringLength(15)]
-        [Required(ErrorMessage = "Geef je telefoonnummer")]
+        [Required(ErrorMessage = "Geef je telefoonnummer op")]
         public string Telefoon { get; set; }
 
         [StringLength(50)]
-        [Required(ErrorMessage = "Geef je e-mail adres")]
+        [Required(ErrorMessage = "Geef je e-mail adres op")]
         public string Email { get; set; }
         
         [StringLength(100)]
@@ -182,7 +200,7 @@ namespace HRE.Models {
         public string OpmerkingenTbvSpeaker { get; set; }
         
         [StringLength(255)]
-        public string Bijzonderheden { get; set; }
+        public string OpmerkingenAanOrganisatie { get; set; }
 
         private bool? _isEarlyBird;
 
@@ -196,7 +214,8 @@ namespace HRE.Models {
                 if (!_isEarlyBird.HasValue) {
                         _isEarlyBird = ExternalEventIdentifier==InschrijvingenRepository.H2RE_EVENTNR 
                             && SportsEventParticipationDal.GetByUserIdEventId(UserId, SportsEventDal.Hre2012Id)!=null
-                            && LogonUserDal.DetermineNumberOfEarlyBirds() < HreSettings.AantalEarlyBirdStartPlekken;
+                            && LogonUserDal.AantalIngeschrevenEarlyBirds() < HreSettings.AantalEarlyBirdStartPlekken
+                            && DateTime.Compare(DateTime.Now, HreSettings.EindDatumEarlyBirdKorting)<=0;
                 }
                 return _isEarlyBird.Value;
             }
@@ -300,15 +319,14 @@ namespace HRE.Models {
 
         /// <summary>
         /// Geeft aan of editen toegestaan is of niet. Wordt gebruikt in de GUI.
-        /// Editen is alleen toegestaan voor admin gebruikers of als dit de huidige gebruikers eigen inschrijving is.
+        /// Editen is alleen toegestaan voor volledige nieuwe inschrijvingen, voor admin gebruikers of als dit de huidige gebruikers eigen inschrijving is.
         /// </summary>
         public bool IsEditAllowed {
             get {
                 var currentUser = LogonUserDal.GetCurrentUser();
-                return  IsAdmin || (currentUser!=null && currentUser.EmailAddress==Email);
+                return IsNewUser || IsAdmin || (currentUser!=null && currentUser.EmailAddress==Email);
             }
         }
-
 
 
         /// <summary>
@@ -316,19 +334,41 @@ namespace HRE.Models {
         /// </summary>
         public bool IsAdmin {
             get {
-                return Roles.IsUserInRole("Admin");
+                return Roles.IsUserInRole(InschrijvingenRepository.ADMIN_ROLE_NAME);
             }
         }
 
 
         /// <summary>
-        /// Geeft aan of de inschrijving nieuw is.
+        /// Geeft aan of de gebruiker speaker rechten heeft.
         /// </summary>
-        public bool IsNew { 
+        public bool IsSpeaker {
             get {
-                return (RegistrationDate==null || RegistrationDate==DateTime.MinValue);
+                return Roles.IsUserInRole(InschrijvingenRepository.SPEAKER_ROLE_NAME);
             }
         }
+
+        /// <summary>
+        /// Geeft aan of de inschrijving al geregistreerd is (de gebruiker is bekend/opgeslagen en de inschrijving heeft al een registratiedatum).
+        /// </summary>
+        public bool IsRegistered { 
+            get {
+                return !IsNewUser && RegistrationDate!=null && RegistrationDate!=DateTime.MinValue;
+            }
+        }
+
+
+        /// <summary>
+        /// This field is NOT stored in the database, but is just to indicate to the (MijnRondjeEilanden) view whether the
+        /// logonuser with this subscription has just confirmed his e-mail address or not.
+        /// </summary>
+        public bool EmailAddressJustConfirmed { get; set; }
+
+
+        /// <summary>
+        /// Geeft aan of het een inschrijving is van een nieuwe gebruiker (view IkDoeMeeof) of niet (view Edit).
+        /// </summary>
+        public bool IsInschrijvingNieuweGebruiker { get; set; }
 
     }
 }

@@ -30,6 +30,12 @@
     </div>
     <h1>@Model.VolledigeNaam</h1>
     <h2>Proficiat!</h2>
+    if(Model.EmailAddressJustConfirmed) {
+        <p>Je e-mail adres is bevestigd. Bedankt, zo weten we zeker dat jij de mails naar @Model.Email goed binnenkrijgt!</p>
+    }
+    if (Model.User.IsEmailAddressUnconfirmed) {
+    	<p>Er is een e-mail gestuurd naar '<a href="mailto:@Model.User.EmailAddress">@Model.User.EmailAddress</a>. Klik op de inlog link in deze e-mail om je e-mail adres te bevestigen. Pas daarna kan je inschrijving definitief gemaakt worden.</p>
+    }
     <p>Je hebt je @Model.RegistrationDate.RelativeDateTimeDescription() aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief als je het inschrijfgeld voldaan hebt.</p>
     <table class="bank-account">
         <tr><td>Inschrijfgeld</td><td><span class="quotable">@Model.InschrijfGeld.AsAmount()</span></td></tr>
@@ -37,8 +43,8 @@
         <tr><td>Ten name van </td><td><span class="quotable">Stichting Woelig Water</span> (te Vinkeveen)</td></tr>
         <tr><td>Onder vermelding van</td><td><span class="quotable">H2RE @Model.VolledigeNaam</span></td></tr>
     </table>
-    <p>Let op: om eventuele Early Bird korting te verzilveren dien je het inschrijfgeld voor 1 maart over te maken!</p>
-    
+    <p>Let op: om eventuele Early Bird korting te verzilveren dien je het inschrijfgeld voor @HRE.Common.HreSettings.EindDatumEarlyBirdKorting.ToShortDateString() over te maken!</p>
+    <p>NB: Je bent automatisch ingelogd via de link in de e-mail. Log als je klaar bent zelf weer uit via de link 'Uitloggen' rechts bovenin. Zo voorkom je dat andere gebruikers van deze computer je gegevens kunnen zien/bewerken. Of zelfs derden via <a href="http://nl.wikipedia.org/wiki/Session_hijacking" target="_blank">session hijacking</a>...</p>
     <br clear="all"/>
     <h2>Deel met je vrienden</h2>
     <span class="tweet-this">

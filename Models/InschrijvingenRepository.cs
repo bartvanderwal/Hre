@@ -38,6 +38,8 @@ namespace HRE.Models {
 
         public static string ADMIN_ROLE_NAME = "Admin";
 
+        public static string SPEAKER_ROLE_NAME = "Speaker";
+
         #endregion :: Constants
 
 
@@ -49,6 +51,10 @@ namespace HRE.Models {
                 Roles.CreateRole(ADMIN_ROLE_NAME);
             }
 
+            if (!Roles.RoleExists(SPEAKER_ROLE_NAME)) {
+                Roles.CreateRole(SPEAKER_ROLE_NAME);
+            }
+
             List<AutoCreatedUser> listOfAdmins = new List<AutoCreatedUser>() { 
                 new AutoCreatedUser("bart@hetrondjeeilanden.nl", "24dec2012"), 
                 new AutoCreatedUser("yordi@hetrondjeeilanden.nl", "24dec2012"), 
@@ -56,12 +62,13 @@ namespace HRE.Models {
                 new AutoCreatedUser("rudo@hetrondjeeilanden.nl", "24dec2012"),
                 new AutoCreatedUser("cock@hetrondjeeilanden.nl", "24dec2012"),
                 new AutoCreatedUser("ad@hetrondjeeilanden.nl", "24dec2012"),
-                new AutoCreatedUser("kitty@hetrondjeeilanden.nl", "24dec2012")
+                new AutoCreatedUser("kitty@hetrondjeeilanden.nl", "24dec2012"),
+                new AutoCreatedUser("bastian@hetrondjeeilanden.nl", "24dec2012")
             };
 
-            List<AutoCreatedUser> listOfTestUsers = new List<AutoCreatedUser>() { 
-                new AutoCreatedUser("tester1@hetrondjeeilanden.nl", "24dec2012"), 
-                new AutoCreatedUser("tester2@hetrondjeeilanden.nl", "24dec2012"), 
+            List<AutoCreatedUser> listOfSpeakers = new List<AutoCreatedUser>() { 
+                new AutoCreatedUser("wilko@hetrondjeeilanden.nl", "topspe@kert"),
+                new AutoCreatedUser("ruud@hetrondjeeilanden.nl", "topspe@kert")
             };
 
             foreach(AutoCreatedUser adminUser in listOfAdmins) {
@@ -74,24 +81,14 @@ namespace HRE.Models {
                 }
             }
 
-
-            foreach(AutoCreatedUser testUser in listOfTestUsers) {
-                MembershipUser user = Membership.GetUser(testUser.UserNameAndEmail);
+            foreach(AutoCreatedUser speakerUser in listOfSpeakers) {
+                MembershipUser user = Membership.GetUser(speakerUser.UserNameAndEmail);
                 if (user==null) {
-                    LogonUserDal logonUser = LogonUserDal.CreateOrRetrieveUser(testUser.UserNameAndEmail, testUser.Password);
+                    LogonUserDal logonUser = LogonUserDal.CreateOrRetrieveUser(speakerUser.UserNameAndEmail, speakerUser.Password);
+                    if (!Roles.IsUserInRole(speakerUser.UserNameAndEmail, SPEAKER_ROLE_NAME)) {
+                        Roles.AddUserToRole(speakerUser.UserNameAndEmail, SPEAKER_ROLE_NAME); 
+                    }
                 }
-            }
-
-
-            LogonUserDal bart = LogonUserDal.GetByEmailAddress("bart@hetrondjeeilanden.nl");
-            if (bart!=null && !bart.DateOfBirth.HasValue) {
-                bart.DateCreated = DateTime.Now;
-                bart.DateOfBirth = DateTime.ParseExact("27/06/1977", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                bart.IsMailingListMember = true;
-                bart.IsActive = true;
-                bart.Gender = true;
-                bart.UserName = bart.EmailAddress;
-                bart.Save();
             }
         }
 
@@ -197,7 +194,7 @@ namespace HRE.Models {
                     Bike = p.Bike.HasValue && p.Bike.Value,
                     HebJeErZinIn = p.NotesToAll,
                     OpmerkingenTbvSpeaker = p.SpeakerRemarks,
-                    Bijzonderheden = p.Notes,
+                    OpmerkingenAanOrganisatie = p.Notes,
                     
                     IsEarlyBird = p.EarlyBird,
                     InschrijfGeld = p.ParticipationAmountInEuroCents,
@@ -275,7 +272,9 @@ namespace HRE.Models {
                 user.DateOfBirth = inschrijving.GeboorteDatum;
                 user.IsMailingListMember = inschrijving.InteresseNieuwsbrief;
                 user.UserName = inschrijving.Email;
-                user.EmailAddress = inschrijving.Email;
+                if (user.EmailAddress != inschrijving.Email) {
+                    user.EmailAddress = inschrijving.Email;
+                }
                 user.TelephoneNumber = inschrijving.Telefoon;
 
                 user.NtbLicenseNumber = inschrijving.HasLicentieNummer ? inschrijving.LicentieNummer : null;
@@ -294,6 +293,9 @@ namespace HRE.Models {
                     // address.DateCreated = DateTime.Now;
                 }
                 address.DateUpdated = DateTime.Now;
+                if (address.DateCreated==null || address.DateCreated==DateTime.MinValue) {
+                    address.DateCreated = DateTime.Now;
+                }
                 address.City = inschrijving.Woonplaats;
                 address.Street = inschrijving.Straat;
                 address.Housenumber = inschrijving.Huisnummer;
@@ -303,9 +305,13 @@ namespace HRE.Models {
                 address.Insertion = inschrijving.Tussenvoegsel;
                 address.Lastname = inschrijving.Achternaam;
                 address.PostalCode = inschrijving.Postcode;
-                user.PrimaryAddress = address; 
+                user.PrimaryAddress = address;
                 user.Save();
 
+                // Set the userId of the inschrijvingmodel, if not set before (for registration of completely new users).
+                if (inschrijving.UserId==0) {
+                    inschrijving.UserId=user.Id;
+                }
                 int eventId = InschrijvingenRepository.GetEvent(eventNumber).Id;
 
                 // Create the sportsparticipation.
@@ -335,7 +341,7 @@ namespace HRE.Models {
                     participation.DateRegistered=inschrijving.RegistrationDate;
                 } else {
                     participation.ExternalIdentifier = inschrijving.ExternalIdentifier;
-                    if(inschrijving.IsNew) {
+                    if (!inschrijving.IsRegistered) {
                         participation.DateRegistered = participation.DateUpdated;
                     }
                     participation.ParticipationAmountInEuroCents = inschrijving.InschrijfGeld;
@@ -352,7 +358,7 @@ namespace HRE.Models {
                 participation.Bike = inschrijving.Bike;
                 participation.TShirtSize = inschrijving.MaatTshirt;
                 participation.ParticipationStatus = 1;
-                participation.Notes = inschrijving.Bijzonderheden;
+                participation.Notes = inschrijving.OpmerkingenAanOrganisatie;
                 participation.NotesToAll = inschrijving.HebJeErZinIn;
                 participation.DateConfirmationSend = inschrijving.DateConfirmationSend;
 

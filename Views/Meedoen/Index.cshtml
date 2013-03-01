@@ -1,15 +1,23 @@
-﻿@model HRE.Models.MeedoenModel
+﻿@model HRE.Models.InschrijvingenModel
 @{
-    ViewBag.Title = "Meedoen";
+    ViewBag.Title = "Inschrijvingen";
 }
 
 <h1>Meedoen</h1>
 @Html.ValidationSummary(true)
-<img src="/Content/img/pen.png" title="Contact" alt="Contact"/>
-<p>Begin februari opent de inschrijving voor deelnemers van het eerste rondje eilanden. Die ontvangen daarvoor een e-mail met een speciale kortingsactie (maximaal 200 plekken).</p>
-<p>Op 1 maart opent de algemene inschrijving (totaal zijn er 500 plekken).</p>
-<p>Check <a href="/Inschrijvingen">de lijst met Early Birds</a>.</p>
+<div id="marquee-div">
+    <div id="marquee-label">Stand: <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenDeelnemers()</b> deelnemers @*(max @HRE.Common.HreSettings.AantalStartPlekken)*@ waarvan <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenEarlyBirds()</b> Early Birds™ (max @HRE.Common.HreSettings.AantalEarlyBirdStartPlekken). Hebben zij er zin in?</div>
+    <marquee>@Html.Raw(Model.ParticipantRemarks)</marquee>
+</div>
+<p>
+@if(DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving)>0) {
+    @Html.ActionLink("Schrijf je nu in!", "Edit", "Inschrijvingen", new { eventNr=HRE.Models.InschrijvingenRepository.H2RE_EVENTNR }, null)<sup>*</sup>
+} else {
+    <text>Op @HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving.ToShortDateString() opent de algemene inschrijving (totaal @HRE.Common.HreSettings.AantalStartPlekken startplekken)</text>
+}
+<p style="font-size: smaller; color: #808080;"><sup>*</sup>Deelnemer in 2012 en geen e-mail gehad? <a href="mailto:info@hetrondjeeilanden">Mail ons dan nu!</a> Alle deelnemers uit 2012 hebben half februari een e-mail gekregen voor speciale Early Bird™ korting...</p>
 <img src="Content/img/fp3.jpg" class="left" alt="Hét Rondje Eilanden 2012" width="320px"/>
+
 @*
 <p>Was je er niet bij, en wil je toch van de actie gebruik maken vraag dan iemand die wel heeft meegedaan. Geef je e-mail adres door via het volgende veld om op de hoogte gehouden te worden:</p>
 @{Html.BeginForm("HouMeOpDeHoogte", "Meedoen", FormMethod.Post);}

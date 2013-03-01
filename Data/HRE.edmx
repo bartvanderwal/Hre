@@ -9,6 +9,7 @@
           <EntitySet Name="address" EntityType="hreModel.Store.address" store:Type="Tables" Schema="hre" />
           <EntitySet Name="emailaudit" EntityType="hreModel.Store.emailaudit" store:Type="Tables" Schema="hre" />
           <EntitySet Name="logonuser" EntityType="hreModel.Store.logonuser" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="my_aspnet_users" EntityType="hreModel.Store.my_aspnet_users" store:Type="Tables" Schema="hre" />
           <EntitySet Name="newsletter" EntityType="hreModel.Store.newsletter" store:Type="Tables" Schema="hre" />
           <EntitySet Name="newsletteritem" EntityType="hreModel.Store.newsletteritem" store:Type="Tables" Schema="hre" />
           <EntitySet Name="paymenttype" EntityType="hreModel.Store.paymenttype" store:Type="Tables" Schema="hre" />
@@ -101,6 +102,16 @@
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
           <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="64" />
+        </EntityType>
+        <EntityType Name="my_aspnet_users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="applicationId" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="256" />
+          <Property Name="isAnonymous" Type="bool" Nullable="false" />
+          <Property Name="lastActivityDate" Type="datetime" />
         </EntityType>
         <EntityType Name="newsletter">
           <Key>
@@ -321,6 +332,7 @@
             <End Role="sportsevent" EntitySet="sportsevent" />
             <End Role="sportseventparticipation" EntitySet="sportseventparticipation" />
           </AssociationSet>
+          <EntitySet Name="my_aspnet_users" EntityType="hreModel.my_aspnet_users" />
           </EntityContainer>
         <EntityType Name="address">
           <Key>
@@ -565,6 +577,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="my_aspnet_users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="applicationId" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" />
+          <Property Type="Boolean" Name="isAnonymous" Nullable="false" />
+          <Property Type="DateTime" Name="lastActivityDate" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -739,6 +761,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_users">
+            <EntityTypeMapping TypeName="hreModel.my_aspnet_users">
+              <MappingFragment StoreEntitySet="my_aspnet_users">
+                <ScalarProperty Name="lastActivityDate" ColumnName="lastActivityDate" />
+                <ScalarProperty Name="isAnonymous" ColumnName="isAnonymous" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="applicationId" ColumnName="applicationId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -793,6 +826,7 @@
           <ConnectorPoint PointX="6.875" PointY="10.49974609375" />
           <ConnectorPoint PointX="8.625" PointY="10.49974609375" />
         </AssociationConnector>
+        <EntityTypeShape EntityType="hreModel.my_aspnet_users" Width="1.5" PointX="0.75" PointY="9.75" Height="1.9802864583333317" />
         </Diagram>
     </Diagrams>
   </Designer>

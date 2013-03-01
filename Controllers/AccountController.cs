@@ -222,7 +222,7 @@ namespace HRE.Controllers {
             try {
                 email = Common.Common.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
             } catch (Exception) {
-                ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal nog niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
+                ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je HRE deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal nog niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
                 return View();
             }
 
@@ -235,13 +235,15 @@ namespace HRE.Controllers {
 
             // Log de gebruiker in (op basis van de e-mail link dus).
             // TODO BW 2013-02-10: In geencrypte key nog expiration date zetten!
+            bool emailConfirmed = user.ConfirmEmailAddress();
+            
             FormsAuthentication.SetAuthCookie(email, false);
             InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.H2RE_EVENTNR);
             if (inschrijving==null) {
                 inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.HRE_EVENTNR);
                 return RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, eventNr = InschrijvingenRepository.H2RE_EVENTNR });
             } else {
-                return RedirectToAction("MijnRondjeEilanden", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, eventNr = InschrijvingenRepository.H2RE_EVENTNR});
+                return RedirectToAction("MijnRondjeEilanden", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, eventNr = InschrijvingenRepository.H2RE_EVENTNR, emailConfirmed = emailConfirmed});
             }
         }
 

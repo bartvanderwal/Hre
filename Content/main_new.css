@@ -617,7 +617,23 @@ table.deelname-kosten td.col {
 
 /* Einde Layout. */
 
-.placeholder {
+::-webkit-input-placeholder {
+    color: #808080;
+    font-style: italic;
+}
+
+::-moz-placeholder {
+    color: #808080;
+    font-style: italic;
+}
+
+:-ms-input-placeholder {
+    color: ##808080;
+    font-style: italic;
+}
+
+input:-moz-placeholder {
+    color: #808080;
     font-style: italic;
 }
 
@@ -628,7 +644,7 @@ form.parallel-form {
 }
 
 .bank-account {
-    margin: 0px 3px 0px 3px;
+    margin: 5px 3px 5px 5px;
     float: right;
     font-size: smaller;
     border: 1px solid #a0a0a0;

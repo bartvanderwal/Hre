@@ -4,8 +4,8 @@
 @using HRE.Models;
 
 @{
-    ViewBag.Title = "Bekijken/wijzigen inschrijving";
-    int nrOfEarlyBirds = LogonUserDal.DetermineNumberOfEarlyBirds();
+    ViewBag.Title = Model.IsRegistered ? "Bekijken/wijzigen inschrijving" : "Inschrijven";
+    int nrOfEarlyBirds = LogonUserDal.AantalIngeschrevenEarlyBirds();
     bool isEarlyBird = Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value;
 }
 
@@ -17,7 +17,7 @@
         <br/><br/>
     }
 
-    @{Html.BeginForm();}
+    @{Html.BeginForm("Edit", "Inschrijvingen");}
         @Html.AntiForgeryToken()
         
         @if (!ViewData.ModelState.IsValid) {
@@ -25,11 +25,15 @@
         }
         
         @if (Model.IsEditAllowed && Model.ExternalEventIdentifier == InschrijvingenRepository.H2RE_EVENTNR) {
-            <p class="welcome">Welkom @Model.Voornaam!</p>
+            <p class="welcome">Welkom@(!string.IsNullOrEmpty(Model.Voornaam) ? " " + @Model.Voornaam : "")!</p>
             <div id="inschrijf-formulier-uitleg">
-                @if (Model.IsNew) {
+                @if (!Model.IsRegistered) {
                     <p>@if(isEarlyBird) { <text>Proficiat Early Bird™! Je bent inschrijver numero @(nrOfEarlyBirds+1) en hebt net als de andere @HreSettings.AantalEarlyBirdStartPlekken recht op korting!<br /></text> }
-                    Meldt je nu aan via onderstaand formulier. Nog slechts een paar stappen. Het meeste is al vooringevuld...</p>
+                    Meld je aan voor Hét Rondje Eilanden via onderstaand formulier. 
+                    @if(!Model.IsNewUser) {
+                        <text>Nog slechts een paar stappen. Het meeste is al vooringevuld...</text>
+                    }
+                    </p>
                 } else {
                    <p>Welkom terug! Je kunt hier zelf je inschrijfgegevens nog wijzigen tot enige tijd voor het evenement.</p>
                 }
@@ -51,29 +55,42 @@
                             <li>en eventueel op de fiets wilt komen (bij voldoende animo komt er een 'Parc Fermé)</li>
                         </ul>
                     </li>
-                    <li>Waar mogelijk zijn gegevens al vooringevuld. Maar corrigeer als er iets gewijzigd is t.o.v. 2012.</li>
-                    <li>Druk als je alles ingevuld op de knop 'Get me a ticket' onderaan om je aanmelding te versturen.</li>
-                    <li>Als er nog iets niet klopt of ontbreekt krijg je vanzelf validatie meldingen. Corrigeren deze eerst voordat je kunt versturen.</li>
-                    <li>Maak voor 15 maart het inschrijfgeld over om de &euro;7,50 Early Bird&trade; korting te krijgen!</li>
+                    @if(!Model.IsNewUser) {
+                        <li>Waar mogelijk zijn gegevens al vooringevuld. Maar corrigeer als er iets gewijzigd is t.o.v. 2012.</li>
+                    }
+                    @if(!Model.IsRegistered) {
+                        <li>Druk als je alles ingevuld op de knop 'Get me a ticket' onderaan om je aanmelding te versturen.</li>
+                    } else {
+                        <li>Vergeet niet op de knop opslaan te druk om je wijzigingen definitief te maken, anders worden ze NIET ehm.. opgeslagen :)</li>
+                    }
+                    <li>Als iets niet klopt krijg je een validatiemelding. Corrigeer de fouten en probeer nogmaals.</li>
+                    @if(!Model.IsNewUser) {
+                        <li>Maak voor @HreSettings.EindDatumEarlyBirdKorting.ToShortDateString() het inschrijfgeld over om de @HreSettings.HoogteEarlyBirdKorting.AsAmount() Early Bird&trade; korting te krijgen!</li>
+                    }
                     <li>Bij inschrijving ga je akkoord met de <a href="/Inschrijvingen/Reglementen" target="_blank">inschrijfvoorwaarden en algemene regelementen</a>.</li>
                     <li>Werkt iets niet of is iets onduidelijk? Mail naar <a href="mailto:bart@hetrondjeeilanden.nl">info@hetrondjeeilanden.nl</a>.</li>
                     <li>We zien je hier later graag terug! Uitnodiging volgt via de Flessenpost&trade;.</li>
                 </ul>
             </div>
+        } else {
+        <p>Ben jij zelf deze @(Model.Geslacht=="M" ? "atleet" : "atlete")? Log in om meer gegevens te zien en deze desgewenst te kunnen wijzigen.</p>
         }
+
         
         <div id="costs">
-            <div id="costs-inner" style="display: none;">
-                <table>
-                    @if (Model.IsEditAllowed) {
-                        <tr><td>Deelname</td><td><span id="basic">@Model.BasisKosten.AsAmount()</span></td></tr>
-                        <tr><td>NTB daglicentie</td><td><span id="license">@Model.KostenDagLicentie.AsAmount()</span></td></tr>
-                        <tr><td>MyLaps chip</td><td><span id="chip">@Model.KostenChip.AsAmount()</span></td></tr>
-                        <tr><td>Early Bird™<span id="minus" style="text-align: right; font-weight: 900; float: right;">-</span></td><td><span id="reduction">@Model.EarlyBirdKorting.AsAmount()</span></td></tr>
-                    }
-                    <tr class="total"><td>Totaal</td><td><span id="total">@Model.InschrijfGeld.Value.AsAmount()</span></td></tr>
-                </table>
-            </div>
+            @if (Model.IsEditAllowed) {
+                <div id="costs-inner" style="display: none;">
+                    <table>
+                            <tr><td>Deelname</td><td><span id="basic">@Model.BasisKosten.AsAmount()</span></td></tr>
+                            <tr><td>NTB daglicentie</td><td><span id="license">@Model.KostenDagLicentie.AsAmount()</span></td></tr>
+                            <tr><td>MyLaps chip</td><td><span id="chip">@Model.KostenChip.AsAmount()</span></td></tr>
+                            @if (isEarlyBird) {
+                                <tr><td>Early Bird™<span id="minus" style="text-align: right; font-weight: 900; float: right;">-</span></td><td><span id="reduction">@Model.EarlyBirdKorting.AsAmount()</span></td></tr>
+                            }
+                        <tr class="total"><td>Totaal</td><td><span id="total">@Model.InschrijfGeld.Value.AsAmount()</span></td></tr>
+                    </table>
+                </div>
+            }
         </div>
 
         <div class="editor-images">
@@ -101,24 +118,24 @@
             @Html.HiddenFor(m => m.RegistrationDate)
             @Html.HiddenFor(m => m.DateCreated)
             @Html.HiddenFor(m => m.DateUpdated)
-            @Html.HiddenFor(m => m.Email)
             @Html.HiddenFor(m => m.ExternalEventIdentifier)
             @Html.HiddenFor(m => m.ExternalEventSerieIdentifier)
             @Html.HiddenFor(m => m.ExternalIdentifier)
             @Html.HiddenFor(m => m.DateConfirmationSend)
-
+            @Html.HiddenFor(m => m.IsInschrijvingNieuweGebruiker)
+            
             <div class="editor-label">Licentie</div>
 	    	<div class="editor-field">
-		    	@Html.CheckBoxFor(m => m.HasLicentieNummer, new { @tabindex="1", @title="Heb je een NTB licentie?" } )
-                <label for="HasLicentieNummer" title="Heb je een NTB licentie?"></label>
+		    	@Html.CheckBoxFor(m => m.HasLicentieNummer, new { @tabindex="1", @title="Ja, ik heb een NTB licentie!" } )
+                <label for="HasLicentieNummer" title="Ja, ik heb een NTB licentie!"></label>
                 <span id="LicentieNummerSpan" class="opt-text">@Html.TextBoxFor(m => m.LicentieNummer, new { @placeholder="Licentienummer...", @maxlength="12", @tabindex="2" }) </span>
 		    </div>
             <div class="editor-label">@Html.LabelFor(m => m.GeboorteDatum)</div>
             <div class="editor-field">@Html.TextBoxFor(m => m.GeboorteDatum, new { @placeholder = "Geboortedatum", @readonly = false, @class = "datePicker", @tabindex="3", @Value = string.Format("{0:dd/MM/yyyy}", Model.GeboorteDatum)})</div>
-            <div class="editor-label">Persoonlijke MyLaps/Champion chip</div>
+            <div class="editor-label">Persoonlijke MyLaps chip</div>
 		    <div class="editor-field">
-			    @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4", @title="Heb je een eigen chip?" })
-			    <label for="HasMyLapsChipNummer" title="Heb je een eigen MyLaps chip?"></label>
+			    @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4", @title="Ja, ik heb een eigen MyLaps chip!" })
+			    <label for="HasMyLapsChipNummer" title="Ja, ik heb een eigen MyLaps chip?"></label>
                 <span id="mylaps-chip-span" class="opt-text">@Html.TextBoxFor(m => m.MyLapsChipNummer, new { @tabindex="5", @placeholder="MyLaps chipnr..." } )</span>
             </div>
         }
@@ -165,16 +182,42 @@
                 @Html.TextBoxFor(m => m.Postcode, new { @tabindex="13", @size="9", @maxLenght="10", @placeholder="1234AB"} )
             </div>
             <div class="editor-label">Woonplaats</div>
-		    <div class="editor-field">
-                @Html.TextBoxFor(m => m.Woonplaats, new { @tabindex="14", @size=30, @maxLenght="25", @placeholder="Woonplaats"} )
-            </div>
+		    <div class="editor-field">@Html.TextBoxFor(m => m.Woonplaats, new { @tabindex="14", @size=30, @maxLenght="25", @placeholder="Woonplaats"} )</div>
+            <div class="editor-label">Land</div>
+		    <div class="editor-field">@Html.DropDownListFor(m => m.Land,
+                new SelectList(new Dictionary<string, string> {
+                    {"Nederland", "NL"},
+                    {"België", "BE"}, 
+                    {"Duitsland", "LU"}, 
+                    {"Luxemburg", "LU"}, 
+                    {"Frankrijk", "FR"}, 
+                    {"Oostenrijk", "AT"}, 
+                    {"Spanje", "ES"}, 
+                    {"Zwitserland", "CH"}, 
+                    {"Portugal", "PT"}, 
+                    {"Zweden", "SU"}, 
+                    {"Finland", "FI"}, 
+                    {"Denemarken", "DK"}, 
+                    {"Australie", "AU"}, 
+                    {"Nieuw Zeeland", "NZ"}, 
+                    {"Polen", "PL"}, 
+                    {"Amerika", "US"}, 
+                    {"Ander", "OT"}
+                },
+                "Value", "Key"))</div>
 
             <div class="editor-label"></div>
 		    <div class="editor-field"></div>
 
             <div class="editor-label">E-mail</div>
             <div class="editor-field">
-                @Html.TextBoxFor(m => m.Email, new { @tabindex="15", @size="30", @maxLenght="100", @placeholder="E-mail", @disabled="disabled", @title="niet wijzigbaar" } )
+                @if (Model.IsAdmin || Model.IsNewUser) {
+                    @Html.TextBoxFor(m => m.Email, new { @tabindex="15", @size="30", @maxLenght="100", @placeholder="E-mail"} )
+                } else {
+                    @Html.TextBoxFor(m => m.Email, new { @tabindex="15", @size="30", @maxLenght="100", @placeholder="E-mail", @disabled="disabled", @title="niet wijzigbaar" } )
+                    // TODO BW 2013-03-01: Adding email as hidden field is necessary to retain value, but this might open up hacking possiblities...
+                    @Html.HiddenFor(m => m.Email)
+                }
             </div>
             <div class="editor-label">Telefoon</div>
 		    <div class="editor-field">
@@ -202,6 +245,7 @@
 			<label for="Bike" title="Interesse op de fiets te komen en deze veilig te kunnen stallen? (vrijblijvende reservering)"></label>
             <span id="bike-span" class="opt-text" style="display: none;">Ja! <span class="small">(PF bij genoeg animo)</span></span>
 		</div>
+
         @*<div class="editor-label">Gewenste serie</div>
 		<div class="editor-field">
 			<input id="recrserie" name="Finale" type="radio" tabindex="18" value="R" />
@@ -226,31 +270,37 @@
         @if(Model.IsEditAllowed) {
             <div class="editor-label">Heb je er zin in?</div>
             <div class="editor-field">@Html.TextAreaFor(m => m.HebJeErZinIn, new { @cols="50", @rows="2", @tabindex="20", @maxlength="100", @placeholder="Deze tekst wordt getoond op de website..."} )</div>
-            
+        } else if (!string.IsNullOrEmpty(Model.HebJeErZinIn)) {    
+            <div class="editor-label">Heb je er zin in?</div>
+            <div class="editor-field">@Model.HebJeErZinIn</div>
+        }
+
+        @if(Model.IsEditAllowed || Model.IsSpeaker) {
             <div class="editor-label"></div>
             <div class="editor-field"><a id="toon-meer-opmerkingen">Nog meer te vertellen?</a></div>
 
             <div id="meer-opmerkingen">
-                <div class="editor-label">Opmerkingen voor de speaker<br /></div>
+                <div class="editor-label">Opmerkingen voor speaker<br /></div>
 		        <div class="editor-field">
-                    @Html.TextAreaFor(m => m.OpmerkingenTbvSpeaker, new { @cols="50", @rows="2", @tabindex="21", @maxlength="1024", @placeholder="Voorzie de speaker(s) van wat extra info.."} )
+                    @Html.TextAreaFor(m => m.OpmerkingenTbvSpeaker, new { @cols="50", @rows="2", @tabindex="21", @maxlength="1024", @placeholder="Voorzie speakers Ruud & Wilko van wat extra info.."} )
+                    <div class="make-it-personal speaker"></div>
                 </div>
-                <div class="editor-label">Opmerkingen aan de organisatie</div>
-                <div class="editor-field">
-                    @Html.TextAreaFor(m => m.Bijzonderheden, new { @cols="50", @rows="2", @tabindex="22", @maxlength="1024", @placeholder="Opmerkingen of vragen aan de organisatie.."} )
-                </div>
+                @if(Model.IsEditAllowed) {
+                    <div class="editor-label">Opmerkingen aan organisatie</div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(m => m.OpmerkingenAanOrganisatie, new { @cols="50", @rows="2", @tabindex="22", @maxlength="1024", @placeholder="Opmerkingen of vragen aan Pieter, Rudo, Kitty, Ad, overige organisatie.."} )
+                        <div class="make-it-personal organisatie"></div>
+                    </div>
+                }
             </div>
-            <div id="save-button-div"><input class="@(Model.IsNew ? "save" : "save-button")" name="submit" type="submit" tabindex="23" value="@(Model.IsNew ? "" : "Opslaan")" /></div>
-        } else {
-            if (!string.IsNullOrEmpty(Model.HebJeErZinIn)) {
-                <div class="editor-label">Heb je er zin in?</div>
-                <div class="editor-field">@Model.HebJeErZinIn</div>
-            }
+        }
+        @if(Model.IsEditAllowed) {
+            <div id="save-button-div"><input class="@(Model.IsRegistered ? "save-button" : "save" )" name="submit" type="submit" tabindex="23" value="@(Model.IsRegistered ? "Opslaan" : "")" /></div>
         }
     @{Html.EndForm();}
 
     @if(Model.IsEditAllowed) {
-        <script type="text/javascript" language="javascript" src="/Scripts/jquery.jqEasyCharCounter.min.js"></script>
+        <script type="text/javascript" lang="javascript" src="/Scripts/jquery.jqEasyCharCounter.min.js"></script>
         <script type="text/javascript" lang="javascript">
             function determineAndDisplayCosts() {
                 var isEarlyBird = '@(Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value)' == 'True';

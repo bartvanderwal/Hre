@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading;
+using System.Globalization;
 
 namespace HRE.Common {
 
@@ -34,10 +35,20 @@ namespace HRE.Common {
         /// <summary>
         /// Read a string setting from the settings and allow for a default value.
         /// </summary>
-        protected static string ReadStringSetting(string settingKey, string defaultValue) {
+        protected static string ReadStringSetting(string settingKey, string defaultValue = "") {
             // Read the setting from the appsettings file.
             string result = ConfigurationManager.AppSettings[settingKey];
             return result != null ? result : defaultValue;
+        }
+
+
+        /// <summary>
+        /// Read a datetime setting from the settings or else return the passed default time-value-as-string as a date.
+        /// TODO BW 2013-02-28 Make a little more robust, with other string parsing options, and an overwrite without default.
+        /// </summary>
+        protected static DateTime ReadDateTimeSetting(string settingKey, string defaultValue) {
+            string dateString = ReadStringSetting(settingKey, defaultValue);
+            return DateTime.Parse(dateString, CultureInfo.CreateSpecificCulture("nl-NL"));
         }
 
 
