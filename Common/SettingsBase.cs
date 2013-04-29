@@ -8,12 +8,28 @@ using System.Globalization;
 namespace HRE.Common {
 
     public class SettingsBase {
+
         /// <summary>
         /// Read a boolean setting from the appsettings. The setting must be set to "True", "true", "TRUE" or something like that, for other values or if it is not present it will be regarded as False.
         /// </summary>
         /// </summary>
         protected static bool ReadBoolSetting(string settingKey) {
-            return "True".Equals(ConfigurationManager.AppSettings[settingKey], StringComparison.InvariantCultureIgnoreCase);
+            return ReadBoolSetting(settingKey, false);
+        }
+
+
+        /// <summary>
+        /// Read a boolean setting from the appsettings. The setting must be set to "True", "true", "TRUE" or something like that, for other values or if it is not present it will be regarded as False.
+        /// </summary>
+        /// </summary>
+        protected static bool ReadBoolSetting(string settingKey, bool defaultValue) {
+            bool boolSettingAsBool;
+            string boolSettingAsString = ConfigurationManager.AppSettings[settingKey];
+            if (!string.IsNullOrEmpty(boolSettingAsString) && bool.TryParse(boolSettingAsString, out boolSettingAsBool)) {
+                return boolSettingAsBool;
+            } else {
+                return defaultValue;
+            }
         }
 
 

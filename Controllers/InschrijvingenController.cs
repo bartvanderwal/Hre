@@ -26,11 +26,19 @@ namespace HRE.Controllers {
     public class InschrijvingenController : BaseController {
 
 
+        public override bool IsConfidentialPage {
+            get {
+                return true;
+            }
+        }
+
+
         public void Initialise(string activeSubMenuItem) {
             ActiveMenuItem = AppConstants.Meedoen;
             ActiveSubMenuItem = activeSubMenuItem;
             ViewBag.SubMenuItems = SubMenuItems;
         }
+
 
         public ActionResult Index() {
             Initialise(AppConstants.MeedoenOverzicht);
@@ -336,7 +344,7 @@ namespace HRE.Controllers {
                     raceEntry.MaatTshirt = raceEntryDetails[4].SelectSingleNode("./td[3]/table/tr[3]/td[2]").InnerText.TrimThisShit();
 
                     // 6. Aanmelden Nieuwsbrief
-                    raceEntry.InteresseNieuwsbrief = raceEntryDetails[4].SelectSingleNode("./td[3]/table/tr[4]/td[2]").InnerText.TrimThisShit()=="Ja";
+                    raceEntry.Newsletter = raceEntryDetails[4].SelectSingleNode("./td[3]/table/tr[4]/td[2]").InnerText.TrimThisShit()=="Ja";
 
                     // 7. Interesse in overnachten na de wedstrijd
                     raceEntry.Camp = raceEntryDetails[4].SelectSingleNode("./td[3]/table/tr[5]/td[2]").InnerText.TrimThisShit()=="Ja";
@@ -498,17 +506,27 @@ namespace HRE.Controllers {
             if (model.HasLicentieNummer && (string.IsNullOrEmpty(model.LicentieNummer) || !Regex.IsMatch(model.LicentieNummer, @"^\d\d[LA]\d\d\d\d\d[MV]\d\d\d$"))) {
                 ModelState.AddModelError("LicentieNummer", "Als je lid bent van de NTB, vul dan een correct licentienummer in");
             }
-            // 4R-YGF8T 
+            // 4R-YGF8T.
             if (model.HasMyLapsChipNummer && (string.IsNullOrEmpty(model.MyLapsChipNummer) || !Regex.IsMatch(model.MyLapsChipNummer, @"^[\d\w][\d\w]-*[\d\w][\d\w][\d\w][\d\w][\d\w]$"))) {
                 ModelState.AddModelError("MyLapsChipNummer", "Als je een eigen MyLaps chip hebt, vul dan het correcte nummer in");
             }
 
-            if (model.Land!="NL" && !string.IsNullOrEmpty(model.Postcode) && !Regex.IsMatch(model.Postcode, @"^\d{4}\s*\w{2}$")) {
+            if (model.Land=="NL" && !string.IsNullOrEmpty(model.Postcode) && !Regex.IsMatch(model.Postcode, @"^\d{4}\s*\w{2}$")) {
                 ModelState.AddModelError("Postcode", "Geen geldige Nederlandse postcode!");
             }
 
             if (!string.IsNullOrEmpty(model.Email) && !Regex.IsMatch(model.Email, @"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*")) {
                 ModelState.AddModelError("Email", "Geen geldig e-mail adres!");
+            }
+
+            // TODO BW 2013-03-18: Make currentEventNr variable, depending on which event is subscribed tol
+            // string currentEventNr = model.ExternalEventIdentifier;
+            string currentEventNr = InschrijvingenRepository.H2RE_EVENTNR;
+
+            // Controleer als het een nieuwe inschrijving betreft dat er niet al een deelnemer is met hetzelfde e-mail adres.
+            LogonUserDal user = LogonUserDal.GetUserByUsername(model.Email);
+            if (model.IsInschrijvingNieuweGebruiker && (user==null || InschrijvingenRepository.GetInschrijving(user, currentEventNr)==null)) {
+                ModelState.AddModelError("Email", "Er is al een deelnemer met dit e-mail adres ingeschreven. Elke deelnemer moet een eigen e-mail adres opgeven!");
             }
 
             // Store the race entry in the local database.
@@ -520,7 +538,7 @@ namespace HRE.Controllers {
                 // Sla op!
                 InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
 
-                if (!model.DateConfirmationSend.HasValue) {
+                if (!model.DateConfirmationSend.HasValue || model.DoForceSendConfirmation) {
                     SendSubscriptionConfirmationMail(model);
                     model.DateConfirmationSend = DateTime.Now;
                     
@@ -618,7 +636,7 @@ namespace HRE.Controllers {
                 item1.Text += string.Format("<tr><td></td></tr>");
                 item1.Text += string.Format("<tr><th colspan=\"2\"><b>Inschrijfkosten</b></th></tr>");
                 item1.Text += string.Format("<tr><td>Inschrijfgeld</td><td>{0}</span></td></tr>", model.BasisKosten.AsAmount() );    
-                item1.Text += string.Format("<tr><td>NTB Licentie</td><td>{0}</span></td></tr>", model.KostenDagLicentie.AsAmount() );
+                item1.Text += string.Format("<tr><td>NTB Licentie</td><td>{0}</span></td></tr>", model.KostenNtbDagLicentie.AsAmount() );
                 item1.Text += string.Format("<tr><td>MyLaps Chip</td><td>{0}</span></td></tr>", model.KostenChip.AsAmount());
                 if (model.IsEarlyBird.HasValue && model.IsEarlyBird.Value) {
                     item1.Text += string.Format("<tr><td>Early Bird™ korting</td><td>{0}</span></td></tr>", model.EarlyBirdKorting.AsAmount());

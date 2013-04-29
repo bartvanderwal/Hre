@@ -13,6 +13,13 @@ using HRE.Common;
 namespace HRE.Controllers {
     public class AccountController : BaseController {
 
+
+        public override bool IsConfidentialPage {
+            get {
+                return true;
+            }
+        }
+
         public void Initialise(string activeSubMenuItem) {
             ActiveMenuItem = AppConstants.Account;
             ActiveSubMenuItem = activeSubMenuItem;
@@ -88,6 +95,10 @@ namespace HRE.Controllers {
                         return Redirect(returnUrl);
                     } else {
                         if (Roles.IsUserInRole(InschrijvingenRepository.ADMIN_ROLE_NAME)) {
+                            // Persist admin cookie always to prevent logging out problems for instance in newsletter.
+                            if (!model.RememberMe) {
+                                FormsAuthentication.SetAuthCookie(login, true);
+                            }
                             return Redirect("/Admin/Dashboard.aspx");
                         } else {
                             return RedirectToAction("Index", "Home");

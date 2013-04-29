@@ -84,16 +84,47 @@
         HRE2012Sponsor = 5
     }
 
+
     /// <summary>
     /// The options to send the newsletter with regards to users being subscribed to it or not.
     /// </summary>
-    public enum NewsletterAudience {
+    public enum NewsletterSubscriptionStatus {
         OnlyToMembers = 0, // Default, basically only use this!
         SpamAll = 1, // Use with caution!
         OnlyToNonMembers = 2 // OnlyToNotify, or if forgotten previously
     }
 
 
+    /// <summary>
+    /// The options to send the newsletter with regards to users having paid the entry fee or not.
+    /// </summary>
+    public enum EntryFeePaidStatus {
+        All = 0,
+        OnlyPaid = 1,
+        OnlyNonPaid = 2
+    }
+
+
+    /// <summary>
+    /// The options to send the newsletter with having subscribed as an Early Bird or not.
+    /// </summary>
+    public enum EarlyBirdStatus {
+        All = 0,
+        OnlyEarlyBird = 1,
+        OnlyNonEarlyBird = 2
+    }
+
+
+    /// <summary>
+    /// The options to send the newsletter with having subscribed (so very likely done) HRE 2012.
+    /// </summary>
+    public enum HREEventParticipantStatus {
+        All = 0,
+        OnlyParticipants = 1,
+        OnlyNonParticipants = 2
+    }
+    
+    
     /// <summary>
     /// The status of a logonuser.
     /// </summary>

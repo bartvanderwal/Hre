@@ -161,7 +161,7 @@ namespace HRE.Models {
                     Voornaam = a.Firstname,
                     Tussenvoegsel = a.Insertion,
                     Achternaam = a.Lastname,
-                    InteresseNieuwsbrief = u.IsMailingListMember,
+                    Newsletter = u.IsMailingListMember.HasValue && u.IsMailingListMember.Value,
                     Straat = a.Street,
                     Huisnummer = a.Housenumber,
                     HuisnummerToevoeging = a.HouseNumberAddition,
@@ -198,6 +198,7 @@ namespace HRE.Models {
                     
                     IsEarlyBird = p.EarlyBird,
                     InschrijfGeld = p.ParticipationAmountInEuroCents,
+                    BedragBetaald = p.ParticipationAmountPaidInEuroCents,
 
                     DateConfirmationSend = p.DateConfirmationSend
                 };
@@ -258,6 +259,7 @@ namespace HRE.Models {
 
             // TODO BW 2013-02-6 Als een inschrijving wordt gesaved die is gescraped van NTB inschrijvingen, maar het e-mail adres is
             // inmiddels aangepast dan werkt onderstaande niet. De persoon wordt dan onder een nieuwe inschrijving gesaved en klapt er mogelijk uit op duplicate NTB licentie nummer..
+            inschrijving.Email = inschrijving.Email.ToLower();
 
             // Create and/or retrieve the user (and the underlying ASP.NET membership user).
             LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(inschrijving.Email, "", inschrijving.ExternalIdentifier);
@@ -270,7 +272,7 @@ namespace HRE.Models {
             if (overrideLocallyUpdated || !isScrape || !user.DateOfBirth.HasValue || (inschrijving.DateLastSynchronized.HasValue 
                                 && DateTime.Compare(inschrijving.DateUpdated, inschrijving.DateLastSynchronized.Value)<=0)) {
                 user.DateOfBirth = inschrijving.GeboorteDatum;
-                user.IsMailingListMember = inschrijving.InteresseNieuwsbrief;
+                user.IsMailingListMember = inschrijving.Newsletter;
                 user.UserName = inschrijving.Email;
                 if (user.EmailAddress != inschrijving.Email) {
                     user.EmailAddress = inschrijving.Email;

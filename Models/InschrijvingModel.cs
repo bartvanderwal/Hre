@@ -9,11 +9,17 @@ using HRE.Data;
 using HRE.Dal;
 using HRE.Common;
 using HRE.Business;
+using HRE.Attributes;
 
 namespace HRE.Models {
 
     public class InschrijvingModel : BaseRepository {
         
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public InschrijvingModel() { }
+
         /// <summary>
         /// The user id.
         /// Warning; do NOT set the UserId from the User form, only initally on scraping/creation.
@@ -160,8 +166,6 @@ namespace HRE.Models {
 
         public string MaatTshirt { get; set; }
 
-        public bool? InteresseNieuwsbrief { get; set; }
-
         [Required(ErrorMessage = "Geef je geslacht aan")]
         public string Geslacht { get; set; }
         
@@ -238,10 +242,11 @@ namespace HRE.Models {
         /// <summary>
         /// Voor niet NTB leden en leden die GEEN wedstrijd/atleten 'A' licentie hebben zijn er de kosten voor een daglicentie.
         /// </summary>
-        public int KostenDagLicentie {
+        public int KostenNtbDagLicentie {
             get {
-                if (string.IsNullOrEmpty(LicentieNummer) || (LicentieNummer.Substring(2,1)!="A" && LicentieNummer.Substring(2,1)!="a")) {
-                    return HreSettings.KostenDagLicentie;
+                if (string.IsNullOrEmpty(LicentieNummer) || 
+                    (LicentieNummer.Substring(2,1).ToUpper()!="A" && LicentieNummer.Substring(2,1).ToUpper()!="X")) {
+                    return HreSettings.KostenNtbDagLicentie;
                 } else {
                     return 0;
                 }
@@ -268,28 +273,50 @@ namespace HRE.Models {
 
         public int? InschrijfGeld { 
             get {
-                // Voor HRE 2012 geef het uit NTB inschrijvingen eventueel gelezen bedrag terug.
-                if (ExternalEventIdentifier==InschrijvingenRepository.HRE_EVENTNR) {
+                // Voor HRE 2012 of latere jaren als bedrag al ingevuld is, geef het bedrag uit database terug.
+                // Voor HRE 2012 komt dit uit NTB inschrijvingen.
+                if (ExternalEventIdentifier==InschrijvingenRepository.HRE_EVENTNR || _inschrijfGeld.HasValue) {
                     return _inschrijfGeld;
                 }
 
                 // Voor HRE 2013 wordt het bedrag bepaald afhankelijk van gebruikersgegevens en vaste bedragen in de appsettings.
                 // Dit gebeurd dus analoog aan maar apart van berekening in client side JavaScript om 'hackmogelijkheden' uit te sluiten.
-                return BasisKosten + KostenDagLicentie + KostenChip - EarlyBirdKorting;
+                return BasisKosten + KostenNtbDagLicentie + KostenChip - EarlyBirdKorting;
             }
-
             set {
                 _inschrijfGeld = value;
             }
         }
 
+        
+        /// <summary>
+        /// Het door de deelnemer betaald bedrag.
+        /// </summary>
+        public int? BedragBetaald { get; set; }
 
+
+        [IsTrue(ErrorMessage = "Meld je aan voor de Flessenpost (e-mail nieuwsbrief voor deelnemers)")]
+        /// <summary>
+        /// Is de deelnemer aangemeld voor de periodieke e-mail nieuwsbrief (Flessenpost) (true) of niet (false)?
+        /// </summary>
+        public bool Newsletter { get; set; }
+
+        
+        /// <summary>
+        /// Wil de deelnemer na afloop mee eten (true) of niet (false)?
+        /// </summary>
         public bool Food { get; set; }
 
-
+        
+        /// <summary>
+        /// Wil de deelnemer na afloop blijven kamperen (true) of niet (false)?
+        /// </summary>
         public bool Camp { get; set; }
 
 
+        /// <summary>
+        /// Wil de deelnemer op de fiets naar het evenement komen (true) of niet (false)?
+        /// </summary>
         public bool Bike { get; set; }
 
 
@@ -298,7 +325,6 @@ namespace HRE.Models {
 
         // Calculated values (only getter, based on above properties). ////////////
 
-        // Calculated values (only getter, based on above properties).
         public string VolledigeNaam {
             get {
                 return Voornaam + " " + Tussenvoegsel + " " + Achternaam;
@@ -310,10 +336,6 @@ namespace HRE.Models {
             get {
                 return ((Geslacht=="M") ? "Mr." : "Mevr.") + " " + VolledigeNaam;
             }
-        }
-
-
-        public InschrijvingModel() {
         }
 
 
@@ -357,6 +379,11 @@ namespace HRE.Models {
             }
         }
 
+        /// <summary>
+        /// Indicates whether - for already registered entries - the e-mail confirmation should be resent.
+        /// </summary>
+        [Display(Name = "Stuur bevestigingsmail")]
+        public bool DoForceSendConfirmation { get; set; }
 
         /// <summary>
         /// This field is NOT stored in the database, but is just to indicate to the (MijnRondjeEilanden) view whether the
@@ -369,6 +396,37 @@ namespace HRE.Models {
         /// Geeft aan of het een inschrijving is van een nieuwe gebruiker (view IkDoeMeeof) of niet (view Edit).
         /// </summary>
         public bool IsInschrijvingNieuweGebruiker { get; set; }
+
+
+        /// <summary>
+        /// Geeft aan 
+        /// </summary>
+        public bool IsVolledigEnCorrectBetaald {
+            get {
+                return InschrijfGeld.HasValue && BedragBetaald.HasValue && InschrijfGeld.Value==BedragBetaald.Value;
+            }
+        }
+
+
+        /// <summary>
+        /// Het te betalen bedrag.
+        /// </summary>
+        public int? BedragTeBetalen {
+            get {
+                // Geef het verschil terug tussen te betalen bedrag en betaald bedrag, als beide zijn ingevuld.
+                if (InschrijfGeld.HasValue && BedragBetaald.HasValue) {
+                    return InschrijfGeld.Value-BedragBetaald.Value;
+                }
+
+                // Als geen betaald bedrag is ingevuld geef dan het inschrijf geld terug.
+                if (InschrijfGeld.HasValue) {
+                    return InschrijfGeld.Value;
+                }
+
+                // Geef anders onbekend bedrag op.
+                return null;
+            }
+        }
 
     }
 }

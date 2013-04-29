@@ -1,7 +1,7 @@
 ﻿@{
-    @* if (User.Identity.IsAuthenticated) {*@
+    if (Request.Params["SkipMaster"]==null || (Request.Params["SkipMaster"])=="False") {
         Layout = "~/Views/Shared/_NewLayout.cshtml";
-    @*} else {
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }*@
+    } else {
+        Layout = null;
+    }
 }

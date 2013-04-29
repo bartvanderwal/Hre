@@ -301,7 +301,7 @@ namespace HRE.Dal {
         public static LogonUserDal CreateOrRetrieveUser(string emailAddressAndUsername, string password="", string externalSubscriptionIdentifier = null) {
             
             // If an non 'HRE' external identifier (meaning a real ext. id) was given, then try to retrieve the user via this.
-            if (!string.IsNullOrEmpty(externalSubscriptionIdentifier) && !externalSubscriptionIdentifier.StartsWith("HRE")) {
+            if (!string.IsNullOrEmpty(externalSubscriptionIdentifier) /* && !externalSubscriptionIdentifier.StartsWith("HRE") */) {
                 int? userId = (from p in DB.sportseventparticipation where p.ExternalIdentifier == externalSubscriptionIdentifier select p.UserId).FirstOrDefault();
                 if (userId.HasValue) {
                     logonuser u = (from logonUser in DB.logonuser where logonUser.Id==userId.Value select logonUser).FirstOrDefault();
@@ -407,17 +407,53 @@ namespace HRE.Dal {
         /// - OnlyToNonMembers: All that are defined NOT to be subscribed to the mailing list / newsletter.
         ///    More SPAM alert. Only to notify non members with a modest message. Basically only to expand OnlyToMembers to if SpamAll was forgotten to be set.
         /// </summary>
-        public static List<LogonUserDal> GetNewsletterReceivers(NewsletterAudience audience) {
-            int audienceAsInt = (int) audience;
-            IQueryable<LogonUserDal> users = from logonuser user in DB.logonuser where 
-                    audience == (int) NewsletterAudience.OnlyToMembers && (!user.IsMailingListMember.HasValue || user.IsMailingListMember.Value)
-                    || (audienceAsInt == (int) NewsletterAudience.SpamAll)
-                    || ((audienceAsInt == (int) NewsletterAudience.OnlyToNonMembers) && user.IsMailingListMember.HasValue && !user.IsMailingListMember.Value) 
-                        select new LogonUserDal() {
-                            _user = user
-                        };
+        public static List<LogonUserDal> GetNewsletterReceivers(
+            NewsletterSubscriptionStatus subscriptionStatus = NewsletterSubscriptionStatus.OnlyToMembers, 
+            EntryFeePaidStatus feePaidStatus = EntryFeePaidStatus.All,
+            EarlyBirdStatus earlyBirdStatus = EarlyBirdStatus.All,
+            HREEventParticipantStatus hre2012ParticipantStatus = HREEventParticipantStatus.All) {
+            
+            List<LogonUserDal> users = LogonUserDal.MakeList(DB.logonuser.ToList());
 
-             return users.ToList();
+            switch (subscriptionStatus) {
+                case NewsletterSubscriptionStatus.OnlyToMembers:
+                    users = users.Where(u => u.IsMailingListMember.HasValue && u.IsMailingListMember.Value).ToList();
+                    break;
+                case NewsletterSubscriptionStatus.OnlyToNonMembers:
+                    users = users.Where(u => u.IsMailingListMember.HasValue && !u.IsMailingListMember.Value).ToList();
+                    break;
+            }
+
+
+            // Check if one of the provided filter parameters requires further trimming.
+            if (feePaidStatus!=EntryFeePaidStatus.All 
+                || earlyBirdStatus!=EarlyBirdStatus.All
+                || hre2012ParticipantStatus!=HREEventParticipantStatus.All) {
+
+                /*
+                switch (feePaidStatus) {
+                    case EntryFeePaidStatus.OnlyPaid:
+                        users = users.Where(u => entries.Contains(u.Id)).ToList();
+                        break;
+                    case EntryFeePaidStatus.OnlyNonPaid:
+                        users = users.Where(u => u.IsMailingListMember.HasValue && !u.IsMailingListMember.Value).ToList();
+                        break;
+                }
+                */
+                
+                List<int> entries2012UserIds = InschrijvingenRepository.GetEntries(InschrijvingenRepository.HRE_EVENTNR, true).Select(e => e.UserId).ToList();
+
+
+                switch (hre2012ParticipantStatus) {
+                    case HREEventParticipantStatus.OnlyParticipants:
+                        users = users.Where(u => entries2012UserIds.Contains(u.Id)).ToList();
+                        break;
+                    case HREEventParticipantStatus.OnlyNonParticipants:
+                        users = users.Where(u => !entries2012UserIds.Contains(u.Id)).ToList();
+                        break;
+                }
+            }
+            return users;
         }
 
 
@@ -451,18 +487,18 @@ namespace HRE.Dal {
         /// <summary>
         /// Create an entry in the membership table and the user (unless the second item already exists).
         /// </summary>
-        public static logonuser CreateUser(string userName, string password, string name, bool? gender, DateTime? dateOfBirth, bool? isMailingListMember, bool isLogOnUser) {
+        public static LogonUserDal CreateUser(string userName, string password, string name, bool? gender, DateTime? dateOfBirth, bool? isMailingListMember, bool isLogOnUser) {
             if (isLogOnUser) {
                 // Create ASP.NET user.
                 Membership.CreateUser(userName, password, userName);
             }
 
             // Create custom user to match.
-            logonuser user;
+            LogonUserDal user;
             user = GetUserByUsername(userName);
             bool isNewUser = user==null;
             if (isNewUser) {
-                user = new logonuser();
+                user = new LogonUserDal();
                 user.DateCreated = DateTime.Now;
                 user.UserName = userName;
                 user.EmailAddress = user.UserName;
@@ -470,7 +506,7 @@ namespace HRE.Dal {
             if (isLogOnUser) {
                 user.ExternalId = Membership.GetUser(user.UserName).ProviderUserKey.ToString();
             }
-            user.Name = name;
+            user.UserName = name;
             
             // Read date of birth, and parse with dutch locale (assuming format 'dd-MM-yyyy'enforced in UI).
             user.DateOfBirth = dateOfBirth; 
@@ -478,9 +514,9 @@ namespace HRE.Dal {
             user.IsMailingListMember = isMailingListMember;
             user.IsActive = isLogOnUser;
             if (isNewUser) {
-                DB.AddTologonuser(user);
+                user.Save();
             }
-            DB.SaveChanges();
+            // DB.SaveChanges();
 
             if (isLogOnUser) {
                 //Make sure the user stays logged in and has a session by setting the (persisted) authorization cookie\
@@ -502,8 +538,14 @@ namespace HRE.Dal {
         /// <summary>
         /// Gets a user by username.
         /// </summary>
-        public static logonuser GetUserByUsername(string userName) {
-            return (DB.logonuser.Where(u => u.UserName == userName).FirstOrDefault());
+        public static LogonUserDal GetUserByUsername(string userName) {
+            logonuser user = DB.logonuser.Where(u => u.UserName == userName).FirstOrDefault();
+            
+            if (user!=null) {
+                return new LogonUserDal((DB.logonuser.Where(u => u.UserName == userName).FirstOrDefault()));
+            } else {
+                return null;
+            }
         }
 
         /// <summary>

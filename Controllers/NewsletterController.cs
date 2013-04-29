@@ -15,8 +15,16 @@ using HRE.Dal;
 namespace HRE.Controllers {
 
 
-    public class NewsletterController : Controller {
+    public class NewsletterController : BaseController {
         
+        
+        public override bool IsConfidentialPage {
+            get {
+                return true;
+            }
+        }
+
+
         NewsletterRepository nr = new NewsletterRepository();
 
 
@@ -89,7 +97,7 @@ namespace HRE.Controllers {
             spnvm.IsEmail = true;
 
             if (spnvm.Newsletter.DateSent == null) {
-                List<LogonUserDal> users = LogonUserDal.GetNewsletterReceivers(spnvm.Newsletter.Audience);
+                List<LogonUserDal> users = LogonUserDal.GetNewsletterReceivers(spnvm.Newsletter.SubscriptionStatus);
                 MailMessage mm = new MailMessage();
                 mm.From = new MailAddress(HreSettings.ReplyToAddress);
                 mm.Subject = spnvm.Newsletter.Title;
@@ -143,7 +151,7 @@ namespace HRE.Controllers {
         [Authorize(Roles="Admin")]
         [HttpPost]
         public ActionResult NewsletterAdresses(int id) {
-            return PartialView("_NewsletterAdresses", LogonUserDal.GetNewsletterReceivers(NewsletterRepository.GetByID(id).Audience));
+            return PartialView("_NewsletterAdresses", LogonUserDal.GetNewsletterReceivers(NewsletterRepository.GetByID(id).SubscriptionStatus));
         }
 
 

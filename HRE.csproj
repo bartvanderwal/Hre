@@ -93,6 +93,8 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\RequiresSsl.cs" />
+    <Compile Include="Attributes\ValidationAttributes.cs" />
     <Compile Include="Business\AppConstants.cs" />
     <Compile Include="Business\EmailSender.cs" />
     <Compile Include="Business\EncDec.cs" />
@@ -129,7 +131,6 @@
     <Compile Include="Controllers\MeedoenController.cs" />
     <Compile Include="Controllers\OudParcoursController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ScrapeNtbController.cs" />
     <Compile Include="Controls\LnkButton.ascx.cs">
       <DependentUpon>LnkButton.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -643,7 +644,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Inschrijvingen\MijnRondjeEilanden.cshtml" />
-    <Content Include="Views\Inschrijvingen\_ViewStart.cshtml" />
     <Content Include="Views\Inschrijvingen\Bedankt.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -776,16 +776,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
-          <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>59162</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:50310/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

@@ -36,7 +36,7 @@ namespace HRE.Business {
             } catch (SmtpException e) {
                 // When sending the mail fails set the status to sendError and set the status message.
                 emailAuditDal.EmailStatus = EmailStatus.SendError;                          
-                emailAuditDal.StatusMessage = e.Message;
+                emailAuditDal.StatusMessage = string.Format("Fout bij het verzenden ('{0}').", e.Message);
             }
         
             emailAuditDal.Save();

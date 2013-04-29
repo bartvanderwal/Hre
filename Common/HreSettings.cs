@@ -231,9 +231,9 @@ namespace HRE.Common {
         /// Kosten van een daglicentie.
         /// Default: 230 (EUR 2,30).
         /// </summary>
-        public static int KostenDagLicentie {
+        public static int KostenNtbDagLicentie {
             get {
-                return ReadIntSetting("KostenDagLicentie", 220);
+                return ReadIntSetting("KostenNtbDagLicentie", 220);
             }
         }
 
@@ -296,6 +296,17 @@ namespace HRE.Common {
         public static string MailAddressSecretary {
             get {
                 return ReadStringSetting("MailAddressSecretary", "pieter@hetrondjeeilanden.nl");
+            }
+        }
+
+
+        /// <summary>
+        /// Specifies
+        /// To be able to switch this of if SSL is no longer available, due to provider errors for example.
+        /// </summary>
+        public static bool IsSslAvailable {
+            get {
+                return ReadBoolSetting("IsSslAvailable", true);
             }
         }
 

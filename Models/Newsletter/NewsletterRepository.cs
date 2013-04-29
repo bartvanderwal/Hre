@@ -13,14 +13,14 @@ namespace HRE.Models.Newsletters {
     public class NewsletterRepository : BaseRepository {
 
         /// <summary>
-        /// Get a select list of possbile audience types.
+        /// Get a select list of possible subscription stati of receivers.
         /// </summary>
         /// <returns></returns>
-        public static List<SelectListItem> AudienceSelectList(string selectedValue) {
+        public static List<SelectListItem> SubscriptionStatusSelectList(string selectedValue) {
             List<SelectListItem> result = new List<SelectListItem> { 
-                new SelectListItem { Text = "Alleen leden", Value = NewsletterAudience.OnlyToMembers.ToString()},
-                new SelectListItem { Text = "Iedereen (spam alert!)", Value = NewsletterAudience.SpamAll.ToString()},
-		        new SelectListItem { Text = "Alleen niet leden (spam alert!)", Value = NewsletterAudience.OnlyToNonMembers.ToString()},
+                new SelectListItem { Text = "Alleen leden", Value = NewsletterSubscriptionStatus.OnlyToMembers.ToString()},
+                new SelectListItem { Text = "Iedereen (spam alert!)", Value = NewsletterSubscriptionStatus.SpamAll.ToString()},
+		        new SelectListItem { Text = "Alleen niet leden (spam alert!)", Value = NewsletterSubscriptionStatus.OnlyToNonMembers.ToString()},
             };
             SelectListItem selectedItem = result.Where(sli => sli.Value==selectedValue).FirstOrDefault();
             if (selectedItem!=null) {
@@ -30,19 +30,45 @@ namespace HRE.Models.Newsletters {
         }
 
 
+        /// <summary>
+        /// Get a select list of possible status for participation in a certain year (e.g. 2012) or not of end users.
+        /// </summary>
+        /// <param name="selectedValue"></param>
+        /// <returns></returns>
+        public static List<SelectListItem> HreParticipantStatusSelectList(string selectedValue) {
+            List<SelectListItem> result = new List<SelectListItem> { 
+                new SelectListItem { Text = "Maakt niet uit", Value = HREEventParticipantStatus.All.ToString()},
+                new SelectListItem { Text = "Deelnemer", Value = HREEventParticipantStatus.OnlyParticipants.ToString()},
+		        new SelectListItem { Text = "Geen deelnemer", Value = HREEventParticipantStatus.OnlyNonParticipants.ToString()},
+            };
+            SelectListItem selectedItem = result.Where(sli => sli.Value==selectedValue).FirstOrDefault();
+            if (selectedItem!=null) {
+                selectedItem.Selected = true;
+            }
+            return result;
+        }
+        
+
         /*
         /// <summary>
-        /// Get a select list of possbile audience types.
+        /// Get a select list of early bird status for participation in a certain year (e.g. 2013) or not of end users.
         /// </summary>
+        /// <param name="selectedValue"></param>
         /// <returns></returns>
-        public static SelectList AudienceSelectList(string selectedValue) {
-            return new SelectList(new List({ { 
-                new SelectListItem { Text = "Alleen leden", Value = NewsletterAudience.OnlyToMembers.ToString(), Selected= (Value==selectedValue)},
-                new SelectListItem { Text = "Iedereen (spam alert!)", Value = NewsletterAudience.SpamAll.ToString()},
-		        new SelectListItem { Text = "Alleen niet leden (spam alert!)", Value = NewsletterAudience.OnlyToNonMembers.ToString() },
+        public static List<SelectListItem> EarlyBirdStatus(string selectedValue) {
+            List<SelectListItem> result = new List<SelectListItem> { 
+                new SelectListItem { Text = "Maakt niet uit", Value = EarlyBirdStatus.All.ToString()},
+                new SelectListItem { Text = "Early Birds", Value = EarlyBirdStatus.OnlyParticipants.ToString()},
+		        new SelectListItem { Text = "Non Early Birds", Value = EarlyBirdStatus.OnlyNonParticipants.ToString()},
             };
+            SelectListItem selectedItem = result.Where(sli => sli.Value==selectedValue).FirstOrDefault();
+            if (selectedItem!=null) {
+                selectedItem.Selected = true;
+            }
+            return result;
         }
         */
+
 
         public static List<NewsletterViewModel> GetNewsletterList(int CultureID = 0) {
 
@@ -57,7 +83,7 @@ namespace HRE.Models.Newsletters {
                                       DateSent = (DateTime)n.DateSent,
                                       DateUpdated = (DateTime)n.DateUpdated,
                                       IntroText = n.IntroText,
-                                      Audience = n.Audience.HasValue ? (NewsletterAudience) n.Audience : NewsletterAudience.OnlyToMembers,
+                                      SubscriptionStatus = n.Audience.HasValue ? (NewsletterSubscriptionStatus) n.Audience : NewsletterSubscriptionStatus.OnlyToMembers,
                                       Title = n.Title
                                   }).ToList();
             } else {
@@ -93,7 +119,7 @@ namespace HRE.Models.Newsletters {
                 Title = nl.Title,
                 IntroText = nl.IntroText,
                 IncludeLoginLink = nl.AddPersonalLoginLink.HasValue && nl.AddPersonalLoginLink.Value,
-                Audience = nl.Audience.HasValue ? (NewsletterAudience) nl.Audience.Value : NewsletterAudience.OnlyToMembers
+                SubscriptionStatus = nl.Audience.HasValue ? (NewsletterSubscriptionStatus) nl.Audience.Value : NewsletterSubscriptionStatus.OnlyToMembers
             };
 
             nivm.Items = new List<NewsletterItemViewModel>();
@@ -124,7 +150,7 @@ namespace HRE.Models.Newsletters {
                 AddPersonalLoginLink = nvm.IncludeLoginLink,
                 IntroText = nvm.IntroText,
                 Title = nvm.Title,
-                Audience = (int) nvm.Audience
+                Audience = (int) nvm.SubscriptionStatus
             };
 
             if (nvm.Items != null) {
@@ -155,7 +181,7 @@ namespace HRE.Models.Newsletters {
             nl.IntroText = nvm.IntroText;
             nl.Title = nvm.Title;
             nl.AddPersonalLoginLink = nvm.IncludeLoginLink;
-            nl.Audience = (int) nvm.Audience;
+            nl.Audience = (int) nvm.SubscriptionStatus;
             List<newsletteritem> nlis = DB.newsletteritem.Where(nli => nli.NewsletterId == nl.Id).ToList();
 
             foreach (newsletteritem nli in nlis) {

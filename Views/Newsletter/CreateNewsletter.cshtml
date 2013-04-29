@@ -25,12 +25,34 @@
                         <td>@Html.CheckBoxFor(m => m.IncludeLoginLink)</td>
                     </tr>
                     <tr>
-                        <td>@Html.LabelFor(m => Model.Audience)</td>
-                        <td>@Html.DropDownListFor(m => m.Audience, 
-                                HRE.Models.Newsletters.NewsletterRepository.AudienceSelectList(Model.Audience.ToString()), 
-                                new { @style = "width: 230px", @class = "select2-dropdown" })
+                        <td>Selectie criteria ontvangers</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(m => Model.SubscriptionStatus)</td>
+                        <td>@Html.DropDownListFor(m => m.SubscriptionStatus, 
+                                HRE.Models.Newsletters.NewsletterRepository.SubscriptionStatusSelectList(Model.SubscriptionStatus.ToString()), 
+                                new { @style = "width: 230px" })
                         </td>
                     </tr>
+                    <tr>
+                        <td>@Html.LabelFor(m => Model.Hre2012ParticipantStatus)</td>
+                        <td>@Html.DropDownListFor(m => m.Hre2012ParticipantStatus, 
+                                HRE.Models.Newsletters.NewsletterRepository.HreParticipantStatusSelectList(Model.Hre2012ParticipantStatus.ToString()), 
+                                new { @style = "width: 230px" })
+                        </td>
+                    </tr>
+
+                    @*
+                    <tr>
+                        <td>@Html.LabelFor(m => Model.LogonUserStatusSelectList)</td>
+                        <td>@Html.DropDownListFor(m => m.Hre2012ParticipantStatus, 
+                                HRE.Models.Newsletters.NewsletterRepository.SubscriptionStatusSelectList(Model.Hre2012ParticipantStatus.ToString()), 
+                                new { @style = "width: 230px" })
+                        </td>
+                    </tr>
+                    *@
+
                     <tr>
                         <td>@Html.LabelFor(m => Model.IntroText)</td>
                         <td>@Html.TextAreaFor(m => Model.IntroText, new { @maxlength="512", style="width: 400px;" } )</td>

@@ -156,6 +156,19 @@ li.test {
 }
 
 
+/****** Flessenpost ***/
+/* Unchecked newsletter checkbox. */
+:root .editor-field > input[type="checkbox"][name="Newsletter"] ~ label:before { 
+	background-position: -257px -254px;
+}
+
+/* Checked newsletter checkbox. */
+:root .editor-field > input[type="checkbox"][name="Newsletter"]:checked ~ label:before{ 
+	background-position: -316px -254px;
+}
+
+
+
 /****** Eten ***/
 /* Unchecked food checkbox. */
 :root .editor-field > input[type="checkbox"][name="Food"] ~ label:before { 
@@ -371,7 +384,7 @@ input.save[type=submit] {
 }
 
 .editor-spacer.amount {
-    height: 96px;
+    height: 150px;
 }
 
 .editor-spacer.speaker {
