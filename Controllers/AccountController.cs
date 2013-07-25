@@ -20,12 +20,14 @@ namespace HRE.Controllers {
             }
         }
 
+
         public void Initialise(string activeSubMenuItem) {
             ActiveMenuItem = AppConstants.Account;
             ActiveSubMenuItem = activeSubMenuItem;
             ViewBag.SubMenuItems = SubMenuItems;
         }
-        
+
+
         public new List<string> SubMenuItems {
             get { 
                 List<string> subMenuItems = new List<string> {
@@ -44,7 +46,6 @@ namespace HRE.Controllers {
 
         //
         // GET: /Account/LogOn
-        //
         public ActionResult Login(string id) {
             string email = System.Web.HttpUtility.UrlDecode(id);
             if (!string.IsNullOrEmpty(id)) {
@@ -94,12 +95,12 @@ namespace HRE.Controllers {
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\")) {
                         return Redirect(returnUrl);
                     } else {
-                        if (Roles.IsUserInRole(InschrijvingenRepository.ADMIN_ROLE_NAME)) {
+                        if (User.IsInRole(InschrijvingenRepository.ADMIN_ROLE_NAME) || User.IsInRole(InschrijvingenRepository.SPEAKER_ROLE_NAME)) {
                             // Persist admin cookie always to prevent logging out problems for instance in newsletter.
                             if (!model.RememberMe) {
                                 FormsAuthentication.SetAuthCookie(login, true);
                             }
-                            return Redirect("/Admin/Dashboard.aspx");
+                            return Redirect("/Inschrijvingen");
                         } else {
                             return RedirectToAction("Index", "Home");
                         }
@@ -115,7 +116,6 @@ namespace HRE.Controllers {
 
         //
         // GET: /Account/LogOff
-
         public ActionResult LogUit() {
             FormsAuthentication.SignOut();
 
@@ -124,7 +124,6 @@ namespace HRE.Controllers {
 
         //
         // GET: /Account/Register
-
         public ActionResult Registreer() {
             Initialise(AppConstants.AccountRegistreer);
             return View();
@@ -132,7 +131,6 @@ namespace HRE.Controllers {
 
         //
         // POST: /Account/Register
-
         [HttpPost]
         public ActionResult Registreer(RegisterModel model) {
             if (ModelState.IsValid) {
@@ -154,7 +152,6 @@ namespace HRE.Controllers {
 
         //
         // GET: /Account/ChangePassword
-
         [Authorize]
         public ActionResult WijzigWW() {
             Initialise(AppConstants.AccountWijzigWW);
@@ -163,25 +160,15 @@ namespace HRE.Controllers {
 
 
         public ActionResult Index() {
-            Initialise(AppConstants.AccountWelkom);
-            return RedirectToAction("Eilanders");
+            // Initialise(AppConstants.AccountWelkom);
+            return RedirectToAction("Login");
         }
 
-
-        public ActionResult Welkom() {
-            Initialise(AppConstants.Account);
-            return RedirectToAction("Eilanders");
-        }
-        
-        public ActionResult Eilanders() {
-            Initialise(AppConstants.Account);
-            return View();
-        }
 
         
         // Alias.
         public ActionResult Overzicht() {
-            Initialise(AppConstants.MeedoenOverzicht);
+            // Initialise(AppConstants.MeedoenOverzicht);
             return RedirectToAction("Index");
         }
 
@@ -247,8 +234,14 @@ namespace HRE.Controllers {
             // Log de gebruiker in (op basis van de e-mail link dus).
             // TODO BW 2013-02-10: In geencrypte key nog expiration date zetten!
             bool emailConfirmed = user.ConfirmEmailAddress();
-            
-            FormsAuthentication.SetAuthCookie(email, false);
+
+            // Log de gebruiker in (op basis van de e-mail link dus).
+            // TODO BW 2013-02-10: In geencrypte key nog expiration date zetten!
+            if (Roles.IsUserInRole("Admin")) {
+                ViewBag.Message = string.Format("Voor admin gebruikers is inloggen via FlessenPost™ link disabled ivm security! Je moet inloggen met login en paswoord.");
+            } else {
+                FormsAuthentication.SetAuthCookie(email, false);
+            }
             InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.H2RE_EVENTNR);
             if (inschrijving==null) {
                 inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.HRE_EVENTNR);

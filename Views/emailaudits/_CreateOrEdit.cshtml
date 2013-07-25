@@ -1,0 +1,132 @@
+@model HRE.Data.emailaudit
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.ToAddresses)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.ToAddresses)
+    @Html.ValidationMessageFor(model => model.ToAddresses)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.FromAddress)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.FromAddress)
+    @Html.ValidationMessageFor(model => model.FromAddress)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.CCAddresses)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.CCAddresses)
+    @Html.ValidationMessageFor(model => model.CCAddresses)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.BccAddresses)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.BccAddresses)
+    @Html.ValidationMessageFor(model => model.BccAddresses)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Subject)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Subject)
+    @Html.ValidationMessageFor(model => model.Subject)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Body)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Body)
+    @Html.ValidationMessageFor(model => model.Body)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.isHtml)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.isHtml)
+    @Html.ValidationMessageFor(model => model.isHtml)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.AttachmentEntityId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.AttachmentEntityId)
+    @Html.ValidationMessageFor(model => model.AttachmentEntityId)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.EmailStatusId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.EmailStatusId)
+    @Html.ValidationMessageFor(model => model.EmailStatusId)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.StatusMessage)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.StatusMessage)
+    @Html.ValidationMessageFor(model => model.StatusMessage)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.UserIdSender)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.UserIdSender)
+    @Html.ValidationMessageFor(model => model.UserIdSender)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.UserIdReceiver)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.UserIdReceiver)
+    @Html.ValidationMessageFor(model => model.UserIdReceiver)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.DateCreated)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateCreated)
+    @Html.ValidationMessageFor(model => model.DateCreated)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.DateUpdated)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateUpdated)
+    @Html.ValidationMessageFor(model => model.DateUpdated)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.DateSent)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateSent)
+    @Html.ValidationMessageFor(model => model.DateSent)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.EmailCategoryId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.EmailCategoryId)
+    @Html.ValidationMessageFor(model => model.EmailCategoryId)
+</div>
+

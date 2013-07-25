@@ -28,11 +28,11 @@
                         @if (!string.IsNullOrEmpty(Model.Newsletter.IntroText)) {
     				        @Html.Raw(Model.Newsletter.IntroText)
                         }
-                        @if (Model.User.IsEmailAddressUnconfirmed) {
-    				        <text>Je e-mail adres - @Model.User.EmailAddress - is nog niet bevestigd. Log minstens éénmaal in via de link hieronder om deze adres te bevestigen. Pas daarna kan je inschrijving definitief gemaakt worden.</text>
+                        @if (Model.User.IsEmailAddressUnconfirmed && Model.Newsletter.IncludeLoginLink && !string.IsNullOrEmpty(Model.Newsletter.IntroText)) {
+    				        <text><br /><br />Je hebt je e-mail adres - @Model.User.EmailAddress - nog niet bevestigd. Log in via de link hieronder om dit adres te bevestigen. Als je je hebt aangemeld voor Het Rondje Eilanden, is dit ook nodig om je inschrijving definitief te kunnen maken.</text>
                         }
                         @if (Model.Newsletter.IncludeLoginLink) {
-    				        <a style="color: #ffffff; background-color: #2483B3; text-align: right; float: right; padding: 5px; margin: 10px; border: 1px solid #303030;" href="@HRE.Common.Common.GetDomainBase()/Account/FlessenPostLink/@Model.PersonalLoginLink">Log mij nu in! > </a>
+    				        <a style="color: #ffffff; background-color: #2483B3; text-align: right; float: right; padding: 5px; margin: 10px; border: 1px solid #303030;" href="@HRE.Common.Common.GetDomainBase()/Account/FlessenPostLink/@Model.PersonalLoginLink">@(Model.User.PrimaryAddress.Firstname)'s Rondje Eilanden pagina > </a>
                         }
                     </td>
 				</tr>
@@ -45,7 +45,7 @@
                 <table border="0" cellspacing="0" cellpadding="0" style="width: 800px; border: 0px; margin: 0px; padding: 0px;">
                     <tr class="item-header">
     					<td class="spacer" style="width: 20px; padding: 0px; margin: 0px"></td>
-                        <td class="icon" style="width: 150px; background-color: #@Item.HeadingHtmlColour;"><img src="http://www.hetrondjeeilanden.nl/Content/img/Nieuwsbrief/@Item.IconImagePath" alt="@Item.Title" /></td>
+                        <td class="icon" style="width: 150px; background-color: #@Item.HeadingHtmlColour;"><img src="@HRE.Common.Common.GetDomainBase()/Content/img/Nieuwsbrief/@Item.IconImagePath" alt="@Item.Title" /></td>
     					<td class="spacer" style="width: 20px; padding: 0px; margin: 0px"></td>
 	    				<td class="header-text" style="width: 600px; background-color: #@Item.HeadingHtmlColour; padding: 10px 30px 10px 30px;">
                         <span class="header-title" style="font-size: 55px; color: White; border-width: 30px; font-weight: bolder;">@Item.Title</span><br />

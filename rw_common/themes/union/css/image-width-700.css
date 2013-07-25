@@ -1,0 +1,4 @@
+@media screen and (min-width: 771px){#floatMedia,#carousel{width:700px;}}
+#floatMedia{margin-left: -700px;}
+#floatMedia img,#floatMedia li{min-width:700px;}
+#center{margin-left:700px;}

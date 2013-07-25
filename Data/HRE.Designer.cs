@@ -22,8 +22,8 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("hreModel", "PrimaryAddress", "address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.address), "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.logonuser), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdReceiver", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdSender", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
-[assembly: EdmRelationshipAttribute("hreModel", "Newsletter1", "newsletter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HRE.Data.newsletter), "newsletteritem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.newsletteritem), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "User", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
+[assembly: EdmRelationshipAttribute("hreModel", "Newsletter1", "newsletter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HRE.Data.newsletter), "newsletteritem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.newsletteritem), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "sportevent", "sportsevent", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.sportsevent), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
 
 #endregion
@@ -111,38 +111,6 @@ namespace HRE.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<paymenttype> paymenttype
-        {
-            get
-            {
-                if ((_paymenttype == null))
-                {
-                    _paymenttype = base.CreateObjectSet<paymenttype>("paymenttype");
-                }
-                return _paymenttype;
-            }
-        }
-        private ObjectSet<paymenttype> _paymenttype;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<usersecondaryaddress> usersecondaryaddress
-        {
-            get
-            {
-                if ((_usersecondaryaddress == null))
-                {
-                    _usersecondaryaddress = base.CreateObjectSet<usersecondaryaddress>("usersecondaryaddress");
-                }
-                return _usersecondaryaddress;
-            }
-        }
-        private ObjectSet<usersecondaryaddress> _usersecondaryaddress;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<logonuser> logonuser
         {
             get
@@ -155,22 +123,6 @@ namespace HRE.Data
             }
         }
         private ObjectSet<logonuser> _logonuser;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<sportsevent> sportsevent
-        {
-            get
-            {
-                if ((_sportsevent == null))
-                {
-                    _sportsevent = base.CreateObjectSet<sportsevent>("sportsevent");
-                }
-                return _sportsevent;
-            }
-        }
-        private ObjectSet<sportsevent> _sportsevent;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -207,6 +159,38 @@ namespace HRE.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<paymenttype> paymenttype
+        {
+            get
+            {
+                if ((_paymenttype == null))
+                {
+                    _paymenttype = base.CreateObjectSet<paymenttype>("paymenttype");
+                }
+                return _paymenttype;
+            }
+        }
+        private ObjectSet<paymenttype> _paymenttype;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<sportsevent> sportsevent
+        {
+            get
+            {
+                if ((_sportsevent == null))
+                {
+                    _sportsevent = base.CreateObjectSet<sportsevent>("sportsevent");
+                }
+                return _sportsevent;
+            }
+        }
+        private ObjectSet<sportsevent> _sportsevent;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<sportseventparticipation> sportseventparticipation
         {
             get
@@ -219,6 +203,22 @@ namespace HRE.Data
             }
         }
         private ObjectSet<sportseventparticipation> _sportseventparticipation;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<usersecondaryaddress> usersecondaryaddress
+        {
+            get
+            {
+                if ((_usersecondaryaddress == null))
+                {
+                    _usersecondaryaddress = base.CreateObjectSet<usersecondaryaddress>("usersecondaryaddress");
+                }
+                return _usersecondaryaddress;
+            }
+        }
+        private ObjectSet<usersecondaryaddress> _usersecondaryaddress;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -257,35 +257,11 @@ namespace HRE.Data
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the paymenttype EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTopaymenttype(paymenttype paymenttype)
-        {
-            base.AddObject("paymenttype", paymenttype);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the usersecondaryaddress EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTousersecondaryaddress(usersecondaryaddress usersecondaryaddress)
-        {
-            base.AddObject("usersecondaryaddress", usersecondaryaddress);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the logonuser EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTologonuser(logonuser logonuser)
         {
             base.AddObject("logonuser", logonuser);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the sportsevent EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTosportsevent(sportsevent sportsevent)
-        {
-            base.AddObject("sportsevent", sportsevent);
         }
     
         /// <summary>
@@ -305,11 +281,35 @@ namespace HRE.Data
         }
     
         /// <summary>
+        /// Deprecated Method for adding a new object to the paymenttype EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTopaymenttype(paymenttype paymenttype)
+        {
+            base.AddObject("paymenttype", paymenttype);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the sportsevent EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTosportsevent(sportsevent sportsevent)
+        {
+            base.AddObject("sportsevent", sportsevent);
+        }
+    
+        /// <summary>
         /// Deprecated Method for adding a new object to the sportseventparticipation EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
         {
             base.AddObject("sportseventparticipation", sportseventparticipation);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the usersecondaryaddress EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTousersecondaryaddress(usersecondaryaddress usersecondaryaddress)
+        {
+            base.AddObject("usersecondaryaddress", usersecondaryaddress);
         }
     
         /// <summary>
@@ -1343,6 +1343,30 @@ namespace HRE.Data
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
+        public global::System.String TelephoneNumber
+        {
+            get
+            {
+                return _TelephoneNumber;
+            }
+            set
+            {
+                OnTelephoneNumberChanging(value);
+                ReportPropertyChanging("TelephoneNumber");
+                _TelephoneNumber = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("TelephoneNumber");
+                OnTelephoneNumberChanged();
+            }
+        }
+        private global::System.String _TelephoneNumber;
+        partial void OnTelephoneNumberChanging(global::System.String value);
+        partial void OnTelephoneNumberChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
         public Nullable<global::System.Boolean> IsActive
         {
             get
@@ -1649,30 +1673,6 @@ namespace HRE.Data
         private global::System.String _UserName;
         partial void OnUserNameChanging(global::System.String value);
         partial void OnUserNameChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String TelephoneNumber
-        {
-            get
-            {
-                return _TelephoneNumber;
-            }
-            set
-            {
-                OnTelephoneNumberChanging(value);
-                ReportPropertyChanging("TelephoneNumber");
-                _TelephoneNumber = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("TelephoneNumber");
-                OnTelephoneNumberChanged();
-            }
-        }
-        private global::System.String _TelephoneNumber;
-        partial void OnTelephoneNumberChanging(global::System.String value);
-        partial void OnTelephoneNumberChanged();
 
         #endregion
 
@@ -2129,6 +2129,30 @@ namespace HRE.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Audience
+        {
+            get
+            {
+                return _Audience;
+            }
+            set
+            {
+                OnAudienceChanging(value);
+                ReportPropertyChanging("Audience");
+                _Audience = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Audience");
+                OnAudienceChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Audience;
+        partial void OnAudienceChanging(Nullable<global::System.Int32> value);
+        partial void OnAudienceChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.DateTime DateCreated
@@ -2173,30 +2197,6 @@ namespace HRE.Data
         private global::System.DateTime _DateUpdated;
         partial void OnDateUpdatedChanging(global::System.DateTime value);
         partial void OnDateUpdatedChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int32> Audience
-        {
-            get
-            {
-                return _Audience;
-            }
-            set
-            {
-                OnAudienceChanging(value);
-                ReportPropertyChanging("Audience");
-                _Audience = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("Audience");
-                OnAudienceChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _Audience;
-        partial void OnAudienceChanging(Nullable<global::System.Int32> value);
-        partial void OnAudienceChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

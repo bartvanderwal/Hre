@@ -186,6 +186,17 @@ namespace HRE.Common {
 
 
         /// <summary>
+        /// Het aantal plekken op de rerervelijst.
+        /// Default: 100.
+        /// </summary>
+        public static int AantalPlekkenReserveLijst {
+            get {
+                return ReadIntSetting("AantalPlekkenReserveLijst", 100);
+            }
+        }
+
+        
+        /// <summary>
         /// Het aantal Early Bird startplekken.
         /// Default: 200.
         /// </summary>
@@ -212,6 +223,16 @@ namespace HRE.Common {
         public static DateTime OpeningsdatumAlgemeneInschrijving {
             get {
                 return ReadDateTimeSetting("OpeningsdatumAlgemeneInschrijving", "01-03-2013");
+            }
+        }
+
+
+        /// <summary>
+        /// Sluitingsdatum algemene inschrijving.
+        /// </summary>
+        public static DateTime SluitingssdatumAlgemeneInschrijving {
+            get {
+                return ReadDateTimeSetting("SluitingsdatumAlgemeneInschrijving", "31-07-2013");
             }
         }
 

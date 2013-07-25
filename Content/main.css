@@ -15,7 +15,19 @@
 
 body {
     font-family: calibri, Sans-Serif, Verdana;
-	background-color: #000000;
+	background-color: #ffffff;
+}
+
+#wrapper {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+#page {
+    margin: 0 auto;
+    padding: 0 30px;
+    width: 800px;
 }
 
 a {
@@ -29,49 +41,48 @@ a:visited {
 a:active {
 }
 
-#content a:hover {
-    background-color: White;
+
+a:hover,
+input:not([disabled]) {
+    cursor: pointer;
+}
+
+input[type="submit"]:hover:not([disabled]) {
+    border: 2px solid #2483B2;
+}
+
+input[type="submit"].download-excel {
+	background: url("/Content/img/Excel_Icon.png") no-repeat right top;
+    width: 140px;
+    height: 40px;
+    border: 0px;
+    text-decoration: underline;
+}
+
+input[type="submit"].download-excel:hover {
+    border: 0px;
 }
 
 #left {
-	background: url("img/Website_Total_LowD.jpg") no-repeat left top; 
+	/* background: url("img/Website_Total_LowD.jpg") no-repeat left top; */
+    background-color: #B3B3B3;
     height: 1080px;
     padding: 0px 0px 0px 0px;
     width: 1920px;
 	top: 0px;
 	left: 0px;
-	z-index: 2;
+	/* z-index: 1; */
     position: fixed;
 }
 
 #top {
-	background: url("img/Top_Wood-LowD.jpg") no-repeat left top; 
-	position: fixed;
-    height: 103px;
+	background: url("img/InschrijvenHREIconSet.png") no-repeat left top; 
+	position: relative;
+    height: 150px;
     padding: 0px 0px 0px 0px;
-    width: 750px;
+    width: 800px;
 	top: 0px;
-	left: 198px;
-	z-index: 3;
-}
-
-#topshadow {
-	background: url("img/Shadow_Top_Stripe.png") repeat-x left top; 
-	position: fixed;
-    height: 15px;
-    padding: 0px 0px 0px 0px;
-    width: 731px;
-	top: 103px;
-	left: 201px;
-	z-index: 3;
-}
-
-#rightshadow {
-	background: url("img/Shadow_Grass.png") repeat-y left top; 
-    float: right;
-    padding: 0px 0px 0px 0px;
-    width: 15px;
-	z-index: 3;
+	/* z-index: 3; */
 }
 
 .countdown { 
@@ -79,13 +90,11 @@ a:active {
    *display: inline;
    zoom: 1;
    height: 50px;
-   position: relative;
-   width: 220px;
-}
-
-#countdown { 
-   left: 683px; 
-   top: 16px;
+   position: fixed;
+   width: 200px;
+   /* z-index: 1; */
+   left: 5px; 
+   top: 70px;
 }
 
 #subscription-countdown { 
@@ -95,13 +104,13 @@ a:active {
 
 #rank {
     display: inline-block;
-    position: fixed;
+    position: relative;
 	margin: 0px 0px 0px px;
 	padding: 0px 0px 0px 0px;
 	width: 100px;
     height: 60px;
-    top: 108px;
-    left: 943px;
+    top: 60px;
+    left: 700px;
     *display: inline;
     zoom: 1;
 }
@@ -110,13 +119,12 @@ a:active {
     margin-top: 3px;
 }
 
-#socialmedia {
+#social-media {
 	display: inline-block;
-    height: 40px;
-	left: 460px;
-    top: -6px;
-    margin: 15px 20px 0px 0px;
-	width: 120px;
+	left: 806px;
+    top: 0px;
+    margin: 0px 0px 0px 0px;
+	/* width: 120px; */
     position: relative;
     *display: inline;
     zoom: 1;
@@ -134,6 +142,7 @@ a:active {
 	display: inline-block;
     *display: inline;
     zoom: 1;
+
 }
 
 #plusone {
@@ -145,6 +154,13 @@ a:active {
 }
 
 #twitter {
+	text-align: center;
+	display: inline-block;
+    *display: inline;
+    zoom: 1;
+}
+
+#youtube {
 	text-align: center;
 	display: inline-block;
     *display: inline;
@@ -178,65 +194,39 @@ span.like {
     display: inline;
 }
 
-#googleearth {
-	text-align: center;
-	display: inline-block;
-    *display: inline;
-    zoom: 1;
-}
-
-#Beta {
-	background: url("img/inbeta.png") no-repeat left top;
+.login-out-form {
     height: 60px;
-    left: 30px;
+    left: 830px;
     position: absolute;
-    top: 7px;
-    width: 70px;
+    top: 120px;
+    width: 200px;
+    color: #ffffff;
 }
 
-
-#logoutForm {
-    height: 60px;
-    left: 30px;
-    position: absolute;
-    top: 7px;
-    width: 100px;
-    background-color: White;
-    color: White
-}
-
-
-#right {
-	background: url("img/Background_Water.png") no-repeat left top; 
-	position: fixed;
-    height: 1227px;
-    padding: 0px 0px 0px 0px;
-    width: 1490px;
-	top: 0px;
-	left: 800px;
+.login-out-form form {
+    margin: 0px !important;
+    padding: 0px !important;
 }
 
 #container {
-	background: url("img/Background_Grass_strookje2-LowD.jpg") repeat left top; 
+    background-color: #FFFFFF;
 	position: fixed;
     height: 985px;
     padding: 0px 0px 0px 0px;
-    width: 731px;
+    width: 800px;
 	top: 94px;
 	left: 200px;
-	z-index: 2;
+	/* z-index: 2; */
 }
 
 #content {
-	background: url("img/Background_Paper_Repeat.jpg") repeat left top;  
+    background-color: #FFFFFF;
 	display: inline-block;
-	left: 210px;
 	padding: 20px 30px 20px 30px;
 	position: relative;
 	text-align: left;
-	top: 133px;
-	width: 634px;
-    z-index: 2;
+	width: 740px;
+    /* z-index: 2; */
     *display: inline;
     zoom: 1;
 }
@@ -256,8 +246,6 @@ img.signup {
     position: relative;
     top: -4px;
 }
-
-
 
 #content img {
     margin: 0px 20px 0px 0px;
@@ -280,7 +268,6 @@ img.signup {
     float: left;
 }
 
-
 #container img {
     display: block;
 	margin: 10px auto;
@@ -290,20 +277,6 @@ img.signup {
 .twtr-widget {
     margin-left: 21px;
     margin-top: 1px;
-}
-
-#content iframe.bigframe {
-    z-index: 10;
-    background-color: #FFFFFF;
-    padding: 10px 10px 10px 10px;
-
-    -moz-border-radius: 12px;
-    -webkit-border-radius: 12px;
-    border-radius: 12px;
-
-    -moz-box-shadow: 4px 4px 14px #000;
-    -webkit-box-shadow: 4px 4px 14px #000;
-    box-shadow: 4px 4px 14px #000;
 }
 
 #frmNTBInschrijvingen {
@@ -323,7 +296,6 @@ img.signup {
     height: 970px;
     padding: 10px 5px 10px 5px !important;
 }
-
 
 #content h1, #content h2,  #content h3  {
     font-family: accid, sans-serif;
@@ -413,12 +385,19 @@ p.partnerlink {
     color: Blue;
 }
 
-#menu .submenu a {
-    z-index: 4;
+#menu {
+    margin: 93px 0px 0px 0px;
+    background-color: White;
+    /* height: 55px; */
 }
 
+/* #menu .submenu a {
+    z-index: 4;
+} */
+
 .menu-button {
-	background: url("img/menu_button.png") no-repeat left top; 	
+	/* background: url("img/menu_button.png") no-repeat left top; */
+    color: #2483B3;
     font-family: accid, sans-serif;
 	font-size: 32px;
 	padding: 10px 0px 0px 20px;
@@ -426,6 +405,11 @@ p.partnerlink {
 	width: 140px;
     text-transform: uppercase;
     margin-left: 20px;
+    display: inline-block;
+    *display: block;
+    zoom: 1;
+    float: left;
+    top: 10px;
 }
 
 .submenu {
@@ -435,34 +419,6 @@ p.partnerlink {
     top: 61px;
     width: 610px;
     position: fixed;
-    *display: inline;
-    zoom: 1;
-}
-
-.submenu .menu-button {
-	/* background: url("img/submenu_button.png") no-repeat left top; */
-    background-color: #ffcc00;
-    /* Gradients for browsers that support it. */ 
-    background: -moz-linear-gradient(left, rgba(256,208,0,1.0), rgba(256,208,0,0.5));
-    /* webkit based browsers */
-    background: -webkit-gradient(linear, left top, right top, from(rgba(256,208,0,1.0)), to(rgba(256,208,0,0.5)));
-
-    filter: progid:DXImageTransform.Microsoft.gradient(
-        startColorstr=#ffffcc00, endColorstr=#80ffcc00
-    );
-
-    /* IE8 uses -ms-filter for whatever reason... */
-    -ms-filter: progid:DXImageTransform.Microsoft.gradient(
-      startColorstr=#ffffcc00, endColorstr=#80ffcc00
-    );
-
-    display: inline-block;
-	font-size: 19px;
-    height: 28px;
-	padding: 2px 2px 0px 5px;
-    text-transform: lowercase;
-    width: 80px;
-    margin: 5px;
     *display: inline;
     zoom: 1;
 }
@@ -481,16 +437,6 @@ p.partnerlink {
 .menu-button a:active { color: #FFFFFF;}
 /* Active link. */ 
 #menu .active a, .submenu .active a { color: #FFFFFF !important;}
-
-p.nieuw {
-    background: url("img/nieuw.png") no-repeat left top;
-    background-position: 0px -4px;
-    padding-left: 56px;
-    /* min-height: 40px;
-    display: inline-block;
-    *display: inline;
-    zoom: 1; */
-}
 
 #google-earth-widget {
     margin: 0px 0px 0px 24px;
@@ -535,13 +481,12 @@ fieldset {
     width: 500px;
     padding: 5px 10px;
     margin: 5px auto;
-    background-color: rgba(90,0,0,0.5);
+    /* background-color: rgba(90,0,0,0.5); */
 }
 
 fieldset legend {
     font-size: x-large;
 }
-
 
 fieldset p {
     border: none;
@@ -572,7 +517,7 @@ fieldset p input {
     float: right;
     margin: 0px 10px 0px 0px;
     width: 250px;
-    z-index: 3;
+    /* z-index: 3; */
     *display: inline;
     zoom: 1;
 }
@@ -660,7 +605,13 @@ table.deelname-kosten td.col {
 }
 
 .deelnemers {
+    margin: 10px 30px;
+    color: #406A80;
+}
+
+.deelnemers.admin-view {
     font-size: x-small;
+    margin: 10px 20px;
 }
 
 /* Einde registreer. */
@@ -677,19 +628,170 @@ table.deelname-kosten td.col {
 
 /* Einde Layout. */
 
-.placeholder {
+::-webkit-input-placeholder {
+    color: #808080;
     font-style: italic;
 }
 
-#content img.left {
-    float: left;
-    margin-left: 30px;
+::-moz-placeholder {
+    color: #808080;
+    font-style: italic;
 }
 
-.login {
-    top: -20px;
-    left: 877px;
-    color: #ffffff;
-    display: inline-block;
-    position: relative;
+:-ms-input-placeholder {
+    color: ##808080;
+    font-style: italic;
 }
+
+input:-moz-placeholder {
+    color: #808080;
+    font-style: italic;
+}
+
+form.parallel-form {
+    display: inline-block;
+    margin: 10px 10px 10px 20px;
+    padding: 5px;
+}
+
+.bank-account {
+    margin: 5px 3px 5px 5px;
+    float: right;
+    font-size: smaller;
+    border: 1px solid #a0a0a0;
+}
+
+.bank-account td:first {
+    text-align: right;
+}
+
+.like {
+    float: right;
+}
+
+ul.personal-links li {
+    margin-left: 40px;
+}
+
+p.personal-links {
+    margin: 0px 20px 0px 30px;
+    padding: 0px;
+}
+
+.quotable {
+    /* background-color: #A0A0A0; */
+    font: courier, monospace;
+    margin: 0px 3px 0px 3px;
+}
+
+.badge {
+    float: right;
+    border: 1px solid #505050;
+    background-color: #A0A0A0;
+    margin: 30px 0px 30px 0px;
+    padding: 5px 10px;
+    font-size: small;
+    text-align: center;
+    color: #ffffff;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.badge li { 
+    text-align: left;
+    margin-left: 5px;
+}
+
+#content img.left {
+    float: left !important;
+}
+
+tr.test-user td a {
+    font-style: italic;
+    color: Orange;
+}
+
+tr.is-me td a {
+    border: 1px solid #303030;
+    font-weight: bolder;
+    padding: 0px 5px 0px 5px;
+}
+
+#admin-panel {
+    border: 1px dashed Orange;
+}
+
+#admin-panel-header {
+    text-align: center;
+    font-weight: bold;
+    color: Orange;
+}
+
+#marquee-div {
+    color: #406A80;
+    background-color: Transparent;
+    border: 1px solid #202020;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    padding: 5px;
+    margin: 10px 20px 10px 20px;
+}
+
+#marquee-label {
+    color: #A0A0A0;
+    text-align: center;
+}
+
+marquee {
+  /* width: 200px; */
+  /* height: 50px; */
+  white-space: nowrap;
+  overflow: hidden;
+  overflow-x:-webkit-marquee;
+  -webkit-marquee-direction: backwards;
+  -webkit-marquee-style: scroll;
+  -webkit-marquee-speed: fast;
+  -webkit-marquee-increment: small;
+  -webkit-marquee-repetition: 5;
+  overflow-x: marquee-line;
+  marquee-direction: forward;
+  marquee-style: scroll;
+  marquee-speed: fast;
+  marquee-play-count: 5;
+}
+
+.marquee-athlete {
+    font-size: small;
+    color: #808080;
+}
+
+marquee-athlete-remark {
+    font-weight: bolder;
+    font-size: large;
+}
+
+.share-text {
+    text-align: center;
+    color: #808080;
+}
+
+span.tweet-this {
+    float: right;
+}
+
+.facebook-comments {
+    margin-left: 113px;
+    padding: 0px;
+}
+
+.facebook-comments + h2 {
+    margin-top: 5px !important;
+}
+
+.white-chrome {
+    background-color: White;
+    width: 800px;
+}
+

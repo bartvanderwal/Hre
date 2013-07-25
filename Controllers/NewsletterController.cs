@@ -102,9 +102,15 @@ namespace HRE.Controllers {
                 mm.From = new MailAddress(HreSettings.ReplyToAddress);
                 mm.Subject = spnvm.Newsletter.Title;
                 mm.IsBodyHtml = true;
+                
+                // TODO BW 2013-06-15: Below the SingleUserId and TestUserId are cleared to prevent using any selected test user and/or singleuser when sending newsletter to everyone. This occurred on 15-6-2013.
+                // This is due to logic in the UserId property of SendPersonalNewsletterViewModel. Maybe this model should be made aware of if it's sending in test mode or actual or something, to make this more transparant.
+                spnvm.SingleUserId=null;
+                spnvm.TestUserId=null;
+                // END TODO.
 
                 foreach (LogonUserDal user in users) {
-                    spnvm.TestUserId = user.Id;
+                    spnvm.UserId = user.Id;
                     mm.Body = this.RenderNewsletterViewToString("NewsletterTemplates/NewsletterTemplate", spnvm);
                     mm.To.Clear();
                     mm.To.Add(new MailAddress(user.EmailAddress));

@@ -1,0 +1,217 @@
+
+
+#stacks_in_365_page9 .pile {
+	margin: 0 auto;
+	padding: 12px;
+}
+
+#stacks_in_365_page9 .layer {	
+	
+			
+	
+		float: left;
+	
+	
+	margin-bottom: 10px;
+}
+
+#stacks_in_365_page9 .clearFloats {
+	clear: both;
+}
+
+
+
+/* Lines v1.0.5 Copyright @2010-2012 Joe Workman */
+#stacks_in_1390_page9 hr{width:100%}#stacks_in_1390_page9 hr.gradient{border:0;height:1px;background:#333;background-image:-webkit-linear-gradient(left,#88FFFF,#22AFE6,#88FFFF);background-image:-moz-linear-gradient(left,#88FFFF,#22AFE6,#88FFFF);background-image:-ms-linear-gradient(left,#88FFFF,#22AFE6,#88FFFF);background-image:-o-linear-gradient(left,#88FFFF,#22AFE6,#88FFFF);background-image:linear-gradient(left,#88FFFF,#22AFE6,#88FFFF)}#stacks_in_1390_page9 hr.faded{border:0;height:1px;background-image:-webkit-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0));background-image:-moz-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0));background-image:-ms-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0));background-image:-o-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0))}#stacks_in_1390_page9 hr.dashed_fade{border:0;border-bottom:1px dashed #6DFAFF;background:#22AFE6}#stacks_in_1390_page9 hr.dotted_fade{border:0;border-bottom:1px dotted #6DFAFF;background:#22AFE6}#stacks_in_1390_page9 hr.dashed{border:0;border-bottom:1px dashed #22AFE6}#stacks_in_1390_page9 hr.dotted{border:0;border-bottom:1px dotted #6DFAFF}#stacks_in_1390_page9 hr.shadow{height:1px;border:0;box-shadow:inset 0 1px 1px -1px rgba(0,0,0,0.5)}#stacks_in_1390_page9 hr.cloudy{border:0;height:0;box-shadow:0 0 1px 1px #22AFE6}#stacks_in_1390_page9 hr.cloudy:after{content:"\00a0"}#stacks_in_1390_page9 hr.inset{border:0;height:0;border-top:1px solid rgba(0,0,0,0.1);border-bottom:1px solid rgba(255,255,255,0.3)}#stacks_in_1390_page9 hr.inset_two{border:0;height:0;border-top:1px solid #88FFFF;border-bottom:1px solid #22AFE6}#stacks_in_1390_page9 hr.inset_three{border:0;height:0;border-top:1px solid #22AFE6;border-bottom:1px solid #88FFFF}#stacks_in_1390_page9 hr.flared{height:30px;border-style:solid;border-color:#22AFE6;border-width:1px 0 0 0;border-radius:20px}#stacks_in_1390_page9 hr.flared:before{display:block;content:"";height:30px;margin-top:-31px;border-style:solid;border-color:#22AFE6;border-width:0 0 1px 0;border-radius:20px}#stacks_in_1390_page9 hr.glyph{padding:0;border:0;border-top:1px double #22AFE6;color:#22AFE6;text-align:center}#stacks_in_1390_page9 hr.glyph:after{content:" ";display:inline-block;position:relative;top:-0.0em;font-size:1.5em;padding:0 .25em;background:#FFFFFF}
+
+#stacks_in_1390_page9 {
+	margin: 10px 0px 10px 0px;
+}
+/* Lines v1.0.5 Copyright @2010-2012 Joe Workman */
+#stacks_in_1389_page9 hr{width:100%}#stacks_in_1389_page9 hr.gradient{border:0;height:1px;background:#333;background-image:-webkit-linear-gradient(left,#88FFFF,#22AFE6,#88FFFF);background-image:-moz-linear-gradient(left,#88FFFF,#22AFE6,#88FFFF);background-image:-ms-linear-gradient(left,#88FFFF,#22AFE6,#88FFFF);background-image:-o-linear-gradient(left,#88FFFF,#22AFE6,#88FFFF);background-image:linear-gradient(left,#88FFFF,#22AFE6,#88FFFF)}#stacks_in_1389_page9 hr.faded{border:0;height:1px;background-image:-webkit-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0));background-image:-moz-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0));background-image:-ms-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0));background-image:-o-linear-gradient(left,rgba(0,0,0,0),rgba(0,0,0,0.75),rgba(0,0,0,0))}#stacks_in_1389_page9 hr.dashed_fade{border:0;border-bottom:1px dashed #6DFAFF;background:#22AFE6}#stacks_in_1389_page9 hr.dotted_fade{border:0;border-bottom:1px dotted #6DFAFF;background:#22AFE6}#stacks_in_1389_page9 hr.dashed{border:0;border-bottom:1px dashed #22AFE6}#stacks_in_1389_page9 hr.dotted{border:0;border-bottom:1px dotted #6DFAFF}#stacks_in_1389_page9 hr.shadow{height:1px;border:0;box-shadow:inset 0 1px 1px -1px rgba(0,0,0,0.5)}#stacks_in_1389_page9 hr.cloudy{border:0;height:0;box-shadow:0 0 1px 1px #22AFE6}#stacks_in_1389_page9 hr.cloudy:after{content:"\00a0"}#stacks_in_1389_page9 hr.inset{border:0;height:0;border-top:1px solid rgba(0,0,0,0.1);border-bottom:1px solid rgba(255,255,255,0.3)}#stacks_in_1389_page9 hr.inset_two{border:0;height:0;border-top:1px solid #88FFFF;border-bottom:1px solid #22AFE6}#stacks_in_1389_page9 hr.inset_three{border:0;height:0;border-top:1px solid #22AFE6;border-bottom:1px solid #88FFFF}#stacks_in_1389_page9 hr.flared{height:30px;border-style:solid;border-color:#22AFE6;border-width:1px 0 0 0;border-radius:20px}#stacks_in_1389_page9 hr.flared:before{display:block;content:"";height:30px;margin-top:-31px;border-style:solid;border-color:#22AFE6;border-width:0 0 1px 0;border-radius:20px}#stacks_in_1389_page9 hr.glyph{padding:0;border:0;border-top:1px double #22AFE6;color:#22AFE6;text-align:center}#stacks_in_1389_page9 hr.glyph:after{content:" ";display:inline-block;position:relative;top:-0.0em;font-size:1.5em;padding:0 .25em;background:#FFFFFF}
+
+#stacks_in_1389_page9 {
+	margin: 10px 0px 10px 0px;
+}
+/* Fluid Columns v1.0.3 Copyright @2010-2012 Joe Workman */
+.isotope,.isotope .isotope-item{-webkit-transition-duration:.8s;-moz-transition-duration:.8s;-o-transition-duration:.8s;transition-duration:.8s}.isotope{-webkit-transition-property:height,width;-moz-transition-property:height,width;-o-transition-property:height,width;transition-property:height,width}.isotope .isotope-item{-webkit-transition-property:-webkit-transform,opacity;-moz-transition-property:-moz-transform,opacity;-o-transition-property:top,left,opacity;transition-property:transform,opacity}.isotope.no-transition,.isotope.no-transition .isotope-item,.isotope .isotope-item.no-transition{-webkit-transition-duration:0s;-moz-transition-duration:0s;-o-transition-duration:0s;transition-duration:0s}#stacks_in_1336_page9 .fluid_cell{margin:5px;float:left;overflow:hidden;position:relative;-webkit-border-radius:0px;-moz-border-radius:0px;border-radius:0px} #stacks_in_1336_page9 .stamp{float:right;width:250px;height:200px}  #stacks_in_1336_page9 .fluid_cell{width:290px} 
+
+#stacks_in_1342_page9 {
+	border: solid #22AFE6;
+	border-width:  1px;
+}
+
+#stacks_in_1338_page9 {
+	padding:  5px;
+}
+
+#stacks_in_1347_page9 {
+	margin: 5px 0px 0px 0px;
+}
+/* Start Contact Form stack CSS code */.stacks_in_1349_page9formwrap{	margin: 0;}#stacks_in_1349_page9comment{display: none;height: 0px;padding: 0px;margin: 0px;}.stacks_in_1349_page9mail{padding: 0;}.stacks_in_1349_page9fieldset{	border: none;	outline: none;}.stacks_in_1349_page9formail{}.stacks_in_1349_page9fieldset{	padding: 0 20px 0 3px;}#stacks_in_1349_page9 label{display: block;margin: 10px 0 0 0;padding: 0 0 5px 0;line-height: 1.1em;}#stacks_in_1349_page9 label *{display: inline;}#stacks_in_1349_page9 .stacks_in_1349_page9input{padding: 3px 7px 3px 7px;width: 100%;font-size: 12px;background: #FFFFFF;color: #22AFE6;margin: 0;border: 1px solid #D8D8D8;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;}#stacks_in_1349_page9 textarea{padding: 7px;width: 100%;font-size: 13px;border: 1px solid #D8D8D8;background: #FFFFFF;color: #22AFE6;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;}.stacks_in_1349_page9sendmail{margin-top: 20px;padding: 4px 7px 4px 7px;display: block;font-size: 12px;color: #444444;border: 1px solid #cccccc;background-color: #f4f4f4;-moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;-moz-box-shadow: inset 0px 0px 8px #ffffff;-webkit-box-shadow: inset 0px 0px 8px #ffffff;box-shadow: inset 0px 0px 8px #ffffff;background-image: -o-linear-gradient(90deg , #e6e6e6 0%, #e6e6e6 45%, #f4f4f4 52%, #f4f4f4 100%);background-image: -webkit-linear-gradient(90deg , #e6e6e6 0%, #e6e6e6 45%, #f4f4f4 52%, #f4f4f4 100%);background-image: -ms-linear-gradient(90deg , #e6e6e6 0%, #e6e6e6 45%, #f4f4f4 52%, #f4f4f4 100%);background-image: linear-gradient(90deg , #e6e6e6 0%, #e6e6e6 45%, #f4f4f4 52%, #f4f4f4 100%);background-image: -moz-linear-gradient(bottom , #e6e6e6 0%, #e6e6e6 45%, #f4f4f4 52%, #f4f4f4 100%);text-shadow: rgba(255,255,255,1) 0px 1px 0px;cursor: pointer;}.stacks_in_1349_page9sendmail{margin-top: 20px;padding: 4px 7px 4px 7px;display: block;font-size: 12px;color: #22AFE6;border: 1px solid #D8D8D8;background-color: #FFFFFF;-moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;-moz-box-shadow: inset 0px 0px 8px #FFFFFF;-webkit-box-shadow: inset 0px 0px 8px #FFFFFF;box-shadow: inset 0px 0px 8px #FFFFFF;background-image: -o-linear-gradient(90deg , #E6E6E6 0%, #E6E6E6 45%, #FFFFFF 52%, #FFFFFF 100%);background-image: -webkit-linear-gradient(90deg , #E6E6E6 0%, #E6E6E6 45%, #FFFFFF 52%, #FFFFFF 100%);background-image: -ms-linear-gradient(90deg , #E6E6E6 0%, #E6E6E6 45%, #FFFFFF 52%, #FFFFFF 100%);background-image: linear-gradient(90deg , #E6E6E6 0%, #E6E6E6 45%, #FFFFFF 52%, #FFFFFF 100%);background-image: -moz-linear-gradient(bottom , #E6E6E6 0%, #E6E6E6 45%, #FFFFFF 52%, #FFFFFF 100%);text-shadow: rgba(255,255,255,0) 0px 0px 0px;cursor: pointer;}#sendmail:hover{cursor: pointer;}.stacks_in_1349_page9response{display: none;width: 80%;border: 1px solid #D6392B;background: #FEF4FA;padding: 10px;margin: 20px auto 0 0;color: #444444;-moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;min-height: 35px;}.stacks_in_1349_page9loader{float: left;width: 35px;height: 35px;padding: 0 15px 30px 0;}.stacks_in_1349_page9autoreplay{visibility: hidden;height: 0px;}/* End Contact Form stack CSS code */
+#stacks_in_1349_page9 {
+	border: solid #22AFE6;
+	border-width:  1px;
+	padding: 5px 5px 148px 5px;
+}
+
+
+/* Start doobox tweets css */
+
+
+.stacks_in_1388_page9twitterFeed
+{
+font-size: 100%;
+margin: 0 0 0 0;
+padding: 0;
+max-width: 600px;
+color: #272727 !important;
+
+
+text-shadow: 0px 1px 0px #ffffff;
+filter: dropshadow(color=#ffffff, offx=0, offy=1); 
+
+ 
+text-shadow:none;
+
+}
+
+
+
+.stacks_in_1388_page9twitterFeed a {color: #22AFE6 !important; font-weight: bold; margin: 0; padding: 0;}
+.stacks_in_1388_page9twitterFeed a:hover{ text-decoration: none; color: #22AFE6 !important; }
+.stacks_in_1388_page9twitterFeed a img {
+border: none;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+}
+
+
+
+.stacks_in_1388_page9twitterFeed ul {
+margin: 0 !important;
+padding: 0 !important;
+list-style: none !important;
+
+}
+
+
+
+.stacks_in_1388_page9twitterRow { 
+list-style:none !important;
+margin: 20px 5px 20px 5px !important;
+padding: 0 !important;
+border: 1px solid #22AFE6;
+/* user entered border radius */
+-webkit-border-radius: 0px;
+-moz-border-radius: 0px;
+border-radius: 0px;
+
+/* show or hide default drop shadow */
+
+}
+
+
+.stacks_in_1388_page9twitterRow:first-child { 
+margin-top: 0px !important;
+}
+
+
+.stacks_in_1388_page9twitterRow:last-child { 
+margin-bottom: 10px !important;
+}
+
+
+
+.stacks_in_1388_page9rowinner { 
+margin: 0;
+padding: 10px;
+-webkit-border-radius: 1px;
+-moz-border-radius: 1px;
+border-radius: 1px;
+
+
+}
+
+
+
+.stacks_in_1388_page9twitterFeed img
+{
+float: left;
+margin: 0;
+padding: 0;
+}
+
+
+
+
+
+
+ 
+.stacks_in_1388_page9bodycontainer{
+
+ 
+margin: 0 20px 0 0;
+
+
+padding: 0;
+}
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+.stacks_in_1388_page9tweetName
+{
+margin: 0;
+padding: 0 0 5px 0;
+font-size: 120%;
+font-weight: bold;
+}
+
+
+.stacks_in_1388_page9tweetName a
+{
+	font-weight: bold;
+}
+
+
+
+.stacks_in_1388_page9tweetTime { 
+float: right; 
+font-weight: bold;
+}
+
+
+
+
+
+
+.stacks_in_1388_page9twitterRow h4
+{
+	margin: 0;
+	padding: 0;
+}
+
+
+
+
+.stacks_in_1388_page9tweetmessage {
+margin: 0;
+padding: 0;
+overflow: hidden;
+}
+
+
+
+/* End doobox tweets css */

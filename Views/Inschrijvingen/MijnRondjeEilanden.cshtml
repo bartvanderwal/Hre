@@ -4,7 +4,7 @@
 
 @{
     ViewBag.Title = (Model==null) ? "Mijn Rondje Eilanden" : Model.VolledigeNaam + " - Mijn " + (Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value ? "2e " : "") + "Rondje Eilanden!";
-    Layout = "~/Views/Shared/_NewLayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     string shareText = string.IsNullOrEmpty(Model.HebJeErZinIn) ? "Ik heb me zojuist als vroege vogel aangemeld voor Hét 2e Rondje Eilanden! #H2RE" : Model.HebJeErZinIn;
 }
 
@@ -44,7 +44,7 @@
         <tr><td>Onder vermelding van</td><td><span class="quotable">H2RE @Model.VolledigeNaam</span></td></tr>
     </table>
     <p>Let op: om eventuele Early Bird korting te verzilveren dien je het inschrijfgeld voor @HRE.Common.HreSettings.EindDatumEarlyBirdKorting.ToShortDateString() over te maken!</p>
-    <p>NB: Je bent automatisch ingelogd via de link in de e-mail. Log als je klaar bent zelf weer uit via de link 'Uitloggen' rechts bovenin. Zo voorkom je dat andere gebruikers van deze computer je gegevens kunnen zien/bewerken. Of zelfs derden via <a href="http://nl.wikipedia.org/wiki/Session_hijacking" target="_blank">session hijacking</a>...</p>
+    <p>NB: Je bent automatisch ingelogd via de link in de e-mail. Log als je klaar bent zelf weer uit via de link 'Uitloggen' rechts bovenin. Zo voorkom je dat andere gebruikers van deze computer je gegevens kunnen zien/bewerken.</p>
     <br clear="all"/>
     <h2>Deel met je vrienden</h2>
     <span class="tweet-this">

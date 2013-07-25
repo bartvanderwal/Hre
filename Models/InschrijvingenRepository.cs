@@ -146,6 +146,7 @@ namespace HRE.Models {
                 join sportsevent e in DB.sportsevent on p.SportsEventId equals e.Id
                 join logonuser u in DB.logonuser on p.UserId equals u.Id 
                 join address a in DB.address on u.PrimaryAddressId equals a.Id
+                orderby p.DateRegistered descending
                 where e.ExternalEventIdentifier == eventNr && (addTestParticipants || !testParticipantIds.Contains(u.Id))
                 select new InschrijvingModel() {
                     // User data.
@@ -206,6 +207,7 @@ namespace HRE.Models {
             if (userId!=0) {
                 raceEntries = raceEntries.Where(e => e.UserId==userId);
             }
+
 
             // Zet de volgorde om, voor laatst ingeschrevenen eerst.
             if(addTestParticipants) {
@@ -269,8 +271,9 @@ namespace HRE.Models {
             // - Or the raceEntry is first created
             // - OR it IS being scraped but was scraped before and was NOT updated after it was last scraped (e.g. DateUpdated<=DateLastScraped)
             // TODO: Update (and save) only if the information is newer; somehow...
-            if (overrideLocallyUpdated || !isScrape || !user.DateOfBirth.HasValue || (inschrijving.DateLastSynchronized.HasValue 
-                                && DateTime.Compare(inschrijving.DateUpdated, inschrijving.DateLastSynchronized.Value)<=0)) {
+            if (overrideLocallyUpdated || !isScrape || !user.DateOfBirth.HasValue || 
+                    (!inschrijving.DateLastSynchronized.HasValue || (inschrijving.DateLastSynchronized.HasValue 
+                        && DateTime.Compare(inschrijving.DateUpdated, inschrijving.DateLastSynchronized.Value)<=0))) {
                 user.DateOfBirth = inschrijving.GeboorteDatum;
                 user.IsMailingListMember = inschrijving.Newsletter;
                 user.UserName = inschrijving.Email;

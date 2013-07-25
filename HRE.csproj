@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -15,6 +16,11 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,8 +46,13 @@
     <Reference Include="AntiXSSLibrary">
       <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\SanitizerProviders\AntiXSSLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="ClosedXML">
+      <HintPath>..\packages\ClosedXML.0.68.1\lib\net40-client\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\packages\DocumentFormat.OpenXml.1.0\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
@@ -122,6 +133,9 @@
     <Compile Include="Common\Common.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\emailauditsController.cs" />
+    <Compile Include="Controllers\StaticHtmlController.cs" />
+    <Compile Include="Controllers\HtmlController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\InschrijvingenController.cs" />
     <Compile Include="Controllers\NewsletterController.cs" />
@@ -185,6 +199,8 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BaseRepository.cs" />
     <Compile Include="Models\ContactViewModel.cs" />
+    <Compile Include="Models\emailauditRepository.cs" />
+    <Compile Include="Models\HREContext.cs" />
     <Compile Include="Models\MeedoenModel.cs" />
     <Compile Include="Models\Newsletter\NewsletterItemViewModel.cs" />
     <Compile Include="Models\Newsletter\NewsletterRepository.cs" />
@@ -203,6 +219,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="contact\files\afbeeldingen_het_rondje_eilanden.jpg" />
+    <Content Include="contact\files\contactAssets\loader.gif" />
+    <Content Include="contact\files\festival_het_rondje_eilanden.jpg" />
+    <Content Include="contact\files\meedoen_het_rondje_eilanden.jpg" />
+    <Content Include="contact\files\stacks_page_page7.css" />
+    <Content Include="contact\files\stacks_page_page7.js" />
+    <Content Include="contact\files\startpagina_het_rondje_eilanden.jpg" />
+    <Content Include="contact\files\tweets_files\tweeticon.png" />
+    <Content Include="contact\index.html" />
     <Content Include="Content\accid-wf.svg" />
     <Content Include="Content\admin.css" />
     <Content Include="Content\ckeditor\contents.css" />
@@ -224,11 +249,18 @@
     <Content Include="Content\ckeditor\images\mini.png" />
     <Content Include="Content\admin_new.css" />
     <Content Include="Content\img\delete.png" />
+    <Content Include="Content\img\Excel_Icon.png" />
     <Content Include="Content\img\HreFinaleConcept.png" />
     <Content Include="Content\img\MyLaps.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\flessenpost.png" />
+    <Content Include="Content\img\Nieuwsbrief\flessenpost_.png" />
+    <Content Include="Content\img\Nieuwsbrief\fp_DennisGoPro.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\HRE_MakeThatTheCatWise.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\HRE_MakeThatTheCatWise.png" />
+    <Content Include="Content\img\Nieuwsbrief\MerijnEllenkampHRE2012.jpeg" />
+    <Content Include="Content\img\Nieuwsbrief\MerijnEllenkampHRE2012Small.jpg" />
     <Content Include="Content\img\Nieuwsbrief\News_Dive.jpg" />
     <Content Include="Content\img\Nieuwsbrief\News_FiveFingers.jpg" />
-    <Content Include="Content\img\Nieuwsbrief\News_Header_old.png" />
     <Content Include="Content\img\Nieuwsbrief\News_Maya.jpg" />
     <Content Include="Content\img\Nieuwsbrief\News_Tattoo.png" />
     <Content Include="Content\img\Nieuwsbrief\News_ThijsGroen.png" />
@@ -253,7 +285,7 @@
     <Content Include="Content\img\twitter_smaller.png" />
     <Content Include="Content\img\YouTube.png" />
     <Content Include="Content\img\YouTube_smaller.png" />
-    <Content Include="Content\main_new.css" />
+    <Content Include="Content\main.css" />
     <Content Include="Content\img\2DParcours-rechtsom.png" />
     <Content Include="Content\img\2DParcours-rechtsom_org.png" />
     <Content Include="Content\img\2DParcours-rechtsom_thumb.png" />
@@ -330,7 +362,6 @@
     <Content Include="Content\img\Nieuwsbrief\News_Facebook.png" />
     <Content Include="Content\img\Nieuwsbrief\News_Footer.png" />
     <Content Include="Content\img\Nieuwsbrief\News_Header.png" />
-    <Content Include="Content\img\Nieuwsbrief\News_Header_left.png" />
     <Content Include="Content\img\Nieuwsbrief\News_TileEB.png" />
     <Content Include="Content\img\Nieuwsbrief\News_TileNY.png" />
     <Content Include="Content\img\Nieuwsbrief\News_TitleEB.png" />
@@ -412,7 +443,7 @@
     <Content Include="Content\img\zwempakshop_large.png" />
     <Content Include="Content\img\zwempakshop_medium.png" />
     <Content Include="Content\img\zwempakshop_small.png" />
-    <Content Include="Content\main.css" />
+    <Content Include="Content\main_old.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -472,6 +503,135 @@
     <Content Include="Errors\_404.aspx" />
     <Content Include="Errors\DefaultError.aspx" />
     <Content Include="Errors\NotAuthorized.aspx" />
+    <Content Include="evenement\avondprogramma-kamperen\files\contactAssets\loader.gif" />
+    <Content Include="evenement\avondprogramma-kamperen\files\inschrijven_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\montageAssets\montageiconsmall.png" />
+    <Content Include="evenement\avondprogramma-kamperen\files\montageAssets\x.png" />
+    <Content Include="evenement\avondprogramma-kamperen\files\montageAssets\zoom.png" />
+    <Content Include="evenement\avondprogramma-kamperen\files\parcours_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_26.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_28.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_30.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_32.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_34.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_36.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_41.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_42.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_43.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_46.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_47.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_48.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_image_49.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_page_page5.css" />
+    <Content Include="evenement\avondprogramma-kamperen\files\stacks_page_page5.js" />
+    <Content Include="evenement\avondprogramma-kamperen\files\timetable_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\files\tweets_files\tweeticon.png" />
+    <Content Include="evenement\avondprogramma-kamperen\files\verleden_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\avondprogramma-kamperen\index.html" />
+    <Content Include="evenement\files\avondprogramma_rondje_eilanden.jpg" />
+    <Content Include="evenement\files\contactAssets\loader.gif" />
+    <Content Include="evenement\files\geschiedenis_rondje_eilanden.jpg" />
+    <Content Include="evenement\files\montageAssets\montageiconsmall.png" />
+    <Content Include="evenement\files\montageAssets\x.png" />
+    <Content Include="evenement\files\montageAssets\zoom.png" />
+    <Content Include="evenement\files\programma_rondje_eilanden.jpg" />
+    <Content Include="evenement\files\stacks_image_26.jpg" />
+    <Content Include="evenement\files\stacks_image_28.jpg" />
+    <Content Include="evenement\files\stacks_image_30.jpg" />
+    <Content Include="evenement\files\stacks_image_32.jpg" />
+    <Content Include="evenement\files\stacks_image_34.jpg" />
+    <Content Include="evenement\files\stacks_image_36.jpg" />
+    <Content Include="evenement\files\stacks_image_41.jpg" />
+    <Content Include="evenement\files\stacks_image_42.jpg" />
+    <Content Include="evenement\files\stacks_image_43.jpg" />
+    <Content Include="evenement\files\stacks_image_46.jpg" />
+    <Content Include="evenement\files\stacks_image_47.jpg" />
+    <Content Include="evenement\files\stacks_image_48.jpg" />
+    <Content Include="evenement\files\stacks_image_49.jpg" />
+    <Content Include="evenement\files\stacks_page_page2.css" />
+    <Content Include="evenement\files\stacks_page_page2.js" />
+    <Content Include="evenement\files\tweets_files\tweeticon.png" />
+    <Content Include="evenement\files\wedstrijd_rondje_eilanden.jpg" />
+    <Content Include="evenement\geschiedenis\files\contactAssets\loader.gif" />
+    <Content Include="evenement\geschiedenis\files\inschrijvingen_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\geschiedenis\files\montageAssets\montageiconsmall.png" />
+    <Content Include="evenement\geschiedenis\files\montageAssets\x.png" />
+    <Content Include="evenement\geschiedenis\files\montageAssets\zoom.png" />
+    <Content Include="evenement\geschiedenis\files\muziek_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\geschiedenis\files\planning_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_26.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_28.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_30.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_32.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_34.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_36.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_41.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_42.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_43.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_46.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_47.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_48.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_image_49.jpg" />
+    <Content Include="evenement\geschiedenis\files\stacks_page_page6.css" />
+    <Content Include="evenement\geschiedenis\files\stacks_page_page6.js" />
+    <Content Include="evenement\geschiedenis\files\tweets_files\tweeticon.png" />
+    <Content Include="evenement\geschiedenis\files\wedstrijdparcours_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\geschiedenis\index.html" />
+    <Content Include="evenement\index.html" />
+    <Content Include="evenement\programma\files\contactAssets\loader.gif" />
+    <Content Include="evenement\programma\files\montageAssets\montageiconsmall.png" />
+    <Content Include="evenement\programma\files\montageAssets\x.png" />
+    <Content Include="evenement\programma\files\montageAssets\zoom.png" />
+    <Content Include="evenement\programma\files\stacks_image_26.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_28.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_30.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_32.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_34.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_36.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_41.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_42.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_43.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_46.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_47.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_48.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_49.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_762.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_785.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_790.jpg" />
+    <Content Include="evenement\programma\files\stacks_image_870.jpg" />
+    <Content Include="evenement\programma\files\stacks_page_page3.css" />
+    <Content Include="evenement\programma\files\stacks_page_page3.js" />
+    <Content Include="evenement\programma\files\tweets_files\tweeticon.png" />
+    <Content Include="evenement\programma\index.html" />
+    <Content Include="evenement\wedstrijd-parcours\files\avond_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\contactAssets\loader.gif" />
+    <Content Include="evenement\wedstrijd-parcours\files\historie_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\lightbox-blank.gif" />
+    <Content Include="evenement\wedstrijd-parcours\files\lightbox-btn-close.gif" />
+    <Content Include="evenement\wedstrijd-parcours\files\lightbox-btn-next.gif" />
+    <Content Include="evenement\wedstrijd-parcours\files\lightbox-btn-prev.gif" />
+    <Content Include="evenement\wedstrijd-parcours\files\lightbox-ico-loading.gif" />
+    <Content Include="evenement\wedstrijd-parcours\files\meedoen_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\montageAssets\montageiconsmall.png" />
+    <Content Include="evenement\wedstrijd-parcours\files\Parcours Het Rondje Eilanden.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\programma_het_rondje_eilanden.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_26.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_28.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_30.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_32.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_34.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_36.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_41.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_42.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_43.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_46.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_47.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_48.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_image_49.jpg" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_page_page4.css" />
+    <Content Include="evenement\wedstrijd-parcours\files\stacks_page_page4.js" />
+    <Content Include="evenement\wedstrijd-parcours\files\tweets_files\tweeticon.png" />
+    <Content Include="evenement\wedstrijd-parcours\index.html" />
     <Content Include="Facebook\Docs\content\images\FBCoreSettings.png" />
     <Content Include="Facebook\Docs\content\images\FBCreateApplication.png" />
     <Content Include="Facebook\Docs\content\images\webx-bkg.png" />
@@ -482,8 +642,224 @@
     <Content Include="Facebook\Docs\content\Site.css" />
     <Content Include="Facebook\Docs\reference.htm" />
     <Content Include="Facebook\Docs\startHere.htm" />
+    <Content Include="files\contactAssets\loader.gif" />
+    <Content Include="files\contact_rondje_eilanden.jpg" />
+    <Content Include="files\evenement_rondje_eilanden.jpg" />
+    <Content Include="files\foto_film_rondje_eilanden.jpg" />
+    <Content Include="files\meedoen_rondje_eilanden.jpg" />
+    <Content Include="files\montageAssets\montageiconsmall.png" />
+    <Content Include="files\montageAssets\x.png" />
+    <Content Include="files\montageAssets\zoom.png" />
+    <Content Include="files\stacks_image_159.jpg" />
+    <Content Include="files\stacks_image_161.jpg" />
+    <Content Include="files\stacks_image_163.jpg" />
+    <Content Include="files\stacks_image_26.jpg" />
+    <Content Include="files\stacks_image_28.jpg" />
+    <Content Include="files\stacks_image_30.jpg" />
+    <Content Include="files\stacks_image_32.jpg" />
+    <Content Include="files\stacks_image_34.jpg" />
+    <Content Include="files\stacks_image_35.jpg" />
+    <Content Include="files\stacks_image_36.jpg" />
+    <Content Include="files\stacks_image_38.jpg" />
+    <Content Include="files\stacks_image_41.jpg" />
+    <Content Include="files\stacks_image_42.jpg" />
+    <Content Include="files\stacks_image_43.jpg" />
+    <Content Include="files\stacks_image_46.jpg" />
+    <Content Include="files\stacks_image_47.jpg" />
+    <Content Include="files\stacks_image_48.jpg" />
+    <Content Include="files\stacks_image_49.jpg" />
+    <Content Include="files\stacks_image_81.jpg" />
+    <Content Include="files\stacks_page_page1.css" />
+    <Content Include="files\stacks_page_page1.js" />
+    <Content Include="files\tweets_files\tweeticon.png" />
+    <Content Include="foto-film\files\aanmelden_het_rondje_eilanden.jpg" />
+    <Content Include="foto-film\files\bericht_het_rondje_eilanden.jpg" />
+    <Content Include="foto-film\files\contactAssets\loader.gif" />
+    <Content Include="foto-film\files\home_het_rondje_eilanden.jpg" />
+    <Content Include="foto-film\files\informatie_het_rondje_eilanden.jpg" />
+    <Content Include="foto-film\files\montageAssets\montageiconsmall.png" />
+    <Content Include="foto-film\files\montageAssets\x.png" />
+    <Content Include="foto-film\files\montageAssets\zoom.png" />
+    <Content Include="foto-film\files\stacks_image_112.jpg" />
+    <Content Include="foto-film\files\stacks_image_114.jpg" />
+    <Content Include="foto-film\files\stacks_image_116.jpg" />
+    <Content Include="foto-film\files\stacks_image_118.jpg" />
+    <Content Include="foto-film\files\stacks_image_120.jpg" />
+    <Content Include="foto-film\files\stacks_image_122.jpg" />
+    <Content Include="foto-film\files\stacks_image_125.jpg" />
+    <Content Include="foto-film\files\stacks_image_126.jpg" />
+    <Content Include="foto-film\files\stacks_image_127.jpg" />
+    <Content Include="foto-film\files\stacks_image_128.jpg" />
+    <Content Include="foto-film\files\stacks_image_129.jpg" />
+    <Content Include="foto-film\files\stacks_image_130.jpg" />
+    <Content Include="foto-film\files\stacks_image_131.jpg" />
+    <Content Include="foto-film\files\stacks_image_139.jpg" />
+    <Content Include="foto-film\files\stacks_image_141.jpg" />
+    <Content Include="foto-film\files\stacks_image_143.jpg" />
+    <Content Include="foto-film\files\stacks_image_145.jpg" />
+    <Content Include="foto-film\files\stacks_image_147.jpg" />
+    <Content Include="foto-film\files\stacks_image_149.jpg" />
+    <Content Include="foto-film\files\stacks_image_26.jpg" />
+    <Content Include="foto-film\files\stacks_image_28.jpg" />
+    <Content Include="foto-film\files\stacks_image_30.jpg" />
+    <Content Include="foto-film\files\stacks_image_32.jpg" />
+    <Content Include="foto-film\files\stacks_image_34.jpg" />
+    <Content Include="foto-film\files\stacks_image_36.jpg" />
+    <Content Include="foto-film\files\stacks_image_41.jpg" />
+    <Content Include="foto-film\files\stacks_image_42.jpg" />
+    <Content Include="foto-film\files\stacks_image_43.jpg" />
+    <Content Include="foto-film\files\stacks_image_46.jpg" />
+    <Content Include="foto-film\files\stacks_image_47.jpg" />
+    <Content Include="foto-film\files\stacks_image_48.jpg" />
+    <Content Include="foto-film\files\stacks_image_49.jpg" />
+    <Content Include="foto-film\files\stacks_image_87.jpg" />
+    <Content Include="foto-film\files\stacks_image_88.jpg" />
+    <Content Include="foto-film\files\stacks_image_89.jpg" />
+    <Content Include="foto-film\files\stacks_image_90.jpg" />
+    <Content Include="foto-film\files\stacks_image_91.jpg" />
+    <Content Include="foto-film\files\stacks_image_92.jpg" />
+    <Content Include="foto-film\files\stacks_image_93.jpg" />
+    <Content Include="foto-film\files\stacks_page_page8.css" />
+    <Content Include="foto-film\files\stacks_page_page8.js" />
+    <Content Include="foto-film\files\tweets_files\tweeticon.png" />
+    <Content Include="foto-film\index.html" />
     <Content Include="Global.asax" />
+    <Content Include="index.html" />
+    <Content Include="meedoen\deelnemerslijst\files\contactAssets\loader.gif" />
+    <Content Include="meedoen\deelnemerslijst\files\event_het_rondje_eilanden.jpg" />
+    <Content Include="meedoen\deelnemerslijst\files\media_het_rondje_eilanden.jpg" />
+    <Content Include="meedoen\deelnemerslijst\files\message_het_rondje_eilanden.jpg" />
+    <Content Include="meedoen\deelnemerslijst\files\stacks_page_page9.css" />
+    <Content Include="meedoen\deelnemerslijst\files\stacks_page_page9.js" />
+    <Content Include="meedoen\deelnemerslijst\files\start_het_rondje_eilanden.jpg" />
+    <Content Include="meedoen\deelnemerslijst\files\tweets_files\tweeticon.png" />
+    <Content Include="meedoen\deelnemerslijst\index.html" />
+    <Content Include="meedoen\files\contactAssets\loader.gif" />
+    <Content Include="meedoen\files\event_het_rondje_eilanden.jpg" />
+    <Content Include="meedoen\files\media_het_rondje_eilanden.jpg" />
+    <Content Include="meedoen\files\message_het_rondje_eilanden.jpg" />
+    <Content Include="meedoen\files\stacks_page_page0.css" />
+    <Content Include="meedoen\files\stacks_page_page0.js" />
+    <Content Include="meedoen\files\start_het_rondje_eilanden.jpg" />
+    <Content Include="meedoen\files\tweets_files\tweeticon.png" />
+    <Content Include="meedoen\index.html" />
+    <Content Include="obj\Debug\HRE.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\HRE.dll" />
+    <Content Include="obj\Debug\HRE.pdb" />
+    <Content Include="obj\Debug\TempPE\Data.HRE.Designer.cs.dll" />
+    <Content Include="obj\Debug\TempPE\Service References.Sisow.Reference.cs.dll" />
     <Content Include="README.jQuery.vsdoc.txt" />
+    <Content Include="resources\avondprogramma.jpg" />
+    <Content Include="resources\cyaan-profiel.jpg" />
+    <Content Include="resources\foto-film.jpg" />
+    <Content Include="resources\geel-luidspreker.jpg" />
+    <Content Include="resources\geschiedenis.jpg" />
+    <Content Include="resources\groen-tekst.jpg" />
+    <Content Include="resources\image-1.jpg" />
+    <Content Include="resources\image-10.jpeg" />
+    <Content Include="resources\image-10.jpg" />
+    <Content Include="resources\image-2.jpg" />
+    <Content Include="resources\image-3.jpg" />
+    <Content Include="resources\image-4.jpeg" />
+    <Content Include="resources\image-4.jpg" />
+    <Content Include="resources\image-5.jpeg" />
+    <Content Include="resources\image-5.jpg" />
+    <Content Include="resources\image-6.jpeg" />
+    <Content Include="resources\image-6.jpg" />
+    <Content Include="resources\image-7.jpeg" />
+    <Content Include="resources\image-7.jpg" />
+    <Content Include="resources\image-8.jpeg" />
+    <Content Include="resources\image-8.jpg" />
+    <Content Include="resources\image-9.jpeg" />
+    <Content Include="resources\image-9.jpg" />
+    <Content Include="resources\inschrijven.jpg" />
+    <Content Include="resources\logo.jpg" />
+    <Content Include="resources\paars-home.jpg" />
+    <Content Include="resources\programma.jpg" />
+    <Content Include="resources\rood-vlag.jpg" />
+    <Content Include="resources\roze-hart.jpg" />
+    <Content Include="result.html" />
+    <Content Include="rw_common\images\weblogo.png" />
+    <Content Include="rw_common\plugins\stacks\stacks.css" />
+    <Content Include="rw_common\plugins\stacks\stacks_ie.css" />
+    <Content Include="rw_common\themes\union\colour_tags-page0.css" />
+    <Content Include="rw_common\themes\union\colour_tags-page1.css" />
+    <Content Include="rw_common\themes\union\colour_tags-page2.css" />
+    <Content Include="rw_common\themes\union\colour_tags-page3.css" />
+    <Content Include="rw_common\themes\union\colour_tags-page4.css" />
+    <Content Include="rw_common\themes\union\colour_tags-page5.css" />
+    <Content Include="rw_common\themes\union\colour_tags-page6.css" />
+    <Content Include="rw_common\themes\union\colour_tags-page7.css" />
+    <Content Include="rw_common\themes\union\colour_tags-page8.css" />
+    <Content Include="rw_common\themes\union\css\control-0.css" />
+    <Content Include="rw_common\themes\union\css\control-10.css" />
+    <Content Include="rw_common\themes\union\css\control-100.css" />
+    <Content Include="rw_common\themes\union\css\control-90.css" />
+    <Content Include="rw_common\themes\union\css\control-hidden.css" />
+    <Content Include="rw_common\themes\union\css\font-arvo.css" />
+    <Content Include="rw_common\themes\union\css\font-bebas-neue.css" />
+    <Content Include="rw_common\themes\union\css\font-open-sans.css" />
+    <Content Include="rw_common\themes\union\css\gradient-25.css" />
+    <Content Include="rw_common\themes\union\css\gradient-50.css" />
+    <Content Include="rw_common\themes\union\css\hide-breadcrumb.css" />
+    <Content Include="rw_common\themes\union\css\image-height-200.css" />
+    <Content Include="rw_common\themes\union\css\image-height-300.css" />
+    <Content Include="rw_common\themes\union\css\image-height-400.css" />
+    <Content Include="rw_common\themes\union\css\image-height-500.css" />
+    <Content Include="rw_common\themes\union\css\image-height-600.css" />
+    <Content Include="rw_common\themes\union\css\image-height-700.css" />
+    <Content Include="rw_common\themes\union\css\image-height-800.css" />
+    <Content Include="rw_common\themes\union\css\image-width-200.css" />
+    <Content Include="rw_common\themes\union\css\image-width-300.css" />
+    <Content Include="rw_common\themes\union\css\image-width-400.css" />
+    <Content Include="rw_common\themes\union\css\image-width-500.css" />
+    <Content Include="rw_common\themes\union\css\image-width-600.css" />
+    <Content Include="rw_common\themes\union\css\image-width-700.css" />
+    <Content Include="rw_common\themes\union\css\image-width-800.css" />
+    <Content Include="rw_common\themes\union\css\max-width-1000.css" />
+    <Content Include="rw_common\themes\union\css\max-width-1100.css" />
+    <Content Include="rw_common\themes\union\css\max-width-1200.css" />
+    <Content Include="rw_common\themes\union\css\max-width-1300.css" />
+    <Content Include="rw_common\themes\union\css\max-width-1400.css" />
+    <Content Include="rw_common\themes\union\css\max-width-1500.css" />
+    <Content Include="rw_common\themes\union\css\max-width-900.css" />
+    <Content Include="rw_common\themes\union\css\sim.css" />
+    <Content Include="rw_common\themes\union\css\slideshow-left-sticky.css" />
+    <Content Include="rw_common\themes\union\css\slideshow-right-sticky.css" />
+    <Content Include="rw_common\themes\union\css\slideshow-right.css" />
+    <Content Include="rw_common\themes\union\css\slideshow-speed-200.css" />
+    <Content Include="rw_common\themes\union\css\slideshow-speed-400.css" />
+    <Content Include="rw_common\themes\union\css\slideshow-speed-600.css" />
+    <Content Include="rw_common\themes\union\css\slideshow-timeout-2.css" />
+    <Content Include="rw_common\themes\union\css\slideshow-timeout-4.css" />
+    <Content Include="rw_common\themes\union\css\slideshow-timeout-6.css" />
+    <Content Include="rw_common\themes\union\css\slideshow-timeout-8.css" />
+    <Content Include="rw_common\themes\union\css\slogan-1.0.css" />
+    <Content Include="rw_common\themes\union\css\slogan-1.6.css" />
+    <Content Include="rw_common\themes\union\css\slogan-2.0.css" />
+    <Content Include="rw_common\themes\union\css\slogan-2.4.css" />
+    <Content Include="rw_common\themes\union\css\slogan-2.8.css" />
+    <Content Include="rw_common\themes\union\css\slogan-3.2.css" />
+    <Content Include="rw_common\themes\union\css\slogan-3.6.css" />
+    <Content Include="rw_common\themes\union\css\slogan-4.0.css" />
+    <Content Include="rw_common\themes\union\css\title-1.2.css" />
+    <Content Include="rw_common\themes\union\css\title-1.6.css" />
+    <Content Include="rw_common\themes\union\css\title-2.4.css" />
+    <Content Include="rw_common\themes\union\css\title-2.8.css" />
+    <Content Include="rw_common\themes\union\css\title-3.2.css" />
+    <Content Include="rw_common\themes\union\css\title-3.6.css" />
+    <Content Include="rw_common\themes\union\css\title-4.0.css" />
+    <Content Include="rw_common\themes\union\css\title-inline.css" />
+    <Content Include="rw_common\themes\union\css\title-serif.css" />
+    <Content Include="rw_common\themes\union\font\BebasNeue-webfont.svg" />
+    <Content Include="rw_common\themes\union\javascript.js" />
+    <Content Include="rw_common\themes\union\js\fluid-vid.js" />
+    <Content Include="rw_common\themes\union\js\function.js" />
+    <Content Include="rw_common\themes\union\js\html5.js" />
+    <Content Include="rw_common\themes\union\js\jcarousellite.min.js" />
+    <Content Include="rw_common\themes\union\js\jquery.transit.min.js" />
+    <Content Include="rw_common\themes\union\styles.css" />
+    <Content Include="rw_common\version.txt" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
     <Content Include="Scripts\ckeditor\config.js" />
     <Content Include="Scripts\ckeditor\editor_gecko.js" />
@@ -598,6 +974,31 @@
     <Content Include="Scripts\main-script.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\newsletter.js" />
+    <None Include="contact\files\contactAssets\contactform.php" />
+    <None Include="evenement\avondprogramma-kamperen\files\contactAssets\contactform.php" />
+    <None Include="evenement\files\contactAssets\contactform.php" />
+    <None Include="evenement\geschiedenis\files\contactAssets\contactform.php" />
+    <None Include="evenement\programma\files\contactAssets\contactform.php" />
+    <None Include="evenement\wedstrijd-parcours\files\contactAssets\contactform.php" />
+    <None Include="files\contactAssets\contactform.php" />
+    <None Include="foto-film\files\contactAssets\contactform.php" />
+    <None Include="meedoen\deelnemerslijst\files\contactAssets\contactform.php" />
+    <None Include="meedoen\files\contactAssets\contactform.php" />
+    <None Include="obj\Debug\CSC4DBE.tmp" />
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\edmxResourcesToEmbed\Data\HRE.csdl" />
+    <None Include="obj\Debug\edmxResourcesToEmbed\Data\HRE.msl" />
+    <None Include="obj\Debug\edmxResourcesToEmbed\Data\HRE.ssdl" />
+    <None Include="obj\Debug\HRE.csprojResolveAssemblyReference.cache" />
+    <None Include="rw_common\themes\union\font\BebasNeue-webfont.eot" />
+    <None Include="rw_common\themes\union\font\BebasNeue-webfont.ttf" />
+    <None Include="rw_common\themes\union\font\BebasNeue-webfont.woff" />
+    <None Include="rw_common\themes\union\font\fontawesome-webfont.eot" />
+    <None Include="rw_common\themes\union\font\fontawesome-webfont.ttf" />
+    <None Include="rw_common\themes\union\font\fontawesome-webfont.woff" />
+    <None Include="rw_common\themes\union\font\ncds.eot" />
+    <None Include="rw_common\themes\union\font\ncds.ttf" />
+    <None Include="rw_common\themes\union\font\ncds.woff" />
     <None Include="Service References\Sisow\AssurePay.disco" />
     <None Include="Service References\Sisow\configuration91.svcinfo" />
     <None Include="Service References\Sisow\configuration.svcinfo" />
@@ -608,12 +1009,21 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="sitemap.xml" />
     <Content Include="sql\1.create_asp_tables.sql" />
     <Content Include="sql\2.create_hre.sql" />
     <Content Include="sql\0.undo_script.sql" />
     <Content Include="sql\3.insert_roles.sql" />
     <Content Include="App_Code\Facebook.cshtml" />
     <None Include="Service References\Sisow\AssurePay.wsdl" />
+    <Content Include="sql\20130720_insert_paymentss.sql" />
+    <Content Include="sql\20130722_update_participation_amounts.sql" />
+    <Content Include="Views\emailaudits\Create.cshtml" />
+    <Content Include="Views\emailaudits\Edit.cshtml" />
+    <Content Include="Views\emailaudits\Delete.cshtml" />
+    <Content Include="Views\emailaudits\Details.cshtml" />
+    <Content Include="Views\emailaudits\Index.cshtml" />
+    <Content Include="Views\emailaudits\_CreateOrEdit.cshtml" />
     <None Include="Views\Errors\DefaultError.cshtml" />
     <None Include="Views\Errors\NotAuthorized.cshtml" />
     <None Include="Views\Errors\_401.cshtml" />
@@ -641,7 +1051,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Inschrijvingen\MijnRondjeEilanden.cshtml" />
     <Content Include="Views\Inschrijvingen\Bedankt.cshtml" />
@@ -649,6 +1058,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Common\Email\" />
+    <Folder Include="obj\Debug\Package\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -677,7 +1087,9 @@
     <Content Include="Configuration\PreProd\CustomErrors.config" />
     <Content Include="Configuration\PreProd\HealthMonitoring.config" />
     <Content Include="Configuration\Prod\ConnectionStrings.config" />
-    <Content Include="Configuration\Dev\AppSettings.config" />
+    <Content Include="Configuration\Dev\AppSettings.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Configuration\Dev\SmtpSettings.config" />
     <Content Include="Configuration\Dev\Compilation.config">
       <SubType>Designer</SubType>
@@ -750,7 +1162,7 @@
     </Content>
     <Content Include="Views\Newsletter\EditorTemplates\NewsletterItemViewModel.cshtml" />
     <Content Include="Views\Shared\_MessageBox.cshtml" />
-    <Content Include="Views\Shared\_NewLayout.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Newsletter\_ViewStart.cshtml" />
     <Content Include="Views\Account\Inschrijven.cshtml" />
     <Content Include="Views\Inschrijvingen\Reglementen.cshtml" />
@@ -761,8 +1173,16 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\Sisow\" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

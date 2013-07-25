@@ -6,6 +6,7 @@
 @{
     ViewBag.Title = Model.IsRegistered ? "Bekijken/wijzigen inschrijving" : "Inschrijven";
     int nrOfEarlyBirds = LogonUserDal.AantalIngeschrevenEarlyBirds();
+    int nrOfEntries = LogonUserDal.AantalIngeschrevenDeelnemers(Model.ExternalEventIdentifier);
     bool isEarlyBird = Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value;
 }
 
@@ -389,6 +390,7 @@
                     $('.datePicker').datepicker('setDate', $('#GeboorteDatum').val());
                 });
 
+                $("#GeboorteDatum" ).datepicker( "option", "defaultDate", -1000 );
                 determineAndDisplayCosts();
 
                 $('ul#uitleg').hide();

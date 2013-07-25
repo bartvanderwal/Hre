@@ -20,6 +20,10 @@ using HRE.Common;
 using HRE.Dal;
 using System.Net.Mail;
 using HRE.Models.Newsletters;
+using HRE.Attributes;
+using ClosedXML.Excel;
+using System.Data;
+
 
 namespace HRE.Controllers {
 
@@ -39,16 +43,9 @@ namespace HRE.Controllers {
             ViewBag.SubMenuItems = SubMenuItems;
         }
 
-
         public ActionResult Index() {
             Initialise(AppConstants.MeedoenOverzicht);
             InschrijvingenModel model = new InschrijvingenModel();
-            return View(model);
-        }
-
-
-        [HttpPost]
-        public ActionResult Index(InschrijvingenModel model) {
             return View(model);
         }
 
@@ -62,23 +59,6 @@ namespace HRE.Controllers {
             }
             set { 
                 HttpRuntime.Cache[NTBI_SESSION_CODE_KEY] = value;
-            }
-        }
-
-        /// <summary>
-        /// The current selected serienumber.
-        /// TODO BW 2012-12-24 Allow user to select serie from dropdown instead of fixed serie number.
-        /// </summary>
-        string CurrentSerieNr { 
-            get {
-                return InschrijvingenRepository.HRE_SERIENR;
-            }
-        }
-
-
-        string CurrentEvenementNumber {
-            get {
-                return InschrijvingenRepository.HRE_EVENTNR;
             }
         }
 
@@ -127,9 +107,106 @@ namespace HRE.Controllers {
         }
 
 
+        public MemoryStream CreateExcelFile(string tableName) {
+            try {
+                // Create an Excel Workbook.
+                XLWorkbook workbook = new XLWorkbook();
+                var dataTable = GetTable(tableName);
+
+                // Add the data.
+                IXLWorksheet sheet = workbook.Worksheets.Add(dataTable);
+
+                // Run autofit on all the columns.
+                sheet.Columns().AdjustToContents();
+                
+                // Mark the first row as BOLD.
+                sheet.FirstRow().Style.Font.Bold = true;
+                
+                // Freeze the first row with the headers.
+                sheet.SheetView.FreezeRows(1);
+
+                // All done.
+                MemoryStream ms = new MemoryStream();
+                workbook.SaveAs(ms);
+                return ms;
+            } catch (Exception e) {
+                string errmsg = String.Format("Failed to create Excel file: {0}", e.Message);
+                throw new Exception(errmsg, e);
+            }
+        }
+        
+        
+        private DataTable GetTable(String tableName) {
+            InschrijvingenModel model = new InschrijvingenModel();
+
+            DataTable table = new DataTable();
+            table.TableName = tableName;
+
+            table.Columns.Add("UserId", typeof(int));
+            table.Columns.Add("Ingeschreven", typeof(DateTime));
+            table.Columns.Add("Voornaam", typeof(string));
+            table.Columns.Add("Tussenvoegsel", typeof(string));
+            table.Columns.Add("Achternaam", typeof(string));
+            table.Columns.Add("ExternalIdentifier", typeof(string));
+            table.Columns.Add("Email", typeof(string));
+            table.Columns.Add("Telefoon", typeof(string));
+            table.Columns.Add("LicentieNummer", typeof(string));
+            table.Columns.Add("Geslacht", typeof(string));
+            table.Columns.Add("Geboortedatum", typeof(DateTime));
+            table.Columns.Add("MyLaps", typeof(string));
+            table.Columns.Add("Te betalen", typeof(int));
+            table.Columns.Add("Betaald", typeof(int));
+            table.Columns.Add("Woonplaats", typeof(string));
+            table.Columns.Add("Postcode", typeof(string));
+            table.Columns.Add("Straat", typeof(string));
+            table.Columns.Add("Huisnr", typeof(string));
+            table.Columns.Add("Toevoeging", typeof(string));
+            table.Columns.Add("Food", typeof(bool));
+            table.Columns.Add("Camp", typeof(bool));
+            table.Columns.Add("Bike", typeof(bool));
+            table.Columns.Add("Early bird", typeof(bool));
+            table.Columns.Add("Speaker", typeof(string));
+            table.Columns.Add("Heb je er zin in?", typeof(string));
+            table.Columns.Add("OpmerkingenAanOrganisatie", typeof(string));
+            
+            foreach (var inschrijving in model.Inschrijvingen) {
+                table.Rows.Add(
+                            inschrijving.UserId,
+                            inschrijving.RegistrationDate,
+                            inschrijving.Voornaam, 
+                            inschrijving.Tussenvoegsel, 
+                            inschrijving.Achternaam,
+                            inschrijving.ExternalIdentifier,
+                            inschrijving.Email,
+                            inschrijving.Telefoon,
+                            inschrijving.LicentieNummer,
+                            inschrijving.Geslacht,
+                            inschrijving.GeboorteDatum,
+                            inschrijving.MyLapsChipNummer,
+                            inschrijving.BedragTeBetalen,
+                            inschrijving.BedragBetaald,
+                            inschrijving.Woonplaats,
+                            inschrijving.Postcode,
+                            inschrijving.Straat,
+                            inschrijving.Huisnummer,
+                            inschrijving.HuisnummerToevoeging,
+                            inschrijving.Food,
+                            inschrijving.Camp,
+                            inschrijving.Bike,
+                            inschrijving.IsEarlyBird,
+                            inschrijving.OpmerkingenTbvSpeaker,
+                            inschrijving.HebJeErZinIn,
+                            inschrijving.OpmerkingenAanOrganisatie
+                            );
+                            // DateCreated,DateUpdated,Id,DateCreated,DateUpdated,DateRegistered,DateFirstScraped,DateLastScraped,DatePaymentReceived,UserId,SportsEventId,Notes,SpeakerRemarks,OrganisationRemarks,ParticipationAmountInEuroCents,ParticipationAmountPaidInEuroCents,TShirtSize,HasPaid,StartNumber,PaymentType,ParticipationStatus,ExternalIdentifier,YouTubeVideoCode,Source,EarlyBird,FreeStarter,Bike,Food,Camp,EmailAddressOfFriend,NotesToAll,DateConfirmationSend,Id,Name,EventDate,EventPlace,DateCreated,DateUpdated,ExternalEventIdentifier,ExternalEventSerieIdentifier
+            }
+            return table;
+        }
+
+
         [HttpPost]
-        public ActionResult DeleteEntry(string participationId) {
-            SportsEventParticipationDal participation = SportsEventParticipationDal.GetByID(int.Parse(participationId));
+        public ActionResult DeleteEntry(int participantUserId, InschrijvingenModel model) {
+            SportsEventParticipationDal participation = SportsEventParticipationDal.GetByID(participantUserId);
             if (participation!=null) {
                 participation.Delete();
             }
@@ -145,7 +222,29 @@ namespace HRE.Controllers {
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles="Admin")]
-        public ActionResult Scrape(InschrijvingenModel model) {
+        public ActionResult Index(InschrijvingenModel model) {
+            if (model==null || model.SubmitAction!="Scrape") {
+                if (model==null) {
+                    model = new InschrijvingenModel();
+                    return View(model);
+                }
+
+                if (model.SubmitAction=="Download") {
+                    string filename = string.Format("HRE-{0}-{1}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString().Replace(":", ""));
+                    MemoryStream ms = CreateExcelFile(filename);
+            
+                    // Return the memorystream.
+                    if (ms != null) {
+		                // Rewind the memory stream to the beginning.
+		                ms.Seek(0, SeekOrigin.Begin);
+		                return File(ms, @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml", filename + ".xlsx");
+	                } else {
+                        // No Excel file, show the main 'Inschrijvingen' page.
+                        return RedirectToAction("Index");
+                    }
+                }
+            }
+
             Initialise(AppConstants.MeedoenOverzicht);
             try {
                 int maxNumberOfItemsToScrape = model.MaxNumberOfScrapedItems;
@@ -198,9 +297,14 @@ namespace HRE.Controllers {
                     response.Close();
                 }
 
+                string currentEvenementNumber = model.EventNumber;
+                string currentSerieNumber = model.EventNumber==InschrijvingenRepository.H2RE_EVENTNR ? 
+                    InschrijvingenRepository.H2RE_SERIENR : InschrijvingenRepository.HRE_SERIENR;
+
                 // I. Overzichtscherm. Voorbeeld URL: https://mijn.triathlonbond.nl/evenementbeheer/inschrijvingen/inschrijvingen_serie_individueel.asp?SID={20B12A29-FFA4-4606-B912-5928181C7D4D}&Serie=4549
                 // Create the GET request.
-                string overviewUrl = "https://mijn.triathlonbond.nl/evenementbeheer/inschrijvingen/inschrijvingen_serie_individueel.asp?SID=" + NtbISessionCode + "&Serie=" + CurrentSerieNr;
+                string overviewUrl = "https://mijn.triathlonbond.nl/evenementbeheer/inschrijvingen/inschrijvingen_serie_individueel.asp?SID=" 
+                    + NtbISessionCode + "&Serie=" + currentSerieNumber; // CurrentSerieNr;
             
                 // Make a GET request and get the response back.
                 // HtmlDocument overviewDoc = GetHtmlDocumentFromUrl(overviewUrl);
@@ -229,7 +333,7 @@ namespace HRE.Controllers {
 
                 ////////////////////////////// START Evenement screen.
                 // Open the evenement once to do some stuff that's apparantly necesary before you can access the entry detail page (setting cookies or something?).
-                string evenementUrl = string.Format("https://mijn.triathlonbond.nl/evenementbeheer/evenement.asp?SID={0}&Evenement={1}", NtbISessionCode, CurrentEvenementNumber);
+                string evenementUrl = string.Format("https://mijn.triathlonbond.nl/evenementbeheer/evenement.asp?SID={0}&Evenement={1}", NtbISessionCode, currentEvenementNumber);
 
                 // Make a GET request and get the response back.
                 // HtmlDocument overviewDoc = GetHtmlDocumentFromUrl(overviewUrl);
@@ -284,8 +388,8 @@ namespace HRE.Controllers {
                     string externalInschrijvingsId = HttpUtility.ParseQueryString(entryUrlPostfix, Encoding.UTF8).Get("Inschrijving");
                     raceEntry.ExternalIdentifier = externalInschrijvingsId;
 
-                    raceEntry.ExternalEventIdentifier = CurrentEvenementNumber;
-                    raceEntry.ExternalEventSerieIdentifier = CurrentSerieNr;
+                    raceEntry.ExternalEventIdentifier = currentEvenementNumber;
+                    raceEntry.ExternalEventSerieIdentifier = currentSerieNumber;
 
                     // Deze pagina open je voor alle rijen (GET request) door het achter de URL te plakken.
                     // Voorbeeld URL: https://mijn.triathlonbond.nl/evenementbeheer/inschrijvingen/inschrijvingen_serie_detail_individueel.asp?SID={7D72F8DA-7E50-46AC-B22E-81A638FB3171}&Inschrijving=94938
@@ -400,7 +504,7 @@ namespace HRE.Controllers {
                     }
 
                     // Save the entry (Determine if the entry aready exists using externalIdentifier and then update, otherwise insert).
-                    InschrijvingenRepository.SaveEntry(raceEntry, CurrentEvenementNumber, true, model.OverrideLocallyUpdated);
+                    InschrijvingenRepository.SaveEntry(raceEntry, currentEvenementNumber, true, model.OverrideLocallyUpdated);
                     raceEntries.Add(raceEntry);
 
                     if (counter>=maxNumberOfItemsToScrape) {
@@ -418,7 +522,7 @@ namespace HRE.Controllers {
                 }
             }
             
-            return RedirectToAction("Index");
+            return View("Index", model);
         }
 
 
@@ -437,6 +541,7 @@ namespace HRE.Controllers {
         /// </summary>
         /// <param name="externalId"></param>
         /// <returns></returns>
+        // [RequiresSsl]
         public ActionResult IkDoeMee() {
             Initialise(AppConstants.MeedoenOverzicht);
 
@@ -525,7 +630,7 @@ namespace HRE.Controllers {
 
             // Controleer als het een nieuwe inschrijving betreft dat er niet al een deelnemer is met hetzelfde e-mail adres.
             LogonUserDal user = LogonUserDal.GetUserByUsername(model.Email);
-            if (model.IsInschrijvingNieuweGebruiker && (user==null || InschrijvingenRepository.GetInschrijving(user, currentEventNr)==null)) {
+            if (model.IsInschrijvingNieuweGebruiker && user!=null && InschrijvingenRepository.GetInschrijving(user, currentEventNr)!=null) {
                 ModelState.AddModelError("Email", "Er is al een deelnemer met dit e-mail adres ingeschreven. Elke deelnemer moet een eigen e-mail adres opgeven!");
             }
 

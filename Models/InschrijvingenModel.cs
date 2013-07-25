@@ -28,6 +28,9 @@ namespace HRE.Models {
             }
         }
        
+
+        public string SubmitAction { get; set; }
+
         public int MaxNumberOfScrapedItems { get; set; }
 
         public bool OverrideLocallyUpdated { get; set; }
@@ -60,7 +63,6 @@ namespace HRE.Models {
 
 
         private string _particpationRemarks { get; set; }
-
         /// <summary>
         /// The notes-to-all of all participants that filled it in.
         /// </summary>
@@ -81,5 +83,49 @@ namespace HRE.Models {
                 return _particpationRemarks;
             }
         }
+
+
+        public int NrOfEntries {
+            get {
+                return LogonUserDal.AantalIngeschrevenDeelnemers(EventNumber);
+            }
+        }
+
+        public int NrOfFoodInteressees {
+            get {
+                return LogonUserDal.AantalIngeschrevenDeelnemers(EventNumber, true);
+            }
+        }
+
+
+        public int NrOfCampInteressees {
+            get {
+                return LogonUserDal.AantalIngeschrevenDeelnemers(EventNumber, null, true);
+            }
+        }
+
+
+        public int NrOfBikeInteressees {
+            get {
+                return LogonUserDal.AantalIngeschrevenDeelnemers(EventNumber, null, null, true);
+            }
+        }
+
+
+        public int NrOfEmailsUnconfirmed {
+            get {
+                return LogonUserDal.AantalIngeschrevenDeelnemers(EventNumber, null, null, null, false);
+            }
+        }
+
+
+        public int NrOfEarlyBirds {
+            get {
+                return LogonUserDal.AantalIngeschrevenDeelnemers(EventNumber, null, null, null, null, true);
+            }
+        }
+
+
+        public int ParticipantToDeleteId { get; set; }
     }
 }

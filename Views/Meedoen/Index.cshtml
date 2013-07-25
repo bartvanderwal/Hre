@@ -1,20 +1,29 @@
 ﻿@model HRE.Models.InschrijvingenModel
 @{
     ViewBag.Title = "Inschrijvingen";
-}
-
+}\
 <h1>Meedoen</h1>
 @Html.ValidationSummary(true)
 <div id="marquee-div">
-    <div id="marquee-label">Stand: <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenDeelnemers()</b> deelnemers @*(max @HRE.Common.HreSettings.AantalStartPlekken)*@ waarvan <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenEarlyBirds()</b> Early Birds™ (max @HRE.Common.HreSettings.AantalEarlyBirdStartPlekken). Hebben zij er zin in?</div>
+    <div id="marquee-label">Stand: <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenDeelnemers(Model.EventNumber)</b> deelnemers @*(max @HRE.Common.HreSettings.AantalStartPlekken)*@ waarvan <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenEarlyBirds()</b> Early Birds™ (max @HRE.Common.HreSettings.AantalEarlyBirdStartPlekken). Hebben zij er zin in?</div>
     <marquee>@Html.Raw(Model.ParticipantRemarks)</marquee>
 </div>
 <p>
-@if(DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving)>0) {
-    @Html.ActionLink("Schrijf je nu in!", "Edit", "Inschrijvingen", new { eventNr=HRE.Models.InschrijvingenRepository.H2RE_EVENTNR }, null)<sup>*</sup>
+@if(DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving)<0) {
+    <text>Voor 2013 opent de de algemene inschrijving op @HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving.ToShortDateString()  (er zijn totaal @HRE.Common.HreSettings.AantalStartPlekken startplekken)</text>
 } else {
-    <text>Op @HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving.ToShortDateString() opent de algemene inschrijving (totaal @HRE.Common.HreSettings.AantalStartPlekken startplekken)</text>
-}
+    if(DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.SluitingssdatumAlgemeneInschrijving)<0) {
+        <text>Voor 2013 sloot de algemene inschrijving op @HRE.Common.HreSettings.SluitingssdatumAlgemeneInschrijving.ToShortDateString() </text>
+    } else {
+        if(@HRE.Dal.LogonUserDal.AantalIngeschrevenDeelnemers(Model.EventNumber)>HRE.Common.HreSettings.AantalStartPlekken+HRE.Common.HreSettings.AantalPlekkenReserveLijst) {
+        <text>Sorrie! Het maximale aantal startplekken van @HRE.Common.HreSettings.AantalStartPlekken voor 2013 is al volgeboekt. En de reservelijst van @HRE.Common.HreSettings.AantalPlekkenReserveLijst is ook al helemaal vol!</text>            
+        } else {
+            @Html.ActionLink("Schrijf je nu in!", "Edit", "Inschrijvingen", new { eventNr=HRE.Models.InschrijvingenRepository.H2RE_EVENTNR }, null)<sup>*</sup>
+        }
+    }
+} 
+    @Html.ActionLink("Schrijf je nu in!", "Edit", "Inschrijvingen", new { eventNr=HRE.Models.InschrijvingenRepository.H2RE_EVENTNR }, null)<sup>*</sup>
+
 <p style="font-size: smaller; color: #808080;"><sup>*</sup>Deelnemer in 2012 en geen e-mail gehad? <a href="mailto:info@hetrondjeeilanden">Mail ons dan nu!</a> Alle deelnemers uit 2012 hebben half februari een e-mail gekregen voor speciale Early Bird™ korting...</p>
 <img src="Content/img/fp3.jpg" class="left" alt="Hét Rondje Eilanden 2012" width="320px"/>
 

@@ -1,0 +1,6 @@
+@media screen and (min-width: 771px) {
+	#carousel{
+	position: fixed !important;
+	-webkit-backface-visibility: hidden;
+	}
+}

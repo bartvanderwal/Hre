@@ -12,7 +12,6 @@ namespace HRE.Common {
         /// <summary>
         /// Read a boolean setting from the appsettings. The setting must be set to "True", "true", "TRUE" or something like that, for other values or if it is not present it will be regarded as False.
         /// </summary>
-        /// </summary>
         protected static bool ReadBoolSetting(string settingKey) {
             return ReadBoolSetting(settingKey, false);
         }
@@ -20,7 +19,6 @@ namespace HRE.Common {
 
         /// <summary>
         /// Read a boolean setting from the appsettings. The setting must be set to "True", "true", "TRUE" or something like that, for other values or if it is not present it will be regarded as False.
-        /// </summary>
         /// </summary>
         protected static bool ReadBoolSetting(string settingKey, bool defaultValue) {
             bool boolSettingAsBool;

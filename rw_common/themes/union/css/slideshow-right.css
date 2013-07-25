@@ -1,0 +1,9 @@
+#floatMedia {
+right:0 !important;
+left: auto !important;
+margin-left:0 !important;
+z-index: 105;
+}
+#center{
+margin-left:0 !important;
+}

@@ -51,7 +51,7 @@ namespace HRE.Models.Newsletters {
 
         /*
         /// <summary>
-        /// Get a select list of early bird status for participation in a certain year (e.g. 2013) or not of end users.
+        /// Get a select list of Early Bird status for participation in a certain year (e.g. 2013) or not of end users.
         /// </summary>
         /// <param name="selectedValue"></param>
         /// <returns></returns>

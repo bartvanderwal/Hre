@@ -102,7 +102,7 @@ namespace HRE.Dal {
 		public string EmailAddress {
             get { return _user.EmailAddress; }
             set { 
-                if (Membership.GetUser().ProviderUserKey.ToString() == _user.ExternalId) {
+                if (Membership.GetUser()!=null && Membership.GetUser().ProviderUserKey.ToString() == _user.ExternalId) {
                     throw new ArgumentException("Het e-mail adres van de gebruiker kan NIET gewijzigd worden als deze momenteel ingelogd is/de huidige gebruiker is.");
                 }
                 _user.EmailAddress = value;
@@ -301,7 +301,7 @@ namespace HRE.Dal {
         public static LogonUserDal CreateOrRetrieveUser(string emailAddressAndUsername, string password="", string externalSubscriptionIdentifier = null) {
             
             // If an non 'HRE' external identifier (meaning a real ext. id) was given, then try to retrieve the user via this.
-            if (!string.IsNullOrEmpty(externalSubscriptionIdentifier) /* && !externalSubscriptionIdentifier.StartsWith("HRE") */) {
+            if (!string.IsNullOrEmpty(externalSubscriptionIdentifier) && externalSubscriptionIdentifier!="HRE0" /* && !externalSubscriptionIdentifier.StartsWith("HRE") */) {
                 int? userId = (from p in DB.sportseventparticipation where p.ExternalIdentifier == externalSubscriptionIdentifier select p.UserId).FirstOrDefault();
                 if (userId.HasValue) {
                     logonuser u = (from logonUser in DB.logonuser where logonUser.Id==userId.Value select logonUser).FirstOrDefault();
@@ -605,7 +605,7 @@ namespace HRE.Dal {
 
 
         /// <summary>
-        /// Determines the number of participants or early birds in the 2013 HRE event.
+        /// Determines the number of participants or Early Birds in the 2013 HRE event.
         /// </summary>
         /// <returns></returns>
         public static int AantalIngeschrevenEarlyBirds() {
@@ -616,16 +616,41 @@ namespace HRE.Dal {
         }
 
 
-                /// <summary>
-        /// Determines the number of participants or early birds in the 2013 HRE event.
+        /// <summary>
+        /// Determines the number of participants or Early Birds in the 2013 HRE event.
         /// </summary>
         /// <returns></returns>
-        public static int AantalIngeschrevenDeelnemers() {
-            return (from p in DB.sportseventparticipation 
-                    where p.SportsEventId==SportsEventDal.Hre2013Id
+        public static int AantalIngeschrevenDeelnemers(string eventNr, bool? food=null, bool? camp = null, bool? bike = null, bool? emailConfirmed = null, bool? earlyBird = null) {
+            var result = from p in DB.sportseventparticipation 
+                    join e in DB.sportsevent on p.SportsEventId equals e.Id
+                    where e.ExternalEventIdentifier==eventNr
                     select p
-                    ).Count();
+                    ;
+
+            if (food.HasValue) {
+                result = result.Where(r => r.Food==food.Value);
+            }
+
+            if (camp.HasValue) {
+                result = result.Where(r => r.Camp==camp.Value);
+            }
+
+            if (bike.HasValue) {
+                result = result.Where(r => r.Bike==bike.Value);
+            }
+
+            if (emailConfirmed.HasValue) {
+                result = result.Where(r => r.ParticipationStatus.HasValue && r.ParticipationStatus.Value==2);
+            }
+
+            if (earlyBird.HasValue) {
+                result = result.Where(r => r.EarlyBird==earlyBird);
+            }
+
+            return result.Count();
         }
+
+        
         /// <summary>
         /// For testing purposes this gets that part of the registered admin users who were also subscribed 
         /// for HRE 2012 (inserted for testing in NTB inschrijvingen).

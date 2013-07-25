@@ -14,32 +14,28 @@
 }
 
 @if (Model.IsAdmin) {
+    <i>@Model.NrOfEntries deelnemers (Food: @Model.NrOfFoodInteressees, Camp: @Model.NrOfCampInteressees, Bike: @Model.NrOfBikeInteressees, E-mail nog niet bevestigd: @Model.NrOfEmailsUnconfirmed, Early Birds: @Model.NrOfEarlyBirds)</i>
     <div id="admin-panel-header">Admin panel</div>
-    using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="select-edition", @class="parallel-form" } )) {
-        @Html.DropDownList("EventNumber",
+            
+    using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) {
+        @Html.AntiForgeryToken();
+        <text>Scrape:</text>
+            @Html.DropDownList("EventNumber",
             new SelectList(new Dictionary<string, string> {
                 {"2013", HRE.Models.InschrijvingenRepository.H2RE_EVENTNR},
                 {"2012", HRE.Models.InschrijvingenRepository.HRE_EVENTNR}
             },
             "Value", "Key"))
-        <input type="submit" value="Update" />
-    }
-    
-    using(@Html.BeginForm("DeleteTestUser", "Inschrijvingen", FormMethod.Post, new { @id="deleteTestUser", @class="parallel-form"} )) {
-        @Html.DropDownListFor(m => m.UserIdToDelete, HRE.Dal.LogonUserDal.GetTestParticipantsAsSelectList());
-        <input type="submit" value="Delete" />
-    }
-    
-    using(Html.BeginForm("Scrape", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) {
-        @Html.AntiForgeryToken();
-        <text>Scrape:</text>
-        @Html.DropDownList("maxNumberOfScrapedItems",
+
+            @Html.DropDownList("maxNumberOfScrapedItems",
             new SelectList(new Dictionary<string, int> { {"Alles", 0}, {"5", 5}, {"10", 10}, {"20", 20}, {"50", 50}, 
                                                             {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
                                                             {"1000", 1000}}, "Value", "Key"));
         @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"});
         <text>Overwrite</text>
-        <input type="submit" value="Scrape" />
+        <input type="submit" name="SubmitAction" value="Update" />
+        <input type="submit" name="SubmitAction" value="Scrape" />
+        <input type="submit" name="SubmitAction" value="Download" class="download-excel"/>
     }
 }
 
@@ -49,7 +45,7 @@
 }
 
 <div id="marquee-div">
-    <div id="marquee-label">Momenteel <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenDeelnemers()</b> deelnemers @*(max @HRE.Common.HreSettings.AantalStartPlekken)*@ waarvan <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenEarlyBirds()</b> Early Birds™ (max @HRE.Common.HreSettings.AantalEarlyBirdStartPlekken). Hebben zij er zin in?</div>
+    <div id="marquee-label">Er hebben zich nu <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenDeelnemers(Model.EventNumber)</b> deelnemers ingeschreven. @*(max @HRE.Common.HreSettings.AantalStartPlekken) waarvan <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenEarlyBirds()</b> Early Birds™ (max @HRE.Common.HreSettings.AantalEarlyBirdStartPlekken). *@ Hebben zij er zin in?</div>
     <marquee>@Html.Raw(Model.ParticipantRemarks)</marquee>
 </div>
 
@@ -83,9 +79,6 @@
                 <th></th>
             }
         </tr>
-
-        @*using(Html.BeginForm("Scrape", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) { *@
-
             
         @foreach (var entry in Model.Inschrijvingen) {
             string participant = entry.Achternaam;
@@ -99,7 +92,8 @@
                     
                 </td>
                 @if (Model.IsAdmin) {
-                    using(Html.BeginForm("DeleteEntry", "Inschrijvingen", new { participationId = entry.ParticipationId}, FormMethod.Post, null)) {
+                    using(Html.BeginForm("DeleteEntry", "Inschrijvingen", new { model = Model, participantUserId = entry.ParticipationId}, FormMethod.Post, null)) {
+                        @Html.HiddenFor(model => model.EventNumber)
                         <td><a href="mailto:@entry.Email">@entry.Email</a></td>
                         <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td>
                         <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstSynchronized.HasValue ? entry.DateFirstSynchronized.Value.RelativeDateDescription() : "-")</td>

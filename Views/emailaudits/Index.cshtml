@@ -1,0 +1,149 @@
+@model IEnumerable<HRE.Data.emailaudit>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            ToAddresses
+        </th>
+        <th>
+            FromAddress
+        </th>
+        <th>
+            CCAddresses
+        </th>
+        <th>
+            BccAddresses
+        </th>
+        <th>
+            Subject
+        </th>
+        <th>
+            Body
+        </th>
+        <th>
+            isHtml
+        </th>
+        <th>
+            AttachmentEntityId
+        </th>
+        <th>
+            EmailStatusId
+        </th>
+        <th>
+            StatusMessage
+        </th>
+        <th>
+            UserIdSender
+        </th>
+        <th>
+            UserIdReceiver
+        </th>
+        <th>
+            DateCreated
+        </th>
+        <th>
+            DateUpdated
+        </th>
+        <th>
+            DateSent
+        </th>
+        <th>
+            EmailCategoryId
+        </th>
+        <th>
+            logonuser
+        </th>
+        <th>
+            logonuserReference
+        </th>
+        <th>
+            logonuser1
+        </th>
+        <th>
+            logonuser1Reference
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+        <td>
+			@item.ToAddresses
+        </td>
+        <td>
+			@item.FromAddress
+        </td>
+        <td>
+			@item.CCAddresses
+        </td>
+        <td>
+			@item.BccAddresses
+        </td>
+        <td>
+			@item.Subject
+        </td>
+        <td>
+			@item.Body
+        </td>
+        <td>
+			@item.isHtml
+        </td>
+        <td>
+			@item.AttachmentEntityId
+        </td>
+        <td>
+			@item.EmailStatusId
+        </td>
+        <td>
+			@item.StatusMessage
+        </td>
+        <td>
+			@item.UserIdSender
+        </td>
+        <td>
+			@item.UserIdReceiver
+        </td>
+        <td>
+			@String.Format("{0:g}", item.DateCreated)
+        </td>
+        <td>
+			@String.Format("{0:g}", item.DateUpdated)
+        </td>
+        <td>
+			@String.Format("{0:g}", item.DateSent)
+        </td>
+        <td>
+			@item.EmailCategoryId
+        </td>
+        <td>
+			@(item.logonuser == null ? "None" : item.logonuser.Name)
+        </td>
+        <td>
+			@Html.DisplayTextFor(_ => item.logonuserReference).ToString()
+        </td>
+        <td>
+			@(item.logonuser1 == null ? "None" : item.logonuser1.Name)
+        </td>
+        <td>
+			@Html.DisplayTextFor(_ => item.logonuser1Reference).ToString()
+        </td>
+    </tr>
+}
+
+</table>
+
+
