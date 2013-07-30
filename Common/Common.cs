@@ -158,5 +158,16 @@ namespace HRE.Common {
             return randomList;
         }
 
+
+        /// <summary>
+        /// A smart Join method that will only add a separator if both the previous and next elements are non-null and non-empty.
+        /// Source: http://stackoverflow.com/questions/6684574/join-with-intelligent-separators
+        /// </summary>
+        /// <param name="separator"></param>
+        /// <param name="Items"></param>
+        public static string SmartJoin(string separator, params string[] Items) {
+            return String.Join(separator, Items.Where(x=>!String.IsNullOrEmpty(x)));
+        }
+
     }
 }

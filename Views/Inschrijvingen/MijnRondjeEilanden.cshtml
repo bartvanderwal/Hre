@@ -36,15 +36,20 @@
     if (Model.User.IsEmailAddressUnconfirmed) {
     	<p>Er is een e-mail gestuurd naar '<a href="mailto:@Model.User.EmailAddress">@Model.User.EmailAddress</a>. Klik op de inlog link in deze e-mail om je e-mail adres te bevestigen. Pas daarna kan je inschrijving definitief gemaakt worden.</p>
     }
-    <p>Je hebt je @Model.RegistrationDate.RelativeDateTimeDescription() aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief als je het inschrijfgeld voldaan hebt.</p>
+    <p>Je hebt je @Model.RegistrationDate.RelativeDateTimeDescription() aangemeld voor Hét 2e Rondje Eilanden.</p>
+    if (!Model.IsVolledigEnCorrectBetaald) {
+        <p>Je moet nog &euro; @Model.BedragTeBetalen betalen. Hieronder de betaalgegevens. Pas als het inschrijfgeld binnen is ben je ingeschreven. Mocht je kortgeleden het geld overgemaakt hebben, dan kan het zijn dat onze betalingen hiervoor nog niet bijgewerkt is. Neem bij twijfel contact op via <a href="mailto:info@hetrondjeeilanden.nl">info@hetrondjeeilanden.nl</a> bij vragen!</p>
+    }
     <table class="bank-account">
         <tr><td>Inschrijfgeld</td><td><span class="quotable">@Model.InschrijfGeld.AsAmount()</span></td></tr>
         <tr><td>Bank rek nr</td><td><span class="quotable">1684.92.059</span> (Rabobank)</td></tr>
         <tr><td>Ten name van </td><td><span class="quotable">Stichting Woelig Water</span> (te Vinkeveen)</td></tr>
         <tr><td>Onder vermelding van</td><td><span class="quotable">H2RE @Model.VolledigeNaam</span></td></tr>
     </table>
-    <p>Let op: om eventuele Early Bird korting te verzilveren dien je het inschrijfgeld voor @HRE.Common.HreSettings.EindDatumEarlyBirdKorting.ToShortDateString() over te maken!</p>
-    <p>NB: Je bent automatisch ingelogd via de link in de e-mail. Log als je klaar bent zelf weer uit via de link 'Uitloggen' rechts bovenin. Zo voorkom je dat andere gebruikers van deze computer je gegevens kunnen zien/bewerken.</p>
+    if (Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value) {
+        <p>Let op: om Early Bird korting te verzilveren moest het inschrijfgeld voor @HRE.Common.HreSettings.EindDatumEarlyBirdKorting.ToShortDateString() overgemaakt te zijn!</p>
+    }
+    <p>NB: Je bent automatisch ingelogd via de link in de e-mail. Log als je klaar bent zelf weer uit via de link 'Uitloggen' rechts bovenin (om onder andere te voorkomen dat eventuele andere gebruikers van deze computer je gegevens kunnen zien/bewerken).</p>
     <br clear="all"/>
     <h2>Deel met je vrienden</h2>
     <span class="tweet-this">
@@ -55,9 +60,7 @@
     </span>
 
     <div class="share-text">@("\"" + shareText + "\"")</div>
-    <p>Als vroege vogel heb je vast een preview van de nieuwe layout waarmee we de komende tijd de gehele site voorzien.</p>
-    <p>Op de volgende verjaardag moet je natuurlijk wel even luid aankondigen melden dat je Het Rondje Eilanden gaat doen!</p>
-    <p>Of wellicht ben je ook actief op social media en kan je mooi al je Friends of followers even laten weten dat jij er 3 augustus bij bent in de Vinkeveense plassen op de hoogte stellen... </p>
+    <p>Actief op social media? Tweet het meteen of post het hieronder en laat je Facebook vrienden en Twitter volgers weten dat je er 3 augustus bij bent in Vinkeveen!</p>
     <div class="facebook-comments">
         <div class="fb-comments" data-href="http://www.hetrondjeeilanden.nl" data-width="470" data-num-posts="6"></div>
     </div>

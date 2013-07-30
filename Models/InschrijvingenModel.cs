@@ -22,7 +22,7 @@ namespace HRE.Models {
         public List<InschrijvingModel> Inschrijvingen { 
             get {
                 if (_inschrijvingen==null) {
-                    return InschrijvingenRepository.GetEntries(EventNumber, IsAdmin);
+                    return InschrijvingenRepository.GetEntries(EventNumber, HasAdminRole);
                 }
                 return _inschrijvingen;
             }
@@ -55,12 +55,18 @@ namespace HRE.Models {
 
         public string Message { get; set; }
 
-        public bool IsAdmin { 
+        public bool HasAdminRole { 
             get {
                 return Roles.IsUserInRole("Admin");
             }
         }
 
+
+        public bool HasSpeakerRole { 
+            get {
+                return Roles.IsUserInRole("Speaker") || HasAdminRole;
+            }
+        }
 
         private string _particpationRemarks { get; set; }
         /// <summary>

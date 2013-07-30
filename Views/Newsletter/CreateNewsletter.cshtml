@@ -25,11 +25,15 @@
                         <td>@Html.CheckBoxFor(m => m.IncludeLoginLink)</td>
                     </tr>
                     <tr>
+                        <td>@Html.LabelFor(m => m.AttachmentFilePath)</td>
+                        <td>@Html.TextBoxFor(m => m.AttachmentFilePath)</td>
+                    </tr>
+                    <tr>
                         <td>Selectie criteria ontvangers</td>
                         <td></td>
                     </tr>
                     <tr>
-                        <td>@Html.LabelFor(m => Model.SubscriptionStatus)</td>
+                        <td>@Html.LabelFor(m => m.SubscriptionStatus)</td>
                         <td>@Html.DropDownListFor(m => m.SubscriptionStatus, 
                                 HRE.Models.Newsletters.NewsletterRepository.SubscriptionStatusSelectList(Model.SubscriptionStatus.ToString()), 
                                 new { @style = "width: 230px" })
@@ -42,16 +46,6 @@
                                 new { @style = "width: 230px" })
                         </td>
                     </tr>
-
-                    @*
-                    <tr>
-                        <td>@Html.LabelFor(m => Model.LogonUserStatusSelectList)</td>
-                        <td>@Html.DropDownListFor(m => m.Hre2012ParticipantStatus, 
-                                HRE.Models.Newsletters.NewsletterRepository.SubscriptionStatusSelectList(Model.Hre2012ParticipantStatus.ToString()), 
-                                new { @style = "width: 230px" })
-                        </td>
-                    </tr>
-                    *@
 
                     <tr>
                         <td>@Html.LabelFor(m => Model.IntroText)</td>

@@ -51,12 +51,12 @@
                         <ul>
                             <li>of je NTB lid bent (met 'A' atleten of 'X' aspirantlicentie betaal je geen daglicentie van @HreSettings.KostenNtbDagLicentie.AsAmount())</li>
                             <li>een MyLaps chip hebt (met eigen chip betaal je geen @HreSettings.KostenHuurMyLapsChipGeel.AsAmount() huurchip)</li>
-                            <li>mee wilt eten (we polsen dit nu alleen, geheel vrijblijvend)</li>
+                            <li>mee wilt eten (we polsen dit alleen, geheel vrijblijvend)</li>
                             <li>blijft kamperen (ook geheel vrijblijvend)</li>
                             <li>en eventueel op de fiets wilt komen (bij voldoende animo komt er een 'Parc Fermé)</li>
                         </ul>
                     </li>
-                    @if(!Model.IsEarlyBird.HasValue || !Model.IsEarlyBird.Value) {
+                    @if(!Model.IsEarlyBird.HasValue || !Model.IsEarlyBird.Value && DateTime.Compare(DateTime.Now, HreSettings.EindDatumEarlyBirdKorting)<=0) {
                         <li>Was je HRE deelnemer in 2012? <a href="mailto:info@hetrondjeeilanden">Mail ons dan nu!</a> Alle deelnemers uit 2012 is half februari een e-mail gestuurd voor speciale Early Bird™ korting...</li>
                     }
                     @if(!Model.IsNewUser) {
@@ -216,6 +216,7 @@
             <div class="editor-field">
                 @if (Model.IsAdmin || Model.IsNewUser) {
                     @Html.TextBoxFor(m => m.Email, new { @tabindex="15", @size="30", @maxLenght="100", @placeholder="E-mail"} )
+                    @Html.HiddenFor(m => m.EmailBeforeUpdateIfAny)
                 } else {
                     @Html.TextBoxFor(m => m.Email, new { @tabindex="15", @size="30", @maxLenght="100", @placeholder="E-mail", @disabled="disabled", @title="niet wijzigbaar" } )
                     // TODO BW 2013-03-01: Adding email as hidden field is necessary to retain value, but this might open up hacking possiblities...

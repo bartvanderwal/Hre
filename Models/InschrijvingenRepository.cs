@@ -34,7 +34,7 @@ namespace HRE.Models {
 
         public const string H2RE_SERIENR = "5089";
 
-        public static DateTime H2RE_DATE = new DateTime(2013,8,3,15,30,0);
+        public static DateTime H2RE_DATE = HreSettings.DatumTijdstipH2RE; // new DateTime(2013,8,3,16,0,0);
 
         public static string ADMIN_ROLE_NAME = "Admin";
 
@@ -55,7 +55,7 @@ namespace HRE.Models {
                 Roles.CreateRole(SPEAKER_ROLE_NAME);
             }
 
-            List<AutoCreatedUser> listOfAdmins = new List<AutoCreatedUser>() { 
+            List<AutoCreatedUser> listOfAdmins = new List<AutoCreatedUser>() {
                 new AutoCreatedUser("bart@hetrondjeeilanden.nl", "24dec2012"), 
                 new AutoCreatedUser("yordi@hetrondjeeilanden.nl", "24dec2012"), 
                 new AutoCreatedUser("pieter@hetrondjeeilanden.nl", "24dec2012"), 
@@ -63,7 +63,9 @@ namespace HRE.Models {
                 new AutoCreatedUser("cock@hetrondjeeilanden.nl", "24dec2012"),
                 new AutoCreatedUser("ad@hetrondjeeilanden.nl", "24dec2012"),
                 new AutoCreatedUser("kitty@hetrondjeeilanden.nl", "24dec2012"),
-                new AutoCreatedUser("bastian@hetrondjeeilanden.nl", "24dec2012")
+                new AutoCreatedUser("bastian@hetrondjeeilanden.nl", "24dec2012"),
+                new AutoCreatedUser("mylapsmaarten@hetrondjeeilanden.nl", "krol"),
+                new AutoCreatedUser("mylapsmarijn@hetrondjeeilanden.nl", "smulders")
             };
 
             List<AutoCreatedUser> listOfSpeakers = new List<AutoCreatedUser>() { 
@@ -146,10 +148,10 @@ namespace HRE.Models {
                 join sportsevent e in DB.sportsevent on p.SportsEventId equals e.Id
                 join logonuser u in DB.logonuser on p.UserId equals u.Id 
                 join address a in DB.address on u.PrimaryAddressId equals a.Id
-                orderby p.DateRegistered descending
                 where e.ExternalEventIdentifier == eventNr && (addTestParticipants || !testParticipantIds.Contains(u.Id))
                 select new InschrijvingModel() {
                     // User data.
+                    RaceNumber = p.RaceNumber,
                     UserId = u.Id,
                     UserName = u.UserName,
                     GeboorteDatum = u.DateOfBirth,
@@ -179,7 +181,8 @@ namespace HRE.Models {
 
                     ExternalIdentifier = p.ExternalIdentifier,
                     RegistrationDate = p.DateRegistered,
-                    
+                    VirtualRegistrationDateForOrdering = p.VirtualRegistrationDateForOrdering,
+
                     // TODO BW 2013-02-06: Rename the database fields from 'Scraped' also to 'Synchronized' like the ORM fields
                     // once this is an accurate description (e.g. when posting 'updates' and 'inserts' to NTB inschrijvingen is also done on Save).
                     DateFirstSynchronized = p.DateFirstScraped,
@@ -198,8 +201,10 @@ namespace HRE.Models {
                     OpmerkingenAanOrganisatie = p.Notes,
                     
                     IsEarlyBird = p.EarlyBird,
+                    FreeStarter = p.FreeStarter,
                     InschrijfGeld = p.ParticipationAmountInEuroCents,
                     BedragBetaald = p.ParticipationAmountPaidInEuroCents,
+                    GenoegBetaaldVoorDeelnemerslijst = p.HasPaidEnoughToList.HasValue && p.HasPaidEnoughToList.Value,
 
                     DateConfirmationSend = p.DateConfirmationSend
                 };
@@ -208,13 +213,20 @@ namespace HRE.Models {
                 raceEntries = raceEntries.Where(e => e.UserId==userId);
             }
 
-
-            // Zet de volgorde om, voor laatst ingeschrevenen eerst.
-            if(addTestParticipants) {
-                raceEntries = raceEntries.OrderByDescending(e => e.RegistrationDate);
-            }
-
-            return raceEntries;
+            
+            return raceEntries.OrderBy(i => i.GenoegBetaaldVoorDeelnemerslijst).
+                    ThenByDescending(i => i.VirtualRegistrationDateForOrdering).
+                    ThenBy(i => i.RegistrationDate); 
+            
+            /*
+            return raceEntries.Where(i => i.BedragBetaald.HasValue && i.BedragBetaald.Value>=2000 || i.FreeStarter.HasValue && i.FreeStarter.Value).
+                    OrderBy(i => i.VirtualRegistrationDateForOrdering).
+                    ThenBy(i => i.RegistrationDate).ToList()
+                .Union((
+                raceEntries.Where(i => (!i.BedragBetaald.HasValue || i.BedragBetaald.Value<2000) && (!i.FreeStarter.HasValue || !i.FreeStarter.Value)).
+                    OrderBy(i => i.VirtualRegistrationDateForOrdering).
+                    ThenBy(i => i.RegistrationDate)).ToList());
+            */
         }
 
 
@@ -263,8 +275,12 @@ namespace HRE.Models {
             // inmiddels aangepast dan werkt onderstaande niet. De persoon wordt dan onder een nieuwe inschrijving gesaved en klapt er mogelijk uit op duplicate NTB licentie nummer..
             inschrijving.Email = inschrijving.Email.ToLower();
 
+            bool isEmailGewijzigd = (!string.IsNullOrEmpty(inschrijving.EmailBeforeUpdateIfAny) && inschrijving.Email!=inschrijving.Email);
+
+            string gebruikersnaam = isEmailGewijzigd ? inschrijving.EmailBeforeUpdateIfAny : inschrijving.Email;
+
             // Create and/or retrieve the user (and the underlying ASP.NET membership user).
-            LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(inschrijving.Email, "", inschrijving.ExternalIdentifier);
+            LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(gebruikersnaam, "", inschrijving.ExternalIdentifier);
 
             // Update the rest of the user data ONLY if:
             // - It is NOT being scraped for this save
@@ -278,7 +294,14 @@ namespace HRE.Models {
                 user.IsMailingListMember = inschrijving.Newsletter;
                 user.UserName = inschrijving.Email;
                 if (user.EmailAddress != inschrijving.Email) {
+                    // TODO BW 2013-07-28: A check has to be added tht the new e-mail address does not exist yet (or is it already present?).
+                    if (Membership.GetUser(inschrijving.Email)!=null) {
+                        throw new ArgumentException(string.Format("Het e-mail adres is gewijzigd van {0} naar {1}, maar dit laatste e-mail adres is al gebruikt door een andere gebruiker.", user.EmailAddress, inschrijving.Email));
+                    }
+
                     user.EmailAddress = inschrijving.Email;
+                    // Set user status as unconfirmed, since the e-mail address is changed, and the new address is not confirmed yet.
+                    user.Status = Business.LogonUserStatus.EmailAddressChanged;
                 }
                 user.TelephoneNumber = inschrijving.Telefoon;
 

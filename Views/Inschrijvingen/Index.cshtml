@@ -13,7 +13,7 @@
     }
 }
 
-@if (Model.IsAdmin) {
+@if (Model.HasAdminRole) {
     <i>@Model.NrOfEntries deelnemers (Food: @Model.NrOfFoodInteressees, Camp: @Model.NrOfCampInteressees, Bike: @Model.NrOfBikeInteressees, E-mail nog niet bevestigd: @Model.NrOfEmailsUnconfirmed, Early Birds: @Model.NrOfEarlyBirds)</i>
     <div id="admin-panel-header">Admin panel</div>
             
@@ -39,7 +39,6 @@
     }
 }
 
-
 @if(!string.IsNullOrEmpty(Model.Message)) {
     <div class="message">@Model.Message</div>
 }
@@ -53,6 +52,14 @@
         "Deelnemerslijst HRE 2012" :
         "Deelnemerslijst H2RE 2013")</h1>
 
+@if (Model.HasSpeakerRole) {
+    using(Html.BeginForm("DownloadSpeakerList", "Inschrijvingen", FormMethod.Post, new { @class="parallel-form" } )) {
+        @Html.AntiForgeryToken();
+        <input type="submit" value="SpeakerLijst" class="download-excel"/>
+    }
+}
+
+
 <span style="color: #ffffff; background-color: #2483B3; text-align: center; float: right; padding: 5px 10px; margin: 5px 10px; border: 1px solid #303030;">
 @if(DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving)>0) {
     @Html.ActionLink("Ik doe mee!", "IkDoeMee", "Inschrijvingen")
@@ -64,13 +71,15 @@
 @if (Model==null || Model.Inschrijvingen==null || Model.Inschrijvingen.Count==0) {
     <p>Er zijn nog geen deelnemers.</p>
 } else {
-    <table class="deelnemers@(Model.IsAdmin ? " admin-view" : string.Empty)">
+    <table class="deelnemers@(Model.HasAdminRole ? " admin-view" : string.Empty)">
         <tr>
+            <th>Voorlopig startnr.</th>
+            <th>Voorlopige indicatieve starttijd</th>
             <th>Deelnemer</th>
             <th>Woonplaats</th>
             <th>Aangemeld</th>
-            <th>Opties</th>
-            @if (Model.IsAdmin) {
+            <th>Uitvoering</th>
+            @if (Model.HasAdminRole) {
                 <th>E-mail adres</th>
                 <th>Geb. datum</th>
                 <th>Eerst gescraped</th>
@@ -79,19 +88,23 @@
                 <th></th>
             }
         </tr>
-            
+
+        @{
+            int startNummer = 1;
+            DateTime startTijd = HRE.Common.HreSettings.DatumTijdstipH2RE;
+        }
         @foreach (var entry in Model.Inschrijvingen) {
             string participant = entry.Achternaam;
             bool isTestUser = testParticipants.Contains(entry.UserId);
             bool isMe = currentUserId==entry.UserId;
             <tr class="@(isTestUser ? "test-user" : "") @(isMe ? "is-me" : "")">
+                <td>@startNummer @* @entry.RaceNumber *@</td>
+                <td>@string.Format("{0:H:mm:ss}", startTijd)</td>
                 <td>@Html.ActionLink(entry.VolledigeNaam, "Edit", new { externalId = entry.ExternalIdentifier, eventNr = entry.ExternalEventIdentifier })</td>
                 <td>@entry.Woonplaats</td>
                 <td>@string.Format("{0:dd-MM-yyyy}", entry.RegistrationDate)</td>
-                <td>
-                    
-                </td>
-                @if (Model.IsAdmin) {
+                <td class="small">@Html.Raw(HRE.Common.Common.SmartJoin("+", new string[] { !entry.Food && !entry.Bike && !entry.Camp ? "Vanilla" : string.Empty, entry.Food ? "Food" : string.Empty, entry.Bike ? "Bike" : string.Empty, entry.Camp ? "Camp" : string.Empty} ))</td>
+                @if (Model.HasAdminRole) {
                     using(Html.BeginForm("DeleteEntry", "Inschrijvingen", new { model = Model, participantUserId = entry.ParticipationId}, FormMethod.Post, null)) {
                         @Html.HiddenFor(model => model.EventNumber)
                         <td><a href="mailto:@entry.Email">@entry.Email</a></td>
@@ -99,10 +112,14 @@
                         <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstSynchronized.HasValue ? entry.DateFirstSynchronized.Value.RelativeDateDescription() : "-")</td>
                         <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastSynchronized.HasValue ? entry.DateLastSynchronized.Value.RelativeDateDescription()  : "-")</td>
                         <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>
-                        <td><input value="Verwijderen" type="submit" onclick="return confirm('Weet je zeker dat je gebruiker @entry.UserName wilt verwijderen?');" /></td>
+                        <td><input value="Verwijderen" type="submit" onclick="return confirm('Weet je zeker dat je de inschrijving van gebruiker @entry.UserName wilt verwijderen?\n NB Bij verwijderen van inschrijving zal het account van deze gebruiker hierbij NIET mee verwijderd woden.');" /></td>
                     }
                 }
             </tr>
+            if ((startNummer%HRE.Common.HreSettings.AantalPersonenPerStartschot)==0) {
+                startTijd = startTijd.AddSeconds(HRE.Common.HreSettings.AantalSecondenTussenStartschots);
+            }
+            startNummer++;
         }
     </table>
 }

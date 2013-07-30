@@ -795,3 +795,8 @@ span.tweet-this {
     width: 800px;
 }
 
+.small {
+    font-style: italic;
+    font-size: smaller;
+    text-align: right;
+}

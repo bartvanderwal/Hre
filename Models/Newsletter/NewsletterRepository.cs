@@ -95,12 +95,14 @@ namespace HRE.Models.Newsletters {
                                       DateSent = (DateTime)n.DateSent,
                                       DateUpdated = (DateTime)n.DateUpdated,
                                       IntroText = n.IntroText,
-                                      Title = n.Title
+                                      Title = n.Title,
+                                      AttachmentFilePath = n.AttachmentFilePath
                                   }).ToList();
             }
 
             return Newsletters;
         }
+
 
         public static NewsletterViewModel GetByID(int id) {
             newsletter nl;
@@ -118,6 +120,7 @@ namespace HRE.Models.Newsletters {
                 DateSent = nl.DateSent,
                 Title = nl.Title,
                 IntroText = nl.IntroText,
+                AttachmentFilePath = nl.AttachmentFilePath,
                 IncludeLoginLink = nl.AddPersonalLoginLink.HasValue && nl.AddPersonalLoginLink.Value,
                 SubscriptionStatus = nl.Audience.HasValue ? (NewsletterSubscriptionStatus) nl.Audience.Value : NewsletterSubscriptionStatus.OnlyToMembers
             };
@@ -142,6 +145,7 @@ namespace HRE.Models.Newsletters {
             return nivm;
         }
 
+
         public static void AddNewsletter(NewsletterViewModel nvm) {
             newsletter nl = new newsletter {
                 DateCreated = DateTime.Now,
@@ -150,6 +154,7 @@ namespace HRE.Models.Newsletters {
                 AddPersonalLoginLink = nvm.IncludeLoginLink,
                 IntroText = nvm.IntroText,
                 Title = nvm.Title,
+                AttachmentFilePath = nvm.AttachmentFilePath,
                 Audience = (int) nvm.SubscriptionStatus
             };
 
@@ -180,6 +185,7 @@ namespace HRE.Models.Newsletters {
             nl.DateSent = nvm.DateSent;
             nl.IntroText = nvm.IntroText;
             nl.Title = nvm.Title;
+            nl.AttachmentFilePath = nvm.AttachmentFilePath;
             nl.AddPersonalLoginLink = nvm.IncludeLoginLink;
             nl.Audience = (int) nvm.SubscriptionStatus;
             List<newsletteritem> nlis = DB.newsletteritem.Where(nli => nli.NewsletterId == nl.Id).ToList();

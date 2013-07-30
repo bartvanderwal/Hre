@@ -84,6 +84,13 @@ namespace HRE.Controllers {
             message.Subject = spnvm.Newsletter.Title;
             message.IsBodyHtml = true;
             message.Body = Newsletter;
+            if (!string.IsNullOrEmpty(spnvm.Newsletter.AttachmentFilePath)) {
+                string filePath = Request.MapPath(spnvm.Newsletter.AttachmentFilePath);
+                if (System.IO.File.Exists(filePath)) {
+                    Attachment attachment = new Attachment(filePath);
+                    message.Attachments.Add(attachment);
+                }
+            }
             EmailSender.SendEmail(message, EmailCategory.Newsletter, spnvm.NewsletterId, spnvm.UserId);
 
             return View(spnvm);

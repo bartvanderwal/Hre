@@ -29,7 +29,7 @@
     				        @Html.Raw(Model.Newsletter.IntroText)
                         }
                         @if (Model.User.IsEmailAddressUnconfirmed && Model.Newsletter.IncludeLoginLink && !string.IsNullOrEmpty(Model.Newsletter.IntroText)) {
-    				        <text><br /><br />Je hebt je e-mail adres - @Model.User.EmailAddress - nog niet bevestigd. Log in via de link hieronder om dit adres te bevestigen. Als je je hebt aangemeld voor Het Rondje Eilanden, is dit ook nodig om je inschrijving definitief te kunnen maken.</text>
+    				        <text><br /><br />Je hebt je e-mail adres - @Model.User.EmailAddress - nog niet bevestigd. Graag even inloggen via de link hieronder, zodat wij weten dat je e-mail adres correct is en we je op de hoogte kunnen houden.</text>
                         }
                         @if (Model.Newsletter.IncludeLoginLink) {
     				        <a style="color: #ffffff; background-color: #2483B3; text-align: right; float: right; padding: 5px; margin: 10px; border: 1px solid #303030;" href="@HRE.Common.Common.GetDomainBase()/Account/FlessenPostLink/@Model.PersonalLoginLink">@(Model.User.PrimaryAddress.Firstname)'s Rondje Eilanden pagina > </a>

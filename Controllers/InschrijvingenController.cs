@@ -50,6 +50,7 @@ namespace HRE.Controllers {
         }
 
 
+
         public const string NTBI_SESSION_CODE_KEY = "SessionCode";
 
 
@@ -81,7 +82,6 @@ namespace HRE.Controllers {
         public ActionResult MijnRondjeEilanden(string externalId, string eventNr, bool emailConfirmed=false) {
             Initialise(AppConstants.MeedoenOverzicht);
             InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, eventNr);
-            model.EmailAddressJustConfirmed = emailConfirmed;
             return View(model);
         }
 
@@ -107,11 +107,11 @@ namespace HRE.Controllers {
         }
 
 
-        public MemoryStream CreateExcelFile(string tableName) {
+        public MemoryStream CreateExcelFile(string tableName, bool isForSpeaker) {
             try {
                 // Create an Excel Workbook.
                 XLWorkbook workbook = new XLWorkbook();
-                var dataTable = GetTable(tableName);
+                var dataTable = GetTable(tableName, isForSpeaker);
 
                 // Add the data.
                 IXLWorksheet sheet = workbook.Worksheets.Add(dataTable);
@@ -135,71 +135,106 @@ namespace HRE.Controllers {
             }
         }
         
-        
-        private DataTable GetTable(String tableName) {
+
+        private DataTable GetTable(String tableName, bool isForSpeaker) {
             InschrijvingenModel model = new InschrijvingenModel();
 
             DataTable table = new DataTable();
             table.TableName = tableName;
 
-            table.Columns.Add("UserId", typeof(int));
-            table.Columns.Add("Ingeschreven", typeof(DateTime));
-            table.Columns.Add("Voornaam", typeof(string));
-            table.Columns.Add("Tussenvoegsel", typeof(string));
-            table.Columns.Add("Achternaam", typeof(string));
-            table.Columns.Add("ExternalIdentifier", typeof(string));
-            table.Columns.Add("Email", typeof(string));
-            table.Columns.Add("Telefoon", typeof(string));
-            table.Columns.Add("LicentieNummer", typeof(string));
-            table.Columns.Add("Geslacht", typeof(string));
-            table.Columns.Add("Geboortedatum", typeof(DateTime));
-            table.Columns.Add("MyLaps", typeof(string));
-            table.Columns.Add("Te betalen", typeof(int));
-            table.Columns.Add("Betaald", typeof(int));
+            table.Columns.Add("StartNr", typeof(int));
+            table.Columns.Add("Naam", typeof(string));
             table.Columns.Add("Woonplaats", typeof(string));
-            table.Columns.Add("Postcode", typeof(string));
-            table.Columns.Add("Straat", typeof(string));
-            table.Columns.Add("Huisnr", typeof(string));
-            table.Columns.Add("Toevoeging", typeof(string));
-            table.Columns.Add("Food", typeof(bool));
-            table.Columns.Add("Camp", typeof(bool));
-            table.Columns.Add("Bike", typeof(bool));
-            table.Columns.Add("Early bird", typeof(bool));
-            table.Columns.Add("Speaker", typeof(string));
             table.Columns.Add("Heb je er zin in?", typeof(string));
-            table.Columns.Add("OpmerkingenAanOrganisatie", typeof(string));
-            
-            foreach (var inschrijving in model.Inschrijvingen) {
-                table.Rows.Add(
-                            inschrijving.UserId,
-                            inschrijving.RegistrationDate,
-                            inschrijving.Voornaam, 
-                            inschrijving.Tussenvoegsel, 
-                            inschrijving.Achternaam,
-                            inschrijving.ExternalIdentifier,
-                            inschrijving.Email,
-                            inschrijving.Telefoon,
-                            inschrijving.LicentieNummer,
-                            inschrijving.Geslacht,
-                            inschrijving.GeboorteDatum,
-                            inschrijving.MyLapsChipNummer,
-                            inschrijving.BedragTeBetalen,
-                            inschrijving.BedragBetaald,
-                            inschrijving.Woonplaats,
-                            inschrijving.Postcode,
-                            inschrijving.Straat,
-                            inschrijving.Huisnummer,
-                            inschrijving.HuisnummerToevoeging,
-                            inschrijving.Food,
-                            inschrijving.Camp,
-                            inschrijving.Bike,
-                            inschrijving.IsEarlyBird,
-                            inschrijving.OpmerkingenTbvSpeaker,
-                            inschrijving.HebJeErZinIn,
-                            inschrijving.OpmerkingenAanOrganisatie
-                            );
-                            // DateCreated,DateUpdated,Id,DateCreated,DateUpdated,DateRegistered,DateFirstScraped,DateLastScraped,DatePaymentReceived,UserId,SportsEventId,Notes,SpeakerRemarks,OrganisationRemarks,ParticipationAmountInEuroCents,ParticipationAmountPaidInEuroCents,TShirtSize,HasPaid,StartNumber,PaymentType,ParticipationStatus,ExternalIdentifier,YouTubeVideoCode,Source,EarlyBird,FreeStarter,Bike,Food,Camp,EmailAddressOfFriend,NotesToAll,DateConfirmationSend,Id,Name,EventDate,EventPlace,DateCreated,DateUpdated,ExternalEventIdentifier,ExternalEventSerieIdentifier
+            table.Columns.Add("Speaker", typeof(string));
+            table.Columns.Add("M/V", typeof(string));
+            table.Columns.Add("Food", typeof(string));
+            table.Columns.Add("Camp", typeof(string));
+            table.Columns.Add("Bike", typeof(string));
+            table.Columns.Add("EarlyBird", typeof(string));
+            table.Columns.Add("Geb. dat.", typeof(DateTime));
+            table.Columns.Add("Lic. nr", typeof(string));
+            table.Columns.Add("Aanmelddatum", typeof(DateTime));
+
+            if (!isForSpeaker) {
+                table.Columns.Add("UserId", typeof(int));
+                table.Columns.Add("ExternalIdentifier", typeof(string));
+                table.Columns.Add("MyLaps", typeof(string));
+                table.Columns.Add("Email", typeof(string));
+                table.Columns.Add("Telefoon", typeof(string));
+                table.Columns.Add("Te betalen", typeof(int));
+                table.Columns.Add("Betaald", typeof(int));
+                table.Columns.Add("Voornaam", typeof(string));
+                table.Columns.Add("tv", typeof(string));
+                table.Columns.Add("Achternaam", typeof(string));
+                table.Columns.Add("Postcode", typeof(string));
+                table.Columns.Add("Straat", typeof(string));
+                table.Columns.Add("Huisnr", typeof(string));
+                table.Columns.Add("Toevoeging", typeof(string));
+                table.Columns.Add("OpmerkingenAanOrganisatie", typeof(string));
+                table.Columns.Add("DateCreated", typeof(DateTime));
+                table.Columns.Add("DateUpdated", typeof(DateTime));
+                table.Columns.Add("DateFirstScraped", typeof(DateTime));
+                table.Columns.Add("DateLastScraped", typeof(DateTime));
             }
+
+            foreach (var inschrijving in model.Inschrijvingen) {
+
+                var row = isForSpeaker ?
+                    new object[] {
+                        inschrijving.RaceNumber,
+                        Common.Common.SmartJoin(" ", new string[] { inschrijving.Voornaam, inschrijving.Tussenvoegsel, inschrijving.Achternaam}),
+                        inschrijving.Woonplaats,
+                        inschrijving.HebJeErZinIn,
+                        inschrijving.OpmerkingenTbvSpeaker,
+                        inschrijving.Geslacht,
+                        inschrijving.IsEarlyBird.HasValue && inschrijving.IsEarlyBird.Value ? "1" : "0",
+                        inschrijving.Food ? "1" : "0",
+                        inschrijving.Camp ? "1" : "0",
+                        inschrijving.Bike ? "1" : "0",
+                        inschrijving.GeboorteDatum.Value.Date,
+                        inschrijving.LicentieNummer,
+                        inschrijving.RegistrationDate.Date
+                    }
+                    : new object[] {
+                        inschrijving.RaceNumber,
+                        Common.Common.SmartJoin(" ", new string[] { inschrijving.Voornaam, inschrijving.Tussenvoegsel, inschrijving.Achternaam}),
+                        inschrijving.Woonplaats,
+                        inschrijving.HebJeErZinIn,
+                        inschrijving.OpmerkingenTbvSpeaker,
+                        inschrijving.Geslacht,
+                        inschrijving.IsEarlyBird.HasValue && inschrijving.IsEarlyBird.Value ? "1" : "0",
+                        inschrijving.Food ? "1" : "0",
+                        inschrijving.Camp ? "1" : "0",
+                        inschrijving.Bike ? "1" : "0",
+                        inschrijving.GeboorteDatum.Value.Date,
+                        inschrijving.LicentieNummer,
+                        inschrijving.RegistrationDate.Date,
+
+                        // Extra velden voor NIET speakers.
+                        inschrijving.UserId,
+                        inschrijving.ExternalIdentifier,
+                        inschrijving.MyLapsChipNummer,
+                        inschrijving.Email,
+                        inschrijving.Telefoon,
+                        inschrijving.BedragTeBetalen,
+                        inschrijving.BedragBetaald,
+                        inschrijving.Voornaam,
+                        inschrijving.Tussenvoegsel,
+                        inschrijving.Achternaam,
+                        inschrijving.Postcode,
+                        inschrijving.Straat,
+                        inschrijving.Huisnummer,
+                        inschrijving.HuisnummerToevoeging,
+                        inschrijving.OpmerkingenAanOrganisatie,
+                        inschrijving.DateCreated,
+                        inschrijving.DateUpdated,
+                        inschrijving.DateFirstSynchronized,
+                        inschrijving.DateLastSynchronized
+                    };
+                
+                    table.Rows.Add(row);
+                }
             return table;
         }
 
@@ -214,7 +249,29 @@ namespace HRE.Controllers {
             return RedirectToAction("Index");
         }
 
-        
+
+        /// <summary>
+        /// Download the speaker list.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize(Roles="Admin,Speaker")]
+        public ActionResult DownLoadSpeakerList(InschrijvingenModel model) {
+            string filename = string.Format("HRE-Spkr-{0}-{1}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString().Replace(":", ""));
+            MemoryStream ms = CreateExcelFile(filename, true);
+            
+            // Return the memorystream (IF something was created).
+            if (ms != null) {
+		        // Rewind the memory stream to the beginning.
+		        ms.Seek(0, SeekOrigin.Begin);
+		        return File(ms, @"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml", filename + ".xlsx");
+	        } else {
+                return View("Index");
+            }
+        }
+
+
         /// <summary>
         /// Scrape the inschrijvingen from NTB inschrijvingen.
         /// </summary>
@@ -231,7 +288,7 @@ namespace HRE.Controllers {
 
                 if (model.SubmitAction=="Download") {
                     string filename = string.Format("HRE-{0}-{1}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString().Replace(":", ""));
-                    MemoryStream ms = CreateExcelFile(filename);
+                    MemoryStream ms = CreateExcelFile(filename, false);
             
                     // Return the memorystream.
                     if (ms != null) {
@@ -558,6 +615,17 @@ namespace HRE.Controllers {
         
         
         /// <summary>
+        /// Upload test.
+        /// </summary>
+        /// <param name="externalId"></param>
+        /// <returns></returns>
+        public ActionResult Upload() {
+            InschrijvingModel model = new InschrijvingModel();
+            return View(model);
+        }
+
+        
+        /// <summary>
         /// Load the screen with a model filled with the given external ID and the data from HRE 2012.
         /// </summary>
         /// <param name="externalId"></param>
@@ -630,7 +698,8 @@ namespace HRE.Controllers {
 
             // Controleer als het een nieuwe inschrijving betreft dat er niet al een deelnemer is met hetzelfde e-mail adres.
             LogonUserDal user = LogonUserDal.GetUserByUsername(model.Email);
-            if (model.IsInschrijvingNieuweGebruiker && user!=null && InschrijvingenRepository.GetInschrijving(user, currentEventNr)!=null) {
+            if ((model.IsInschrijvingNieuweGebruiker || (!model.IsInschrijvingNieuweGebruiker && model.Email!=model.EmailBeforeUpdateIfAny)) 
+                    && user!=null && InschrijvingenRepository.GetInschrijving(user, currentEventNr)!=null) {
                 ModelState.AddModelError("Email", "Er is al een deelnemer met dit e-mail adres ingeschreven. Elke deelnemer moet een eigen e-mail adres opgeven!");
             }
 
@@ -642,7 +711,7 @@ namespace HRE.Controllers {
                 
                 // Sla op!
                 InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
-
+                
                 if (!model.DateConfirmationSend.HasValue || model.DoForceSendConfirmation) {
                     SendSubscriptionConfirmationMail(model);
                     model.DateConfirmationSend = DateTime.Now;
@@ -656,7 +725,7 @@ namespace HRE.Controllers {
                 if (string.IsNullOrEmpty(model.ExternalIdentifier) || model.ExternalIdentifier.StartsWith("HRE")) {
                     // The data is not yet in NTB inschrijvingen, write it to a new form.
                 } else {
-                    // The entry is already in NTB inschr and edit the existing entry.
+                    // The entry is already in NTB inschr, load the edit page of it, edit the existing entry and save.
                 }
 
                 // TODO BW 2013-02-10: Set the model as updated and synchronized/scraped if it was written to NTB inschrijvingen.
@@ -665,9 +734,6 @@ namespace HRE.Controllers {
                 // if (!model.DateFirstSynchronized.HasValue) {
                 //    model.DateFirstSynchronized=model.DateUpdated;
                 // }
-
-                // Opgeslagen model gegevens herladen.
-                // model = InschrijvingenRepository.GetInschrijving(LogonUserDal.GetByID(model.UserId), model.ExternalEventIdentifier); //(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
                 
                 if (model.IsInschrijvingNieuweGebruiker) {
                     return RedirectToAction("Bedankt", new { externalId=model.ExternalIdentifier, eventNr=model.ExternalEventIdentifier });
@@ -711,7 +777,7 @@ namespace HRE.Controllers {
                 item1.Text += string.Format("<tr><td>Naam</td><td>{0}</span></td></tr>", model.VolledigeNaamMetAanhef);
                 item1.Text += string.Format("<tr><td>Geboortedatum</td><td>{0}</span></td></tr>", model.GeboorteDatum.HasValue ? model.GeboorteDatum.Value.ToShortDateString() : "-");
                 item1.Text += string.Format("<tr><td>NTB Licentie</td><td>{0}</span></td></tr>", string.IsNullOrEmpty(model.LicentieNummer) ? " - " : model.LicentieNummer);
-                item1.Text += string.Format("<tr><td>Persoonlijke MyLaps Chip</td><td>{0}</span></td></tr>", string.IsNullOrEmpty(model.LicentieNummer) ? " - " : model.MyLapsChipNummer);
+                item1.Text += string.Format("<tr><td>Persoonlijke MyLaps Chip</td><td>{0}</span></td></tr>", string.IsNullOrEmpty(model.MyLapsChipNummer) ? " - " : model.MyLapsChipNummer);
                 
                 item1.Text += string.Format("<tr><td></td></tr>");
                 item1.Text += string.Format("<tr><th colspan=\"2\"><b>Persoonsgegevens</b></th></tr>");

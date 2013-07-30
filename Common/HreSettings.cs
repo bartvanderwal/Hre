@@ -331,5 +331,36 @@ namespace HRE.Common {
             }
         }
 
+
+        /// <summary>
+        /// Het aantal personen per 'startschot' in de tijdrit serie. Default starten twee personen tegelijkertijd.
+        /// </summary>
+        public static int AantalPersonenPerStartschot {
+            get {
+                return ReadIntSetting("AantalPersonenPerStartschot", 2);
+            }
+        }
+
+
+        /// <summary>
+        /// Het aantal seconden twee twee startschots in de tijdrit serie. Default is dit 10 seconden.
+        /// </summary>
+        public static int AantalSecondenTussenStartschots {
+            get {
+                return ReadIntSetting("AantalSecondenTussenStartschots", 10);
+            }
+        }
+
+
+        /// <summary>
+        /// De datum en tijdstip van de 1e start van Het 2e Rondje Eilanden.
+        /// </summary>
+        public static DateTime DatumTijdstipH2RE {
+            get {
+                return ReadDateTimeSetting("DatumTijdstipH2RE", "3-8-2013 16:00:00");
+            }
+        }
+
+
     }
 }

@@ -62,10 +62,22 @@
       <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\SanitizerProviders\HtmlSanitizationLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SanitizerProviders">
       <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\SanitizerProviders\SanitizerProviders.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
@@ -257,13 +269,71 @@
     <Content Include="Content\img\Nieuwsbrief\fp_DennisGoPro.jpg" />
     <Content Include="Content\img\Nieuwsbrief\HRE_MakeThatTheCatWise.jpg" />
     <Content Include="Content\img\Nieuwsbrief\HRE_MakeThatTheCatWise.png" />
+    <Content Include="Content\img\Nieuwsbrief\icon.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\icons\anker.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\axes.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\bbq.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\bestek.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\brief.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\facebook.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\fiets.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\foto.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\groen.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\haan.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\home.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\ijsje.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\inschrijven.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\instellingen.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\kampvuur.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\koffie.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\kompas.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\like.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\logo.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\love.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\man.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\muziek.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\nieuws.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\no1.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\picknick.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\profiel.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\recycle.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\reddingsboei.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\run.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\speech.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\speech2.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\stuurwiel.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\swim.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\tent.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\tijd.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\twitter.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\vis1.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\vis2.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\vlag.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\vrouw.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\wereldbol.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\winners.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\zeilboot.png" />
+    <Content Include="Content\img\Nieuwsbrief\icons\zwembroek.png" />
     <Content Include="Content\img\Nieuwsbrief\MerijnEllenkampHRE2012.jpeg" />
     <Content Include="Content\img\Nieuwsbrief\MerijnEllenkampHRE2012Small.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_Bier.jpg" />
     <Content Include="Content\img\Nieuwsbrief\News_Dive.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_FinaleBord.jpg" />
     <Content Include="Content\img\Nieuwsbrief\News_FiveFingers.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_FiveFingersClinic.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_Inschrijving.jpg" />
     <Content Include="Content\img\Nieuwsbrief\News_Maya.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_Mobile.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_Relax.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_Rob.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_Ruud.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_Ruud2.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_Sing.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_Swimcaps.jpg" />
     <Content Include="Content\img\Nieuwsbrief\News_Tattoo.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_Tatz.jpg" />
     <Content Include="Content\img\Nieuwsbrief\News_ThijsGroen.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_TijsSings.jpg" />
     <Content Include="Content\img\Nieuwsbrief\News_Tile3A.png" />
     <Content Include="Content\img\Nieuwsbrief\News_TileAG.png" />
     <Content Include="Content\img\Nieuwsbrief\News_TileBF.png" />
@@ -274,8 +344,12 @@
     <Content Include="Content\img\Nieuwsbrief\News_TileFF2.png" />
     <Content Include="Content\img\Nieuwsbrief\News_TileGH.png" />
     <Content Include="Content\img\Nieuwsbrief\News_TileNY - kopie.png" />
+    <Content Include="Content\img\Nieuwsbrief\News_VibramsWaslijn.jpg" />
     <Content Include="Content\img\Nieuwsbrief\News_Vrijwilligers.png" />
     <Content Include="Content\img\Nieuwsbrief\News_Wilko.jpg" />
+    <Content Include="Content\img\Nieuwsbrief\News_Winkeloord.png" />
+    <Content Include="Content\img\Nieuwsbrief\savethedate.png" />
+    <Content Include="Content\img\Nieuwsbrief\weeseralsdekippenbij.png" />
     <Content Include="Content\img\NtbIcon.png" />
     <Content Include="Content\img\SpeakersAndOrganisation.png" />
     <Content Include="Content\newsletter.css" />
@@ -860,6 +934,7 @@
     <Content Include="rw_common\themes\union\js\jquery.transit.min.js" />
     <Content Include="rw_common\themes\union\styles.css" />
     <Content Include="rw_common\version.txt" />
+    <Content Include="Scripts\CarlsFileUploader.js" />
     <Content Include="Scripts\ckeditor\ckeditor.js" />
     <Content Include="Scripts\ckeditor\config.js" />
     <Content Include="Scripts\ckeditor\editor_gecko.js" />
@@ -975,6 +1050,7 @@
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\newsletter.js" />
     <None Include="contact\files\contactAssets\contactform.php" />
+    <None Include="Content\pdf\ProgrammaboekjeHet2eRondjeEilanden2013.pdf" />
     <None Include="evenement\avondprogramma-kamperen\files\contactAssets\contactform.php" />
     <None Include="evenement\files\contactAssets\contactform.php" />
     <None Include="evenement\geschiedenis\files\contactAssets\contactform.php" />
@@ -1018,6 +1094,9 @@
     <None Include="Service References\Sisow\AssurePay.wsdl" />
     <Content Include="sql\20130720_insert_paymentss.sql" />
     <Content Include="sql\20130722_update_participation_amounts.sql" />
+    <Content Include="sql\20130727_add_newsletter_attachmentfilepath.sql" />
+    <Content Include="sql\20130728_add_sportseventparticiption_raceinfo.sql" />
+    <Content Include="sql\20130729_set_logonuser_ismailinglistmember.sql" />
     <Content Include="Views\emailaudits\Create.cshtml" />
     <Content Include="Views\emailaudits\Edit.cshtml" />
     <Content Include="Views\emailaudits\Delete.cshtml" />
@@ -1028,6 +1107,7 @@
     <None Include="Views\Errors\NotAuthorized.cshtml" />
     <None Include="Views\Errors\_401.cshtml" />
     <None Include="Views\Errors\_404.cshtml" />
+    <Content Include="Views\Inschrijvingen\Upload.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1054,8 +1134,13 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Inschrijvingen\MijnRondjeEilanden.cshtml" />
     <Content Include="Views\Inschrijvingen\Bedankt.cshtml" />
+    <Content Include="Views\Newsletter\Web_noworkie.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Newsletter\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="api\" />
     <Folder Include="App_Data\" />
     <Folder Include="Common\Email\" />
     <Folder Include="obj\Debug\Package\" />

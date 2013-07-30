@@ -18,13 +18,19 @@ namespace HRE.Models {
         /// <summary>
         /// Constructor.
         /// </summary>
-        public InschrijvingModel() { }
+        public InschrijvingModel() { 
+            // Set EmailBeforeUpdateIfAny to value of Email on initialisation, to store old value to be able to determine if it changed..
+            EmailBeforeUpdateIfAny = Email;
+        }
+
+        public int? RaceNumber { get; set; }
 
         /// <summary>
-        /// The user id.
+        /// The User id.
         /// Warning; do NOT set the UserId from the User form, only initally on scraping/creation.
         /// </summary>
         public int UserId { get; set; }
+
 
         /// <summary>
         /// The user name.
@@ -49,8 +55,12 @@ namespace HRE.Models {
             }
         }
 
+        
+        
         public DateTime RegistrationDate { get; set; }
 
+        public DateTime? VirtualRegistrationDateForOrdering { get; set; }
+        
         public DateTime? DateFirstSynchronized { get; set; }
 
         public DateTime? DateLastSynchronized { get; set; }
@@ -65,7 +75,7 @@ namespace HRE.Models {
 
         
         /// <summary>
-        /// The external identifier is the one from NTB inschrijvingen or 'HRE+ParticipationId'</Participation>(not stored but calculated, so this can be changed later).
+        /// The external identifier is the one from NTB inschrijvingen or 'HRE+ParticipationId' (not stored but calculated, so this can be changed later).
         /// </summary>
         public string ExternalIdentifier { 
             get {
@@ -197,6 +207,9 @@ namespace HRE.Models {
         [Required(ErrorMessage = "Geef je e-mail adres op")]
         public string Email { get; set; }
         
+        [StringLength(50)]
+        public string EmailBeforeUpdateIfAny { get; set; }
+        
         [StringLength(100)]
         public string HebJeErZinIn { get; set; }
 
@@ -211,7 +224,7 @@ namespace HRE.Models {
         public DateTime? DateConfirmationSend { get; set; }
 
         /// <summary>
-        /// The user gets the Early Bird discount if he/she was a participant in 2012 and is again in 2013 and is with the first 200.
+        /// The user gets the Early Bird discount if he/she was a participant in 2012 and is again in 2013 and is with the first 200 and is still on time for the discount.
         /// </summary>
         public bool? IsEarlyBird { 
             get {
@@ -255,7 +268,7 @@ namespace HRE.Models {
 
 
         /// <summary>
-        /// Voor wie geen eigen (MyLaps) chip heeft komt er nog kosten van huur bij.
+        /// Voor wie geen eigen (MyLaps) chip heeft komen er nog kosten van huur bij.
         /// </summary>
         public int KostenChip {
             get {
@@ -264,9 +277,12 @@ namespace HRE.Models {
         }
 
 
+        public bool? FreeStarter { get; set; }
+
+
         public int? BasisKosten { 
             get {
-                return HreSettings.HuidigeDeelnameBedrag;
+                return (FreeStarter.HasValue && FreeStarter.Value) ? 0 : HreSettings.HuidigeDeelnameBedrag;
             }
         }
 
@@ -274,7 +290,6 @@ namespace HRE.Models {
         public int? InschrijfGeld { 
             get {
                 // Voor HRE 2012 of latere jaren als bedrag al ingevuld is, geef het bedrag uit database terug.
-                // Voor HRE 2012 komt dit uit NTB inschrijvingen.
                 if (ExternalEventIdentifier==InschrijvingenRepository.HRE_EVENTNR || _inschrijfGeld.HasValue) {
                     return _inschrijfGeld;
                 }
@@ -293,6 +308,9 @@ namespace HRE.Models {
         /// Het door de deelnemer betaald bedrag.
         /// </summary>
         public int? BedragBetaald { get; set; }
+
+
+        public bool GenoegBetaaldVoorDeelnemerslijst { get; set; }
 
 
         [IsTrue(ErrorMessage = "Meld je aan voor de Flessenpost (e-mail nieuwsbrief voor deelnemers)")]
@@ -389,7 +407,7 @@ namespace HRE.Models {
         /// This field is NOT stored in the database, but is just to indicate to the (MijnRondjeEilanden) view whether the
         /// logonuser with this subscription has just confirmed his e-mail address or not.
         /// </summary>
-        public bool EmailAddressJustConfirmed { get; set; }
+        public bool EmailAddressJustConfirmed { get; private set; }
 
 
         /// <summary>
@@ -399,11 +417,21 @@ namespace HRE.Models {
 
 
         /// <summary>
-        /// Geeft aan 
+        /// Geeft aan of er volledig en correct betaald is. 
         /// </summary>
         public bool IsVolledigEnCorrectBetaald {
             get {
                 return InschrijfGeld.HasValue && BedragBetaald.HasValue && InschrijfGeld.Value==BedragBetaald.Value;
+            }
+        }
+
+
+        /// <summary>
+        /// Geeft aan of er voldoende betaald is om in ieder geval in de inschrijflijst te kunnen staan. 
+        /// </summary>
+        public bool IsVoldoendeBetaaldVoorStartlijst {
+            get {
+                return (FreeStarter.HasValue && FreeStarter.Value || (InschrijfGeld.HasValue && BedragBetaald.HasValue && (InschrijfGeld.Value-BedragBetaald.Value<=1000)));
             }
         }
 

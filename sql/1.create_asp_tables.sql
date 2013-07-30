@@ -83,7 +83,8 @@ CREATE TABLE IF NOT EXISTS `my_aspnet_profiles` (
 
 CREATE TABLE IF NOT EXISTS `my_aspnet_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `applicationId` int(11) NOT NULL,
+  `applicationId` int(
+  ) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;

@@ -132,7 +132,8 @@
         Undetermined = 0,   // Undetermined, for records created before this Enum was added :P
         New = 1, // A new user, with unconfirmed (or no) e-mail address.
         EmailAddressConfirmed = 2, // THe e-mail address was confirmed
-        FullAccount = 3  // The user has a password
+        EmailAddressChanged = 3, // A user with a previously confirmed email address changed it, so that it is now unconfirmed again :).
+        FullAccount = 4  // The user has a password
     }
 
 }

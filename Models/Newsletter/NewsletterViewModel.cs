@@ -39,6 +39,9 @@ namespace HRE.Models.Newsletters {
         [Display(Name = "Intro tekst")]
         public string IntroText { get; set; }
         
+        [Display(Name = "Attachment file path")]
+        public string AttachmentFilePath { get; set; }
+
 
         [Display(Name = "Nieuwsbrief items")]
         public List<NewsletterItemViewModel> Items { get; set; } 

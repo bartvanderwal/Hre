@@ -22,8 +22,8 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("hreModel", "PrimaryAddress", "address", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.address), "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.logonuser), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdReceiver", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdSender", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
-[assembly: EdmRelationshipAttribute("hreModel", "User", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "Newsletter1", "newsletter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HRE.Data.newsletter), "newsletteritem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.newsletteritem), true)]
+[assembly: EdmRelationshipAttribute("hreModel", "User", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "sportevent", "sportsevent", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.sportsevent), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
 
 #endregion
@@ -191,22 +191,6 @@ namespace HRE.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<sportseventparticipation> sportseventparticipation
-        {
-            get
-            {
-                if ((_sportseventparticipation == null))
-                {
-                    _sportseventparticipation = base.CreateObjectSet<sportseventparticipation>("sportseventparticipation");
-                }
-                return _sportseventparticipation;
-            }
-        }
-        private ObjectSet<sportseventparticipation> _sportseventparticipation;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<usersecondaryaddress> usersecondaryaddress
         {
             get
@@ -235,6 +219,22 @@ namespace HRE.Data
             }
         }
         private ObjectSet<my_aspnet_users> _my_aspnet_users;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<sportseventparticipation> sportseventparticipation
+        {
+            get
+            {
+                if ((_sportseventparticipation == null))
+                {
+                    _sportseventparticipation = base.CreateObjectSet<sportseventparticipation>("sportseventparticipation");
+                }
+                return _sportseventparticipation;
+            }
+        }
+        private ObjectSet<sportseventparticipation> _sportseventparticipation;
 
         #endregion
 
@@ -297,14 +297,6 @@ namespace HRE.Data
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the sportseventparticipation EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
-        {
-            base.AddObject("sportseventparticipation", sportseventparticipation);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the usersecondaryaddress EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTousersecondaryaddress(usersecondaryaddress usersecondaryaddress)
@@ -318,6 +310,14 @@ namespace HRE.Data
         public void AddTomy_aspnet_users(my_aspnet_users my_aspnet_users)
         {
             base.AddObject("my_aspnet_users", my_aspnet_users);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the sportseventparticipation EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
+        {
+            base.AddObject("sportseventparticipation", sportseventparticipation);
         }
 
         #endregion
@@ -2221,6 +2221,30 @@ namespace HRE.Data
         private global::System.String _IntroText;
         partial void OnIntroTextChanging(global::System.String value);
         partial void OnIntroTextChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String AttachmentFilePath
+        {
+            get
+            {
+                return _AttachmentFilePath;
+            }
+            set
+            {
+                OnAttachmentFilePathChanging(value);
+                ReportPropertyChanging("AttachmentFilePath");
+                _AttachmentFilePath = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("AttachmentFilePath");
+                OnAttachmentFilePathChanged();
+            }
+        }
+        private global::System.String _AttachmentFilePath;
+        partial void OnAttachmentFilePathChanging(global::System.String value);
+        partial void OnAttachmentFilePathChanged();
 
         #endregion
 
@@ -3689,6 +3713,294 @@ namespace HRE.Data
         private Nullable<global::System.DateTime> _DateConfirmationSend;
         partial void OnDateConfirmationSendChanging(Nullable<global::System.DateTime> value);
         partial void OnDateConfirmationSendChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> VirtualRegistrationDateForOrdering
+        {
+            get
+            {
+                return _VirtualRegistrationDateForOrdering;
+            }
+            set
+            {
+                OnVirtualRegistrationDateForOrderingChanging(value);
+                ReportPropertyChanging("VirtualRegistrationDateForOrdering");
+                _VirtualRegistrationDateForOrdering = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("VirtualRegistrationDateForOrdering");
+                OnVirtualRegistrationDateForOrderingChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _VirtualRegistrationDateForOrdering;
+        partial void OnVirtualRegistrationDateForOrderingChanging(Nullable<global::System.DateTime> value);
+        partial void OnVirtualRegistrationDateForOrderingChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> RaceNumber
+        {
+            get
+            {
+                return _RaceNumber;
+            }
+            set
+            {
+                OnRaceNumberChanging(value);
+                ReportPropertyChanging("RaceNumber");
+                _RaceNumber = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("RaceNumber");
+                OnRaceNumberChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _RaceNumber;
+        partial void OnRaceNumberChanging(Nullable<global::System.Int32> value);
+        partial void OnRaceNumberChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.TimeSpan> PlannedStartTime
+        {
+            get
+            {
+                return _PlannedStartTime;
+            }
+            set
+            {
+                OnPlannedStartTimeChanging(value);
+                ReportPropertyChanging("PlannedStartTime");
+                _PlannedStartTime = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PlannedStartTime");
+                OnPlannedStartTimeChanged();
+            }
+        }
+        private Nullable<global::System.TimeSpan> _PlannedStartTime;
+        partial void OnPlannedStartTimeChanging(Nullable<global::System.TimeSpan> value);
+        partial void OnPlannedStartTimeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String RaceCat
+        {
+            get
+            {
+                return _RaceCat;
+            }
+            set
+            {
+                OnRaceCatChanging(value);
+                ReportPropertyChanging("RaceCat");
+                _RaceCat = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("RaceCat");
+                OnRaceCatChanged();
+            }
+        }
+        private global::System.String _RaceCat;
+        partial void OnRaceCatChanging(global::System.String value);
+        partial void OnRaceCatChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> WantsToDoFinal
+        {
+            get
+            {
+                return _WantsToDoFinal;
+            }
+            set
+            {
+                OnWantsToDoFinalChanging(value);
+                ReportPropertyChanging("WantsToDoFinal");
+                _WantsToDoFinal = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("WantsToDoFinal");
+                OnWantsToDoFinalChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _WantsToDoFinal;
+        partial void OnWantsToDoFinalChanging(Nullable<global::System.Boolean> value);
+        partial void OnWantsToDoFinalChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> ResultPosition
+        {
+            get
+            {
+                return _ResultPosition;
+            }
+            set
+            {
+                OnResultPositionChanging(value);
+                ReportPropertyChanging("ResultPosition");
+                _ResultPosition = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ResultPosition");
+                OnResultPositionChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _ResultPosition;
+        partial void OnResultPositionChanging(Nullable<global::System.Int32> value);
+        partial void OnResultPositionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> ResultPositionInCategory
+        {
+            get
+            {
+                return _ResultPositionInCategory;
+            }
+            set
+            {
+                OnResultPositionInCategoryChanging(value);
+                ReportPropertyChanging("ResultPositionInCategory");
+                _ResultPositionInCategory = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("ResultPositionInCategory");
+                OnResultPositionInCategoryChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _ResultPositionInCategory;
+        partial void OnResultPositionInCategoryChanging(Nullable<global::System.Int32> value);
+        partial void OnResultPositionInCategoryChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.TimeSpan> TotalTime
+        {
+            get
+            {
+                return _TotalTime;
+            }
+            set
+            {
+                OnTotalTimeChanging(value);
+                ReportPropertyChanging("TotalTime");
+                _TotalTime = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("TotalTime");
+                OnTotalTimeChanged();
+            }
+        }
+        private Nullable<global::System.TimeSpan> _TotalTime;
+        partial void OnTotalTimeChanging(Nullable<global::System.TimeSpan> value);
+        partial void OnTotalTimeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.TimeSpan> TimeInFinal
+        {
+            get
+            {
+                return _TimeInFinal;
+            }
+            set
+            {
+                OnTimeInFinalChanging(value);
+                ReportPropertyChanging("TimeInFinal");
+                _TimeInFinal = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("TimeInFinal");
+                OnTimeInFinalChanged();
+            }
+        }
+        private Nullable<global::System.TimeSpan> _TimeInFinal;
+        partial void OnTimeInFinalChanging(Nullable<global::System.TimeSpan> value);
+        partial void OnTimeInFinalChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.TimeSpan> TimeOnTimedSwimPart
+        {
+            get
+            {
+                return _TimeOnTimedSwimPart;
+            }
+            set
+            {
+                OnTimeOnTimedSwimPartChanging(value);
+                ReportPropertyChanging("TimeOnTimedSwimPart");
+                _TimeOnTimedSwimPart = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("TimeOnTimedSwimPart");
+                OnTimeOnTimedSwimPartChanged();
+            }
+        }
+        private Nullable<global::System.TimeSpan> _TimeOnTimedSwimPart;
+        partial void OnTimeOnTimedSwimPartChanging(Nullable<global::System.TimeSpan> value);
+        partial void OnTimeOnTimedSwimPartChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.TimeSpan> TimeOnTimedRunPart
+        {
+            get
+            {
+                return _TimeOnTimedRunPart;
+            }
+            set
+            {
+                OnTimeOnTimedRunPartChanging(value);
+                ReportPropertyChanging("TimeOnTimedRunPart");
+                _TimeOnTimedRunPart = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("TimeOnTimedRunPart");
+                OnTimeOnTimedRunPartChanged();
+            }
+        }
+        private Nullable<global::System.TimeSpan> _TimeOnTimedRunPart;
+        partial void OnTimeOnTimedRunPartChanging(Nullable<global::System.TimeSpan> value);
+        partial void OnTimeOnTimedRunPartChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> HasPaidEnoughToList
+        {
+            get
+            {
+                return _HasPaidEnoughToList;
+            }
+            set
+            {
+                OnHasPaidEnoughToListChanging(value);
+                ReportPropertyChanging("HasPaidEnoughToList");
+                _HasPaidEnoughToList = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("HasPaidEnoughToList");
+                OnHasPaidEnoughToListChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _HasPaidEnoughToList;
+        partial void OnHasPaidEnoughToListChanging(Nullable<global::System.Boolean> value);
+        partial void OnHasPaidEnoughToListChanged();
 
         #endregion
 
