@@ -13,6 +13,8 @@
     }
 }
 
+<link href="@Url.Content("~/Content/subscribe.css")" rel="stylesheet" type="text/css">
+
 @if (Model.HasAdminRole) {
     <div id="admin-panel-header">Admin panel</div>
             
@@ -75,17 +77,18 @@
     <table class="deelnemers@(Model.HasAdminRole ? " admin-view" : string.Empty)">
         <tr>
             <th>Voorlopig startnr.</th>
-            <th>Voorlopige indicatieve starttijd</th>
+            <th>Voorlopige starttijd</th>
             <th>Deelnemer</th>
             <th>Woonplaats</th>
-            <th>Aangemeld</th>
-            <th>Uitvoering</th>
+            <th></th>
+            <th></th>
             @if (Model.HasAdminRole) {
                 <th>DVD</th>
-                <th>E-mail adres</th>
-                <th>Geb. datum</th>
+                @*<th>Geb. datum</th>
                 <th>Eerst gescraped</th>
-                <th>Laatst gescraped</th>
+                <th>Laatst gescraped</th> *@
+                <th>Saldo</th>
+                <th>NTB</th>
                 <th>Updated</th>
                 <th></th>
             }
@@ -104,16 +107,36 @@
                 <td>@string.Format("{0:H:mm:ss}", startTijd)</td>
                 <td>@Html.ActionLink(entry.VolledigeNaam, "Edit", new { externalId = entry.ExternalIdentifier, eventNr = entry.ExternalEventIdentifier })</td>
                 <td>@entry.Woonplaats</td>
-                <td>@string.Format("{0:dd-MM-yyyy}", entry.RegistrationDate)</td>
-                <td class="small">@Html.Raw(HRE.Common.Common.SmartJoin("+", new string[] { !entry.Food && !entry.Bike && !entry.Camp ? "Vanilla" : string.Empty, entry.Food ? "Food" : string.Empty, entry.Bike ? "Bike" : string.Empty, entry.Camp ? "Camp" : string.Empty} ))</td>
+                <td>@string.Format("{0:d-MMM}", entry.RegistrationDate)</td>
+                @*<td class="small">@Html.Raw(HRE.Common.Common.SmartJoin("+", new string[] { !entry.Food && !entry.Bike && !entry.Camp ? "Vanilla" : string.Empty, entry.Food ? "Food" : string.Empty, entry.Bike ? "Bike" : string.Empty, entry.Camp ? "Camp" : string.Empty} ))</td> *@
+                <td style="width: 120px;">
+		            <div class="editor-field">
+                        @{string foodTitle = entry.Food ? string.Format("{0} blijft eten!", entry.Voornaam.UppercaseFirst()) : "";}
+                        @Html.CheckBoxFor(m => entry.Food, new { @title= @foodTitle, @disabled="",  })
+			            <label for="entry.Food" title="Blijft eten"></label>
+		            </div>
+		            <div class="editor-field">
+                        @{string campTitle = entry.Camp ? string.Format("{0} blijft kamperen!", entry.Voornaam.UppercaseFirst()) : "";}
+			            @Html.CheckBoxFor(m => entry.Camp, new { @title= @campTitle, @disabled="",  })
+			            <label for="entry.Camp" title="Blijft kamperen"></label>
+		            </div>
+                    <div class="editor-field">
+                        @{string bikeTitle = entry.Bike ? string.Format("{0} komt op de fiets!", entry.Voornaam.UppercaseFirst()) : "";}
+                        @Html.CheckBoxFor(m => entry.Bike, new { @title= @bikeTitle, @disabled=""})
+                        <label for="entry.Bike" title="Komt op de fiets"></label>    
+                    </div>
+                </td>
                 @if (Model.HasAdminRole) {
                     using(Html.BeginForm("DeleteEntry", "Inschrijvingen", new { model = Model, participantUserId = entry.ParticipationId}, FormMethod.Post, null)) {
                         @Html.HiddenFor(model => model.EventNumber)
                         <td>@string.Format("{0:dd-MM-yyyy H:mm}", @entry.VirtualRegistrationDateForOrdering)</td>
-                        <td><a href="mailto:@entry.Email">@entry.Email</a></td>
-                        <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td>
+                        @*
+                        <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td> 
                         <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstSynchronized.HasValue ? entry.DateFirstSynchronized.Value.RelativeDateDescription() : "-")</td>
                         <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastSynchronized.HasValue ? entry.DateLastSynchronized.Value.RelativeDateDescription()  : "-")</td>
+                        *@
+                        <td><span title="@string.Format("Inschrijfgeld: {0}, Betaald: {1}.", (entry.InschrijfGeld.HasValue ? entry.InschrijfGeld.AsAmount() : "-"), (entry.BedragBetaald.HasValue ? entry.BedragBetaald.AsAmount() : "-"))">@((entry.InschrijfGeld.HasValue && entry.BedragBetaald.HasValue ? (entry.InschrijfGeld.Value-entry.BedragBetaald.Value).AsAmount() : "-"))</span></td>
+                        <td>@(entry.DateLastSynchronized.HasValue ? "1" : "")</td>
                         <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>
                         <td><input value="Verwijderen" type="submit" onclick="return confirm('Weet je zeker dat je de inschrijving van gebruiker @entry.UserName wilt verwijderen?\n NB Bij verwijderen van inschrijving zal het account van deze gebruiker hierbij NIET mee verwijderd woden.');" /></td>
                     }

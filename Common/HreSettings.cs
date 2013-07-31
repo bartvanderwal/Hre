@@ -191,7 +191,7 @@ namespace HRE.Common {
         /// </summary>
         public static int AantalPlekkenReserveLijst {
             get {
-                return ReadIntSetting("AantalPlekkenReserveLijst", 100);
+                return ReadIntSetting("AantalPlekkenReserveLijst", 60);
             }
         }
 
@@ -232,7 +232,7 @@ namespace HRE.Common {
         /// </summary>
         public static DateTime SluitingsDatumAlgemeneInschrijving {
             get {
-                return ReadDateTimeSetting("SluitingsDatumAlgemeneInschrijving", "31-07-2013");
+                return ReadDateTimeSetting("SluitingsDatumAlgemeneInschrijving", "1-8-2013");
             }
         }
 

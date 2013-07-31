@@ -617,7 +617,7 @@ namespace HRE.Dal {
 
 
         /// <summary>
-        /// Determines the number of participants or Early Birds in the 2013 HRE event.
+        /// Determines the number of participants or Early Birds in HRE event with the specified eventnr.
         /// </summary>
         /// <returns></returns>
         public static int AantalIngeschrevenDeelnemers(string eventNr, bool? food=null, bool? camp = null, bool? bike = null, bool? earlyBird = null) {

@@ -29,10 +29,9 @@
 	width: 46px;
 }
 
-/* Has MyLaps chop checkbox image size (less wide than default). 
+/* Has MyLaps chip checkbox image size (less wide than default). 
 :root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"] ~ label:before,
-:root .editor-field > input[type="checkbox"][name="test-checkbox"] ~ label:before 
- {
+:root .editor-field > input[type="checkbox"][name="test-checkbox"] ~ label:before {
 	width: 30px;
 } */
 
@@ -123,7 +122,7 @@ li.test {
 			
 /****** Parc Fermé  ***/
 /* Unchecked bike checkbox. */
-:root .editor-field > input[type="checkbox"][name="Bike"] ~ label:before { 
+:root .editor-field > input[type="checkbox"][name="entry.Bike"] ~ label:before { 
 	background-position: -382px -217px;
 }
 

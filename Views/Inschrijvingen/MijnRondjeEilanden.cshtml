@@ -38,7 +38,7 @@
     }
     <p>Je hebt je @Model.RegistrationDate.RelativeDateTimeDescription() aangemeld voor Hét 2e Rondje Eilanden.</p>
     if (!Model.IsVolledigEnCorrectBetaald) {
-        <p>Je moet nog &euro; @Model.BedragTeBetalen.AsAmount() betalen. Hieronder de betaalgegevens. Pas als het inschrijfgeld binnen is ben je ingeschreven. Mocht je kortgeleden het geld overgemaakt hebben, dan kan het zijn dat onze betalingen hiervoor nog niet bijgewerkt is (de inschrijvingen zijn op 30 juli voor het laatst bijgewerkt). Neem bij twijfel contact op via <a href="mailto:info@hetrondjeeilanden.nl">info@hetrondjeeilanden.nl</a> bij vragen!</p>
+        <p>Je moet nog @Model.BedragTeBetalen.AsAmount() betalen. Hieronder de betaalgegevens. Pas als het inschrijfgeld binnen is ben je ingeschreven. Mocht je kortgeleden het geld overgemaakt hebben, dan kan het zijn dat onze betalingen hiervoor nog niet bijgewerkt is (de inschrijvingen zijn op 30 juli voor het laatst bijgewerkt). Neem bij twijfel contact op via <a href="mailto:info@hetrondjeeilanden.nl">info@hetrondjeeilanden.nl</a> bij vragen!</p>
     }
     <table class="bank-account">
         <tr><td>Inschrijfgeld</td><td><span class="quotable">@Model.InschrijfGeld.AsAmount()</span></td></tr>

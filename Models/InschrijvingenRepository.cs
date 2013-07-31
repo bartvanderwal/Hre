@@ -214,16 +214,16 @@ namespace HRE.Models {
             }
 
             /*
-            return raceEntries.OrderByDescending(i => i.GenoegBetaaldVoorDeelnemerslijst).
-                    ThenByDescending(i => i.VirtualRegistrationDateForOrdering). // Deze is descending 
-                    ThenBy(i => i.RegistrationDate); 
+            return raceEntries.OrderByDescending(i => i.GenoegBetaaldVoorDeelnemerslijst)
+                    .ThenBy(i => i.VirtualRegistrationDateForOrdering) // Deze is descending 
+                    // .ThenBy(i => i.RegistrationDate); 
             */
             
-            return raceEntries.Where(i => i.BedragBetaald.HasValue && i.BedragBetaald.Value>=2000 || i.FreeStarter.HasValue && i.FreeStarter.Value).
-                    OrderBy(i => i.VirtualRegistrationDateForOrdering)
-                .Union(
+            return raceEntries.Where(i => i.BedragBetaald.HasValue && i.BedragBetaald.Value>=2000 || (i.FreeStarter.HasValue && i.FreeStarter.Value)).
+                    OrderBy(i => i.VirtualRegistrationDateForOrdering.Value).ToList()
+                .Concat(
                 raceEntries.Where(i => (!i.BedragBetaald.HasValue || i.BedragBetaald.Value<2000) && (!i.FreeStarter.HasValue || !i.FreeStarter.Value)).
-                    OrderBy(i => i.VirtualRegistrationDateForOrdering));
+                    OrderBy(i => i.VirtualRegistrationDateForOrdering.Value).ToList());
         }
 
 

@@ -804,3 +804,50 @@ span.tweet-this {
 .checkbox-above-save {
     float: right;
 }
+
+
+td > .editor-field {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    /* float: left; */
+    width: 25px;
+    text-align: inherit;
+    margin: 3x 5px 3px 5px;
+    color: #406A80; 
+}
+
+
+/****** Parc Fermé  ***/
+/* Unchecked bike checkbox. */
+:root .editor-field > input[type="checkbox"][name="entry.Bike"] ~ label:before { 
+	background-position: -382px -217px;
+}
+
+/* Checked bike checkbox. */
+:root .editor-field > input[type="checkbox"][name="entry.Bike"]:checked ~ label:before {
+	background-position: -440px -218px;
+}
+
+
+/****** Eten ***/
+/* Unchecked food checkbox. */
+:root .editor-field > input[type="checkbox"][name="entry.Food"] ~ label:before { 
+	background-position: -131px -218px;
+}
+
+/* Checked food checkbox. */
+:root .editor-field > input[type="checkbox"][name="entry.Food"]:checked ~ label:before{ 
+	background-position: -194px -218px;
+}
+
+/****** Kamperen ***/
+/* Unchecked camp checkbox. */
+:root .editor-field > input[type="checkbox"][name="entry.Camp"] ~ label:before { 
+	background-position: -254px -218px;
+}
+
+/* Checked camp checkbox. */
+:root .editor-field > input[type="checkbox"][name="entry.Camp"]:checked ~ label:before { 
+	background-position: -316px -217px;
+}

@@ -8,19 +8,33 @@
     int nrOfEarlyBirds = LogonUserDal.AantalIngeschrevenEarlyBirds();
     int nrOfEntries = LogonUserDal.AantalIngeschrevenDeelnemers(Model.ExternalEventIdentifier);
     bool isEarlyBird = Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value;
+    int aantalPlekken = HreSettings.AantalStartPlekken;
+    int aantalReserve = HreSettings.AantalPlekkenReserveLijst;
+    int aantalPlekkenInclusiefReserve = aantalPlekken+aantalReserve;
+    bool allePlekkenBezet = nrOfEntries > aantalPlekkenInclusiefReserve;
+    bool inschrijfDatumGepasseerd = DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.SluitingsDatumAlgemeneInschrijving)>0;
 }
 
-<div @(Model.IsEditAllowed ? "class=edit-allowed" : "")>
-    <link href="@Url.Content("~/Content/subscribe.css")" rel="stylesheet" type="text/css">
+<link href="@Url.Content("~/Content/subscribe.css")" rel="stylesheet" type="text/css">
 
-    @if(DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.SluitingsDatumAlgemeneInschrijving)>=0) {
-        <text>De inschrijving is gesloten!</text>
+<div @(Model.IsEditAllowed ? "class=edit-allowed" : "")>
+    @if(Model.IsNewUser && allePlekkenBezet || inschrijfDatumGepasseerd) {
+        <p>De inschrijving is gesloten!</p>
+        if(inschrijfDatumGepasseerd) {
+            <p>De inschrijving sloot om middernacht @HreSettings.SluitingsDatumAlgemeneInschrijving.ToString("d-MMM-yyyy").</p>
+        }
+        if(allePlekkenBezet) {
+            <p> Alle @aantalPlekken startplekken zijn bezet, en de @aantalReserve reserve plekken ook!</p>            
+        }
     } else {
         if (Model.IsAdmin) {
             @Html.ActionLink(" ", "Index", null, new { @class="editor-image back", @title="Terug naar overzicht", @alt="Back" })
             <br/><br/>
         }
 
+        if(nrOfEntries > aantalPlekken) {
+            <p>Let op: Alle @aantalPlekken startplekken zijn bezet. We hebben nog wel wat reserve ruimte, dus je kunt je inschrijven. Maar we kunnen helaas niet garanderen dat je een aandenken krijgt. We doen echter ons best. Volgend jaar eerder inschrijven!! :)</p>
+        }
         
         Html.BeginForm("Edit", "Inschrijvingen");
             @Html.AntiForgeryToken()
@@ -245,7 +259,7 @@
             <div class="editor-label">Mee-eten?</div>
 		    <div class="editor-field">
                 @Html.CheckBoxFor(m => m.Food, new { @tabindex="18", @title="Interesse om na afloop mee te eten? (vrijblijvende reservering)" })
-			    <label for="food" title="Interesse om na afloop mee te eten? (vrijblijvende reservering)"></label>
+			    <label for="Food" title="Interesse om na afloop mee te eten? (vrijblijvende reservering)"></label>
                 <span id="food-span" class="opt-text" style="display: none;">Ja! <span class="small">(Dit jaar grotere porties ;)</span></span>
 		    </div>
 		    <div class="editor-label">Kamperen?</div>
@@ -287,7 +301,7 @@
                 <div class="editor-field">@Html.TextAreaFor(m => m.HebJeErZinIn, new { @tabindex="21", @cols="50", @rows="2", @maxlength="100", @placeholder="Deze tekst wordt getoond op de website..."} )</div>
             } else {
                 <div class="editor-label">Heb je er zin in?</div>
-                <div class="editor-field">@(Model.HebJeErZinIn ?? "-")</div>
+                <div class="editor-field">@(Model.HebJeErZinIn ?? "[Geen commentaar]")</div>
             }
 
             if(Model.IsEditAllowed || Model.IsSpeaker) {
