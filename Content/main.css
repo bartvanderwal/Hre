@@ -800,3 +800,7 @@ span.tweet-this {
     font-size: smaller;
     text-align: right;
 }
+
+.checkbox-above-save {
+    float: right;
+}

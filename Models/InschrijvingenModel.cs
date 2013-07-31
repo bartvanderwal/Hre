@@ -117,17 +117,9 @@ namespace HRE.Models {
             }
         }
 
-
-        public int NrOfEmailsUnconfirmed {
-            get {
-                return LogonUserDal.AantalIngeschrevenDeelnemers(EventNumber, null, null, null, false);
-            }
-        }
-
-
         public int NrOfEarlyBirds {
             get {
-                return LogonUserDal.AantalIngeschrevenDeelnemers(EventNumber, null, null, null, null, true);
+                return LogonUserDal.AantalIngeschrevenDeelnemers(EventNumber, null, null, null, true);
             }
         }
 

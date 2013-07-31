@@ -230,9 +230,9 @@ namespace HRE.Common {
         /// <summary>
         /// Sluitingsdatum algemene inschrijving.
         /// </summary>
-        public static DateTime SluitingssdatumAlgemeneInschrijving {
+        public static DateTime SluitingsDatumAlgemeneInschrijving {
             get {
-                return ReadDateTimeSetting("SluitingsdatumAlgemeneInschrijving", "31-07-2013");
+                return ReadDateTimeSetting("SluitingsDatumAlgemeneInschrijving", "31-07-2013");
             }
         }
 

@@ -213,20 +213,17 @@ namespace HRE.Models {
                 raceEntries = raceEntries.Where(e => e.UserId==userId);
             }
 
-            
-            return raceEntries.OrderBy(i => i.GenoegBetaaldVoorDeelnemerslijst).
-                    ThenByDescending(i => i.VirtualRegistrationDateForOrdering).
-                    ThenBy(i => i.RegistrationDate); 
-            
             /*
-            return raceEntries.Where(i => i.BedragBetaald.HasValue && i.BedragBetaald.Value>=2000 || i.FreeStarter.HasValue && i.FreeStarter.Value).
-                    OrderBy(i => i.VirtualRegistrationDateForOrdering).
-                    ThenBy(i => i.RegistrationDate).ToList()
-                .Union((
-                raceEntries.Where(i => (!i.BedragBetaald.HasValue || i.BedragBetaald.Value<2000) && (!i.FreeStarter.HasValue || !i.FreeStarter.Value)).
-                    OrderBy(i => i.VirtualRegistrationDateForOrdering).
-                    ThenBy(i => i.RegistrationDate)).ToList());
+            return raceEntries.OrderByDescending(i => i.GenoegBetaaldVoorDeelnemerslijst).
+                    ThenByDescending(i => i.VirtualRegistrationDateForOrdering). // Deze is descending 
+                    ThenBy(i => i.RegistrationDate); 
             */
+            
+            return raceEntries.Where(i => i.BedragBetaald.HasValue && i.BedragBetaald.Value>=2000 || i.FreeStarter.HasValue && i.FreeStarter.Value).
+                    OrderBy(i => i.VirtualRegistrationDateForOrdering)
+                .Union(
+                raceEntries.Where(i => (!i.BedragBetaald.HasValue || i.BedragBetaald.Value<2000) && (!i.FreeStarter.HasValue || !i.FreeStarter.Value)).
+                    OrderBy(i => i.VirtualRegistrationDateForOrdering));
         }
 
 
@@ -375,6 +372,11 @@ namespace HRE.Models {
                     participation.ParticipationAmountInEuroCents = inschrijving.InschrijfGeld;
                 }
 
+                // Initialiseer de virtuele datum voor orderen op de inschrijfdatum (door wijzigen kun je later de volgorde 'kunstmatig' wijzigen, maar dit is wel iets minder kunstmatig dan met de inschrijfdatum zelf :P).
+                if (!participation.VirtualRegistrationDateForOrdering.HasValue) {
+                    participation.VirtualRegistrationDateForOrdering = participation.DateRegistered;
+                }
+
                 participation.SportsEventId = (from sportsevent se in DB.sportsevent 
                                                 where se.ExternalEventIdentifier==eventNumber 
                                                 select se.Id).First();
@@ -385,6 +387,7 @@ namespace HRE.Models {
                 participation.Food = inschrijving.Food;
                 participation.Bike = inschrijving.Bike;
                 participation.TShirtSize = inschrijving.MaatTshirt;
+                
                 participation.ParticipationStatus = 1;
                 participation.Notes = inschrijving.OpmerkingenAanOrganisatie;
                 participation.NotesToAll = inschrijving.HebJeErZinIn;

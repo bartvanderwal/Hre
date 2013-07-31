@@ -1092,11 +1092,12 @@
     <Content Include="sql\3.insert_roles.sql" />
     <Content Include="App_Code\Facebook.cshtml" />
     <None Include="Service References\Sisow\AssurePay.wsdl" />
-    <Content Include="sql\20130720_insert_paymentss.sql" />
+    <Content Include="sql\20130720_insert_payments.sql" />
     <Content Include="sql\20130722_update_participation_amounts.sql" />
     <Content Include="sql\20130727_add_newsletter_attachmentfilepath.sql" />
     <Content Include="sql\20130728_add_sportseventparticiption_raceinfo.sql" />
     <Content Include="sql\20130729_set_logonuser_ismailinglistmember.sql" />
+    <Content Include="sql\20130730_insert_payments.sql" />
     <Content Include="Views\emailaudits\Create.cshtml" />
     <Content Include="Views\emailaudits\Edit.cshtml" />
     <Content Include="Views\emailaudits\Delete.cshtml" />

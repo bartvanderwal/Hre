@@ -400,8 +400,8 @@ namespace HRE.Models {
         /// <summary>
         /// Indicates whether - for already registered entries - the e-mail confirmation should be resent.
         /// </summary>
-        [Display(Name = "Stuur bevestigingsmail")]
-        public bool DoForceSendConfirmation { get; set; }
+        [Display(Name = "Bevestigingsmail van wijziging")]
+        public bool DoForceSendConfirmationOfChange { get; set; }
 
         /// <summary>
         /// This field is NOT stored in the database, but is just to indicate to the (MijnRondjeEilanden) view whether the

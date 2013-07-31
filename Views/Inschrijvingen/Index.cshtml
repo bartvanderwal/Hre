@@ -14,7 +14,6 @@
 }
 
 @if (Model.HasAdminRole) {
-    <i>@Model.NrOfEntries deelnemers (Food: @Model.NrOfFoodInteressees, Camp: @Model.NrOfCampInteressees, Bike: @Model.NrOfBikeInteressees, E-mail nog niet bevestigd: @Model.NrOfEmailsUnconfirmed, Early Birds: @Model.NrOfEarlyBirds)</i>
     <div id="admin-panel-header">Admin panel</div>
             
     using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) {
@@ -56,6 +55,7 @@
     using(Html.BeginForm("DownloadSpeakerList", "Inschrijvingen", FormMethod.Post, new { @class="parallel-form" } )) {
         @Html.AntiForgeryToken();
         <input type="submit" value="SpeakerLijst" class="download-excel"/>
+        <i>@Model.NrOfEntries deelnemers (Food: @Model.NrOfFoodInteressees, Camp: @Model.NrOfCampInteressees, Bike: @Model.NrOfBikeInteressees, Early Birds: @Model.NrOfEarlyBirds)</i>
     }
 }
 
@@ -67,7 +67,8 @@
     <text>Op @HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving.ToShortDateString() opent de algemene inschrijving (totaal @HRE.Common.HreSettings.AantalStartPlekken startplekken)</text>
 }
 </span>
-<p>Hieronder de lijst van aangemelde deelnemers aan Het Rondje Eilanden.</p>
+<p>Hieronder de deelnemerslijst; met startnummers en starttijden.<br />
+<b>Belangrijk: Check je nummer en tijd de dag voor de wedstrijd nog een keer! Er kunnen namelijk nog een paar verschuivingen plaatsvinden...</b></p>
 @if (Model==null || Model.Inschrijvingen==null || Model.Inschrijvingen.Count==0) {
     <p>Er zijn nog geen deelnemers.</p>
 } else {
@@ -80,6 +81,7 @@
             <th>Aangemeld</th>
             <th>Uitvoering</th>
             @if (Model.HasAdminRole) {
+                <th>DVD</th>
                 <th>E-mail adres</th>
                 <th>Geb. datum</th>
                 <th>Eerst gescraped</th>
@@ -107,6 +109,7 @@
                 @if (Model.HasAdminRole) {
                     using(Html.BeginForm("DeleteEntry", "Inschrijvingen", new { model = Model, participantUserId = entry.ParticipationId}, FormMethod.Post, null)) {
                         @Html.HiddenFor(model => model.EventNumber)
+                        <td>@string.Format("{0:dd-MM-yyyy H:mm}", @entry.VirtualRegistrationDateForOrdering)</td>
                         <td><a href="mailto:@entry.Email">@entry.Email</a></td>
                         <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td>
                         <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstSynchronized.HasValue ? entry.DateFirstSynchronized.Value.RelativeDateDescription() : "-")</td>

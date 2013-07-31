@@ -143,6 +143,7 @@ namespace HRE.Controllers {
             table.TableName = tableName;
 
             table.Columns.Add("StartNr", typeof(int));
+            table.Columns.Add("StartTijd", typeof(string));
             table.Columns.Add("Naam", typeof(string));
             table.Columns.Add("Woonplaats", typeof(string));
             table.Columns.Add("Heb je er zin in?", typeof(string));
@@ -178,11 +179,15 @@ namespace HRE.Controllers {
                 table.Columns.Add("DateLastScraped", typeof(DateTime));
             }
 
-            foreach (var inschrijving in model.Inschrijvingen) {
+            // Initializeer startnummer en starttijd.
+            int startNummer = 1;
+            DateTime startTijd = HRE.Common.HreSettings.DatumTijdstipH2RE;
 
+            foreach (var inschrijving in model.Inschrijvingen) {
                 var row = isForSpeaker ?
                     new object[] {
-                        inschrijving.RaceNumber,
+                        startNummer,
+                        startTijd.ToString("H:mm:ss"),
                         Common.Common.SmartJoin(" ", new string[] { inschrijving.Voornaam, inschrijving.Tussenvoegsel, inschrijving.Achternaam}),
                         inschrijving.Woonplaats,
                         inschrijving.HebJeErZinIn,
@@ -197,7 +202,8 @@ namespace HRE.Controllers {
                         inschrijving.RegistrationDate.Date
                     }
                     : new object[] {
-                        inschrijving.RaceNumber,
+                        startNummer,
+                        startTijd.ToString("H:mm:ss"),
                         Common.Common.SmartJoin(" ", new string[] { inschrijving.Voornaam, inschrijving.Tussenvoegsel, inschrijving.Achternaam}),
                         inschrijving.Woonplaats,
                         inschrijving.HebJeErZinIn,
@@ -234,7 +240,12 @@ namespace HRE.Controllers {
                     };
                 
                     table.Rows.Add(row);
-                }
+                    if ((startNummer%HRE.Common.HreSettings.AantalPersonenPerStartschot)==0) {
+                        startTijd = startTijd.AddSeconds(HRE.Common.HreSettings.AantalSecondenTussenStartschots);
+                    }
+                    startNummer++;
+            }
+            
             return table;
         }
 
@@ -635,6 +646,9 @@ namespace HRE.Controllers {
 
             InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, eventNr);
 
+            // Initialize the email before update, so that a change in the e-mail address can be detected.
+            model.EmailBeforeUpdateIfAny = model.Email;
+
             // Als inladen is mislukt en het gaat om inschrijving voor 2013.
             if (model==null && eventNr==InschrijvingenRepository.H2RE_EVENTNR) {
                 // Probeer dan de gegevens voor te laden uit het jaar ervoor (2012)
@@ -712,7 +726,7 @@ namespace HRE.Controllers {
                 // Sla op!
                 InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
                 
-                if (!model.DateConfirmationSend.HasValue || model.DoForceSendConfirmation) {
+                if (!model.DateConfirmationSend.HasValue || model.DoForceSendConfirmationOfChange) {
                     SendSubscriptionConfirmationMail(model);
                     model.DateConfirmationSend = DateTime.Now;
                     
@@ -756,15 +770,24 @@ namespace HRE.Controllers {
             newsletter.IncludeLoginLink = true;
             newsletter.Items = new List<NewsletterItemViewModel>();
 
-            newsletter.IntroText = string.Format("Je bent aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief na betaling van het inschrijfgeld. ");
+            if (!model.DoForceSendConfirmationOfChange) {
+                newsletter.IntroText = string.Format("Je bent aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief na betaling van het inschrijfgeld. ");
+            } else {
+                newsletter.IntroText = string.Format("Hier een Flessenpost achtige mail omdat je je inschrijfgegevens hebt gewijzigd.");
+            }
             if (model.IsEarlyBird.HasValue && model.IsEarlyBird.Value) {
                 newsletter.IntroText += string.Format("Voor Early Bird korting maak het voor {0} over!", HreSettings.EindDatumEarlyBirdKorting.ToShortDateString());
             }
             newsletter.IntroText += "<br/>Hieronder je inschrijfgegevens. Graag even controleren. Als er iets niet klopt kunt je dit zelf wijzigen op onze site door in te loggen via de persoonlijke link hierboven.";
 
             NewsletterItemViewModel item1 = new NewsletterItemViewModel();
-            item1.Title = "You're in!";
-            item1.SubTitle = "voor Hét 2e Rondje Eilanden";
+            if (!model.DoForceSendConfirmationOfChange) {
+                item1.Title = "You're in!";
+                item1.SubTitle = "voor Hét 2e Rondje Eilanden";
+            } else {
+                item1.Title = "We have there sin in";
+                item1.SubTitle = "...hope you also!";
+            }
             item1.HeadingHtmlColour = "208900";
             item1.ImagePath = "News_2013.png";
             item1.IconImagePath = "News_TileEB.png";
@@ -841,7 +864,9 @@ namespace HRE.Controllers {
                 mm.Bcc.Add(new MailAddress(HreSettings.MailAddressSecretary));
             }
 
-            mm.Subject = "Aanmeldbevestiging deelname Het 2e Rondje Eilanden " + model.VolledigeNaam;
+            mm.Subject = model.DoForceSendConfirmationOfChange ? 
+                "Wijziging in inschrijfgegevens Het 2e Rondje Eilanden " + model.VolledigeNaam
+                : "Aanmeldbevestiging deelname Het 2e Rondje Eilanden " + model.VolledigeNaam;
 
             mm.IsBodyHtml = true;
             spnvm.UserId = model.UserId;

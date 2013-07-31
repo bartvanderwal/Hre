@@ -620,12 +620,11 @@ namespace HRE.Dal {
         /// Determines the number of participants or Early Birds in the 2013 HRE event.
         /// </summary>
         /// <returns></returns>
-        public static int AantalIngeschrevenDeelnemers(string eventNr, bool? food=null, bool? camp = null, bool? bike = null, bool? emailConfirmed = null, bool? earlyBird = null) {
+        public static int AantalIngeschrevenDeelnemers(string eventNr, bool? food=null, bool? camp = null, bool? bike = null, bool? earlyBird = null) {
             var result = from p in DB.sportseventparticipation 
                     join e in DB.sportsevent on p.SportsEventId equals e.Id
                     where e.ExternalEventIdentifier==eventNr
-                    select p
-                    ;
+                    select p;
 
             if (food.HasValue) {
                 result = result.Where(r => r.Food==food.Value);
@@ -639,12 +638,8 @@ namespace HRE.Dal {
                 result = result.Where(r => r.Bike==bike.Value);
             }
 
-            if (emailConfirmed.HasValue) {
-                result = result.Where(r => r.ParticipationStatus.HasValue && r.ParticipationStatus.Value==2);
-            }
-
             if (earlyBird.HasValue) {
-                result = result.Where(r => r.EarlyBird==earlyBird);
+                result = result.Where(r => r.EarlyBird==earlyBird.Value);
             }
 
             return result.Count();
