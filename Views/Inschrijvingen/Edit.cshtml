@@ -11,7 +11,7 @@
     int aantalPlekken = HreSettings.AantalStartPlekken;
     int aantalReserve = HreSettings.AantalPlekkenReserveLijst;
     int aantalPlekkenInclusiefReserve = aantalPlekken+aantalReserve;
-    bool allePlekkenBezet = nrOfEntries > aantalPlekkenInclusiefReserve;
+    bool allePlekkenBezet = nrOfEntries >= aantalPlekkenInclusiefReserve;
     bool inschrijfDatumGepasseerd = DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.SluitingsDatumAlgemeneInschrijving)>0;
 }
 
@@ -33,7 +33,7 @@
         }
 
         if(nrOfEntries > aantalPlekken) {
-            <p>Let op: Alle @aantalPlekken startplekken zijn bezet. We hebben nog wel wat reserve ruimte, dus je kunt je inschrijven. Maar we kunnen helaas niet garanderen dat je een aandenken krijgt. We doen echter ons best. Volgend jaar eerder inschrijven!! :)</p>
+            <p>Let op: De @aantalPlekken geplande startplekken zijn inmiddels ingenomen. De organisatie heeft echter nog wat reserve plekken weten te creeren. Dus je kunt je nog wel net inschrijven. Door de grote animo kunnen we helaas niet garanderen dat er een aandenken voor je is. Daar doen we wel ons best voor!</p>
         }
         
         Html.BeginForm("Edit", "Inschrijvingen");
@@ -237,8 +237,9 @@
                         @Html.HiddenFor(m => m.EmailBeforeUpdateIfAny)
                     } else {
                         @Html.TextBoxFor(m => m.Email, new { @tabindex="15", @size="30", @maxLenght="100", @placeholder="E-mail", @disabled="disabled", @title="niet wijzigbaar" } )
-                        // TODO BW 2013-03-01: Adding email as hidden field is necessary to retain value, but this might open up hacking possiblities...
+                        @* TODO BW 2013-03-01: Adding email as hidden field is necessary to retain value, but this might open up hacking possiblities... *@
                         @Html.HiddenFor(m => m.Email)
+                        @Html.HiddenFor(m => m.EmailBeforeUpdateIfAny)
                     }
                 </div>
                 <div class="editor-label">Telefoon</div>
@@ -265,8 +266,8 @@
 		    <div class="editor-label">Kamperen?</div>
 		    <div class="editor-field">
 			    @Html.CheckBoxFor(m => m.Camp, new { @tabindex="19", @title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"})
-			    <label for="Camp" title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"></label>
-                <span id="camp-span" class="opt-text" style="display: none;">Ja! <span class="small">(Info volgt nog..)</span></span>
+			    <label for="Camp" title="Ik wil blijven kamperen!"></label>
+                <span id="camp-span" class="opt-text" style="display: none;">Ja! <span class="small">(Bij Winkeloord &euro;10,-)</span></span>
 		    </div>
 		    <div class="editor-label">Fiets stallen?</div>
 		    <div class="editor-field">

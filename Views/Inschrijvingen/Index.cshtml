@@ -94,17 +94,17 @@
             }
         </tr>
 
-        @{
+        @*
             int startNummer = 1;
             DateTime startTijd = HRE.Common.HreSettings.DatumTijdstipH2RE;
-        }
+        *@
         @foreach (var entry in Model.Inschrijvingen) {
             string participant = entry.Achternaam;
             bool isTestUser = testParticipants.Contains(entry.UserId);
             bool isMe = currentUserId==entry.UserId;
             <tr class="@(isTestUser ? "test-user" : "") @(isMe ? "is-me" : "")">
-                <td>@startNummer @* @entry.RaceNumber *@</td>
-                <td>@string.Format("{0:H:mm:ss}", startTijd)</td>
+                <td>@entry.StartNummer</td> @* @startNummer *@
+                <td>@entry.StartTijd.ToString()</td> @* string.Format("{0:H:mm:ss}", startTijd) *@
                 <td>@Html.ActionLink(entry.VolledigeNaam, "Edit", new { externalId = entry.ExternalIdentifier, eventNr = entry.ExternalEventIdentifier })</td>
                 <td>@entry.Woonplaats</td>
                 <td>@string.Format("{0:d-MMM}", entry.RegistrationDate)</td>
@@ -142,10 +142,11 @@
                     }
                 }
             </tr>
-            if ((startNummer%HRE.Common.HreSettings.AantalPersonenPerStartschot)==0) {
+
+            @*if ((startNummer%HRE.Common.HreSettings.AantalPersonenPerStartschot)==0) {
                 startTijd = startTijd.AddSeconds(HRE.Common.HreSettings.AantalSecondenTussenStartschots);
             }
-            startNummer++;
+            startNummer++; *@
         }
     </table>
 }

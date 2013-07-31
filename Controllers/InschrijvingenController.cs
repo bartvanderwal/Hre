@@ -180,14 +180,14 @@ namespace HRE.Controllers {
             }
 
             // Initializeer startnummer en starttijd.
-            int startNummer = 1;
-            DateTime startTijd = HRE.Common.HreSettings.DatumTijdstipH2RE;
+            // int startNummer = 1;
+            // DateTime startTijd = HRE.Common.HreSettings.DatumTijdstipH2RE;
 
             foreach (var inschrijving in model.Inschrijvingen) {
                 var row = isForSpeaker ?
                     new object[] {
-                        startNummer,
-                        startTijd.ToString("H:mm:ss"),
+                        inschrijving.StartNummer, // startNummer,
+                        inschrijving.StartTijd.ToString(), // startTijd.ToString("H:mm:ss"),
                         Common.Common.SmartJoin(" ", new string[] { inschrijving.Voornaam, inschrijving.Tussenvoegsel, inschrijving.Achternaam}),
                         inschrijving.Woonplaats,
                         inschrijving.HebJeErZinIn,
@@ -202,8 +202,8 @@ namespace HRE.Controllers {
                         inschrijving.RegistrationDate.Date
                     }
                     : new object[] {
-                        startNummer,
-                        startTijd.ToString("H:mm:ss"),
+                        inschrijving.StartNummer, // startNummer,
+                        inschrijving.StartTijd.ToString(), // startTijd.ToString("H:mm:ss"),
                         Common.Common.SmartJoin(" ", new string[] { inschrijving.Voornaam, inschrijving.Tussenvoegsel, inschrijving.Achternaam}),
                         inschrijving.Woonplaats,
                         inschrijving.HebJeErZinIn,
@@ -240,10 +240,10 @@ namespace HRE.Controllers {
                     };
                 
                     table.Rows.Add(row);
-                    if ((startNummer%HRE.Common.HreSettings.AantalPersonenPerStartschot)==0) {
+                    /* if ((startNummer%HRE.Common.HreSettings.AantalPersonenPerStartschot)==0) {
                         startTijd = startTijd.AddSeconds(HRE.Common.HreSettings.AantalSecondenTussenStartschots);
                     }
-                    startNummer++;
+                    startNummer++; */
             }
             
             return table;
@@ -778,7 +778,7 @@ namespace HRE.Controllers {
             if (model.IsEarlyBird.HasValue && model.IsEarlyBird.Value) {
                 newsletter.IntroText += string.Format("Voor Early Bird korting maak het voor {0} over!", HreSettings.EindDatumEarlyBirdKorting.ToShortDateString());
             }
-            newsletter.IntroText += "<br/>Hieronder je inschrijfgegevens. Graag even controleren. Als er iets niet klopt kunt je dit zelf wijzigen op onze site door in te loggen via de persoonlijke link hierboven.";
+            newsletter.IntroText += "<br/>Hieronder je inschrijfgegevens. Graag even controleren. Als er iets niet klopt kunt je dit zelf wijzigen op onze site door in te loggen via de persoonlijke link hiernaast.";
 
             NewsletterItemViewModel item1 = new NewsletterItemViewModel();
             if (!model.DoForceSendConfirmationOfChange) {

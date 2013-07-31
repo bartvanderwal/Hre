@@ -151,7 +151,8 @@ namespace HRE.Models {
                 where e.ExternalEventIdentifier == eventNr && (addTestParticipants || !testParticipantIds.Contains(u.Id))
                 select new InschrijvingModel() {
                     // User data.
-                    RaceNumber = p.RaceNumber,
+                    StartNummer = p.RaceNumber,
+                    StartTijd = p.PlannedStartTime,
                     UserId = u.Id,
                     UserName = u.UserName,
                     GeboorteDatum = u.DateOfBirth,
@@ -212,18 +213,16 @@ namespace HRE.Models {
             if (userId!=0) {
                 raceEntries = raceEntries.Where(e => e.UserId==userId);
             }
-
-            /*
-            return raceEntries.OrderByDescending(i => i.GenoegBetaaldVoorDeelnemerslijst)
-                    .ThenBy(i => i.VirtualRegistrationDateForOrdering) // Deze is descending 
-                    // .ThenBy(i => i.RegistrationDate); 
-            */
             
-            return raceEntries.Where(i => i.BedragBetaald.HasValue && i.BedragBetaald.Value>=2000 || (i.FreeStarter.HasValue && i.FreeStarter.Value)).
-                    OrderBy(i => i.VirtualRegistrationDateForOrdering.Value).ToList()
+            return raceEntries.OrderBy(i => i.StartNummer.Value);
+
+            /* return raceEntries.Where(i => i.BedragBetaald.HasValue && i.BedragBetaald.Value>=2000 || (i.FreeStarter.HasValue && i.FreeStarter.Value))
+                        .OrderBy(i => i.StartNummer)
+                        .ThenBy(i => i.VirtualRegistrationDateForOrdering.Value).ToList()
                 .Concat(
-                raceEntries.Where(i => (!i.BedragBetaald.HasValue || i.BedragBetaald.Value<2000) && (!i.FreeStarter.HasValue || !i.FreeStarter.Value)).
-                    OrderBy(i => i.VirtualRegistrationDateForOrdering.Value).ToList());
+                raceEntries.Where(i => (!i.BedragBetaald.HasValue || i.BedragBetaald.Value<2000) && (!i.FreeStarter.HasValue || !i.FreeStarter.Value))
+                    .OrderBy(i => i.StartNummer)
+                    .ThenBy(i => i.VirtualRegistrationDateForOrdering.Value).ToList()); */
         }
 
 

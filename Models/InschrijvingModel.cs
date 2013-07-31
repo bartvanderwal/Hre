@@ -23,7 +23,10 @@ namespace HRE.Models {
             EmailBeforeUpdateIfAny = Email;
         }
 
-        public int? RaceNumber { get; set; }
+        public int? StartNummer { get; set; }
+
+
+        public TimeSpan? StartTijd { get; set; }
 
         /// <summary>
         /// The User id.
