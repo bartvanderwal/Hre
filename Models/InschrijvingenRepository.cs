@@ -214,7 +214,7 @@ namespace HRE.Models {
                 raceEntries = raceEntries.Where(e => e.UserId==userId);
             }
             
-            return raceEntries.OrderBy(i => i.StartNummer.Value);
+            return raceEntries.OrderBy(i => i.StartNummer ?? int.MaxValue);
 
             /* return raceEntries.Where(i => i.BedragBetaald.HasValue && i.BedragBetaald.Value>=2000 || (i.FreeStarter.HasValue && i.FreeStarter.Value))
                         .OrderBy(i => i.StartNummer)
@@ -271,7 +271,7 @@ namespace HRE.Models {
             // inmiddels aangepast dan werkt onderstaande niet. De persoon wordt dan onder een nieuwe inschrijving gesaved en klapt er mogelijk uit op duplicate NTB licentie nummer..
             inschrijving.Email = inschrijving.Email.ToLower();
 
-            bool isEmailGewijzigd = (!string.IsNullOrEmpty(inschrijving.EmailBeforeUpdateIfAny) && inschrijving.Email!=inschrijving.Email);
+            bool isEmailGewijzigd = (!string.IsNullOrEmpty(inschrijving.EmailBeforeUpdateIfAny) && inschrijving.EmailBeforeUpdateIfAny!=inschrijving.Email);
 
             string gebruikersnaam = isEmailGewijzigd ? inschrijving.EmailBeforeUpdateIfAny : inschrijving.Email;
 
@@ -288,9 +288,9 @@ namespace HRE.Models {
                         && DateTime.Compare(inschrijving.DateUpdated, inschrijving.DateLastSynchronized.Value)<=0))) {
                 user.DateOfBirth = inschrijving.GeboorteDatum;
                 user.IsMailingListMember = inschrijving.Newsletter;
-                user.UserName = inschrijving.Email;
+
                 if (user.EmailAddress != inschrijving.Email) {
-                    // TODO BW 2013-07-28: A check has to be added tht the new e-mail address does not exist yet (or is it already present?).
+                    // TODO BW 2013-07-28: A check has to be added that the new e-mail address does not exist yet (or is it already present?).
                     if (Membership.GetUser(inschrijving.Email)!=null) {
                         throw new ArgumentException(string.Format("Het e-mail adres is gewijzigd van {0} naar {1}, maar dit laatste e-mail adres is al gebruikt door een andere gebruiker.", user.EmailAddress, inschrijving.Email));
                     }
@@ -299,6 +299,7 @@ namespace HRE.Models {
                     // Set user status as unconfirmed, since the e-mail address is changed, and the new address is not confirmed yet.
                     user.Status = Business.LogonUserStatus.EmailAddressChanged;
                 }
+                user.UserName = inschrijving.Email;
                 user.TelephoneNumber = inschrijving.Telefoon;
 
                 user.NtbLicenseNumber = inschrijving.HasLicentieNummer ? inschrijving.LicentieNummer : null;

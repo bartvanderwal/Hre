@@ -34,7 +34,7 @@
         <p>Je e-mail adres is bevestigd. Bedankt, zo weten we zeker dat jij de mails naar @Model.Email goed binnenkrijgt!</p>
     }
     if (Model.User.IsEmailAddressUnconfirmed) {
-    	<p>Er is een e-mail gestuurd naar '<a href="mailto:@Model.User.EmailAddress">@Model.User.EmailAddress</a>. Klik op de inlog link in deze e-mail om je e-mail adres te bevestigen. Pas daarna kan je inschrijving definitief gemaakt worden.</p>
+    	<p>Er is een e-mail gestuurd naar '<a href="mailto:@Model.User.EmailAddress">@Model.User.EmailAddress</a>'. Klik op de inlog link in deze e-mail om je e-mail adres te bevestigen. Pas daarna kan je inschrijving definitief gemaakt worden.</p>
     }
     <p>Je hebt je @Model.RegistrationDate.RelativeDateTimeDescription() aangemeld voor Hét 2e Rondje Eilanden.</p>
     if (!Model.IsVolledigEnCorrectBetaald) {

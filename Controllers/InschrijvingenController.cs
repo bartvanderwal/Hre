@@ -771,9 +771,16 @@ namespace HRE.Controllers {
             newsletter.Items = new List<NewsletterItemViewModel>();
 
             if (!model.DoForceSendConfirmationOfChange) {
-                newsletter.IntroText = string.Format("Je bent aangemeld voor Hét 2e Rondje Eilanden. Je inschrijving wordt definitief na betaling van het inschrijfgeld. ");
+                newsletter.IntroText = string.Format("Je bent aangemeld voor Hét 2e Rondje Eilanden!");
+                if (model.BedragTeBetalen>0) {
+                    newsletter.IntroText = "Je inschrijving wordt definitief na betaling van het inschrijfgeld.";
+                }
             } else {
-                newsletter.IntroText = string.Format("Hier een Flessenpost achtige mail omdat je je inschrijfgegevens hebt gewijzigd.");
+                if (model.EmailBeforeUpdateIfAny!=model.Email) {
+                    newsletter.IntroText = string.Format("Je bent aangemeld voor Hét 2e Rondje Eilanden! Je hebt je e-mail adres gewijzigd, of iemand anders heeft zijn inschrijving naar jouw e-mail overgezet. Je moet de inschrijving en het nieuwe e-mail adres bevestigen via onderstaande link. ");
+                } else {
+                    newsletter.IntroText = string.Format("Hier een Flessenpost achtige mail omdat je je inschrijfgegevens hebt gewijzigd.");
+                }
             }
             if (model.IsEarlyBird.HasValue && model.IsEarlyBird.Value) {
                 newsletter.IntroText += string.Format("Voor Early Bird korting maak het voor {0} over!", HreSettings.EindDatumEarlyBirdKorting.ToShortDateString());
@@ -785,8 +792,8 @@ namespace HRE.Controllers {
                 item1.Title = "You're in!";
                 item1.SubTitle = "voor Hét 2e Rondje Eilanden";
             } else {
-                item1.Title = "We have there sin in";
-                item1.SubTitle = "...hope you also!";
+                item1.Title = "We have there sin in!";
+                item1.SubTitle = "...how sits it with you?";
             }
             item1.HeadingHtmlColour = "208900";
             item1.ImagePath = "News_2013.png";
@@ -811,7 +818,9 @@ namespace HRE.Controllers {
                 item1.Text += string.Format("<tr><td>Toevoeging</td><td>{0}</span></td></tr>", model.HuisnummerToevoeging ?? "-");
                 item1.Text += string.Format("<tr><td>Postcode</td><td>{0}</span></td></tr>", model.Postcode ?? "-");
                 item1.Text += string.Format("<tr><td>Woonplaats</td><td>{0}</span></td></tr>", model.Woonplaats?? "-");
+                item1.Text += string.Format("<tr><td>Land</td><td>{0}</span></td></tr>", model.Land ?? "-");
                 item1.Text += string.Format("<tr><td>E-mail adres</td><td>{0}</span></td></tr>", model.Email ?? "-");
+                item1.Text += string.Format("<tr><td>Telefoon</td><td>{0}</span></td></tr>", model.Telefoon ?? "-");
 
                 item1.Text += string.Format("<tr><td></td></tr>");
                 item1.Text += string.Format("<tr><th colspan=\"2\"><b>Extra's</b></th></tr>");

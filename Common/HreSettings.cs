@@ -232,7 +232,7 @@ namespace HRE.Common {
         /// </summary>
         public static DateTime SluitingsDatumAlgemeneInschrijving {
             get {
-                return ReadDateTimeSetting("SluitingsDatumAlgemeneInschrijving", "1-8-2013");
+                return ReadDateTimeSetting("SluitingsDatumAlgemeneInschrijving", "1-8-2013 0:00:00");
             }
         }
 

@@ -1099,6 +1099,7 @@
     <Content Include="sql\20130729_set_logonuser_ismailinglistmember.sql" />
     <Content Include="sql\20130730_insert_new_payments.sql" />
     <Content Include="sql\20130731_insert_startnummers_en_tijden.sql" />
+    <Content Include="sql\20130801AddSportsEventParticipation_UserCanceled.sql" />
     <Content Include="Views\emailaudits\Create.cshtml" />
     <Content Include="Views\emailaudits\Edit.cshtml" />
     <Content Include="Views\emailaudits\Delete.cshtml" />
