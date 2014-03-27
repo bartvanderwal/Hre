@@ -125,7 +125,7 @@ namespace HRE.Common {
         /// Returns the domain base of the URL for the current environment: local, test or production.
         /// </summary>
         public static string GetDomainBase() {
-            return HreSettings.IsProduction ? "https://www.hetrondjeeilanden.nl" : HreSettings.IsDevelopment ? "https://localhost:44301" : "http://test.hetrondjeeilanden.nl";
+            return HreSettings.IsProduction ? "https://www.hetrondjeeilanden.nl" : HreSettings.IsDevelopment ? "https://localhost:59162" : "http://test.hetrondjeeilanden.nl";
         }
 
 

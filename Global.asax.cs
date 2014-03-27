@@ -24,6 +24,8 @@ namespace HRE {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             // routes.IgnoreRoute("{resource}.aspx/{*pathInfo}");
             routes.IgnoreRoute("{resource}.html/{*pathInfo}");
+            // routes.IgnoreRoute("index.html");
+            // routes.IgnoreRoute("");
 
             /* routes.MapRoute(
                 "StaticHtml", // Route name
@@ -32,11 +34,17 @@ namespace HRE {
                 new { controller = "Home|Meedoen|Newsletter|Inschrijvingen|Programma|Video" } // Route constraints.
             ); */
 
+           routes.MapRoute(
+                "Html", // Route name
+                "{controller}/{action}", // URL with parameters
+                new { controller = "Html", action = "GetHtml"}     // Parameter defaults.
+            );
+
             routes.MapRoute(
                 "Controllers", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional},     // Parameter defaults.
-                new { controller = "Home|Meedoen|Newsletter|Inschrijvingen|Programma|Video|Account|emailaudits" } // Route constraints.
+                new { controller = "Home|Meedoen|Newsletter|Inschrijvingen|Programma|Video|Account|emailaudits|Inschrijven" } // Route constraints.
             );
         }
 

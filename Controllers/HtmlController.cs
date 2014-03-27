@@ -21,5 +21,24 @@ namespace HRE.Controllers {
         }
 
         
+        public ActionResult GetHtml() {
+            string path = Request.FilePath;
+            var result = new FilePathResult("~/"+ path + "/index.html", "text/html");
+            return result;
+        }
+
+        /*
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="folderAndOrFile">Pathname; for instance "/Solution/Html"/</param>
+        public void GetHtml(string folderOrFile) {
+            var encoding = new System.Text.UTF8Encoding();
+            var htm = System.IO.File.ReadAllText(Server.MapPath(folderOrFile) + "index.html", encoding);
+            byte[] data = encoding.GetBytes(htm);
+            Response.OutputStream.Write(data, 0, data.Length);
+            Response.OutputStream.Flush();
+        }
+         * */
     }
 }

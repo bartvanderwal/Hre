@@ -62,7 +62,8 @@ namespace HRE.Common {
         /// </summary>
         protected static DateTime ReadDateTimeSetting(string settingKey, string defaultValue) {
             string dateString = ReadStringSetting(settingKey, defaultValue);
-            return DateTime.Parse(dateString, CultureInfo.CreateSpecificCulture("nl-NL"));
+            var result = DateTime.Parse(dateString, CultureInfo.CreateSpecificCulture("nl-NL"));
+            return result;
         }
 
 

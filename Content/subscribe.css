@@ -12,7 +12,6 @@
 	opacity: 0;
 }
 
-
 /* General background image and display mode for inputs. */
 :root .editor-field > input ~ label:before {
 	background: url('/Content/img/InschrijvenHREIconSet.png') -35px -214px no-repeat;
@@ -257,7 +256,7 @@ ul#uitleg {
 }
 
 .edit-allowed .editor-field {
-    width: 222px !important;
+    width: 250px !important;
 }
 
 .editor-field input {
@@ -371,7 +370,7 @@ input.save[type=submit] {
 }
 
 .editor-spacer.name {
-    height: 260px;
+    height: 180px;
 }
 
 .editor-spacer.address {
@@ -379,11 +378,11 @@ input.save[type=submit] {
 }
 
 .editor-spacer.email {
-    height: 42px;
+    height: 192px;
 }
 
 .editor-spacer.amount {
-    height: 150px;
+    height: 326px;
 }
 
 .editor-spacer.speaker {
@@ -420,7 +419,7 @@ input.input-validation-error {
     float: right;
     color: #FFFFFF;
     padding: 10px 10px;
-    margin: 10px 0px 900px 0px;
+    margin: 10px 0px 1080px 0px;
     display: inline-block;
     *display: inline;
     zoom: 1;
@@ -467,6 +466,24 @@ tr.total td:last-child {
 	background: url('/Content/img/InschrijvenHREIconSet.png') 0px 0px no-repeat;
 }
 
+#my-laps-green {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    height: 24px;
+    width: 24px;
+	background: url('/Content/img/InschrijvenHREIconSet.png') -392px -256px no-repeat;
+}
+
+#my-laps-yellow {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    height: 24px;
+    width: 24px;
+	background: url('/Content/img/InschrijvenHREIconSet.png') -505px -257px no-repeat;
+}
+
 .make-it-personal.speaker {
     background-position: 0px -295px;
 }
@@ -477,4 +494,56 @@ tr.total td:last-child {
 
 /* End subscription. */
 
+.item-text {
+    display: inline-block;
+    margin: 0px 0px 0px 4px;
+    padding: 0px 0px;
+    vertical-align: top;
+}
 
+.sprite { 
+	background-image: url('/Content/img/AllBanks2_small.png');
+    /* background-color: #FFFFFF00; */
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+	display: inline-block;
+	height: 19px;
+    margin: 3px 0px 0px 0px;
+	width: 19px;
+}
+    .sprite.p1 { /* iDeal */
+	    background-position: -61px -41px;
+    }
+    .sprite.b01 { /* ABNAmro */
+	    background-position: -21px 0px;
+    }
+    .sprite.b02 { /* ASN Bank */
+	    background-position: -41px 0px;
+    }
+    .sprite.b04 { /* Friesland Bank */
+	    background-position: -21px -42px;
+    }
+    .sprite.b05 { /* ING */
+	    background-position: -61px 0px;
+    }
+    .sprite.b06 { /* Rabobank */
+	    background-position: 0px -41px;
+    }
+    .sprite.b07 { /* SNS Bank */
+	    background-position: 0px -21px;
+    }
+    .sprite.b08 { /* Regiobank */
+	    background-position: -61px -21px;
+    }
+    .sprite.b09 { /* Triodos */
+	    background-position: -41px -21px;
+    }
+    .sprite.b10 { /* Van Lanschot */ 
+	    background-position: -41px -41px;
+    }
+    .sprite.b11 { /* Knab 11 */
+	    background-position: -21px -21px;
+    }
+    .sprite.b99 { /* Sisow Bank (Test) */
+	    background-position: -81px -41px;
+    }

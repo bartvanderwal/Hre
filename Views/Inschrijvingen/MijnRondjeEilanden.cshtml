@@ -24,7 +24,7 @@
     <div class="badge">Míjn @(Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value ? "2e " : "")Rondje Eilanden<br />
         <ul class="personal-links">
         <li>@Html.ActionLink("Gegevens " + Model.Voornaam, "Edit", new { externalId=Model.ExternalIdentifier, @eventNr=Model.ExternalEventIdentifier })</li>
-        <li><a href="/Inschrijvingen">Deelnemerslijst</a></li>
+        <li><a href="/Inschrijvingen/Index">Deelnemerslijst</a></li>
         <li>Binnenkort meer...</li>
         </ul>
     </div>
@@ -36,18 +36,19 @@
     if (Model.User.IsEmailAddressUnconfirmed) {
     	<p>Er is een e-mail gestuurd naar '<a href="mailto:@Model.User.EmailAddress">@Model.User.EmailAddress</a>'. Klik op de inlog link in deze e-mail om je e-mail adres te bevestigen. Pas daarna kan je inschrijving definitief gemaakt worden.</p>
     }
-    <p>Je hebt je @Model.RegistrationDate.RelativeDateTimeDescription() aangemeld voor Hét 2e Rondje Eilanden.</p>
+    <p>Je hebt je @Model.RegistrationDate.RelativeDateTimeDescription() aangemeld voor Hét 3e Rondje Eilanden.</p>
     if (!Model.IsVolledigEnCorrectBetaald) {
-        <p>Je moet nog @Model.BedragTeBetalen.AsAmount() betalen. Hieronder de betaalgegevens. Pas als het inschrijfgeld binnen is ben je ingeschreven. Mocht je kortgeleden het geld overgemaakt hebben, dan kan het zijn dat onze betalingen hiervoor nog niet bijgewerkt is (de inschrijvingen zijn op 30 juli voor het laatst bijgewerkt). Neem bij twijfel contact op via <a href="mailto:info@hetrondjeeilanden.nl">info@hetrondjeeilanden.nl</a> bij vragen!</p>
+        <p>Je moet nog @Model.BedragTeBetalen.AsAmount() betalen.</p>
+        <div style="display: inline-block;">
+            <a href="@Model.SisowUrl" target="_blank" title="Betalen met iDEAL" id="sisow-pay-link">
+                <img src="/Content/img/IdealButtonKlein.png" class="pay" alt="Betalen" runat="server" id="PayButton" /><br />
+                iDEAL<img src="/Content/img/IdealLinkje.png" class="pay" alt="Betalen" runat="server" id="PayLink" /><br />
+            </a>
+            <p>Betaal het inschrijfgeld van @Model.InschrijfGeld.AsAmount() via iDeal.</p>
+        </div>
     }
-    <table class="bank-account">
-        <tr><td>Inschrijfgeld</td><td><span class="quotable">@Model.InschrijfGeld.AsAmount()</span></td></tr>
-        <tr><td>Bank rek nr</td><td><span class="quotable">1684.92.059</span> (Rabobank)</td></tr>
-        <tr><td>Ten name van </td><td><span class="quotable">Stichting Woelig Water</span> (te Vinkeveen)</td></tr>
-        <tr><td>Onder vermelding van</td><td><span class="quotable">H2RE @Model.VolledigeNaam</span></td></tr>
-    </table>
-    if (Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value) {
-        <p>Let op: om Early Bird korting te verzilveren moest het inschrijfgeld voor @HRE.Common.HreSettings.EindDatumEarlyBirdKorting.ToShortDateString() overgemaakt te zijn!</p>
+    if (Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value && (!Model.IsBetaald.HasValue || !Model.IsBetaald.Value)) {
+        <p>Let op: om Early Bird korting te verzilveren moet het inschrijfgeld voor @HRE.Common.HreSettings.EindDatumEarlyBirdKorting.ToShortDateString() overgemaakt te zijn!</p>
     }
     <p>NB: Je bent automatisch ingelogd via de link in de e-mail. Log als je klaar bent zelf weer uit via de link 'Uitloggen' rechts bovenin (om onder andere te voorkomen dat eventuele andere gebruikers van deze computer je gegevens kunnen zien/bewerken).</p>
     <br clear="all"/>

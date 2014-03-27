@@ -4,7 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Security.Cryptography;
+using System.Web.Mvc;
+
 using HRE.Common;
+using HRE.Sisow;
 
 namespace HRE.Business {
     /// <summary>
@@ -19,8 +22,7 @@ namespace HRE.Business {
         private const string PAGEURL = "https://www.sisow.nl/Sisow/iDeal/Betaal.aspx";
 
 
-        // Betalingskenmerk: "Boek Word wie je bent"
-        // Bepaal de URL voor get request voor Ideal transactie bij SISOW.
+        // Bepaal de URL voor get request voor de Ideal transactie bij Sisow.
         public static string DetermineSisowGetUrl(int amountInCents, string purchaseId, string description, string returnurl, string issuerid) {
             
             if (purchaseId.Length>16) {
@@ -44,14 +46,15 @@ namespace HRE.Business {
             payparams += "&purchaseid=" + HttpUtility.UrlEncode(purchaseId);
             payparams += "&amount=" + amountInCents;
             payparams += "&description=" + HttpUtility.UrlEncode(description);
-            if (!string.IsNullOrEmpty(returnurl)) {
-                payparams += "&returnurl=" + returnurl;
-            }
             if (!string.IsNullOrEmpty(issuerid)) {
                 payparams += "&issuerid=" + HttpUtility.UrlEncode(issuerid);
             } else {
                 payparams += "&confirm=1";
             }
+            if (!string.IsNullOrEmpty(returnurl)) {
+                payparams += "&returnurl=" + returnurl;
+            }
+
             // The confirmback URL param in the querystring results in the user getting an acknowledgement screen within Sisow. 
             // at the end of the his/her IDEAL transaction.
             // payparams += "&confirmback=";
@@ -71,19 +74,29 @@ namespace HRE.Business {
 
 
         /// <summary>
-        /// Get the currently valid bank names from Sisow iDEAL webservice.
+        /// Get the currently valid bank names and id's from the Sisow iDEAL webservice.
         /// </summary>
         /// <returns></returns>
-        public static List<String> Banks() {
-            Sisow.AssurePaySoapClient ap = new Sisow.AssurePaySoapClient();
-            List<String> sourceBankList = ap.GetBanken();
-            List<String> destBankList = new List<String>();
+        public static List<SelectListItem> GetIssuerList() {
+            List<SelectListItem> result = new List<SelectListItem>();
+            
+            using (HRE.Sisow.AssurePaySoapClient service = new AssurePaySoapClient()) {
+                List<string> banks = service.GetIssuers(HreSettings.IsDevelopment).ToList();
+                // Add empty item (for placeholder).
+                result.Add(new SelectListItem());
 
-            for (int i=0; i<sourceBankList.Count(); i++) {
-                if (i%2==0) destBankList.Add(sourceBankList.ElementAt(i));
+                for (int i = 0; i < banks.Count(); i = i+2) {
+                    string bankText = banks[i];
+                    string bankValue = banks[i+1];
+                    result.Add(new SelectListItem() {
+                        Text = bankText,
+                        Value= bankValue
+                    });
+                }
             }
-            return destBankList;
+            return result;
         }
+
 
 
         /// <summary>
@@ -101,9 +114,12 @@ namespace HRE.Business {
                  || string.IsNullOrEmpty(ec) || string.IsNullOrEmpty(status) || string.IsNullOrEmpty(check)) {
                 return false;
             }
+
             // Perform the actual SHA1 check of txId+ec+status+password against the 'check' param.
             string checkSHA1 = SHA1Encode(txId + ec + status + PASSWORD);
-            return checkSHA1.Equals(check.ToUpper());
+            bool result = checkSHA1.Equals(check.ToUpper());
+            return result;
         }
+
     }
 }

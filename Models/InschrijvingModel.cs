@@ -10,6 +10,8 @@ using HRE.Dal;
 using HRE.Common;
 using HRE.Business;
 using HRE.Attributes;
+using System.Web.UI.WebControls;
+using System.Web;
 
 namespace HRE.Models {
 
@@ -95,7 +97,6 @@ namespace HRE.Models {
                 }
             }
         }
-
 
         // The external identifier for the event (ntbI event number; note that for now assume only 1 serie per event).
         public string ExternalEventIdentifier { get; set; }
@@ -271,6 +272,16 @@ namespace HRE.Models {
 
 
         /// <summary>
+        /// Wie mee wil eten, betaald voor eten :).
+        /// </summary>
+        public int KostenEten {
+            get {
+                return Food ? HreSettings.KostenEten : 0;
+            }
+        }
+
+
+        /// <summary>
         /// Voor wie geen eigen (MyLaps) chip heeft komen er nog kosten van huur bij.
         /// </summary>
         public int KostenChip {
@@ -299,7 +310,7 @@ namespace HRE.Models {
 
                 // Voor HRE 2013 wordt het bedrag bepaald afhankelijk van gebruikersgegevens en vaste bedragen in de appsettings.
                 // Dit gebeurd dus analoog aan maar apart van berekening in client side JavaScript om 'hackmogelijkheden' uit te sluiten.
-                return BasisKosten + KostenNtbDagLicentie + KostenChip - EarlyBirdKorting;
+                return BasisKosten + KostenNtbDagLicentie + KostenChip + KostenEten - EarlyBirdKorting;
             }
             set {
                 _inschrijfGeld = value;
@@ -312,6 +323,9 @@ namespace HRE.Models {
         /// </summary>
         public int? BedragBetaald { get; set; }
 
+        public DateTime? DatumBetaald { get; set; }
+
+        public bool? IsBetaald { get; set; }
 
         public bool GenoegBetaaldVoorDeelnemerslijst { get; set; }
 
@@ -339,6 +353,12 @@ namespace HRE.Models {
         /// Wil de deelnemer op de fiets naar het evenement komen (true) of niet (false)?
         /// </summary>
         public bool Bike { get; set; }
+
+        
+        /// <summary>
+        /// Denkt de deelnemer mee te kunnen doen aan de finale?
+        /// </summary>
+        public string Finale { get; set; }
 
 
         [StringLength(12)]
@@ -424,7 +444,7 @@ namespace HRE.Models {
         /// </summary>
         public bool IsVolledigEnCorrectBetaald {
             get {
-                return InschrijfGeld.HasValue && BedragBetaald.HasValue && InschrijfGeld.Value==BedragBetaald.Value;
+                return IsBetaald.HasValue && IsBetaald.Value; // InschrijfGeld.HasValue && BedragBetaald.HasValue && InschrijfGeld.Value==BedragBetaald.Value && DatumBetaald.HasValue;
             }
         }
 
@@ -459,5 +479,57 @@ namespace HRE.Models {
             }
         }
 
+        [Required(ErrorMessage = "Selecteer betaling")]
+        public string BankCode { get; set; }
+
+        protected List<SelectListItem> _bankList;
+
+        public List<SelectListItem> BankList {
+            get {
+                if (_bankList==null) {
+                    _bankList = SisowIdealHandler.GetIssuerList();
+                }
+                return _bankList;
+            }
+        }
+
+        [Required(ErrorMessage = "Alleen iDeal betaling mogelijk")]
+        public PaymentType PaymentType { get; set; }
+
+        protected List<SelectListItem> _paymentTypeList;
+
+        public List<SelectListItem> PaymentTypeList {
+            get {
+                if (_paymentTypeList==null) {
+                    _paymentTypeList = new List<SelectListItem> {
+                        new SelectListItem(),
+                        new SelectListItem() { Selected = true, Text="iDeal", Value = "1" }
+                    };
+                }
+                return _paymentTypeList;
+            }
+        }
+
+
+        public string ReturnUrl {
+            get {
+                HttpRequest request = HttpContext.Current.Request;
+                string result = Uri.EscapeDataString(request.Url.Scheme + System.Uri.SchemeDelimiter + request.Url.Host 
+                        + (request.Url.IsDefaultPort ? "" : (":" + request.Url.Port)) + "/Inschrijvingen/Aangemeld");
+                return result;
+            }
+        }
+
+
+        public string SisowUrl {
+            get {
+                string result = null;
+                if (!string.IsNullOrEmpty(ReturnUrl)) {
+                    result = SisowIdealHandler.DetermineSisowGetUrl(InschrijfGeld.Value, 
+                        ParticipationId.ToString(), string.Format("{0} H3RE", Voornaam), ReturnUrl, BankCode);
+                }
+                return result;
+            }
+        }
     }
 }

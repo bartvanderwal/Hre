@@ -1,0 +1,49 @@
+﻿@model HRE.Models.InschrijvingModel
+
+@{
+    ViewBag.Title = "Aangemeld";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript" src="/Scripts/kickstart.js"></script> <!-- KICKSTART -->
+<link rel="stylesheet" href="/Content/kickstarter/kickstart.css" media="all" /> <!-- KICKSTART -->
+<script type="text/javascript" src="/Scripts/kickstart.js">
+    $(function () {
+        self.scrollTo(0, 0);
+        // top.scrollTo(0, 0);
+    });
+</script>
+
+@if (Model!=null && Model.User!=null) {    
+    <h2></h2>
+    <p>Je gegevens zijn geregistreerd...</p>
+    if ((int) Model.User.Status >= (int) LogonUserStatus.EmailAddressConfirmed && Model.IsBetaald.HasValue && Model.IsBetaald.Value) {
+        <p>Gefeliciteerd, je bent ingeschreven!</p>
+    } else {
+        <p>Doe het volgende om je voorlopige inschrijving om te zetten in een startbewijs:</p>
+    }
+    <ul class="icons">
+        @if (Model.IsBetaald.HasValue && Model.IsBetaald.Value) {
+            <li><i class="icon-ok"></i>Het inschrijfgeld (@Model.InschrijfGeld.AsAmount()) is voldaan!</li>
+        } else {
+            <li>
+                <i class="icon-remove"></i>
+                <div style="display: inline-block;">
+                    <a href="@Model.SisowUrl" target="_blank" title="Betalen met iDEAL" id="sisow-pay-link">
+                        <img src="/Content/img/IdealButtonKlein.png" class="pay" alt="Betalen" runat="server" id="PayButton" /><br />
+                        iDEAL<img src="/Content/img/IdealLinkje.png" class="pay" alt="Betalen" runat="server" id="PayLink" /><br />
+                    </a>
+                </div>
+                <p>Betaal het inschrijfgeld van @Model.InschrijfGeld.AsAmount() via iDeal.</p>
+            </li>
+        }
+        @if (Model.User !=null && (int) Model.User.Status >= (int) LogonUserStatus.EmailAddressConfirmed) {
+            <li><i class="icon-ok"></i>Je e-mail adres is bevestigd! (<a href="mailto:@Model.User.EmailAddress">@Model.User.EmailAddress</a>)</li>
+        } else {
+            <li><i class="icon-remove"></i>Bevestig je <span title="@Model.User.EmailAddress" style="text-decoration: underline;">e-mail adres</span> nog even via de link in de e-mail die je net gestuurd is</li>
+        }
+
+    </ul>
+} else {
+    <p>Er ging iets mis.</p>
+}

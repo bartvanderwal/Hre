@@ -50,7 +50,6 @@ namespace HRE.Controllers {
         }
 
 
-
         public const string NTBI_SESSION_CODE_KEY = "SessionCode";
 
 
@@ -86,14 +85,28 @@ namespace HRE.Controllers {
         }
 
 
-        public ActionResult Bedankt(string externalId, string eventNr) {
-            Initialise(AppConstants.MeedoenOverzicht);
-            InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, eventNr);
+        public ActionResult Aangemeld(InschrijvingModel model) {
+            // If this page is called as the confirmation screen then check data and set participation as paid if relevant.
+            string txId = Request.QueryString["txid"];
+            string ec = Request.QueryString["ec"];
+            string errorFromIdeal = Request.QueryString["error"];
+            if (!string.IsNullOrEmpty(txId) || !string.IsNullOrEmpty(errorFromIdeal)) {
+                // Check the confirmation parameters.
+                model = CheckConfirmationParameters();
+
+                // Mark the entry as paid in the DB if everythings checks out (e.g. it was just paid).
+                if (model!=null) {
+                    int participationID = int.Parse(ec);
+                    InschrijvingenRepository.MarkEntryAsPaid(participationID);
+                    model.IsBetaald = true;
+                }
+            }
             return View(model);
         }
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteTestUser(InschrijvingenModel model) {
             int eventId = SportsEventDal.GetByExternalId(model.EventNumber).ID;
             int userId = model.UserIdToDelete;
@@ -107,7 +120,7 @@ namespace HRE.Controllers {
         }
 
 
-        public MemoryStream CreateExcelFile(string tableName, bool isForSpeaker) {
+        protected MemoryStream CreateExcelFile(string tableName, bool isForSpeaker) {
             try {
                 // Create an Excel Workbook.
                 XLWorkbook workbook = new XLWorkbook();
@@ -136,7 +149,7 @@ namespace HRE.Controllers {
         }
         
 
-        private DataTable GetTable(String tableName, bool isForSpeaker) {
+        protected DataTable GetTable(String tableName, bool isForSpeaker) {
             InschrijvingenModel model = new InschrijvingenModel();
 
             DataTable table = new DataTable();
@@ -251,6 +264,7 @@ namespace HRE.Controllers {
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteEntry(int participantUserId, InschrijvingenModel model) {
             SportsEventParticipationDal participation = SportsEventParticipationDal.GetByID(participantUserId);
             if (participation!=null) {
@@ -366,9 +380,20 @@ namespace HRE.Controllers {
                 }
 
                 string currentEvenementNumber = model.EventNumber;
-                string currentSerieNumber = model.EventNumber==InschrijvingenRepository.H2RE_EVENTNR ? 
-                    InschrijvingenRepository.H2RE_SERIENR : InschrijvingenRepository.HRE_SERIENR;
-
+                
+                string currentSerieNumber;
+                switch (model.EventNumber) {
+                    case InschrijvingenRepository.H2RE_EVENTNR: 
+                        currentSerieNumber = InschrijvingenRepository.H2RE_SERIENR;
+                        break;
+                    case InschrijvingenRepository.HRE_SERIENR:
+                        currentSerieNumber = InschrijvingenRepository.HRE_SERIENR;
+                        break;
+                    case InschrijvingenRepository.H3RE_SERIENR:
+                    default:
+                        currentSerieNumber = InschrijvingenRepository.H3RE_SERIENR;
+                        break;
+                }
                 // I. Overzichtscherm. Voorbeeld URL: https://mijn.triathlonbond.nl/evenementbeheer/inschrijvingen/inschrijvingen_serie_individueel.asp?SID={20B12A29-FFA4-4606-B912-5928181C7D4D}&Serie=4549
                 // Create the GET request.
                 string overviewUrl = "https://mijn.triathlonbond.nl/evenementbeheer/inschrijvingen/inschrijvingen_serie_individueel.asp?SID=" 
@@ -425,6 +450,7 @@ namespace HRE.Controllers {
                     evenementDoc.Load(reader);
                     reader.Close();
                 }
+
                 ////////////////////////////// END evenement.
 
 
@@ -611,8 +637,6 @@ namespace HRE.Controllers {
         /// <returns></returns>
         // [RequiresSsl]
         public ActionResult IkDoeMee() {
-            Initialise(AppConstants.MeedoenOverzicht);
-
             InschrijvingModel model = new InschrijvingModel();
             model.ExternalEventIdentifier = InschrijvingenRepository.H2RE_EVENTNR;
             model.ExternalEventSerieIdentifier = InschrijvingenRepository.H2RE_SERIENR;
@@ -630,7 +654,8 @@ namespace HRE.Controllers {
         /// </summary>
         /// <param name="externalId"></param>
         /// <returns></returns>
-        public ActionResult Upload() {
+        [Authorize(Roles = "Admin")]
+        public ActionResult UploadTest() {
             InschrijvingModel model = new InschrijvingModel();
             return View(model);
         }
@@ -647,14 +672,18 @@ namespace HRE.Controllers {
             InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, eventNr);
 
             // Initialize the email before update, so that a change in the e-mail address can be detected.
-            model.EmailBeforeUpdateIfAny = model.Email;
 
-            // Als inladen is mislukt en het gaat om inschrijving voor 2013.
-            if (model==null && eventNr==InschrijvingenRepository.H2RE_EVENTNR) {
-                // Probeer dan de gegevens voor te laden uit het jaar ervoor (2012)
-                model = InschrijvingenRepository.GetByExternalIdentifier(externalId, InschrijvingenRepository.HRE_EVENTNR);
+            // Als inladen is mislukt en het gaat om inschrijving voor dit jaar - 2014.
+            if (model==null && eventNr==InschrijvingenRepository.H3RE_EVENTNR) {
+                // Probeer dan de gegevens voor te laden uit het jaar ervoor (2013)
+                model = InschrijvingenRepository.GetByExternalIdentifier(externalId, InschrijvingenRepository.H2RE_EVENTNR);
+                if (model==null) {
+                    // Of zo niet, dan uit 2 jaar terug - 2012.
+                    model = InschrijvingenRepository.GetByExternalIdentifier(externalId, InschrijvingenRepository.HRE_EVENTNR);
+                }
+                // Als gevonden..
                 if (model!=null) {
-                    // Reset de gegevens uit 2012.
+                    // Reset de gegevens uit 2013.
                     model.InschrijfGeld = null;
                     model.OpmerkingenTbvSpeaker = string.Empty;
                     model.OpmerkingenAanOrganisatie = string.Empty;
@@ -669,6 +698,8 @@ namespace HRE.Controllers {
                     return HttpNotFound();
                 }
             }
+
+            model.EmailBeforeUpdateIfAny = model.Email;
 
             return View("Edit", model);
         }
@@ -706,9 +737,9 @@ namespace HRE.Controllers {
                 ModelState.AddModelError("Email", "Geen geldig e-mail adres!");
             }
 
-            // TODO BW 2013-03-18: Make currentEventNr variable, depending on which event is subscribed tol
+            // TODO BW 2013-03-18: Make currentEventNr variable, depending on which event is subscribed to.
             // string currentEventNr = model.ExternalEventIdentifier;
-            string currentEventNr = InschrijvingenRepository.H2RE_EVENTNR;
+            string currentEventNr = InschrijvingenRepository.H3RE_EVENTNR;
 
             // Controleer als het een nieuwe inschrijving betreft dat er niet al een deelnemer is met hetzelfde e-mail adres.
             LogonUserDal user = LogonUserDal.GetUserByUsername(model.Email);
@@ -719,12 +750,12 @@ namespace HRE.Controllers {
 
             // Store the race entry in the local database.
             if (ModelState.IsValid) {
-                // Set the eventIdentifier to the event of 2013.
+                // Set the eventIdentifier to the event of 2014.
                 // TODO BW 2013-02-10: Refactor "HRE" to prefix constant.
                 // model.ExternalIdentifier = "HRE" + model.ParticipationId;
                 
                 // Sla op!
-                InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
+                InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H3RE_EVENTNR, false, true);
                 
                 if (!model.DateConfirmationSend.HasValue || model.DoForceSendConfirmationOfChange) {
                     SendSubscriptionConfirmationMail(model);
@@ -750,7 +781,9 @@ namespace HRE.Controllers {
                 // }
                 
                 if (model.IsInschrijvingNieuweGebruiker) {
-                    return RedirectToAction("Bedankt", new { externalId=model.ExternalIdentifier, eventNr=model.ExternalEventIdentifier });
+                    string sisowUrl = model.SisowUrl;
+                    // return RedirectToAction("Aangemeld", model);
+                    return Redirect(sisowUrl);
                 } else {
                     return RedirectToAction("MijnRondjeEilanden", new { externalId=model.ExternalIdentifier, eventNr=model.ExternalEventIdentifier });
                 }
@@ -790,10 +823,10 @@ namespace HRE.Controllers {
             NewsletterItemViewModel item1 = new NewsletterItemViewModel();
             if (!model.DoForceSendConfirmationOfChange) {
                 item1.Title = "You're in!";
-                item1.SubTitle = "voor Hét 2e Rondje Eilanden";
+                item1.SubTitle = "voor Hét 3e Rondje Eilanden";
             } else {
-                item1.Title = "We have there sin in!";
-                item1.SubTitle = "...how sits it with you?";
+                item1.Title = "Tough that you are there by!";
+                item1.SubTitle = "...we can haste not wait ourselves!";
             }
             item1.HeadingHtmlColour = "208900";
             item1.ImagePath = "News_2013.png";
@@ -828,6 +861,8 @@ namespace HRE.Controllers {
                 item1.Text += string.Format("<tr><td>Meeeten?</td><td>{0}</span></td></tr>", model.Food ? "Interesse" : "Geen interesse");
                 item1.Text += string.Format("<tr><td>Kamperen</td><td>{0}</span></td></tr>", model.Camp ? "Interesse" : "Geen interesse");
                 item1.Text += string.Format("<tr><td>Fiets stallen</td><td>{0}</span></td></tr>", model.Bike ? "Interesse" : "Geen interesse");
+                item1.Text += string.Format("<tr><td>Finale</td><td>{0}</span></td></tr>", model.Finale=="W" ? "Ik ga ervoor!" : "Ik zie wel" );
+
                 
                 item1.Text += string.Format("<tr><td></td></tr>");
                 item1.Text += string.Format("<tr><th colspan=\"2\"><b>Opmerkingen</b></th></tr>");
@@ -844,15 +879,19 @@ namespace HRE.Controllers {
                 if (model.IsEarlyBird.HasValue && model.IsEarlyBird.Value) {
                     item1.Text += string.Format("<tr><td>Early Bird™ korting</td><td>{0}</span></td></tr>", model.EarlyBirdKorting.AsAmount());
                 }
+                item1.Text += string.Format("<tr><td>Avondeten</td><td>{0}</span></td></tr>", model.KostenEten.AsAmount());
                 item1.Text += string.Format("<tr><td><b></b></td><td><span class=\"quotable\">------</span></td></tr>");
                 item1.Text += string.Format("<tr><td><b>Totaal</b></td><td><span class=\"quotable\">{0}</span></td></tr>", model.InschrijfGeld.AsAmount());
-
+                
+                /*
                 item1.Text += string.Format("<tr><td></td></tr>");
                 item1.Text += string.Format("<tr><th colspan=\"2\"><b>Overmaken naar</b></th></tr>");
 
                 item1.Text += string.Format("<tr><td>Bank rek nr</td><td><span class=\"quotable\">'1684.92.059'</span> (Rabobank)</td></tr>");
                 item1.Text += string.Format("<tr><td>Ten name van </td><td><span class=\"quotable\">'Stichting Woelig Water'</span> (te Vinkeveen)</td></tr>");
                 item1.Text += string.Format("<tr><td>Onder vermelding van</td><td><span class=\"quotable\">'H2RE {0}'</span></td></tr>", model.VolledigeNaam);
+                */
+
                 item1.Text += string.Format("</table></td></tr>");
                 item1.Text += string.Format("</table>");
 
@@ -874,8 +913,8 @@ namespace HRE.Controllers {
             }
 
             mm.Subject = model.DoForceSendConfirmationOfChange ? 
-                "Wijziging in inschrijfgegevens Het 2e Rondje Eilanden " + model.VolledigeNaam
-                : "Aanmeldbevestiging deelname Het 2e Rondje Eilanden " + model.VolledigeNaam;
+                "Wijziging in inschrijfgegevens Het 3e Rondje Eilanden " + model.VolledigeNaam
+                : "Aanmeldbevestiging deelname Het 3e Rondje Eilanden " + model.VolledigeNaam;
 
             mm.IsBodyHtml = true;
             spnvm.UserId = model.UserId;
@@ -907,6 +946,35 @@ namespace HRE.Controllers {
 
         // Licentienummer koppeling
         // URL: http://ntbinschrijvingen.nl/Inschrijvingen/inschrijving_toevoegen_individueel.asp?Evenement=2005881&Serie=4549&Oorsprong=kalender
-    }
 
+        [Authorize(Roles = "Admin")]
+        public ActionResult UploadVolonteers() {
+            InschrijvingModel model = new InschrijvingModel();
+            return View(model);
+        }
+
+
+        /// <summary>
+        /// Handles the situation when the page is called back from iDEAL payment (with URL params).
+        /// </summary>
+        protected InschrijvingModel CheckConfirmationParameters() {
+            string txID = Request.QueryString["txId"];
+            string check = Request.QueryString["check"];
+            string ec = Request.QueryString["ec"];
+            string status = Request.QueryString["status"];
+            string error = Request.QueryString["error"];
+            bool confirmationChecksOut = SisowIdealHandler.DoesConfirmationCheckOut(txID, ec, status, check, error);
+            
+            int participationID = int.Parse(ec);
+
+            var inschrijving = InschrijvingenRepository.GetInschrijvingByParticipationID(participationID);
+
+            if (inschrijving!=null && !string.IsNullOrEmpty(status) && confirmationChecksOut) {
+                bool isPaid = status == "Success";
+                bool isJustPaid = isPaid && !inschrijving.DatumBetaald.HasValue;
+            }
+            return inschrijving;
+        }
+
+    }
 }

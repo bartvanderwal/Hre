@@ -180,7 +180,7 @@ namespace HRE.Common {
         /// </summary>
         public static int AantalStartPlekken {
             get {
-                return ReadIntSetting("AantalStartPlekken", 500);
+                return ReadIntSetting("AantalStartPlekken", 700);
             }
         }
 
@@ -191,7 +191,7 @@ namespace HRE.Common {
         /// </summary>
         public static int AantalPlekkenReserveLijst {
             get {
-                return ReadIntSetting("AantalPlekkenReserveLijst", 60);
+                return ReadIntSetting("AantalPlekkenReserveLijst", 100);
             }
         }
 
@@ -212,7 +212,7 @@ namespace HRE.Common {
         /// </summary>
         public static DateTime EindDatumEarlyBirdKorting {
             get {
-                return ReadDateTimeSetting("EindDatumEarlyBirdKorting", "15-03-2013");
+                return ReadDateTimeSetting("EindDatumEarlyBirdKorting", "30-04-2014");
             }
         }
 
@@ -222,7 +222,7 @@ namespace HRE.Common {
         /// </summary>
         public static DateTime OpeningsdatumAlgemeneInschrijving {
             get {
-                return ReadDateTimeSetting("OpeningsdatumAlgemeneInschrijving", "01-03-2013");
+                return ReadDateTimeSetting("OpeningsdatumAlgemeneInschrijving", "01-04-2014");
             }
         }
 
@@ -232,36 +232,36 @@ namespace HRE.Common {
         /// </summary>
         public static DateTime SluitingsDatumAlgemeneInschrijving {
             get {
-                return ReadDateTimeSetting("SluitingsDatumAlgemeneInschrijving", "1-8-2013 0:00:00");
+                return ReadDateTimeSetting("SluitingsDatumAlgemeneInschrijving", "27-7-2014 00:00:00");
             }
         }
 
 
         /// <summary>
         /// Het huidige - kale - deelnamebedrag (exclusief korting zoals early bird, en extra kosten zoals chip/licentie).
-        /// Default: 2750.
+        /// Default: 2500.
         /// </summary>
         public static int HuidigeDeelnameBedrag {
             get {
-                return ReadIntSetting("HuidigeDeelnameBedrag", 2750);
+                return ReadIntSetting("HuidigeDeelnameBedrag", 2500);
             }
         }
 
 
         /// <summary>
         /// Kosten van een daglicentie.
-        /// Default: 230 (EUR 2,30).
+        /// Default: 220 (EUR 2,20).
         /// </summary>
         public static int KostenNtbDagLicentie {
             get {
-                return ReadIntSetting("KostenNtbDagLicentie", 220);
+                return ReadIntSetting("KostenNtbDagLicentie", 300);
             }
         }
 
 
         /// <summary>
-        /// De kosten voor huur van een (gele) MyLaps chip.
-        /// Default: 250.
+        /// De kosten voor huur van een gele MyLaps chip.
+        /// Default: 200.
         /// </summary>
         public static int KostenHuurMyLapsChipGeel {
             get {
@@ -271,12 +271,44 @@ namespace HRE.Common {
 
 
         /// <summary>
+        /// De kosten voor huur van een witte MyLaps chip.
+        /// Default: 250.
+        /// </summary>
+        public static int KostenHuurMyLapsChipWit {
+            get {
+                return ReadIntSetting("KostenHuurMyLapsChipWit", 150);
+            }
+        }
+
+
+        /// <summary>
+        /// Kosten voor gebruik van een groene MyLaps chip.
+        /// Default: 150.
+        /// </summary>
+        public static int KostenGebruikMyLapsChipGroen {
+            get {
+                return ReadIntSetting("KostenGebruikMyLapsChipGroen", 150);
+            }
+        }
+
+
+        /// <summary>
+        /// De kosten voor eten.
+        /// Default: 1000.
+        /// </summary>
+        public static int KostenEten {
+            get {
+                return ReadIntSetting("KostenEten", 1000);
+            }
+        }
+
+        /// <summary>
         /// De korting voor Early Birds.
         /// Default: 750.
         /// </summary>
         public static int HoogteEarlyBirdKorting {
             get {
-                return ReadIntSetting("HoogteEarlyBirdKorting", 750);
+                return ReadIntSetting("HoogteEarlyBirdKorting", 500);
             }
         }
 
@@ -350,17 +382,6 @@ namespace HRE.Common {
                 return ReadIntSetting("AantalSecondenTussenStartschots", 10);
             }
         }
-
-
-        /// <summary>
-        /// De datum en tijdstip van de 1e start van Het 2e Rondje Eilanden.
-        /// </summary>
-        public static DateTime DatumTijdstipH2RE {
-            get {
-                return ReadDateTimeSetting("DatumTijdstipH2RE", "3-8-2013 16:00:00");
-            }
-        }
-
 
     }
 }

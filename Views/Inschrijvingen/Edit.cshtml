@@ -1,4 +1,5 @@
 ﻿@model HRE.Models.InschrijvingModel
+
 @using HRE.Common;
 @using HRE.Dal;
 @using HRE.Models;
@@ -11,32 +12,45 @@
     int aantalPlekken = HreSettings.AantalStartPlekken;
     int aantalReserve = HreSettings.AantalPlekkenReserveLijst;
     int aantalPlekkenInclusiefReserve = aantalPlekken+aantalReserve;
-    bool allePlekkenBezet = nrOfEntries >= aantalPlekkenInclusiefReserve;
-    bool inschrijfDatumGepasseerd = DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.SluitingsDatumAlgemeneInschrijving)>0;
+    bool allePlekkenBezet = nrOfEntries >= aantalPlekken;
+    bool allePlekkenBezetÍnclusiefReserve = nrOfEntries >= aantalPlekkenInclusiefReserve;
+    DateTime sluitingsDatum = HRE.Common.HreSettings.SluitingsDatumAlgemeneInschrijving;
+    DateTime openingsDatum = HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving;
+    bool inschrijvingGesloten = DateTime.Compare(DateTime.Now, sluitingsDatum)>0;
+    bool inschrijvingGeopend = DateTime.Compare(DateTime.Now, openingsDatum)>0;
 }
 
-<link href="@Url.Content("~/Content/subscribe.css")" rel="stylesheet" type="text/css">
-
+@section Css {
+    <link href="@Url.Content("~/Content/subscribe.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Scripts/select2/select2.css")" rel="stylesheet" type="text/css" />
+    @* <link href="@Url.Content("~/Content/jquery-ui-1.10.4.custom.min.css")" rel="stylesheet" type="text/css" /> *@
+}
 <div @(Model.IsEditAllowed ? "class=edit-allowed" : "")>
-    @if(Model.IsNewUser && !Model.IsAdmin && (allePlekkenBezet || inschrijfDatumGepasseerd)) {
-        <p>De inschrijving is gesloten!</p>
-        if(Model.IsNewUser && inschrijfDatumGepasseerd) {
-            <p>De inschrijving sloot op @HreSettings.SluitingsDatumAlgemeneInschrijving.ToString("d MMM yyyy hh:mm").</p>
+
+    @if(Model.IsNewUser && !Model.IsAdmin && (allePlekkenBezet || inschrijvingGesloten || !inschrijvingGeopend)) {
+        if(inschrijvingGesloten) {
+            <p>De inschrijving is gesloten!</p>
+            <p>De inschrijving sloot op @sluitingsDatum.ToString("d MMM yyyy hh:mm").</p>
         }
-        if(Model.IsNewUser && allePlekkenBezet) {
-            <p> Alle @aantalPlekken startplekken zijn bezet, en de @aantalReserve reserve plekken ook!</p>            
+        if(allePlekkenBezet) {
+            <p> Alle @aantalPlekken startplekken zijn bezet @(allePlekkenBezet ? "(en de @aantalReserve reserveplekken ook!)" : string.Empty).</p>
+        }
+        if (!inschrijvingGeopend) {
+            <p>De algemene inschrijving opent op @openingsDatum.ToString("d MMM yyyy") (geen grap).</p>
+            <p>Oud deelnemers (van 2012 en 2013) kunnen voor die tijd al inschrijven. Zij krijgen via de e-mail weer een aanbieding voor een speciale Early Bird kortingsactie! Any day now..</p>
         }
     } else {
+        
         if (Model.IsAdmin) {
             @Html.ActionLink(" ", "Index", null, new { @class="editor-image back", @title="Terug naar overzicht", @alt="Back" })
             <br/><br/>
         }
-
+        
         if(Model.IsNewUser && nrOfEntries > aantalPlekken) {
-            <p>Let op: De @aantalPlekken geplande startplekken zijn inmiddels ingenomen. De organisatie heeft echter nog wat reserve plekken weten te creeren. Dus je kunt je nog wel net inschrijven. Door de grote animo kunnen we helaas niet garanderen dat er een aandenken voor je is. Daar doen we wel ons best voor!</p>
+            <p>Let op: De @aantalPlekken geplande startplekken zijn inmiddels al vergeven. De organisatie heeft echter nog wat reserve plekken weten te creeren. Dus je kunt je nog wel net inschrijven. Door de grote animo kunnen we helaas niet garanderen dat er een aandenken voor je is. Daar doen we wel ons best voor!</p>
         }
         
-        Html.BeginForm("Edit", "Inschrijvingen");
+        using (Html.BeginForm("Edit", "Inschrijvingen")) {
             @Html.AntiForgeryToken()
 
             if (!ViewData.ModelState.IsValid) {
@@ -47,8 +61,8 @@
                 <p class="welcome">Welkom@(!string.IsNullOrEmpty(Model.Voornaam) ? " " + @Model.Voornaam : "")!</p>
                 <div id="inschrijf-formulier-uitleg">
                     @if (!Model.IsRegistered) {
-                        <p>@if(isEarlyBird) { <text>Proficiat Early Bird™! Je bent inschrijver numero @(nrOfEarlyBirds+1) en hebt net als de andere @HreSettings.AantalEarlyBirdStartPlekken recht op korting!<br /></text> }
-                        Meld je aan voor Hét Rondje Eilanden via onderstaand formulier. 
+                        <p>@if(isEarlyBird) { <text>Proficiat Early Bird™! Je bent inschrijver numero @(nrOfEarlyBirds+1) en hebt net als @(HreSettings.AantalEarlyBirdStartPlekken-1) andere Early Birds™ recht op korting!<br /></text> }
+                        Meld je aan voor Hét Rondje Eilanden via onderstaand formulier.
                         @if(!Model.IsNewUser) {
                             <text>Nog slechts een paar stappen. Het meeste is al vooringevuld...</text>
                         }
@@ -69,16 +83,18 @@
                             <ul>
                                 <li>of je NTB lid bent (met 'A' atleten of 'X' aspirantlicentie betaal je geen daglicentie van @HreSettings.KostenNtbDagLicentie.AsAmount())</li>
                                 <li>een MyLaps chip hebt (met eigen chip betaal je geen @HreSettings.KostenHuurMyLapsChipGeel.AsAmount() huurchip)</li>
-                                <li>mee wilt eten (we polsen dit alleen, geheel vrijblijvend)</li>
-                                <li>blijft kamperen (ook geheel vrijblijvend)</li>
+                                <li>mee wilt eten (&euro; 10 incl. 2 drankjes)</li>
+                                <li>wilt blijven kamperen (geheel vrijblijvend)</li>
+                                <li>er wel of niet voor gaat om ook de finale te halen</li>
                                 <li>en eventueel op de fiets wilt komen (bij voldoende animo komt er een 'Parc Fermé)</li>
                             </ul>
                         </li>
+                        <li>Nieuw in 2014 is dat je het inschijfgeld direct bij inschrijving met iDeal kunt én dient te betalen</li>
                         @if(!Model.IsEarlyBird.HasValue || !Model.IsEarlyBird.Value && DateTime.Compare(DateTime.Now, HreSettings.EindDatumEarlyBirdKorting)<=0) {
-                            <li>Was je HRE deelnemer in 2012? <a href="mailto:info@hetrondjeeilanden">Mail ons dan nu!</a> Alle deelnemers uit 2012 is half februari een e-mail gestuurd voor speciale Early Bird™ korting...</li>
+                            <li>Was je HRE deelnemer in 2012 en/of 2013? Je krijgt korte tijd voor de algemene inschrijving opent een e-mail om gebruik te maken van speciale Early Bird™ korting...</li>
                         }
                         @if(!Model.IsNewUser) {
-                            <li>Waar mogelijk zijn gegevens al vooringevuld. Maar corrigeer als er iets gewijzigd is t.o.v. 2012.</li>
+                            <li>Enkele gegevens zijn vooringevuld obv 2012/2013. Corrigeer als iets gewijzigd is!</li>
                         }
                         @if(!Model.IsRegistered) {
                             <li>Druk als je alles ingevuld op de knop 'Get me a ticket' onderaan om je aanmelding te versturen.</li>
@@ -87,7 +103,7 @@
                         }
                         <li>Als iets niet klopt krijg je een validatiemelding. Corrigeer de fouten en probeer nogmaals.</li>
                         @if(!Model.IsNewUser) {
-                            <li>Maak voor @HreSettings.EindDatumEarlyBirdKorting.ToShortDateString() het inschrijfgeld over om de @HreSettings.HoogteEarlyBirdKorting.AsAmount() Early Bird&trade; korting te krijgen!</li>
+                            <li>Schrijf je voor @HreSettings.EindDatumEarlyBirdKorting.ToShortDateString() en betaal direct via iDeal om de @HreSettings.HoogteEarlyBirdKorting.AsAmount() Early Bird&trade; korting te krijgen!</li>
                         }
                         <li>Bij inschrijving ga je akkoord met de <a href="/Inschrijvingen/Reglementen" target="_blank">inschrijfvoorwaarden en algemene regelementen</a>.</li>
                         <li>Werkt iets niet of is iets onduidelijk? Mail naar <a href="mailto:bart@hetrondjeeilanden.nl">info@hetrondjeeilanden.nl</a>.</li>
@@ -95,9 +111,8 @@
                     </ul>
                 </div>
             } else {
-            <p>Ben jij zelf deze @(Model.Geslacht=="M" ? "atleet" : "atlete")? Log in om meer gegevens te zien en deze desgewenst te kunnen wijzigen.</p>
+                <p>Ben jij zelf deze @(Model.Geslacht=="M" ? "atleet" : "atlete")? Log in om meer gegevens te zien en deze desgewenst te kunnen wijzigen.</p>
             }
-
         
             <div id="costs">
                 @if (Model.IsEditAllowed) {
@@ -109,66 +124,27 @@
                                 @if (isEarlyBird) {
                                     <tr><td>Early Bird™<span id="minus" style="text-align: right; font-weight: 900; float: right;">-</span></td><td><span id="reduction">@Model.EarlyBirdKorting.AsAmount()</span></td></tr>
                                 }
+                                <tr><td>Eten</td><td><span id="food">@Model.KostenEten.AsAmount()</span></td></tr>
                             <tr class="total"><td>Totaal</td><td><span id="total">@Model.InschrijfGeld.Value.AsAmount()</span></td></tr>
                         </table>
                     </div>
                 }
             </div>
-
+        
             <div class="editor-images">
                 @if (Model.IsEditAllowed) {
                     <div class="editor-spacer initial"></div>
                 }
                 <div class="editor-image name"></div><div class="editor-spacer name"></div>
                 @if (Model.IsEditAllowed) {
+                    <div class="editor-image amount"></div><div class="editor-spacer amount"></div>
                     <div class="editor-image address"></div><div class="editor-spacer address"></div>
                     <div class="editor-image email"></div><div class="editor-spacer email"></div>
-                    <div class="editor-image amount"></div><div class="editor-spacer amount"></div>
                     @*<div class="editor-image social"></div><div class="editor-spacer social"></div>*@
                     <div class="editor-image speaker"></div><div class="editor-spacer speaker"></div>
                 }
             </div>
-
         
-            if (Model.IsEditAllowed) {
-                @* Include a number of hidden fields in the view to prevent these fields from getting emptied.
-                    Be wary of hacking possibilities with this do do NOT include amounts and reduction oppurtunities and such,
-                    but compute these on the server side with some logic.
-                    TODO BW 2013-02-15: The e-mail address should actually be removed here. *@
-                @Html.HiddenFor(m => m.UserId)
-                @Html.HiddenFor(m => m.UserName)
-                @Html.HiddenFor(m => m.RegistrationDate)
-                @Html.HiddenFor(m => m.DateCreated)
-                @Html.HiddenFor(m => m.DateUpdated)
-                @Html.HiddenFor(m => m.ExternalEventIdentifier)
-                @Html.HiddenFor(m => m.ExternalEventSerieIdentifier)
-                @Html.HiddenFor(m => m.ExternalIdentifier)
-                @Html.HiddenFor(m => m.DateConfirmationSend)
-                @Html.HiddenFor(m => m.IsInschrijvingNieuweGebruiker)
-            
-                <div class="editor-label">Licentie</div>
-	    	    <div class="editor-field">
-		    	    @Html.CheckBoxFor(m => m.HasLicentieNummer, new { @tabindex="1", @title="Ja, ik heb een NTB licentie!" } )
-                    <label for="HasLicentieNummer" title="Ja, ik heb een NTB licentie!"></label>
-                    <span id="LicentieNummerSpan" class="opt-text">@Html.TextBoxFor(m => m.LicentieNummer, new { @placeholder="Licentienummer...", @maxlength="12", @tabindex="2" }) </span>
-		        </div>
-                <div class="editor-label">@Html.LabelFor(m => m.GeboorteDatum)</div>
-                <div class="editor-field">@Html.TextBoxFor(m => m.GeboorteDatum, new { @placeholder = "Geboortedatum", @readonly = false, @class = "datePicker", @tabindex="3", @Value = string.Format("{0:dd/MM/yyyy}", Model.GeboorteDatum)})</div>
-                <div class="editor-label">Persoonlijke MyLaps chip</div>
-                <div class="editor-field">
-                    @if (Model.IsAdmin || Model.IsNewUser || DateTime.Now < HreSettings.SluitingsDatumAlgemeneInschrijving) {
-    			        @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4", @title="Ja, ik heb een eigen MyLaps chip!" })
-	    		        <label for="HasMyLapsChipNummer" title="Ja, ik heb een eigen MyLaps chip?"></label>
-                        <span id="mylaps-chip-span" class="opt-text">@Html.TextBoxFor(m => m.MyLapsChipNummer, new { @tabindex="5", @placeholder="MyLaps chipnr..." } )</span>
-                    } else {
-    			        @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4", @disabled="disabled", @title="niet meer wijzigbaar" })
-	    		        <label for="HasMyLapsChipNummer" title="Ja, ik heb een eigen MyLaps chip?"></label>
-                        <span id="mylaps-chip-span" class="opt-text">@(Model.MyLapsChipNummer ?? "-")</span>
-                        @Html.HiddenFor(m => m.MyLapsChipNummer)
-                    }
-                </div>
-            }
-
             <div class="editor-label">Voornaam</div>
 		    <div class="editor-field">
                 @Html.TextBoxFor(m => m.Voornaam, new { @tabindex="6", @placeholder="Voornaam..." } )
@@ -188,8 +164,90 @@
                 <input name="Geslacht" id="M" type="radio" value="M" tabindex="9" @(Model.Geslacht=="M" ? "checked=\"checked\"" : string.Empty) title="Man">
                 <label for="M" title="Man"></label>
             </div>
+            <div class="editor-label">@Html.LabelFor(m => m.GeboorteDatum)</div>
+            <div class="editor-field">@Html.TextBoxFor(m => m.GeboorteDatum, new { @placeholder = "Geboortedatum", @class = "datePicker", @tabindex="3", @Value = string.Format("{0:dd/MM/yyyy}", Model.GeboorteDatum)})</div>
 
             if (Model.IsEditAllowed) {
+                <div class="editor-label"></div>
+                <div class="editor-field"></div>
+                <div class="editor-label"></div>
+                <div class="editor-field"></div>
+                @* Include a number of hidden fields in the view to prevent these fields from getting emptied.
+                    Be wary of hacking possibilities with this. Costs (amounts and reductions) are recomputed server side to prevent this. *@
+                @Html.HiddenFor(m => m.UserId)
+                @Html.HiddenFor(m => m.UserName)
+                @Html.HiddenFor(m => m.RegistrationDate)
+                @Html.HiddenFor(m => m.DateCreated)
+                @Html.HiddenFor(m => m.DateUpdated)
+                @Html.HiddenFor(m => m.ExternalEventIdentifier)
+                @Html.HiddenFor(m => m.ExternalEventSerieIdentifier)
+                @Html.HiddenFor(m => m.ExternalIdentifier)
+                @Html.HiddenFor(m => m.DateConfirmationSend)
+                @Html.HiddenFor(m => m.IsInschrijvingNieuweGebruiker)
+            
+                <div class="editor-label">Licentie</div>
+	    	    <div class="editor-field">
+		    	    @Html.CheckBoxFor(m => m.HasLicentieNummer, new { @tabindex="1", @title="Ja, ik heb een NTB licentie!" } )
+                    <label for="HasLicentieNummer" title="Ja, ik heb een NTB licentie!"></label>
+                    <span id="LicentieNummerSpan" class="opt-text">@Html.TextBoxFor(m => m.LicentieNummer, new { @placeholder="Licentienummer...", @maxlength="12", @tabindex="2" }) </span>
+		        </div>
+                <div class="editor-label">MyLaps timing</div>
+                <div class="editor-field">
+                    @if (Model.IsAdmin || Model.IsNewUser || DateTime.Now < HreSettings.SluitingsDatumAlgemeneInschrijving) {
+    			        @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4", @title="Ja, ik heb een eigen MyLaps chip!" })
+	    		        <label for="HasMyLapsChipNummer" title="Ja, ik heb een eigen MyLaps chip?"></label>
+                        <span id="mylaps-chip-span" class="opt-text">@Html.TextBoxFor(m => m.MyLapsChipNummer, new { @tabindex="5", @placeholder="MyLaps chipnr..." } )</span>
+                        <!-- div id="my-laps-green" style="display: none;"></div><div id="my-laps-yellow" style="display: none;"  /div -->
+                    } else {
+    			        @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4", @disabled="disabled", @title="niet meer wijzigbaar" })
+	    		        <label for="HasMyLapsChipNummer" title="Ja, ik heb een eigen MyLaps chip?"></label>
+                        <span id="mylaps-chip-span" class="opt-text">@(Model.MyLapsChipNummer ?? "-")</span>
+                        @Html.HiddenFor(m => m.MyLapsChipNummer)
+                    }
+                </div>
+            }
+        
+            <div class="editor-label">Flessenpost&trade;</div>
+            <div class="editor-field">
+			    @Html.CheckBoxFor(m => m.Newsletter, new { @tabindex="17", @title="Aanmelden voor nieuwsbrief om op de hoogte te blijven? (nodig voor deelname)" })
+			    <label for="Newsletter" title="Aanmelden voor de Flessenpost nieuwsbrief om op de hoogte te blijven? (nodig voor deelname)"></label>
+                <span id="newsletter-span" class="opt-text" style="display: none;">Ja <span class="small">E-mail nieuwsbrief</span></span>
+		    </div>
+
+            <div class="editor-label">Mee-eten?</div>
+		    <div class="editor-field">
+                @Html.CheckBoxFor(m => m.Food, new { @tabindex="18", @title="Eet je mee na afloop?" })
+			    <label for="Food" title="Interesse om na afloop mee te eten? (vrijblijvende reservering)"></label>
+                <span id="food-span" class="opt-text" style="display: none;">Ja! <span class="small">Eten+2 drinks &euro;10</span></span>
+			</div>
+			<div class="editor-label">Kamperen?</div>
+			<div class="editor-field">
+				@Html.CheckBoxFor(m => m.Camp, new { @tabindex="19", @title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"})
+			    <label for="Camp" title="Ik wil blijven kamperen!"></label>
+                <span id="camp-span" class="opt-text" style="display: none;">Ja! <span class="small">&euro;10; met ontbijt (betalen 2 aug)</span></span>
+		    </div>
+		    <div class="editor-label">Fiets stallen?</div>
+		    <div class="editor-field">
+			    @Html.CheckBoxFor(m => m.Bike, new { @tabindex="20", @title="Interesse op de fiets te komen en deze te kunnen stallen? (vrijblijvende reservering)" })
+			    <label for="Bike" title="Interesse op de fiets te komen en deze veilig te kunnen stallen? (vrijblijvende reservering)"></label>
+                <span id="bike-span" class="opt-text" style="display: none;">Ja! <span class="small">(Neem wel een slot mee)</span></span>
+		    </div>
+
+            <div class="editor-label">Going for gold?</div>
+		    <div class="editor-field">
+			    <input id="recrserie" name="Finale" type="radio" tabindex="18" value="R" />
+			    <label for="recrserie" title="Recreatief!"></label>
+			    <input id="topserie" name="Finale" type="radio" value="W" />
+			    <label for="topserie" title="Wedstrijd.."></label>
+                <span id="gold-span" class="opt-text">
+                    <span class="small" id="topserie-text" style="display: none;">Ik denk dat ik de finale kan halen...</span>
+                    <span class="small" id="recrserie-text" style="display: none;">Fun first!</span>
+                </span>
+		    </div>
+        
+            if (Model.IsEditAllowed) {
+                <div class="editor-label"></div>
+		        <div class="editor-field"></div>
                 <div class="editor-label"></div>
 		        <div class="editor-field"></div>
 
@@ -236,6 +294,8 @@
 
                 <div class="editor-label"></div>
 		        <div class="editor-field"></div>
+                <div class="editor-label"></div>
+		        <div class="editor-field"></div>
 
                 <div class="editor-label">E-mail</div>
                 <div class="editor-field">
@@ -256,57 +316,32 @@
                 <div class="editor-label"></div>
 		        <div class="editor-field"></div>
             }
-        
-            <div class="editor-label">Flessenpost&trade;</div>
-            <div class="editor-field">
-			    @Html.CheckBoxFor(m => m.Newsletter, new { @tabindex="17", @title="Aanmelden voor nieuwsbrief om op de hoogte te blijven? (nodig voor deelname)" })
-			    <label for="Newsletter" title="Aanmelden voor de Flessenpost nieuwsbrief om op de hoogte te blijven? (nodig voor deelname)"></label>
-                <span id="newsletter-span" class="opt-text" style="display: none;">Ja <span class="small">(Up-to-date via de e-mail)</span></span>
-		    </div>
-
-            <div class="editor-label">Mee-eten?</div>
-		    <div class="editor-field">
-                @Html.CheckBoxFor(m => m.Food, new { @tabindex="18", @title="Interesse om na afloop mee te eten? (vrijblijvende reservering)" })
-			    <label for="Food" title="Interesse om na afloop mee te eten? (vrijblijvende reservering)"></label>
-                <span id="food-span" class="opt-text" style="display: none;">Ja! <span class="small">(Paella of Roti+2 drinks &euro;10)</span></span>
-			</div>
-			<div class="editor-label">Kamperen?</div>
-			<div class="editor-field">
-				@Html.CheckBoxFor(m => m.Camp, new { @tabindex="19", @title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"})
-			    <label for="Camp" title="Ik wil blijven kamperen!"></label>
-                <span id="camp-span" class="opt-text" style="display: none;">Ja! <span class="small">(Eigen tent &euro;10 incl. ontbijt)</span></span>
-		    </div>
-		    <div class="editor-label">Fiets stallen?</div>
-		    <div class="editor-field">
-			    @Html.CheckBoxFor(m => m.Bike, new { @tabindex="20", @title="Interesse op de fiets te komen en deze te kunnen stallen? (vrijblijvende reservering)" })
-			    <label for="Bike" title="Interesse op de fiets te komen en deze veilig te kunnen stallen? (vrijblijvende reservering)"></label>
-                <span id="bike-span" class="opt-text" style="display: none;">Ja! <span class="small">(Neem wel slotje mee)</span></span>
-		    </div>
-
-            @*<div class="editor-label">Gewenste serie</div>
-		    <div class="editor-field">
-			    <input id="recrserie" name="Finale" type="radio" tabindex="18" value="R" />
-			    <label for="recrserie" title="Recreatief!"></label>
-			    <input id="topserie" name="Finale" type="radio" value="W" />
-			    <label for="topserie" title="Wedstrijd.."></label>
-		    </div>
 
             <div class="editor-label"></div>
 		    <div class="editor-field"></div>
 
+            @*
             <div class="editor-label">Early bird friend</div>
             <div class="editor-field"><input value="" type="text" tabindex="19" maxlength="100" style="width: 300px;" placeholder="E-mail van vriend(in) die ook Early Bird verdient..."></div>
 
             <div class="editor-label">Video fun</div>
             <div class="editor-field"><input value="" type="text" tabindex="20" style="width: 350px;" placeholder="URL van leuke YouTube video die je wil delen..."></div>
             *@
-        
+
+            <div class="editor-label">Betaalwijze</div>
+		    <div class="editor-field">@Html.DropDownListFor(m => m.PaymentType, Model.PaymentTypeList, null, new { @style = "width: 250px", @class="select2", @id="payment-type", @placeholder="Selecteer betaalwijze..." })</div>
+
+            <div class="editor-label">Bank (iDeal)</div>
+		    <div class="editor-field">@Html.DropDownListFor(m => m.BankCode, Model.BankList, new { @style = "width: 250px", @class="select2", @id="bank-code", @placeholder="Selecteer je bank..." })</div>
+
+            <div class="editor-label"></div>
+		    <div class="editor-field"></div>
             <div class="editor-label"></div>
 		    <div class="editor-field"></div>
 
             if(Model.IsEditAllowed) {
-                <div class="editor-label">Heb je er zin in?</div>
-                <div class="editor-field">@Html.TextAreaFor(m => m.HebJeErZinIn, new { @tabindex="21", @cols="50", @rows="2", @maxlength="100", @placeholder="Deze tekst wordt getoond op de website..."} )</div>
+                <div class="editor-label">Wat vind jij het meest aan Het Rondje Eilanden?</div>
+                <div class="editor-field">@Html.TextAreaFor(m => m.HebJeErZinIn, new { @tabindex="21", @cols="50", @rows="2", @maxlength="100", @placeholder="Wordt getoond op de website..."} )</div>
             } else {
                 <div class="editor-label">Heb je er zin in?</div>
                 <div class="editor-field">@(Model.HebJeErZinIn ?? "[Geen commentaar]")</div>
@@ -315,13 +350,14 @@
             if(Model.IsEditAllowed || Model.IsSpeaker) {
                 <div class="editor-label"></div>
                 <div class="editor-field"><a id="toon-meer-opmerkingen">Nog meer te vertellen?</a></div>
-
+        
                 <div id="meer-opmerkingen">
                     <div class="editor-label">Opmerkingen voor speaker<br /></div>
 		            <div class="editor-field">
                         @Html.TextAreaFor(m => m.OpmerkingenTbvSpeaker, new { @tabindex="22", @cols="50", @rows="2", @maxlength="1024", @placeholder="Voorzie speakers Ruud & Wilko van wat extra info.."} )
                         <div class="make-it-personal speaker"></div>
                     </div>
+                    <br />
                     @if(Model.IsEditAllowed) {
                         <div class="editor-label">Opmerkingen aan organisatie</div>
                         <div class="editor-field">
@@ -340,235 +376,55 @@
                     <input class="@(Model.IsRegistered ? "save-button" : "save" )" name="submit" type="submit" tabindex="24" value="@(Model.IsRegistered ? "Opslaan" : "")" />
                 </div>
             }
-
-        Html.EndForm();
-
-        if(Model.IsEditAllowed) {
-            <script type="text/javascript" lang="javascript" src="/Scripts/jquery.jqEasyCharCounter.min.js"></script>
-            <script type="text/javascript" lang="javascript">
-                function determineAndDisplayCosts() {
-                    var isEarlyBird = '@(Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value)' == 'True';
-                    var isNtbWedstrijdLid = $('#HasLicentieNummer').is(":checked") 
-                                && ($('#LicentieNummer').val().substring(2,3)=='a' || $('#LicentieNummer').val().substring(2,3)=='A'
-                                 || $('#LicentieNummer').val().substring(2,3)=='x' || $('#LicentieNummer').val().substring(2,3)=='X');
-                    var hasMyLaps = $('#HasMyLapsChipNummer').is(":checked");
-                    var basicCosts = @HreSettings.HuidigeDeelnameBedrag / 100;
-                    var licenseCosts = isNtbWedstrijdLid ? 0 : @HreSettings.KostenNtbDagLicentie / 100;
-                    var chipCosts = hasMyLaps ? 0 : @HreSettings.KostenHuurMyLapsChipGeel / 100;
-                    var reduction = !isEarlyBird ? 0 : @HreSettings.HoogteEarlyBirdKorting / 100;
-                    var totalCosts = basicCosts + licenseCosts + chipCosts - reduction;
-                    $('#basic').html(euroBedrag(basicCosts));
-                    $('#license').html(euroBedrag(licenseCosts));
-                    $('#chip').html(euroBedrag(chipCosts));
-                    $('#reduction').html(euroBedrag(reduction));
-                    $('#total').html(euroBedrag(totalCosts));
-                }
-
-                function euroBedrag(bedragInCenten) {
-                    result = bedragInCenten.toFixed(2);
-                    result = result.replace(".",",");
-                    result = result.replace(",00",",-");
-                    return "€ " + result;
-                }
-
-                $(function() {
-                    $('input[type=submit]').attr('disabled', 'disabled');
-                    $('input:not(#DoForceSendConfirmationOfChange),textarea').change(function() {
-                         $('#DoForceSendConfirmationOfChange').attr('checked', true);
-                         $('input[type=submit]').removeAttr('disabled');                             
-                    });
-                    $('#toon-uitleg').click(function () {
-                        $('ul#uitleg').slideToggle();
-                    });
-
-                    $('#toon-meer-opmerkingen').click(function () {
-                        $('#meer-opmerkingen').slideToggle();
-                    });
-
-                    // Nederlands Localization
-                    $.datepicker.regional['nl'] = {
-                        renderer: $.ui.datepicker.defaultRenderer,
-                        monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
-                        monthNamesShort: ['jan', 'feb', 'maa', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
-                        dayNames: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
-                        dayNamesShort: ['zon', 'maa', 'din', 'woe', 'don', 'vri', 'zat'],
-                        dayNamesMin: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
-                        dateFormat: 'dd-mm-yy',
-                        changeYear: true,
-                        yearRange: '-100:-15',
-                        firstDay: 1,
-                        prevText: '←', prevStatus: '',
-                        prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
-                        nextText: '→', nextStatus: '',
-                        nextJumpText: '&#x3e;&#x3e;', nextJumpStatus: '',
-                        currentText: 'Vandaag', currentStatus: '',
-                        todayText: 'Vandaag', todayStatus: '',
-                        clearText: '-', clearStatus: '',
-                        closeText: 'Sluiten', closeStatus: '',
-                        yearStatus: '', monthStatus: '',
-                        weekText: 'Wk', weekStatus: '',
-                        dayStatus: 'DD d MM',
-                        defaultStatus: '',
-                        isRTL: false
-                    };
-
-                    $.datepicker.setDefaults($.datepicker.regional['nl']);
-                    $datePicker = $(".datePicker");
-                    $datePicker.datepicker({
-                        constrainInput: false,
-                        defaultDate: new Date(1980,06,01)
-                        });
-                    $datePicker.click(function() {
-                        $('.datePicker').datepicker('setDate', $('#GeboorteDatum').val());
-                    });
-
-                    $("#GeboorteDatum" ).datepicker( "option", "defaultDate", -1000 );
-                    determineAndDisplayCosts();
-
-                    $('ul#uitleg').hide();
-                
-                    $('#meer-opmerkingen').hide();
-
-                    $('#costs-inner').show();
-
-                    $('#LicentieNummer').change(function() {
-                        determineAndDisplayCosts();
-                    });
-
-                    $('#Email').change(function() {
-                        $('#Email').val($('#Email').val().toLowerCase());
-                    });
-
-                    if ($('#test-checkbox').attr('checked')) {
-                        $("#test-checkbox-span").show();
-                        $("#test-checkbox-span-weer-uit").hide();
-                    } else {
-                        $("#test-checkbox-span").hide();
-                    }
-
-                    $('#test-checkbox').change(function() {
-                        if ($(this).is(":checked")) {
-                            $("#test-checkbox-span").show();
-                            $("#test-checkbox-span-weer-uit").hide();
-                        } else {
-                            $("#test-checkbox-span").hide();
-                            $("#test-checkbox-span-weer-uit").show();
-                        }
-                    });
-
-                    if ($('#HasLicentieNummer').attr('checked')) {
-                        $("#LicentieNummerSpan").show();
-                    } else {
-                        $("#LicentieNummerSpan").hide();
-                    }
-            
-                    $('#HasLicentieNummer').change(function() {
-                        determineAndDisplayCosts();
-                        if ($(this).is(":checked")) {
-                            $("#LicentieNummerSpan").show();
-                        } else {
-                            $("#LicentieNummerSpan").hide();
-                        }
-                    });
-
-                    if ($('#HasMyLapsChipNummer').attr('checked')) {
-                        $("#mylaps-chip-span").show();
-                    } else {
-                        $("#mylaps-chip-span").hide();
-                    }
-                
-                    $('#HasMyLapsChipNummer').change(function() {
-                        determineAndDisplayCosts();
-                        if ($(this).is(":checked")) {
-                            $("#mylaps-chip-span").show();
-                        } else {
-                            $("#mylaps-chip-span").hide();
-                        }
-                    });
-                
-                    if ($('#Newsletter').attr('checked')) {
-                        $("#newsletter-span").show();
-                    } else {
-                        $("#newsletter-span").hide();
-                    }
-
-                    if ($('#Food').attr('checked')) {
-                        $("#food-span").show();
-                    } else {
-                        $("#food-span").hide();
-                    }
-
-                    if ($('#Bike').attr('checked')) {
-                        $("#bike-span").show();
-                    } else {
-                        $("#bike-span").hide();
-                    }
-
-                    if ($('#Camp').attr('checked')) {
-                        $("#camp-span").show();
-                    } else {
-                        $("#camp-span").hide();
-                    }
-
-                    $('#Newsletter').change(function() {
-                        if ($(this).is(":checked")) {
-                            $("#newsletter-span").show('800');
-                        } else {
-                            $("#newsletter-span").hide();
-                        }
-                    });
-
-
-                    $('#Food').change(function() {
-                        if ($(this).is(":checked")) {
-                            $("#food-span").show('800');
-                        } else {
-                            $("#food-span").hide();
-                        }
-                    });
-
-                    $('#Bike').change(function() {
-                        if ($(this).is(":checked")) {
-                            $("#bike-span").show('800');
-                        } else {
-                            $("#bike-span").hide();
-                        }
-                    });
-
-                    $('#Camp').change(function() {
-                        if ($(this).is(":checked")) {
-                            $("#camp-span").show('800');
-                        } else {
-                            $("#camp-span").hide();
-                        }
-                    });
-
-                    $('#HebJeErZinIn').jqEasyCounter({
-                        'maxChars': 100,
-                        'maxCharsWarning': 100,
-                        'msgFontSize': '12px',
-                        'msgFontColor': '#000',
-                        'msgFontFamily': 'Arial',
-                        'msgTextAlign': 'right',
-                        'msgWarningColor': '#F00',
-                        'msgAppendMethod': 'insertAfter'
-                    });
-                });
-            </script>
-        } else {
-            <script type="text/javascript" lang="javascript">
-                // Disable all editing unless this is the current users' subscription (or user is admin).
-                if ('@(Model.IsEditAllowed)' == 'False') {
-                    $("input,select").prop('disabled', true);
-                }
-            </script>
         }
+    }
+</div>
 
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/select2/select2.js"></script>
+    <script type="text/javascript" lang="javascript" src="/Scripts/jquery.jqEasyCharCounter.min.js"></script>
+    @if(!Model.IsEditAllowed) {
+        <script type="text/javascript" lang="javascript">
+            // Disable all editing unless this is the current users' subscription (or user is admin).
+            @* if ('@(Model.IsEditAllowed)' == 'False') { *@
+                $("input,select").prop('disabled', true);
+            @* } *@
+        </script>
     }
 
-        
-    @section Scripts {
-        <script type="text/javascript">
+    <script type="text/javascript">
+        $.datepicker.setDefaults($.datepicker.regional['nl']);
+
+        // Nederlands Localization.
+        $.datepicker.regional['nl'] = {
+            renderer: $.ui.datepicker.defaultRenderer,
+            monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
+            monthNamesShort: ['jan', 'feb', 'maa', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
+            dayNames: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
+            dayNamesShort: ['zon', 'maa', 'din', 'woe', 'don', 'vri', 'zat'],
+            dayNamesMin: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
+            dateFormat: 'dd-mm-yy',
+            changeYear: true,
+            yearRange: '-100:-15',
+            firstDay: 1,
+            prevText: '←', prevStatus: '',
+            prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
+            nextText: '→', nextStatus: '',
+            nextJumpText: '&#x3e;&#x3e;', nextJumpStatus: '',
+            currentText: 'Vandaag', currentStatus: '',
+            todayText: 'Vandaag', todayStatus: '',
+            clearText: '-', clearStatus: '',
+            closeText: 'Sluiten', closeStatus: '',
+            yearStatus: '', monthStatus: '',
+            weekText: 'Wk', weekStatus: '',
+            dayStatus: 'DD d MM',
+            defaultStatus: '',
+            isRTL: false
+        };
+    </script>
+
+    <script type="text/javascript">
+        $(function() {
             $('.jq-runCode').click(function() {
                 var parent = $(this).parent();
                 var code = parent.find('code').text();
@@ -579,6 +435,250 @@
                 $(this).hide();
                 return false;
             });
-        </script>
-    }
-</div>
+
+            $('input[type=submit]').attr('disabled', 'disabled');
+            $('input:not(#DoForceSendConfirmationOfChange),textarea').change(function() {
+                    $('#DoForceSendConfirmationOfChange').attr('checked', true);
+                    $('input[type=submit]').removeAttr('disabled');                             
+            });
+            $('#toon-uitleg').click(function () {
+                $('ul#uitleg').slideToggle();
+            });
+
+            $('#toon-meer-opmerkingen').click(function () {
+                $('#meer-opmerkingen').slideToggle();
+            });
+            
+            $datePicker = $(".datePicker");
+            $datePicker.datepicker({
+                constrainInput: false,
+                defaultDate: new Date(1980,08,02),
+                yearRange: '-100:-15',
+                changeYear: true
+            });
+            $datePicker.click(function() {
+                $('.datePicker').datepicker('setDate', $('#GeboorteDatum').val());
+            });
+
+            $("#GeboorteDatum").datepicker('option', 'defaultDate', -1000 );
+            determineAndDisplayCosts();
+
+            $('ul#uitleg').hide();
+                
+            $('#meer-opmerkingen').hide();
+
+            $('#costs-inner').show();
+
+            $('#LicentieNummer').change(function() {
+                determineAndDisplayCosts();
+            });
+
+            $('#Food').change(function() {
+                determineAndDisplayCosts();
+            });
+
+            $('#Email').change(function() {
+                $('#Email').val($('#Email').val().toLowerCase());
+            });
+
+            if ($('#test-checkbox').attr('checked')) {
+                $("#test-checkbox-span").show();
+                $("#test-checkbox-span-weer-uit").hide();
+            } else {
+                $("#test-checkbox-span").hide();
+            }
+
+            $('#test-checkbox').change(function() {
+                if ($(this).is(":checked")) {
+                    $("#test-checkbox-span").show();
+                    $("#test-checkbox-span-weer-uit").hide();
+                } else {
+                    $("#test-checkbox-span").hide();
+                    $("#test-checkbox-span-weer-uit").show();
+                }
+            });
+
+            if ($('#HasLicentieNummer').attr('checked')) {
+                $("#LicentieNummerSpan").show();
+            } else {
+                $("#LicentieNummerSpan").hide();
+            }
+            
+            $('#HasLicentieNummer').change(function() {
+                determineAndDisplayCosts();
+                if ($(this).is(":checked")) {
+                    $("#LicentieNummerSpan").show();
+                } else {
+                    $("#LicentieNummerSpan").hide();
+                }
+            });
+
+            if ($('#HasMyLapsChipNummer').attr('checked')) {
+                $("#mylaps-chip-span").show();
+            } else {
+                $("#mylaps-chip-span").hide();
+            }
+                
+            $('#HasMyLapsChipNummer').change(function() {
+                determineAndDisplayCosts();
+                if ($(this).is(":checked")) {
+                    $("#mylaps-chip-span").show();
+                } else {
+                    $("#mylaps-chip-span").hide();
+                }
+            });
+                
+            if ($('#Newsletter').attr('checked')) {
+                $("#newsletter-span").show();
+            } else {
+                $("#newsletter-span").hide();
+            }
+
+            if ($('#Food').attr('checked')) {
+                $("#food-span").show();
+            } else {
+                $("#food-span").hide();
+            }
+
+            if ($('#Bike').attr('checked')) {
+                $("#bike-span").show();
+            } else {
+                $("#bike-span").hide();
+            }
+
+            if ($('#Camp').attr('checked')) {
+                $("#camp-span").show();
+            } else {
+                $("#camp-span").hide();
+            }
+
+            $('#Newsletter').change(function() {
+                if ($(this).is(":checked")) {
+                    $("#newsletter-span").show('800');
+                } else {
+                    $("#newsletter-span").hide();
+                }
+            });
+
+            $('#Food').change(function() {
+                if ($(this).is(":checked")) {
+                    $("#food-span").show('800');
+                } else {
+                    $("#food-span").hide();
+                }
+            });
+
+            $('#Bike').change(function() {
+                if ($(this).is(":checked")) {
+                    $("#bike-span").show('800');
+                } else {
+                    $("#bike-span").hide();
+                }
+            });
+
+            $('#Camp').change(function() {
+                if ($(this).is(":checked")) {
+                    $("#camp-span").show('800');
+                } else {
+                    $("#camp-span").hide();
+                }
+            });
+
+            $('input[name=Finale]').change(function() {
+                if ($('#topserie').is(":checked")) {
+                    $("#recrserie-text").hide('800');
+                    $("#topserie-text").show();
+                } else {
+                    $("#recrserie-text").show();
+                    $("#topserie-text").hide('800');
+                }
+            });
+
+
+            $('#HebJeErZinIn').jqEasyCounter({
+                'maxChars': 100,
+                'maxCharsWarning': 100,
+                'msgFontSize': '12px',
+                'msgFontColor': '#000',
+                'msgFontFamily': 'Arial',
+                'msgTextAlign': 'right',
+                'msgWarningColor': '#F00',
+                'msgAppendMethod': 'insertAfter'
+            });
+
+            function formatBank(state) {
+                if (!state.id) {
+                    return state.text; // optgroup
+                }
+                result = "<div class='sprite b" + state.id + "' /><div class='item-text'>" + state.text + "</div>";
+                return result;
+            }
+
+            function formatPaymentType(state) {
+                if (!state.id) {
+                    return state.text; // optgroup
+                }
+                result = "<div class='sprite p" + state.id + "' /><div class='item-text'>" + state.text + "</div>";
+                return result;
+            }
+
+            $('#bank-code').select2({
+                formatResult: formatBank,
+                formatSelection: formatBank,
+                escapeMarkup: function(m) {
+                    return m;
+                }
+            });
+
+            $('#payment-type').select2({
+                formatResult: formatPaymentType,
+                formatSelection: formatPaymentType,
+                escapeMarkup: function(m) {
+                    return m;
+                }
+            });
+
+        });
+
+        function determineAndDisplayCosts() {
+            var isEarlyBird = '@(Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value)' == 'True';
+            var isNtbWedstrijdLid = $('#HasLicentieNummer').is(":checked") 
+                        && ($('#LicentieNummer').val().substring(2,3)=='a' || $('#LicentieNummer').val().substring(2,3)=='A'
+                            || $('#LicentieNummer').val().substring(2,3)=='x' || $('#LicentieNummer').val().substring(2,3)=='X');
+            var hasMyLaps = $('#HasMyLapsChipNummer').is(":checked");
+            var isMyLapsGeel  = hasMyLaps && $('#MyLapsChipNummer').val().match(/^\d/);
+            var isMyLapsGroen = hasMyLaps && $('#MyLapsChipNummer').val().match(/^\w/);
+            if (isMyLapsGroen) {
+                $('#my-laps-yellow').hide();
+                $('#my-laps-green').show();
+            }
+            if (isMyLapsGeel) {
+                $('#my-laps-green').hide();
+                $('#my-laps-yellow').show();
+            }
+
+            var basicCosts = @(HreSettings.HuidigeDeelnameBedrag / 100);
+            var licenseCosts = isNtbWedstrijdLid ? 0 : @(HreSettings.KostenNtbDagLicentie / 100);
+            var chipCosts = hasMyLaps ? 0 : 
+                isMyLapsGeel ? @(HreSettings.KostenHuurMyLapsChipGeel/100) : @(HreSettings.KostenGebruikMyLapsChipGroen/100);
+            var reduction = !isEarlyBird ? 0 : @(HreSettings.HoogteEarlyBirdKorting / 100);
+            var foodCosts = !$('#Food').is(':checked') ? 0 : @(HreSettings.KostenEten / 100);
+            var totalCosts = basicCosts + licenseCosts + chipCosts + foodCosts - reduction;
+            $('#basic').html(euroBedrag(basicCosts));
+            $('#license').html(euroBedrag(licenseCosts));
+            $('#chip').html(euroBedrag(chipCosts));
+            $('#food').html(euroBedrag(foodCosts));
+            $('#reduction').html(euroBedrag(reduction));
+            $('#total').html(euroBedrag(totalCosts));
+        }
+
+        function euroBedrag(bedragInCenten) {
+            result = bedragInCenten.toFixed(2);
+            result = result.replace(".",",");
+            result = result.replace(",00",",-");
+            return "€ " + result;
+        }
+
+    </script>
+
+}

@@ -23,6 +23,7 @@
         <text>Scrape:</text>
             @Html.DropDownList("EventNumber",
             new SelectList(new Dictionary<string, string> {
+                {"2014", HRE.Models.InschrijvingenRepository.H3RE_EVENTNR},
                 {"2013", HRE.Models.InschrijvingenRepository.H2RE_EVENTNR},
                 {"2012", HRE.Models.InschrijvingenRepository.HRE_EVENTNR}
             },
@@ -51,7 +52,7 @@
 
 <h1>@(Model.EventNumber==HRE.Models.InschrijvingenRepository.HRE_EVENTNR ? 
         "Deelnemerslijst HRE 2012" :
-        "Deelnemerslijst H2RE 2013")</h1>
+        Model.EventNumber==HRE.Models.InschrijvingenRepository.H2RE_EVENTNR ? "Deelnemerslijst H2RE 2013" : "Deelnemerslijst H2RE 2014")</h1>
 
 @if (Model.HasSpeakerRole) {
     using(Html.BeginForm("DownloadSpeakerList", "Inschrijvingen", FormMethod.Post, new { @class="parallel-form" } )) {

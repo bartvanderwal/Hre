@@ -33,11 +33,10 @@
         PostalAddress,
     }
 
-
     public enum PaymentType {
-        iDeal,
-        BankTransfer,
-        Cash
+        iDeal = 0,
+        BankTransfer = 1,
+        Cash = 2
     }
 
     public enum EmailType {
@@ -129,11 +128,10 @@
     /// The status of a logonuser.
     /// </summary>
     public enum LogonUserStatus {
-        Undetermined = 0,   // Undetermined, for records created before this Enum was added :P
+        Undetermined = 0,   // Undetermined, for records created before this Enum was added or when a user with a previously confirmed email address changed it, so that it is now unconfirmed again :).
         New = 1, // A new user, with unconfirmed (or no) e-mail address.
         EmailAddressConfirmed = 2, // THe e-mail address was confirmed
-        EmailAddressChanged = 3, // A user with a previously confirmed email address changed it, so that it is now unconfirmed again :).
-        FullAccount = 4  // The user has a password
+        FullAccount = 3  // The user has a password
     }
 
 }

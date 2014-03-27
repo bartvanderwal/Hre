@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
       <s:element name="GetBanken">
@@ -28,43 +28,6 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetIssuersResult" type="tns:ArrayOfString" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetSHA1Login">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="gebruiker" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="wachtwoord" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetSHA1LoginResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetSHA1LoginResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetSHA1Login2">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="gebruiker" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="wachtwoord" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="bank" type="s:string" />
-            <s:element minOccurs="1" maxOccurs="1" name="bedrag" type="s:long" />
-            <s:element minOccurs="0" maxOccurs="1" name="kenmerk" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="omschrijving" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="returnURL" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="entrance" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetSHA1Login2Response">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetSHA1Login2Result" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="txid" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -175,18 +138,6 @@
   <wsdl:message name="GetIssuersSoapOut">
     <wsdl:part name="parameters" element="tns:GetIssuersResponse" />
   </wsdl:message>
-  <wsdl:message name="GetSHA1LoginSoapIn">
-    <wsdl:part name="parameters" element="tns:GetSHA1Login" />
-  </wsdl:message>
-  <wsdl:message name="GetSHA1LoginSoapOut">
-    <wsdl:part name="parameters" element="tns:GetSHA1LoginResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetSHA1Login2SoapIn">
-    <wsdl:part name="parameters" element="tns:GetSHA1Login2" />
-  </wsdl:message>
-  <wsdl:message name="GetSHA1Login2SoapOut">
-    <wsdl:part name="parameters" element="tns:GetSHA1Login2Response" />
-  </wsdl:message>
   <wsdl:message name="GetStatusSoapIn">
     <wsdl:part name="parameters" element="tns:GetStatus" />
   </wsdl:message>
@@ -226,14 +177,6 @@
       <wsdl:input message="tns:GetIssuersSoapIn" />
       <wsdl:output message="tns:GetIssuersSoapOut" />
     </wsdl:operation>
-    <wsdl:operation name="GetSHA1Login">
-      <wsdl:input message="tns:GetSHA1LoginSoapIn" />
-      <wsdl:output message="tns:GetSHA1LoginSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetSHA1Login2">
-      <wsdl:input message="tns:GetSHA1Login2SoapIn" />
-      <wsdl:output message="tns:GetSHA1Login2SoapOut" />
-    </wsdl:operation>
     <wsdl:operation name="GetStatus">
       <wsdl:input message="tns:GetStatusSoapIn" />
       <wsdl:output message="tns:GetStatusSoapOut" />
@@ -268,24 +211,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetIssuers">
       <soap:operation soapAction="http://tempuri.org/GetIssuers" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetSHA1Login">
-      <soap:operation soapAction="http://tempuri.org/GetSHA1Login" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetSHA1Login2">
-      <soap:operation soapAction="http://tempuri.org/GetSHA1Login2" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -352,24 +277,6 @@
     </wsdl:operation>
     <wsdl:operation name="GetIssuers">
       <soap12:operation soapAction="http://tempuri.org/GetIssuers" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetSHA1Login">
-      <soap12:operation soapAction="http://tempuri.org/GetSHA1Login" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetSHA1Login2">
-      <soap12:operation soapAction="http://tempuri.org/GetSHA1Login2" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

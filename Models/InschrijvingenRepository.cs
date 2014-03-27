@@ -12,7 +12,6 @@ using HRE.Dal;
 
 namespace HRE.Models {
 
-
     /// <summary>
     /// Class with utility functions to put into and retrieve Ntb entries from the database.
     /// </summary>
@@ -26,7 +25,7 @@ namespace HRE.Models {
 
         public const string HRE_SERIENR = "4549";
 
-        public static DateTime HRE_DATE = new DateTime(2012,8,4,16,00,0);
+        public static DateTime HRE_DATE = new DateTime(2012, 8, 4, 16, 0, 0);
 
         public const string H2RE_NAME = "H2RE";
 
@@ -34,7 +33,16 @@ namespace HRE.Models {
 
         public const string H2RE_SERIENR = "5089";
 
-        public static DateTime H2RE_DATE = HreSettings.DatumTijdstipH2RE; // new DateTime(2013,8,3,16,0,0);
+        public static DateTime H2RE_DATE = new DateTime(2013, 8, 3, 16, 0, 0);
+
+        public const string H3RE_NAME = "H3RE";
+
+        public const string H3RE_EVENTNR = "2006240";
+
+        public const string H3RE_SERIENR = "6941";
+
+        public static DateTime H3RE_DATE = new DateTime(2014, 8, 2, 15, 0, 0);
+
 
         public static string ADMIN_ROLE_NAME = "Admin";
 
@@ -128,9 +136,47 @@ namespace HRE.Models {
         }
 
 
-        // Retrieve an InschrijvingModel for a user and a certain event (determined by externalIdentifier).
+        /// <summary>
+        /// Retrieve an InschrijvingModel for a user and a certain event (determined by externalIdentifier).
+        /// </summary>
+        /// <param name="logonUser"></param>
+        /// <param name="eventNr"></param>
+        /// <returns></returns>
         public static InschrijvingModel GetInschrijving(LogonUserDal logonUser, string eventNr) {
             return SelectEntries(eventNr, true, logonUser.Id).FirstOrDefault();
+        }
+
+
+        /// <summary>
+        /// Retrieve an InschrijvingModel by ID.
+        /// </summary>
+        /// <param name="participationID"></param>
+        /// <param name="eventNr"></param>
+        /// <returns></returns>
+        public static InschrijvingModel GetInschrijvingByParticipationID(int participationID) {
+            var participation = (
+                from p in DB.sportseventparticipation 
+                where p.Id == participationID 
+                select new {
+                    userID = p.UserId,
+                    eventID = p.SportsEventId
+                }).FirstOrDefault();
+
+            string eventNr = null;
+            
+            if (participation.eventID.HasValue) {
+                eventNr = (
+                    from e in DB.sportsevent
+                    where e.Id == participation.eventID.Value
+                    select e.ExternalEventIdentifier
+                ).FirstOrDefault();
+
+                if (participation.userID.HasValue && !string.IsNullOrEmpty(eventNr)) {
+                    InschrijvingModel result = SelectEntries(eventNr, true, participation.userID.Value).FirstOrDefault();
+                    return result;
+                }
+            }
+            return null;
         }
 
 
@@ -183,6 +229,7 @@ namespace HRE.Models {
                     ExternalIdentifier = p.ExternalIdentifier,
                     RegistrationDate = p.DateRegistered,
                     VirtualRegistrationDateForOrdering = p.VirtualRegistrationDateForOrdering,
+                    BankCode = p.BankCode,
 
                     // TODO BW 2013-02-06: Rename the database fields from 'Scraped' also to 'Synchronized' like the ORM fields
                     // once this is an accurate description (e.g. when posting 'updates' and 'inserts' to NTB inschrijvingen is also done on Save).
@@ -197,6 +244,7 @@ namespace HRE.Models {
                     Camp = p.Camp.HasValue && p.Camp.Value,
                     Food = p.Food.HasValue && p.Food.Value,
                     Bike = p.Bike.HasValue && p.Bike.Value,
+                    Finale = p.WantsToDoFinal.HasValue && p.WantsToDoFinal.Value ? "W" : "R",
                     HebJeErZinIn = p.NotesToAll,
                     OpmerkingenTbvSpeaker = p.SpeakerRemarks,
                     OpmerkingenAanOrganisatie = p.Notes,
@@ -207,6 +255,8 @@ namespace HRE.Models {
                     BedragBetaald = p.ParticipationAmountPaidInEuroCents,
                     GenoegBetaaldVoorDeelnemerslijst = p.HasPaidEnoughToList.HasValue && p.HasPaidEnoughToList.Value,
 
+                    DatumBetaald = p.DatePaymentReceived,
+                    IsBetaald = p.HasPaid,
                     DateConfirmationSend = p.DateConfirmationSend
                 };
 
@@ -261,7 +311,7 @@ namespace HRE.Models {
 
 
         /// <summary>
-        /// Sav an entry.
+        /// Save an entry.
         /// </summary>
         /// <param name="inschrijving"></param>
         /// <param name="eventNumber"></param>
@@ -297,7 +347,7 @@ namespace HRE.Models {
 
                     user.EmailAddress = inschrijving.Email;
                     // Set user status as unconfirmed, since the e-mail address is changed, and the new address is not confirmed yet.
-                    user.Status = Business.LogonUserStatus.EmailAddressChanged;
+                    user.Status = Business.LogonUserStatus.Undetermined;
                 }
                 user.UserName = inschrijving.Email;
                 user.TelephoneNumber = inschrijving.Telefoon;
@@ -366,9 +416,7 @@ namespace HRE.Models {
                     participation.DateRegistered=inschrijving.RegistrationDate;
                 } else {
                     participation.ExternalIdentifier = inschrijving.ExternalIdentifier;
-                    if (!inschrijving.IsRegistered) {
-                        participation.DateRegistered = participation.DateUpdated;
-                    }
+                    participation.DateRegistered = participation.DateUpdated;
                     participation.ParticipationAmountInEuroCents = inschrijving.InschrijfGeld;
                 }
 
@@ -386,12 +434,15 @@ namespace HRE.Models {
                 participation.Camp = inschrijving.Camp;
                 participation.Food = inschrijving.Food;
                 participation.Bike = inschrijving.Bike;
+                participation.WantsToDoFinal = inschrijving.Finale=="W";
                 participation.TShirtSize = inschrijving.MaatTshirt;
                 
                 participation.ParticipationStatus = 1;
                 participation.Notes = inschrijving.OpmerkingenAanOrganisatie;
                 participation.NotesToAll = inschrijving.HebJeErZinIn;
                 participation.DateConfirmationSend = inschrijving.DateConfirmationSend;
+
+                participation.BankCode = inschrijving.BankCode;
 
                 if (participation.Id==0) {
                     DB.AddTosportseventparticipation(participation);
@@ -400,6 +451,23 @@ namespace HRE.Models {
                 inschrijving.ParticipationId = participation.Id;
                 inschrijving.RegistrationDate = participation.DateRegistered;
             }
+        }
+
+
+        /// <summary>
+        /// Save an entry.
+        /// </summary>
+        /// <param name="inschrijving"></param>
+        /// <param name="eventNumber"></param>
+        public static void MarkEntryAsPaid(int participationID) {
+            var participation = (from p in DB.sportseventparticipation where p.Id == participationID select p).FirstOrDefault();
+            
+            if (participation!=null) {
+                DateTime now = DateTime.Now;
+                participation.DatePaymentReceived = now;
+                participation.HasPaid = true;
+            }
+            DB.SaveChanges();
         }
 
 

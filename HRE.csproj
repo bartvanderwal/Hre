@@ -21,6 +21,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,6 +63,14 @@
       <HintPath>..\packages\AjaxControlToolkit.4.1.51116\lib\40\SanitizerProviders\HtmlSanitizationLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MySql.Data.6.8.3\lib\net40\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Web, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MySql.Web.6.8.3\lib\net40\MySql.Web.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -157,13 +166,6 @@
     <Compile Include="Controllers\MeedoenController.cs" />
     <Compile Include="Controllers\OudParcoursController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controls\LnkButton.ascx.cs">
-      <DependentUpon>LnkButton.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\LnkButton.ascx.designer.cs">
-      <DependentUpon>LnkButton.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Dal\SportsEventDal.cs" />
     <Compile Include="Dal\SportsEventParticipationDal.cs" />
     <Compile Include="Dal\EmailAuditDal.cs" />
@@ -211,6 +213,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BaseRepository.cs" />
     <Compile Include="Models\ContactViewModel.cs" />
+    <Compile Include="Models\ParticipationRepository.cs" />
     <Compile Include="Models\emailauditRepository.cs" />
     <Compile Include="Models\HREContext.cs" />
     <Compile Include="Models\MeedoenModel.cs" />
@@ -222,7 +225,7 @@
     <Compile Include="Models\InschrijvingModel.cs" />
     <Compile Include="Models\InschrijvingenRepository.cs" />
     <Compile Include="Models\InschrijvingenModel.cs" />
-    <Compile Include="Models\VolonteerModel.cs" />
+    <Compile Include="Models\VolunteerModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\Sisow\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -260,9 +263,13 @@
     <Content Include="Content\ckeditor\images\close.png" />
     <Content Include="Content\ckeditor\images\mini.png" />
     <Content Include="Content\admin_new.css" />
+    <Content Include="Content\img\AllBanks2.png" />
+    <Content Include="Content\img\AllBanks2_small.png" />
     <Content Include="Content\img\delete.png" />
     <Content Include="Content\img\Excel_Icon.png" />
     <Content Include="Content\img\HreFinaleConcept.png" />
+    <Content Include="Content\img\IdealButtonKlein.png" />
+    <Content Include="Content\img\IdealLinkje.png" />
     <Content Include="Content\img\MyLaps.jpg" />
     <Content Include="Content\img\Nieuwsbrief\flessenpost.png" />
     <Content Include="Content\img\Nieuwsbrief\flessenpost_.png" />
@@ -352,6 +359,7 @@
     <Content Include="Content\img\Nieuwsbrief\weeseralsdekippenbij.png" />
     <Content Include="Content\img\NtbIcon.png" />
     <Content Include="Content\img\SpeakersAndOrganisation.png" />
+    <Content Include="Content\jquery-ui-1.10.4.custom.min.css" />
     <Content Include="Content\newsletter.css" />
     <Content Include="Content\img\Cup.png" />
     <Content Include="Content\subscribe.css" />
@@ -572,7 +580,6 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
-    <Content Include="Controls\LnkButton.ascx" />
     <Content Include="Errors\_401.aspx" />
     <Content Include="Errors\_404.aspx" />
     <Content Include="Errors\DefaultError.aspx" />
@@ -799,6 +806,11 @@
     <Content Include="foto-film\index.html" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
+    <Content Include="inschrijven\files\het rondje eilanden klein.png" />
+    <Content Include="inschrijven\files\pixel.png" />
+    <Content Include="inschrijven\files\stacks_page_page3.css" />
+    <Content Include="inschrijven\files\stacks_page_page3.js" />
+    <Content Include="inschrijven\index.html" />
     <Content Include="meedoen\deelnemerslijst\files\contactAssets\loader.gif" />
     <Content Include="meedoen\deelnemerslijst\files\event_het_rondje_eilanden.jpg" />
     <Content Include="meedoen\deelnemerslijst\files\media_het_rondje_eilanden.jpg" />
@@ -822,6 +834,17 @@
     <Content Include="obj\Debug\HRE.pdb" />
     <Content Include="obj\Debug\TempPE\Data.HRE.Designer.cs.dll" />
     <Content Include="obj\Debug\TempPE\Service References.Sisow.Reference.cs.dll" />
+    <Content Include="programma\files\bg_control_nav.png" />
+    <Content Include="programma\files\bg_control_nav_2x.png" />
+    <Content Include="programma\files\bg_direction_nav.png" />
+    <Content Include="programma\files\het rondje eilanden klein.png" />
+    <Content Include="programma\files\pixel.png" />
+    <Content Include="programma\files\stacks_image_172.jpg" />
+    <Content Include="programma\files\stacks_image_173.jpg" />
+    <Content Include="programma\files\stacks_image_174.jpg" />
+    <Content Include="programma\files\stacks_page_page2.css" />
+    <Content Include="programma\files\stacks_page_page2.js" />
+    <Content Include="programma\index.html" />
     <Content Include="README.jQuery.vsdoc.txt" />
     <Content Include="resources\avondprogramma.jpg" />
     <Content Include="resources\cyaan-profiel.jpg" />
@@ -1024,11 +1047,8 @@
     <Content Include="Scripts\ckeditor\plugins\tabletools\dialogs\tableCell.js" />
     <Content Include="Scripts\ckeditor\plugins\table\dialogs\table.js" />
     <Content Include="Scripts\ckeditor\styles.js" />
-    <Content Include="Scripts\jquery-1.7.2-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.7.2.js" />
-    <Content Include="Scripts\jquery-1.7.2.min.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-ui-1.10.4.custom.min.js" />
     <Content Include="Scripts\jquery.countdown.css" />
     <Content Include="Scripts\jquery.countdown.min.js" />
     <Content Include="Scripts\jquery.countdown.package-1.5.11\countdownBasic.html" />
@@ -1039,15 +1059,18 @@
     <Content Include="Scripts\jquery.countdown.package-1.5.11\jquery.countdown.js" />
     <Content Include="Scripts\jquery.countdown.package-1.5.11\jquery.countdown.min.js" />
     <Content Include="Scripts\jquery.countdown.package-1.5.11\jquery.countdown.pack.js" />
+    <Content Include="Scripts\jquery.cycle.all.js" />
     <Content Include="Scripts\jquery.jqdock.js" />
     <Content Include="Scripts\jquery.jqdock.min.js" />
     <Content Include="Scripts\jquery.jqEasyCharCounter.js" />
     <Content Include="Scripts\jquery.jqEasyCharCounter.min.js" />
+    <Content Include="Scripts\jquery.ui.datepicker-nl.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\kickstart.js" />
     <Content Include="Scripts\main-script.js" />
-    <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\newsletter.js" />
     <None Include="contact\files\contactAssets\contactform.php" />
     <None Include="Content\pdf\ProgrammaboekjeHet2eRondjeEilanden2013.pdf" />
@@ -1058,6 +1081,7 @@
     <None Include="evenement\wedstrijd-parcours\files\contactAssets\contactform.php" />
     <None Include="files\contactAssets\contactform.php" />
     <None Include="foto-film\files\contactAssets\contactform.php" />
+    <Content Include="inschrijven\Web.config" />
     <None Include="meedoen\deelnemerslijst\files\contactAssets\contactform.php" />
     <None Include="meedoen\files\contactAssets\contactform.php" />
     <None Include="obj\Debug\CSC4DBE.tmp" />
@@ -1075,6 +1099,13 @@
     <None Include="rw_common\themes\union\font\ncds.eot" />
     <None Include="rw_common\themes\union\font\ncds.ttf" />
     <None Include="rw_common\themes\union\font\ncds.woff" />
+    <Content Include="Scripts\jquery-ui-1.10.4.custom.zip" />
+    <None Include="Scripts\select2\bower.json" />
+    <None Include="Scripts\select2\LICENSE" />
+    <None Include="Scripts\select2\README.md" />
+    <None Include="Scripts\select2\release.sh" />
+    <None Include="Scripts\select2\select2.jquery.json" />
+    <None Include="Scripts\select2\select2_locale_en.js.template" />
     <None Include="Service References\Sisow\AssurePay.disco" />
     <None Include="Service References\Sisow\configuration91.svcinfo" />
     <None Include="Service References\Sisow\configuration.svcinfo" />
@@ -1085,6 +1116,54 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="Scripts\select2\select2-bootstrap.css" />
+    <Content Include="Scripts\select2\select2-spinner.gif" />
+    <Content Include="Scripts\select2\select2.css" />
+    <Content Include="Scripts\select2\select2.js" />
+    <Content Include="Scripts\select2\select2.min.js" />
+    <Content Include="Scripts\select2\select2.png" />
+    <Content Include="Scripts\select2\select2x2.png" />
+    <Content Include="Scripts\select2\select2_locale_ar.js" />
+    <Content Include="Scripts\select2\select2_locale_bg.js" />
+    <Content Include="Scripts\select2\select2_locale_ca.js" />
+    <Content Include="Scripts\select2\select2_locale_cs.js" />
+    <Content Include="Scripts\select2\select2_locale_da.js" />
+    <Content Include="Scripts\select2\select2_locale_de.js" />
+    <Content Include="Scripts\select2\select2_locale_el.js" />
+    <Content Include="Scripts\select2\select2_locale_es.js" />
+    <Content Include="Scripts\select2\select2_locale_et.js" />
+    <Content Include="Scripts\select2\select2_locale_eu.js" />
+    <Content Include="Scripts\select2\select2_locale_fa.js" />
+    <Content Include="Scripts\select2\select2_locale_fi.js" />
+    <Content Include="Scripts\select2\select2_locale_fr.js" />
+    <Content Include="Scripts\select2\select2_locale_gl.js" />
+    <Content Include="Scripts\select2\select2_locale_he.js" />
+    <Content Include="Scripts\select2\select2_locale_hr.js" />
+    <Content Include="Scripts\select2\select2_locale_hu.js" />
+    <Content Include="Scripts\select2\select2_locale_id.js" />
+    <Content Include="Scripts\select2\select2_locale_is.js" />
+    <Content Include="Scripts\select2\select2_locale_it.js" />
+    <Content Include="Scripts\select2\select2_locale_ja.js" />
+    <Content Include="Scripts\select2\select2_locale_ko.js" />
+    <Content Include="Scripts\select2\select2_locale_lt.js" />
+    <Content Include="Scripts\select2\select2_locale_lv.js" />
+    <Content Include="Scripts\select2\select2_locale_mk.js" />
+    <Content Include="Scripts\select2\select2_locale_ms.js" />
+    <Content Include="Scripts\select2\select2_locale_nl.js" />
+    <Content Include="Scripts\select2\select2_locale_no.js" />
+    <Content Include="Scripts\select2\select2_locale_pl.js" />
+    <Content Include="Scripts\select2\select2_locale_pt-BR.js" />
+    <Content Include="Scripts\select2\select2_locale_pt-PT.js" />
+    <Content Include="Scripts\select2\select2_locale_ro.js" />
+    <Content Include="Scripts\select2\select2_locale_ru.js" />
+    <Content Include="Scripts\select2\select2_locale_sk.js" />
+    <Content Include="Scripts\select2\select2_locale_sv.js" />
+    <Content Include="Scripts\select2\select2_locale_th.js" />
+    <Content Include="Scripts\select2\select2_locale_tr.js" />
+    <Content Include="Scripts\select2\select2_locale_ua.js" />
+    <Content Include="Scripts\select2\select2_locale_vi.js" />
+    <Content Include="Scripts\select2\select2_locale_zh-CN.js" />
+    <Content Include="Scripts\select2\select2_locale_zh-TW.js" />
     <Content Include="sitemap.xml" />
     <Content Include="sql\1.create_asp_tables.sql" />
     <Content Include="sql\2.create_hre.sql" />
@@ -1100,6 +1179,8 @@
     <Content Include="sql\20130730_insert_new_payments.sql" />
     <Content Include="sql\20130731_insert_startnummers_en_tijden.sql" />
     <Content Include="sql\20130801AddSportsEventParticipation_UserCanceled.sql" />
+    <Content Include="sql\20140114AddVolonteer.sql" />
+    <Content Include="sql\20140311_add_sportsevent_2014.sql" />
     <Content Include="Views\emailaudits\Create.cshtml" />
     <Content Include="Views\emailaudits\Edit.cshtml" />
     <Content Include="Views\emailaudits\Delete.cshtml" />
@@ -1136,16 +1217,19 @@
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Inschrijvingen\MijnRondjeEilanden.cshtml" />
-    <Content Include="Views\Inschrijvingen\Bedankt.cshtml" />
+    <Content Include="Views\Inschrijvingen\Aangemeld.cshtml" />
     <Content Include="Views\Newsletter\Web_noworkie.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Newsletter\_Layout.cshtml" />
+    <Content Include="Views\Shared\_Layout2014.cshtml" />
+    <Content Include="Views\Inschrijvingen\Reglementen2013.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="api\" />
     <Folder Include="App_Data\" />
     <Folder Include="Common\Email\" />
+    <Folder Include="Controls\" />
     <Folder Include="obj\Debug\Package\" />
   </ItemGroup>
   <ItemGroup>

@@ -12,8 +12,8 @@
 @if(DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving)<0) {
     <text>Voor 2013 opent de de algemene inschrijving op @HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving.ToShortDateString()  (er zijn totaal @HRE.Common.HreSettings.AantalStartPlekken startplekken)</text>
 } else {
-    if(DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.SluitingssdatumAlgemeneInschrijving)<0) {
-        <text>Voor 2013 sloot de algemene inschrijving op @HRE.Common.HreSettings.SluitingssdatumAlgemeneInschrijving.ToShortDateString() </text>
+    if(DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.SluitingsDatumAlgemeneInschrijving)<0) {
+        <text>Voor 2013 sloot de algemene inschrijving op @HRE.Common.HreSettings.SluitingsDatumAlgemeneInschrijving.ToShortDateString() </text>
     } else {
         if(@HRE.Dal.LogonUserDal.AantalIngeschrevenDeelnemers(Model.EventNumber)>HRE.Common.HreSettings.AantalStartPlekken+HRE.Common.HreSettings.AantalPlekkenReserveLijst) {
         <text>Sorrie! Het maximale aantal startplekken van @HRE.Common.HreSettings.AantalStartPlekken voor 2013 is al volgeboekt. En de reservelijst van @HRE.Common.HreSettings.AantalPlekkenReserveLijst is ook al helemaal vol!</text>            

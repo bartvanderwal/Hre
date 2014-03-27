@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/stacks/!svn/ver/319/trunk/FormSnapBase.stack/Contents/Resources/formsnap
+END
+class.formsnap.php
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/stacks/!svn/ver/319/trunk/FormSnapBase.stack/Contents/Resources/formsnap/class.formsnap.php
+END
+recaptchalib.php
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/stacks/!svn/ver/2/trunk/FormSnapBase.stack/Contents/Resources/formsnap/recaptchalib.php
+END
+fancy_progress.png
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/stacks/!svn/ver/41/trunk/FormSnapBase.stack/Contents/Resources/formsnap/fancy_progress.png
+END
+browser.php
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/stacks/!svn/ver/2/trunk/FormSnapBase.stack/Contents/Resources/formsnap/browser.php
+END
+alert.png
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/stacks/!svn/ver/2/trunk/FormSnapBase.stack/Contents/Resources/formsnap/alert.png
+END
+class.phpmailer.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/stacks/!svn/ver/253/trunk/FormSnapBase.stack/Contents/Resources/formsnap/class.phpmailer.php
+END
+error.png
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/stacks/!svn/ver/2/trunk/FormSnapBase.stack/Contents/Resources/formsnap/error.png
+END
+class.smtp.php
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/stacks/!svn/ver/237/trunk/FormSnapBase.stack/Contents/Resources/formsnap/class.smtp.php
+END

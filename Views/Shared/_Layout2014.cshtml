@@ -1,0 +1,144 @@
+﻿<!doctype html>
+
+@{  bool showMaster = Request.Params["SkipMaster"]=="False" 
+        || (Request.Params["SkipMaster"]==null && TempData["SkipMaster"]=="False");
+    if (showMaster) {
+        TempData["SkipMaster"] = "False";
+    } else {
+        TempData["SkipMaster"] = "True";
+    }
+}
+<!-- BEGIN html -->
+<html lang="nl">
+	<!-- BEGIN head -->
+	<head>
+		<!-- Meta Tags -->
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		
+		<!-- Title -->
+		<title>H&eacute;t Rondje Eilanden | Zwemloop Vinkeveense Plassen</title>
+		<!--Viewport tag -->
+		<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)">
+		<meta content='yes' name='apple-mobile-web-app-capable'>
+		<meta content='black-translucent' name='apple-mobile-web-app-status-bar-style'>
+		<meta name="HandheldFriendly" content="True">
+
+	    @if (showMaster) {
+		    <!--[if lt IE 9]>
+			    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+		    <![endif]-->
+		    <!-- Stylesheets -->
+            <link rel="stylesheet" type="text/css" media="screen" href="/Content/site.css" />
+         	<link rel="stylesheet" type="text/css" media="screen" href="http://hre.yordidebruin.nl/rw_common/themes/flatty/consolidated-screen-0.css" />
+		    <link rel="stylesheet" type="text/css" media="all" href="http://hre.yordidebruin.nl/rw_common/themes/flatty/consolidated-all-0.css" />
+            <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css" type="text/css" media="all" />
+            
+            <!-- added -->
+		    <link rel="shortcut icon" type="image/x-icon" href="http://www.hetrondjeeilanden.nl/img/favicon.ico" />
+		    <link rel="apple-touch-icon" href="/Content/img/favicon57.png" />
+		    <link rel="apple-touch-icon" sizes="72x72" href="/Content/img/favicon72.png" />
+		    <link rel="apple-touch-icon" sizes="114x114" href="/Content/img/favicon114.png" />
+		    <script type="text/javascript">
+			    var _gaq = _gaq || [];
+			    _gaq.push(['_setAccount', 'UA-28452151-1']);
+			    _gaq.push(['_trackPageview']);
+
+			    (function() {
+			        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			    })();
+		    </script>
+
+		    <!-- /added -->
+		
+		    <!-- Scripts --> 
+		    <style type="text/css" media="all">@@import url(http://weloveiconfonts.com/api/?family=entypo|fontawesome|iconicfill|iconicstroke|maki|typicons|zocial);
+                /* entypo */
+                [class*="entypo-"]:before {
+                  font-family: 'entypo', sans-serif;
+                }
+
+                /* fontawesome */
+                [class*="fontawesome-"]:before {
+                  font-family: 'FontAwesome', sans-serif;
+                }
+
+                /* iconicfill */
+                [class*="iconicfill-"]:before {
+                  font-family: 'IconicFill', sans-serif;
+                }
+
+                /* iconicstroke */
+                [class*="iconicstroke-"]:before {
+                  font-family: 'IconicStroke', sans-serif;
+                }
+
+                /* maki */
+                [class*="maki-"]:before {
+                  font-family: 'maki', sans-serif;
+                }
+
+                /* typicons */
+                [class*="typicons-"]:before {
+                  font-family: 'Typicons', sans-serif;
+                }
+
+                /* zocial */
+                [class*="zocial-"]:before {
+                  font-family: 'zocial', sans-serif;
+                }
+		    </style>
+		
+		    <link rel='stylesheet' type='text/css' media='all' href='http://hre.yordidebruin.nl/rw_common/plugins/stacks/stacks.css' />
+		    <!--[if lte IE 7]>
+			    <link rel="stylesheet" type="text/css" media="all" href="rw_common/themes/flatty/rw_common/plugins/stacks/stacks_ie.css" />
+		    <![endif]-->
+		    <link rel='stylesheet' type='text/css' media='all' href='http://hre.yordidebruin.nl/files/stacks_page_page0.css' />
+	    <!-- END head -->
+        }
+        @RenderSection("Css", required: false)
+	</head>
+	
+	<!-- BEGIN body -->
+	<body>
+	    @if (showMaster) {
+		
+        <div class="container" class="clearfix">
+			<header class="slideRight">
+				<div id="siteLogo"><a href="http://hre.yordidebruin.nl/"></a></div>
+				<h1 class="siteTitle"><a href="http://hre.yordidebruin.nl/">H3RE</a></h1>
+			</header>
+			<nav class="slideLeft">
+				<ul>
+					<li><a href="./" rel="self" class="active">de 3e Ronde</a></li>
+					<li><a href="programma/" rel="self">Programma</a></li>
+					<li><a href="inschrijven/" rel="self">Inschrijven</a></li>
+					<li><a href="contact/" rel="self">Contact</a></li>
+				</ul>
+			</nav>
+		</div>
+		}
+        <div id="wrapper">
+	        <div id="page">
+		        <div id="content">			
+                    @RenderBody()
+                </div>	
+	        </div>
+        </div>	
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <!-- <script type='text/javascript' charset='utf-8' src='/Scripts/jquery-1.10.2.js'></script> -->
+        <!-- <script type='text/javascript' charset='utf-8' src='/Scripts/jquery-ui-1.10.4.custom.min.js'></script> -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js" type="text/javascript"></script>
+        <script type="text/javascript" charset="utf-8" src="/Scripts/jquery.ui.datepicker-nl.js"></script>
+        <script type="text/javascript" charset="utf-8" src="/Scripts/main-script.js"></script>
+
+        @if (showMaster) {
+    		<script type='text/javascript' charset='utf-8' src='http://hre.yordidebruin.nl/files/stacks_page_page0.js'></script>
+            <script type="text/javascript" src="http://hre.yordidebruin.nl/rw_common/themes/flatty/javascript.js"></script>
+		    <script type="text/javascript" src="http://hre.yordidebruin.nl/rw_common/themes/flatty/js/yuzoolthemes.js"></script>
+		    <script type="text/javascript" src="http://hre.yordidebruin.nl/rw_common/themes/flatty/js/trunk.js"></script>
+        }
+        @RenderSection("Scripts", required: false)
+	</body><!-- END body -->
+</html><!-- END html -->

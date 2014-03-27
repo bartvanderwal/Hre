@@ -148,7 +148,7 @@ namespace HRE.Business {
 
 
         /// <summary>
-        /// Turns 340 into 3,40 and 500 into € 5,- and so on.
+        /// Turns 340 into '€ 3,40' and '500' into € 5,- and so on (null becomes '?'.
         /// </summary>
         /// <param name="bedragInCenten">int amount to convert to formatted euro amount</param>
         /// <returns></returns>

@@ -1,0 +1,46 @@
+.container {
+	overflow: hidden;
+	background-color: #000;
+
+/*  Prevents Flickering  */
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	-ms-backface-visibility: hidden;
+	
+	position: relative;
+	overflow: hidden;
+	margin-bottom: 250px;
+}
+
+
+#footer {
+	height: 250px;
+}
+
+
+@media only screen and (max-width: 780px) {
+#footer {
+	position: relative;
+	bottom: -1px;
+	left: 0px;
+	z-index:0;
+	width: 100%;
+}
+
+.container {
+margin-bottom: 0px;
+}
+
+}
+
+@media only screen and (max-width: 640px) {
+
+#footer {
+	width: 100%;
+	position: relative;
+	bottom: -1px;
+	left: 0;
+	right: 0;
+	z-index:0;
+}
+}
