@@ -12,6 +12,7 @@ using HRE.Business;
 using HRE.Attributes;
 using System.Web.UI.WebControls;
 using System.Web;
+using System.Text.RegularExpressions;
 
 namespace HRE.Models {
 
@@ -228,13 +229,14 @@ namespace HRE.Models {
         public DateTime? DateConfirmationSend { get; set; }
 
         /// <summary>
-        /// The user gets the Early Bird discount if he/she was a participant in 2012 and is again in 2013 and is with the first 200 and is still on time for the discount.
+        /// The user gets the Early Bird discount if he/she was a participant in 2012 or 2013 and is again in 2014 and is with the first 200 and is still on time for the discount.
         /// </summary>
         public bool? IsEarlyBird { 
             get {
                 if (!_isEarlyBird.HasValue) {
-                        _isEarlyBird = ExternalEventIdentifier==InschrijvingenRepository.H2RE_EVENTNR 
-                            && SportsEventParticipationDal.GetByUserIdEventId(UserId, SportsEventDal.Hre2012Id)!=null
+                        _isEarlyBird = ExternalEventIdentifier==InschrijvingenRepository.H3RE_EVENTNR 
+                            && (SportsEventParticipationDal.GetByUserIdEventId(UserId, SportsEventDal.Hre2012Id)!=null
+                                || SportsEventParticipationDal.GetByUserIdEventId(UserId, SportsEventDal.Hre2013Id)!=null)
                             && LogonUserDal.AantalIngeschrevenEarlyBirds() < HreSettings.AantalEarlyBirdStartPlekken
                             && DateTime.Compare(DateTime.Now, HreSettings.EindDatumEarlyBirdKorting)<=0;
                 }
@@ -286,7 +288,13 @@ namespace HRE.Models {
         /// </summary>
         public int KostenChip {
             get {
-                return (!HasMyLapsChipNummer || string.IsNullOrEmpty(MyLapsChipNummer)) ? HreSettings.KostenHuurMyLapsChipGeel : 0;
+                if (!HasMyLapsChipNummer || string.IsNullOrEmpty(MyLapsChipNummer)) {
+                    return HreSettings.KostenHuurMyLapsChipGeel;
+                }
+                if (Regex.IsMatch(MyLapsChipNummer, "^d")) {
+                    return HreSettings.KostenGebruikMyLapsChipGroen;
+                }
+                return 0;
             }
         }
 
@@ -330,7 +338,7 @@ namespace HRE.Models {
         public bool GenoegBetaaldVoorDeelnemerslijst { get; set; }
 
 
-        [IsTrue(ErrorMessage = "Meld je aan voor de Flessenpost (e-mail nieuwsbrief voor deelnemers)")]
+        [IsTrue(ErrorMessage = "Meld je aan voor de Flessenpost (e-mail nieuwsbrief)")]
         /// <summary>
         /// Is de deelnemer aangemeld voor de periodieke e-mail nieuwsbrief (Flessenpost) (true) of niet (false)?
         /// </summary>
@@ -434,7 +442,7 @@ namespace HRE.Models {
 
 
         /// <summary>
-        /// Geeft aan of het een inschrijving is van een nieuwe gebruiker (view IkDoeMeeof) of niet (view Edit).
+        /// Geeft aan of het een inschrijving is van een nieuwe gebruiker (view IkDoeMee) of niet (view Edit).
         /// </summary>
         public bool IsInschrijvingNieuweGebruiker { get; set; }
 
@@ -479,7 +487,6 @@ namespace HRE.Models {
             }
         }
 
-        [Required(ErrorMessage = "Selecteer betaling")]
         public string BankCode { get; set; }
 
         protected List<SelectListItem> _bankList;
@@ -493,8 +500,7 @@ namespace HRE.Models {
             }
         }
 
-        [Required(ErrorMessage = "Alleen iDeal betaling mogelijk")]
-        public PaymentType PaymentType { get; set; }
+        public PaymentType? Betaalwijze { get; set; }
 
         protected List<SelectListItem> _paymentTypeList;
 
@@ -503,7 +509,7 @@ namespace HRE.Models {
                 if (_paymentTypeList==null) {
                     _paymentTypeList = new List<SelectListItem> {
                         new SelectListItem(),
-                        new SelectListItem() { Selected = true, Text="iDeal", Value = "1" }
+                        new SelectListItem() { Selected = true, Text="iDeal", Value = ((int) PaymentType.iDeal).ToString() }
                     };
                 }
                 return _paymentTypeList;
@@ -511,23 +517,30 @@ namespace HRE.Models {
         }
 
 
-        public string ReturnUrl {
+        public string _sisowReturnUrl;
+
+
+        public string SisowReturnUrl {
             get {
+                if (string.IsNullOrEmpty(_sisowReturnUrl)) {
+                    // Set the default value
+                    SisowReturnUrl = "/Inschrijvingen/Aangemeld";
+                }
+                return _sisowReturnUrl;
+            }
+            set {
                 HttpRequest request = HttpContext.Current.Request;
-                string result = Uri.EscapeDataString(request.Url.Scheme + System.Uri.SchemeDelimiter + request.Url.Host 
-                        + (request.Url.IsDefaultPort ? "" : (":" + request.Url.Port)) + "/Inschrijvingen/Aangemeld");
-                return result;
+                string opionalPortNr = request.Url.IsDefaultPort ? "" : ":" + request.Url.Port;
+                _sisowReturnUrl = Uri.EscapeDataString(request.Url.Scheme + System.Uri.SchemeDelimiter 
+                    + request.Url.Host + opionalPortNr + value);
             }
         }
 
 
         public string SisowUrl {
             get {
-                string result = null;
-                if (!string.IsNullOrEmpty(ReturnUrl)) {
-                    result = SisowIdealHandler.DetermineSisowGetUrl(InschrijfGeld.Value, 
-                        ParticipationId.ToString(), string.Format("{0} H3RE", Voornaam), ReturnUrl, BankCode);
-                }
+                string result = SisowIdealHandler.DetermineSisowGetUrl(InschrijfGeld.Value, 
+                        ParticipationId.ToString(), string.Format("{0} H3RE", Voornaam), SisowReturnUrl, BankCode);
                 return result;
             }
         }

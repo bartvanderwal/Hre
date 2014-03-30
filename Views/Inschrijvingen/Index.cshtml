@@ -70,15 +70,19 @@
     <text>Op @HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving.ToShortDateString() opent de algemene inschrijving (totaal @HRE.Common.HreSettings.AantalStartPlekken startplekken)</text>
 }
 </span>
-<p>Hieronder de deelnemerslijst; met startnummers en starttijden.<br />
-<b>Belangrijk: Check je nummer en tijd de dag voor de wedstrijd nog een keer! Er kunnen namelijk nog een paar verschuivingen plaatsvinden...</b></p>
+<p>Hieronder de deelnemerslijst. Enige tijd voor het evenement worden de startnummers en starttijden definitief.<br />
 @if (Model==null || Model.Inschrijvingen==null || Model.Inschrijvingen.Count==0) {
     <p>Er zijn nog geen deelnemers.</p>
 } else {
-    <table class="deelnemers@(Model.HasAdminRole ? " admin-view" : string.Empty)">
+    int startNummer = 1;
+    DateTime startTijd = HRE.Models.InschrijvingenRepository.GetCurrentEvent().EventDate.Value;
+    HRE.Models.InschrijvingModel testInschrijving = Model.Inschrijvingen.FirstOrDefault();
+    bool startNummersIngedeeld = testInschrijving!=null && testInschrijving.StartNummer.HasValue;
+        
+        <table class="deelnemers@(Model.HasAdminRole ? " admin-view" : string.Empty)">
         <tr>
-            <th>Voorlopig startnr.</th>
-            <th>Voorlopige starttijd</th>
+            <th>@(startNummersIngedeeld ? "Voorlopig " : "")Startnr.</th>
+            <th>@(startNummersIngedeeld ? "Voorlopige " : "")Starttijd</th>
             <th>Deelnemer</th>
             <th>Woonplaats</th>
             <th></th>
@@ -95,21 +99,16 @@
             }
         </tr>
 
-        @*
-            int startNummer = 1;
-            DateTime startTijd = HRE.Common.HreSettings.DatumTijdstipH2RE;
-        *@
         @foreach (var entry in Model.Inschrijvingen) {
             string participant = entry.Achternaam;
             bool isTestUser = testParticipants.Contains(entry.UserId);
             bool isMe = currentUserId==entry.UserId;
             <tr class="@(isTestUser ? "test-user" : "") @(isMe ? "is-me" : "")">
-                <td>@entry.StartNummer</td> @* @startNummer *@
-                <td>@entry.StartTijd.ToString()</td> @* string.Format("{0:H:mm:ss}", startTijd) *@
+                <td>@(startNummersIngedeeld ? entry.StartNummer : @startNummer)</td>
+                <td>@(startNummersIngedeeld ? entry.StartTijd.ToString() : string.Format("{0:H:mm:ss}", startTijd))</td> 
                 <td>@Html.ActionLink(entry.VolledigeNaam, "Edit", new { externalId = entry.ExternalIdentifier, eventNr = entry.ExternalEventIdentifier })</td>
                 <td>@entry.Woonplaats</td>
                 <td>@string.Format("{0:d-MMM}", entry.RegistrationDate)</td>
-                @*<td class="small">@Html.Raw(HRE.Common.Common.SmartJoin("+", new string[] { !entry.Food && !entry.Bike && !entry.Camp ? "Vanilla" : string.Empty, entry.Food ? "Food" : string.Empty, entry.Bike ? "Bike" : string.Empty, entry.Camp ? "Camp" : string.Empty} ))</td> *@
                 <td style="width: 120px;">
 		            <div class="editor-field">
                         @{string foodTitle = entry.Food ? string.Format("{0} blijft eten!", entry.Voornaam.UppercaseFirst()) : "";}
@@ -131,11 +130,6 @@
                     using(Html.BeginForm("DeleteEntry", "Inschrijvingen", new { model = Model, participantUserId = entry.ParticipationId}, FormMethod.Post, null)) {
                         @Html.HiddenFor(model => model.EventNumber)
                         <td>@string.Format("{0:dd-MM-yyyy H:mm}", @entry.VirtualRegistrationDateForOrdering)</td>
-                        @*
-                        <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td> 
-                        <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstSynchronized.HasValue ? entry.DateFirstSynchronized.Value.RelativeDateDescription() : "-")</td>
-                        <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastSynchronized.HasValue ? entry.DateLastSynchronized.Value.RelativeDateDescription()  : "-")</td>
-                        *@
                         <td><span title="@string.Format("Inschrijfgeld: {0}, Betaald: {1}.", (entry.InschrijfGeld.HasValue ? entry.InschrijfGeld.AsAmount() : "-"), (entry.BedragBetaald.HasValue ? entry.BedragBetaald.AsAmount() : "-"))">@((entry.InschrijfGeld.HasValue && entry.BedragBetaald.HasValue ? (entry.InschrijfGeld.Value-entry.BedragBetaald.Value).AsAmount() : "-"))</span></td>
                         <td>@(entry.DateLastSynchronized.HasValue ? "1" : "")</td>
                         <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>
@@ -143,11 +137,12 @@
                     }
                 }
             </tr>
-
-            @*if ((startNummer%HRE.Common.HreSettings.AantalPersonenPerStartschot)==0) {
-                startTijd = startTijd.AddSeconds(HRE.Common.HreSettings.AantalSecondenTussenStartschots);
+            if (!startNummersIngedeeld) {
+                if ((startNummer%HRE.Common.HreSettings.AantalPersonenPerStartschot)==0) {
+                    startTijd = startTijd.AddSeconds(HRE.Common.HreSettings.AantalSecondenTussenStartschots);
+                }
+                startNummer++;
             }
-            startNummer++; *@
         }
     </table>
 }

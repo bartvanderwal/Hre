@@ -34,9 +34,9 @@
     }
 
     public enum PaymentType {
-        iDeal = 0,
-        BankTransfer = 1,
-        Cash = 2
+        iDeal = 1,
+        BankTransfer = 2,
+        Cash = 3
     }
 
     public enum EmailType {

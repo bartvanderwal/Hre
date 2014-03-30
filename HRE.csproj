@@ -845,7 +845,6 @@
     <Content Include="programma\files\stacks_page_page2.css" />
     <Content Include="programma\files\stacks_page_page2.js" />
     <Content Include="programma\index.html" />
-    <Content Include="README.jQuery.vsdoc.txt" />
     <Content Include="resources\avondprogramma.jpg" />
     <Content Include="resources\cyaan-profiel.jpg" />
     <Content Include="resources\foto-film.jpg" />

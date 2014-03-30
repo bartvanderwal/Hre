@@ -237,18 +237,17 @@ namespace HRE.Controllers {
 
             // Log de gebruiker in (op basis van de e-mail link dus).
             // TODO BW 2013-02-10: In geencrypte key nog expiration date zetten!
-            if (Roles.IsUserInRole("Admin")) {
+            if (Roles.IsUserInRole(user.UserName, "Admin")) {
                 ViewBag.Message = string.Format("Voor admin gebruikers is inloggen via FlessenPost™ link disabled ivm security! Je moet inloggen met login en paswoord.");
+                // But sign out any current user to prevent confusion about the above, and loggin in as current user to subscription of other user.
+                FormsAuthentication.SignOut();
             } else {
                 FormsAuthentication.SetAuthCookie(email, false);
             }
             InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.H3RE_EVENTNR);
             if (inschrijving==null) {
-                inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.H2RE_EVENTNR);
-                if (inschrijving==null) {
-                    inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.HRE_EVENTNR);
-                }
-                return RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, eventNr = InschrijvingenRepository.H3RE_EVENTNR });
+                inschrijving = InschrijvingenRepository.GetLatestInschrijvingOfUser(user.Id);
+                return RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, eventNr = InschrijvingenRepository.GetCurrentEvent().ExternalEventIdentifier });
             } else {
                 return RedirectToAction("MijnRondjeEilanden", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, eventNr = InschrijvingenRepository.H3RE_EVENTNR, emailConfirmed = emailConfirmed});
             }

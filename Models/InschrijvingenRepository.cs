@@ -112,6 +112,17 @@ namespace HRE.Models {
             return GetOrCreateEvent(H2RE_EVENTNR, H2RE_SERIENR, H2RE_NAME, H2RE_DATE);
         }
 
+        public static sportsevent GetCurrentEvent() {
+            hreEntities DB = DBConnection.GetHreContext();
+            int currentYear = DateTime.Now.Year;
+
+            sportsevent result = (
+                from e in DB.sportsevent 
+                where e.EventDate.HasValue && e.EventDate.Value.Year==currentYear
+                select e).FirstOrDefault();
+
+            return result;
+        }
 
         /// <summary>
         /// Get an event by it's external Id (=NTB inschrijvingen evenement nummer).
@@ -144,6 +155,31 @@ namespace HRE.Models {
         /// <returns></returns>
         public static InschrijvingModel GetInschrijving(LogonUserDal logonUser, string eventNr) {
             return SelectEntries(eventNr, true, logonUser.Id).FirstOrDefault();
+        }
+
+
+        /// <summary>
+        /// Retrieve an InschrijvingModel for the latest event participation by the given user.
+        /// </summary>
+        /// <param name="userID">The ID of the user.</param>
+        /// <returns></returns>
+        public static InschrijvingModel GetLatestInschrijvingOfUser(int userID) {
+            var participation = (
+                from p in DB.sportseventparticipation
+                join e in DB.sportsevent on p.SportsEventId equals e.Id
+                orderby e.EventDate descending
+                where p.UserId == userID
+                select new {
+                    EventNr = e.ExternalEventIdentifier,
+                    UserId = p.UserId,
+                }
+            ).FirstOrDefault();
+
+            if (participation!=null) {
+                InschrijvingModel result = SelectEntries(participation.EventNr, true, participation.UserId.Value).FirstOrDefault();
+                return result;
+            }
+            return null;
         }
 
 
@@ -185,7 +221,7 @@ namespace HRE.Models {
         /// </summary>
         /// <param name="eventNr"></param>
         /// <returns></returns>
-        public static IEnumerable<InschrijvingModel> SelectEntries(string eventNr, bool addTestParticipants = false, int userId = 0) {
+        public static IEnumerable<InschrijvingModel> SelectEntries(string eventNr, bool includeTestParticipants = false, int userId = 0) {
             hreEntities DB = DBConnection.GetHreContext();
             
             List<int> testParticipantIds = LogonUserDal.GetTestParticipantIds();
@@ -194,7 +230,7 @@ namespace HRE.Models {
                 join sportsevent e in DB.sportsevent on p.SportsEventId equals e.Id
                 join logonuser u in DB.logonuser on p.UserId equals u.Id 
                 join address a in DB.address on u.PrimaryAddressId equals a.Id
-                where e.ExternalEventIdentifier == eventNr && (addTestParticipants || !testParticipantIds.Contains(u.Id))
+                where e.ExternalEventIdentifier == eventNr && (includeTestParticipants || !testParticipantIds.Contains(u.Id))
                 select new InschrijvingModel() {
                     // User data.
                     StartNummer = p.RaceNumber,
@@ -265,14 +301,6 @@ namespace HRE.Models {
             }
             
             return raceEntries.OrderBy(i => i.StartNummer ?? int.MaxValue);
-
-            /* return raceEntries.Where(i => i.BedragBetaald.HasValue && i.BedragBetaald.Value>=2000 || (i.FreeStarter.HasValue && i.FreeStarter.Value))
-                        .OrderBy(i => i.StartNummer)
-                        .ThenBy(i => i.VirtualRegistrationDateForOrdering.Value).ToList()
-                .Concat(
-                raceEntries.Where(i => (!i.BedragBetaald.HasValue || i.BedragBetaald.Value<2000) && (!i.FreeStarter.HasValue || !i.FreeStarter.Value))
-                    .OrderBy(i => i.StartNummer)
-                    .ThenBy(i => i.VirtualRegistrationDateForOrdering.Value).ToList()); */
         }
 
 

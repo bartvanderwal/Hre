@@ -297,7 +297,13 @@ namespace HRE.Dal {
         }
 
 
-        // Creates a new logonuser, that is not active and with a random password stored in the comments.
+        /// <summary>
+        /// Creates a new logonuser, that is not active and with a random password stored in the comments.
+        /// </summary>
+        /// <param name="emailAddressAndUsername"></param>
+        /// <param name="password"></param>
+        /// <param name="externalSubscriptionIdentifier"></param>
+        /// <returns></returns>
         public static LogonUserDal CreateOrRetrieveUser(string emailAddressAndUsername, string password="", string externalSubscriptionIdentifier = null) {
             
             // If an non 'HRE' external identifier (meaning a real ext. id) was given, then try to retrieve the user via this.

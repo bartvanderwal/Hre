@@ -79,28 +79,22 @@ namespace HRE.Controllers {
 
         [Authorize]
         public ActionResult MijnRondjeEilanden(string externalId, string eventNr, bool emailConfirmed=false) {
-            Initialise(AppConstants.MeedoenOverzicht);
-            InschrijvingModel model = InschrijvingenRepository.GetByExternalIdentifier(externalId, eventNr);
+            InschrijvingModel model = CheckConfirmationParameters();
+            if (model==null) {
+                model = InschrijvingenRepository.GetByExternalIdentifier(externalId, eventNr);
+            }
             return View(model);
         }
 
 
         public ActionResult Aangemeld(InschrijvingModel model) {
             // If this page is called as the confirmation screen then check data and set participation as paid if relevant.
-            string txId = Request.QueryString["txid"];
-            string ec = Request.QueryString["ec"];
-            string errorFromIdeal = Request.QueryString["error"];
-            if (!string.IsNullOrEmpty(txId) || !string.IsNullOrEmpty(errorFromIdeal)) {
+            // string txId = Request.QueryString["txid"];
+            // string errorFromIdeal = Request.QueryString["error"];
+            // if (!string.IsNullOrEmpty(txId) || !string.IsNullOrEmpty(errorFromIdeal)) {
                 // Check the confirmation parameters.
                 model = CheckConfirmationParameters();
-
-                // Mark the entry as paid in the DB if everythings checks out (e.g. it was just paid).
-                if (model!=null) {
-                    int participationID = int.Parse(ec);
-                    InschrijvingenRepository.MarkEntryAsPaid(participationID);
-                    model.IsBetaald = true;
-                }
-            }
+            // }
             return View(model);
         }
 
@@ -638,8 +632,9 @@ namespace HRE.Controllers {
         // [RequiresSsl]
         public ActionResult IkDoeMee() {
             InschrijvingModel model = new InschrijvingModel();
-            model.ExternalEventIdentifier = InschrijvingenRepository.H2RE_EVENTNR;
-            model.ExternalEventSerieIdentifier = InschrijvingenRepository.H2RE_SERIENR;
+            sportsevent currentEvent = InschrijvingenRepository.GetCurrentEvent();
+            model.ExternalEventIdentifier = currentEvent.ExternalEventIdentifier;
+            model.ExternalEventSerieIdentifier = currentEvent.ExternalEventSerieIdentifier;
             model.ExternalIdentifier = string.Empty;
             model.RegistrationDate = DateTime.MinValue;
 
@@ -687,8 +682,8 @@ namespace HRE.Controllers {
                     model.InschrijfGeld = null;
                     model.OpmerkingenTbvSpeaker = string.Empty;
                     model.OpmerkingenAanOrganisatie = string.Empty;
-                    model.ExternalEventIdentifier = InschrijvingenRepository.H2RE_EVENTNR;
-                    model.ExternalEventSerieIdentifier = InschrijvingenRepository.H2RE_SERIENR;
+                    model.ExternalEventIdentifier = InschrijvingenRepository.H3RE_EVENTNR;
+                    model.ExternalEventSerieIdentifier = InschrijvingenRepository.H3RE_SERIENR;
                     model.ExternalIdentifier = string.Empty;
                     model.RegistrationDate = DateTime.MinValue;
                     model.Bike = false;
@@ -699,7 +694,9 @@ namespace HRE.Controllers {
                 }
             }
 
-            model.EmailBeforeUpdateIfAny = model.Email;
+            if (model!=null) {
+                model.EmailBeforeUpdateIfAny = model.Email;
+            }
 
             return View("Edit", model);
         }
@@ -722,11 +719,15 @@ namespace HRE.Controllers {
 
             // Run server side validations.
             if (model.HasLicentieNummer && (string.IsNullOrEmpty(model.LicentieNummer) || !Regex.IsMatch(model.LicentieNummer, @"^\d\d[LA]\d\d\d\d\d[MV]\d\d\d$"))) {
-                ModelState.AddModelError("LicentieNummer", "Als je lid bent van de NTB, vul dan een correct licentienummer in");
+                ModelState.AddModelError("LicentieNummer", "Geef correct licentienummer (of zet licentie-icoon uit)");
             }
             // 4R-YGF8T.
-            if (model.HasMyLapsChipNummer && (string.IsNullOrEmpty(model.MyLapsChipNummer) || !Regex.IsMatch(model.MyLapsChipNummer, @"^[\d\w][\d\w]-*[\d\w][\d\w][\d\w][\d\w][\d\w]$"))) {
-                ModelState.AddModelError("MyLapsChipNummer", "Als je een eigen MyLaps chip hebt, vul dan het correcte nummer in");
+            if (model.HasMyLapsChipNummer) {
+                if (string.IsNullOrEmpty(model.MyLapsChipNummer)) {
+                    ModelState.AddModelError("MyLapsChipNummer", "Vul een correct MyLaps chipnr in (of zet icoon 'eigen-chip' uit)");
+                } else if (!CheckMyLapsChipNumber(model.MyLapsChipNummer)) {
+                    ModelState.AddModelError("MyLapsChipNummer", "Geen geldig MyLaps chip nummer! Graag controleren.");
+                }
             }
 
             if (model.Land=="NL" && !string.IsNullOrEmpty(model.Postcode) && !Regex.IsMatch(model.Postcode, @"^\d{4}\s*\w{2}$")) {
@@ -737,11 +738,26 @@ namespace HRE.Controllers {
                 ModelState.AddModelError("Email", "Geen geldig e-mail adres!");
             }
 
+            // Only check the payment if the subscription is new.
+            if ((!model.IsBetaald.HasValue || !model.IsBetaald.Value)  && model.Betaalwijze != PaymentType.iDeal) {
+                ModelState.AddModelError("PaymentType", "Alleen iDeal betaling mogelijk");
+            }
+
+            // Check final yes/no if the subsription is new.
+            if (model.IsNewUser && string.IsNullOrEmpty(model.Finale)) {
+                ModelState.AddModelError("PaymentType", "Geef aan of je de finale denkt mee te kunnen en willen doen.");
+            }
+
+            // Only check the payment if the subsription is new.
+            if ((!model.IsBetaald.HasValue || !model.IsBetaald.Value) && string.IsNullOrEmpty(model.BankCode)) {
+                ModelState.AddModelError("BankCode", "Selecteer bank voor iDeal betaling");
+            }
+
             // TODO BW 2013-03-18: Make currentEventNr variable, depending on which event is subscribed to.
             // string currentEventNr = model.ExternalEventIdentifier;
             string currentEventNr = InschrijvingenRepository.H3RE_EVENTNR;
 
-            // Controleer als het een nieuwe inschrijving betreft dat er niet al een deelnemer is met hetzelfde e-mail adres.
+            // Controleer als het een nieuwe inschrijving betreft dat er nog geen deelnemer is met hetzelfde e-mail adres.
             LogonUserDal user = LogonUserDal.GetUserByUsername(model.Email);
             if ((model.IsInschrijvingNieuweGebruiker || (!model.IsInschrijvingNieuweGebruiker && model.Email!=model.EmailBeforeUpdateIfAny)) 
                     && user!=null && InschrijvingenRepository.GetInschrijving(user, currentEventNr)!=null) {
@@ -752,7 +768,7 @@ namespace HRE.Controllers {
             if (ModelState.IsValid) {
                 // Set the eventIdentifier to the event of 2014.
                 // TODO BW 2013-02-10: Refactor "HRE" to prefix constant.
-                // model.ExternalIdentifier = "HRE" + model.ParticipationId;
+                model.ExternalIdentifier = "HRE" + model.ParticipationId;
                 
                 // Sla op!
                 InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H3RE_EVENTNR, false, true);
@@ -763,7 +779,7 @@ namespace HRE.Controllers {
                     
                     // Sla de entry nog een keer op, om ook de dateConfirmationSend op te slaan.
                     // TODO BW 2013-03-01: Doe dit wat netter dan alles geheel twee keer opslaan.
-                    InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H2RE_EVENTNR, false, true);
+                    InschrijvingenRepository.SaveEntry(model, InschrijvingenRepository.H3RE_EVENTNR, false, true);
                 }
 
                 // TODO BW 2013-02-04: Synchronize the data to NTB inschrijvingen.
@@ -785,13 +801,62 @@ namespace HRE.Controllers {
                     // return RedirectToAction("Aangemeld", model);
                     return Redirect(sisowUrl);
                 } else {
-                    return RedirectToAction("MijnRondjeEilanden", new { externalId=model.ExternalIdentifier, eventNr=model.ExternalEventIdentifier });
+                    if (!model.IsBetaald.HasValue || !model.IsBetaald.Value) {
+                        model.SisowReturnUrl = Url.Action("MijnRondjeEilanden", new { externalId=model.ExternalIdentifier, eventNr=model.ExternalEventIdentifier });
+                        string sisowUrl = model.SisowUrl;
+                        return Redirect(sisowUrl);
+                    } else {
+                        return RedirectToAction("MijnRondjeEilanden", new { externalId=model.ExternalIdentifier, eventNr=model.ExternalEventIdentifier });
+                    }
                 }
             }
 
             return View(model);
         }
 
+
+        // New Block Chips
+        // 7 positions
+        // 1st position: D,E,F,G,H,K,M,N,P,R,S,T,V,W,Y,Z
+        // 2nd position: A,B,C,D,E,F,G,H,K,M,N,P,R,S,T,V,W,X,Y,Z
+        // 3rd position: 0,1,2,3,4,5,6,7,8,9
+        // 4th, 5th, 6th position: 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,K,M,N,P,R,S,T,V,W,X,Y,Z
+
+        // The 7th position is the check-character. The check character is calculated from the 6 preceding characters. 
+        // Each character has an assigned value. The digits represent values 0 – 9, the letters represent values 10 – 35.
+        // Sum all values of the preceding characters and divide the total by 29. 
+        // The remainder of the division points to the x-th position in the series: Z97BN4XSVE56AWYM1TPK8H2GDCF3R
+
+        // As an example: If the remainder is 0, the last position should be Z. If the remainder is 2, the last position should be 7.
+        // Examples: DY7AM37, DW24PWH, DG7SKAS, DA51D0W, HD7W0RE
+
+        /// Performs the check for NewBlock MyLaps nr's (taken from document from MyLaps).
+        protected static bool CheckMyLapsChipNumber(string input) {
+            bool result = Regex.IsMatch(input, @"^[\d\w][\w]-?[\d\w][\d\w][\d\w][\d\w][\d\w]$");
+            if (!result) {
+                return false;
+            }
+            bool isOldBlock = Regex.IsMatch(input, @"^(A|B|C)", RegexOptions.IgnoreCase);
+            if (isOldBlock) {
+                return true;
+            }
+            string inputWithoutDash = input.Replace("-", "");
+            char checkChar = inputWithoutDash[6];
+            int sum = 0;
+            foreach (char c in inputWithoutDash.Substring(0, 6).ToCharArray()) {
+                int value = (int) (c - '0');
+                if (value>10) {
+                    value = value-7;
+                }
+                sum += value;
+            }
+            int index = sum % 29;
+            const string checkString = "Z97BN4XSVE56AWYM1TPK8H2GDCF3R";
+            char computedChar = checkString[index];
+            result = computedChar==checkChar;
+            return result;
+        }
+        
 
         /// <summary>
         /// Stuurt een bevestigingsmail van inschrijving naar de gebruiker.
@@ -804,21 +869,18 @@ namespace HRE.Controllers {
             newsletter.Items = new List<NewsletterItemViewModel>();
 
             if (!model.DoForceSendConfirmationOfChange) {
-                newsletter.IntroText = string.Format("Je bent aangemeld voor Hét 2e Rondje Eilanden!");
+                newsletter.IntroText = string.Format("Je bent aangemeld voor Hét Rondje Eilanden!");
                 if (model.BedragTeBetalen>0) {
                     newsletter.IntroText = "Je inschrijving wordt definitief na betaling van het inschrijfgeld.";
                 }
             } else {
                 if (model.EmailBeforeUpdateIfAny!=model.Email) {
-                    newsletter.IntroText = string.Format("Je bent aangemeld voor Hét 2e Rondje Eilanden! Je hebt je e-mail adres gewijzigd, of iemand anders heeft zijn inschrijving naar jouw e-mail overgezet. Je moet de inschrijving en het nieuwe e-mail adres bevestigen via onderstaande link. ");
+                    newsletter.IntroText = string.Format("Je bent aangemeld voor Hét Rondje Eilanden! Je hebt je e-mail adres gewijzigd, of iemand anders heeft zijn inschrijving naar jouw e-mail overgezet. Bevestig je inschrijving en dit e-mail adres via onderstaande link. ");
                 } else {
                     newsletter.IntroText = string.Format("Hier een Flessenpost achtige mail omdat je je inschrijfgegevens hebt gewijzigd.");
                 }
             }
-            if (model.IsEarlyBird.HasValue && model.IsEarlyBird.Value) {
-                newsletter.IntroText += string.Format("Voor Early Bird korting maak het voor {0} over!", HreSettings.EindDatumEarlyBirdKorting.ToShortDateString());
-            }
-            newsletter.IntroText += "<br/>Hieronder je inschrijfgegevens. Graag even controleren. Als er iets niet klopt kunt je dit zelf wijzigen op onze site door in te loggen via de persoonlijke link hiernaast.";
+            newsletter.IntroText += "<br/>Hieronder je inschrijfgegevens. Als er iets niet klopt graag direct zelf wijzigen door op onze site door in te loggen via de persoonlijke link hiernaast.";
 
             NewsletterItemViewModel item1 = new NewsletterItemViewModel();
             if (!model.DoForceSendConfirmationOfChange) {
@@ -958,6 +1020,7 @@ namespace HRE.Controllers {
         /// Handles the situation when the page is called back from iDEAL payment (with URL params).
         /// </summary>
         protected InschrijvingModel CheckConfirmationParameters() {
+            InschrijvingModel result = null;
             string txID = Request.QueryString["txId"];
             string check = Request.QueryString["check"];
             string ec = Request.QueryString["ec"];
@@ -965,15 +1028,19 @@ namespace HRE.Controllers {
             string error = Request.QueryString["error"];
             bool confirmationChecksOut = SisowIdealHandler.DoesConfirmationCheckOut(txID, ec, status, check, error);
             
-            int participationID = int.Parse(ec);
-
-            var inschrijving = InschrijvingenRepository.GetInschrijvingByParticipationID(participationID);
-
-            if (inschrijving!=null && !string.IsNullOrEmpty(status) && confirmationChecksOut) {
-                bool isPaid = status == "Success";
-                bool isJustPaid = isPaid && !inschrijving.DatumBetaald.HasValue;
+            if (confirmationChecksOut) {
+                int participationID = int.Parse(ec);
+                result = InschrijvingenRepository.GetInschrijvingByParticipationID(participationID);
+                if (result !=null && !string.IsNullOrEmpty(status) && confirmationChecksOut) {
+                    bool isPaid = status == "Success";
+                    bool isJustPaid = isPaid && !result.DatumBetaald.HasValue;
+                    if (isJustPaid) {
+                        InschrijvingenRepository.MarkEntryAsPaid(participationID);
+                        result.IsBetaald = true;
+                    }
+                }
             }
-            return inschrijving;
+            return result;
         }
 
     }

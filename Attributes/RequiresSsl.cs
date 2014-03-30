@@ -17,7 +17,7 @@ namespace HRE.Attributes {
             if (!req.IsSecureConnection) {
                 var builder = new UriBuilder(req.Url) {
                     Scheme = Uri.UriSchemeHttps,
-                    Port = req.IsLocal ? 59162 : 443
+                    Port = req.IsLocal ? 44301 : 443
                 };
                 res.Redirect(builder.Uri.ToString());
             }

@@ -5,6 +5,10 @@
 @using HRE.Models;
 
 @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
     ViewBag.Title = Model.IsRegistered ? "Bekijken/wijzigen inschrijving" : "Inschrijven";
     int nrOfEarlyBirds = LogonUserDal.AantalIngeschrevenEarlyBirds();
     int nrOfEntries = LogonUserDal.AantalIngeschrevenDeelnemers(Model.ExternalEventIdentifier);
@@ -54,10 +58,10 @@
             @Html.AntiForgeryToken()
 
             if (!ViewData.ModelState.IsValid) {
-                <div id="errorMessagePopup" style="display:none;" title="Corrigeer het volgende voordat je kunt inschrijven">@Html.ValidationSummary()</div>
+                <div id="errorMessagePopup" style="display:none;" title="Corrigeer het volgende:">@Html.ValidationSummary()</div>
             }
         
-            if (Model.IsEditAllowed && Model.ExternalEventIdentifier == InschrijvingenRepository.H2RE_EVENTNR) {
+            if (Model.IsEditAllowed && Model.ExternalEventIdentifier == InschrijvingenRepository.GetCurrentEvent().ExternalEventIdentifier) {
                 <p class="welcome">Welkom@(!string.IsNullOrEmpty(Model.Voornaam) ? " " + @Model.Voornaam : "")!</p>
                 <div id="inschrijf-formulier-uitleg">
                     @if (!Model.IsRegistered) {
@@ -82,10 +86,10 @@
                         <li>Met de buttons geef je aan:
                             <ul>
                                 <li>of je NTB lid bent (met 'A' atleten of 'X' aspirantlicentie betaal je geen daglicentie van @HreSettings.KostenNtbDagLicentie.AsAmount())</li>
-                                <li>een MyLaps chip hebt (met eigen chip betaal je geen @HreSettings.KostenHuurMyLapsChipGeel.AsAmount() huurchip)</li>
+                                <li>een MyLaps chip hebt (met eigen (gele) chip betaal je geen @HreSettings.KostenHuurMyLapsChipGeel.AsAmount() huurchip)</li>
                                 <li>mee wilt eten (&euro; 10 incl. 2 drankjes)</li>
-                                <li>wilt blijven kamperen (geheel vrijblijvend)</li>
-                                <li>er wel of niet voor gaat om ook de finale te halen</li>
+                                <li>wilt blijven kamperen (vrijblijvend, betaling later ter plaatse)</li>
+                                <li>er wel of niet voor gaat om ook de finale mee te doen</li>
                                 <li>en eventueel op de fiets wilt komen (bij voldoende animo komt er een 'Parc Fermé)</li>
                             </ul>
                         </li>
@@ -147,25 +151,25 @@
         
             <div class="editor-label">Voornaam</div>
 		    <div class="editor-field">
-                @Html.TextBoxFor(m => m.Voornaam, new { @tabindex="6", @placeholder="Voornaam..." } )
+                @Html.TextBoxFor(m => m.Voornaam, new { @placeholder="Voornaam..." } )
             </div>
             <div class="editor-label">Tussenvoegsels</div>
 		    <div class="editor-field">
-                @Html.TextBoxFor(m => m.Tussenvoegsel, new { @tabindex="7", @size=20 } )
+                @Html.TextBoxFor(m => m.Tussenvoegsel, new { @size=20 } )
             </div>
             <div class="editor-label">Achternaam</div>
 		    <div class="editor-field">
-                @Html.TextBoxFor(m => m.Achternaam, new { @tabindex="8", @maxLength=50, @placeholder="Achternaam" } )    
+                @Html.TextBoxFor(m => m.Achternaam, new { @maxLength=50, @placeholder="Achternaam" } )    
             </div>
             <div class="editor-label">Vrouw/Man?</div>
 		    <div class="editor-field">
-                <input name="Geslacht" id="V" type="radio" value="V" tabindex="9" @(Model.Geslacht=="V" ? "checked=\"checked\"" : string.Empty) title="Vrouw">
+                <input name="Geslacht" id="V" type="radio" value="V" @(Model.Geslacht=="V" ? "checked=\"checked\"" : string.Empty) title="Vrouw">
                 <label for="V" title="Vrouw"></label>
-                <input name="Geslacht" id="M" type="radio" value="M" tabindex="9" @(Model.Geslacht=="M" ? "checked=\"checked\"" : string.Empty) title="Man">
+                <input name="Geslacht" id="M" type="radio" value="M" @(Model.Geslacht=="M" ? "checked=\"checked\"" : string.Empty) title="Man">
                 <label for="M" title="Man"></label>
             </div>
             <div class="editor-label">@Html.LabelFor(m => m.GeboorteDatum)</div>
-            <div class="editor-field">@Html.TextBoxFor(m => m.GeboorteDatum, new { @placeholder = "Geboortedatum", @class = "datePicker", @tabindex="3", @Value = string.Format("{0:dd/MM/yyyy}", Model.GeboorteDatum)})</div>
+            <div class="editor-field">@Html.TextBoxFor(m => m.GeboorteDatum, new { @placeholder = "Geboortedatum", @class = "datePicker", @Value = string.Format("{0:dd-MM-yyyy}", Model.GeboorteDatum)})</div>
 
             if (Model.IsEditAllowed) {
                 <div class="editor-label"></div>
@@ -187,19 +191,20 @@
             
                 <div class="editor-label">Licentie</div>
 	    	    <div class="editor-field">
-		    	    @Html.CheckBoxFor(m => m.HasLicentieNummer, new { @tabindex="1", @title="Ja, ik heb een NTB licentie!" } )
+		    	    @Html.CheckBoxFor(m => m.HasLicentieNummer, new { @title="Ja, ik heb een NTB licentie!" } )
                     <label for="HasLicentieNummer" title="Ja, ik heb een NTB licentie!"></label>
                     <span id="LicentieNummerSpan" class="opt-text">@Html.TextBoxFor(m => m.LicentieNummer, new { @placeholder="Licentienummer...", @maxlength="12", @tabindex="2" }) </span>
 		        </div>
-                <div class="editor-label">MyLaps timing</div>
+                <div class="editor-label">MyLaps chip</div>
                 <div class="editor-field">
                     @if (Model.IsAdmin || Model.IsNewUser || DateTime.Now < HreSettings.SluitingsDatumAlgemeneInschrijving) {
-    			        @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4", @title="Ja, ik heb een eigen MyLaps chip!" })
+    			        @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @title="Ja, ik heb een eigen MyLaps chip!" })
 	    		        <label for="HasMyLapsChipNummer" title="Ja, ik heb een eigen MyLaps chip?"></label>
-                        <span id="mylaps-chip-span" class="opt-text">@Html.TextBoxFor(m => m.MyLapsChipNummer, new { @tabindex="5", @placeholder="MyLaps chipnr..." } )</span>
-                        <!-- div id="my-laps-green" style="display: none;"></div><div id="my-laps-yellow" style="display: none;"  /div -->
+                        <span id="mylaps-chip-span" class="opt-text">@Html.TextBoxFor(m => m.MyLapsChipNummer, new { @placeholder="MyLaps chipnr..." } )</span>
+                        <div id="my-laps-green" class="my-laps" style="display: none;" title="Groene chip (&euro; 1,50 per gebruik, &euro; 5,00 bij aanschaf)"></div>
+                        <div id="my-laps-yellow" class="my-laps" style="display: none;" title="Gele chip (&euro; 0,- per gebruik, &euro; 30 bij aanschaf)"></div>
                     } else {
-    			        @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @tabindex="4", @disabled="disabled", @title="niet meer wijzigbaar" })
+    			        @Html.CheckBoxFor(m => m.HasMyLapsChipNummer, new { @disabled="disabled", @title="niet meer wijzigbaar" })
 	    		        <label for="HasMyLapsChipNummer" title="Ja, ik heb een eigen MyLaps chip?"></label>
                         <span id="mylaps-chip-span" class="opt-text">@(Model.MyLapsChipNummer ?? "-")</span>
                         @Html.HiddenFor(m => m.MyLapsChipNummer)
@@ -209,35 +214,35 @@
         
             <div class="editor-label">Flessenpost&trade;</div>
             <div class="editor-field">
-			    @Html.CheckBoxFor(m => m.Newsletter, new { @tabindex="17", @title="Aanmelden voor nieuwsbrief om op de hoogte te blijven? (nodig voor deelname)" })
+			    @Html.CheckBoxFor(m => m.Newsletter, new { @title="Aanmelden voor nieuwsbrief om op de hoogte te blijven? (nodig voor deelname)" })
 			    <label for="Newsletter" title="Aanmelden voor de Flessenpost nieuwsbrief om op de hoogte te blijven? (nodig voor deelname)"></label>
                 <span id="newsletter-span" class="opt-text" style="display: none;">Ja <span class="small">E-mail nieuwsbrief</span></span>
 		    </div>
 
             <div class="editor-label">Mee-eten?</div>
 		    <div class="editor-field">
-                @Html.CheckBoxFor(m => m.Food, new { @tabindex="18", @title="Eet je mee na afloop?" })
+                @Html.CheckBoxFor(m => m.Food, new { @title="Eet je mee na afloop?" })
 			    <label for="Food" title="Interesse om na afloop mee te eten? (vrijblijvende reservering)"></label>
                 <span id="food-span" class="opt-text" style="display: none;">Ja! <span class="small">Eten+2 drinks &euro;10</span></span>
 			</div>
 			<div class="editor-label">Kamperen?</div>
 			<div class="editor-field">
-				@Html.CheckBoxFor(m => m.Camp, new { @tabindex="19", @title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"})
+				@Html.CheckBoxFor(m => m.Camp, new { @title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"})
 			    <label for="Camp" title="Ik wil blijven kamperen!"></label>
                 <span id="camp-span" class="opt-text" style="display: none;">Ja! <span class="small">&euro;10; met ontbijt (betalen 2 aug)</span></span>
 		    </div>
 		    <div class="editor-label">Fiets stallen?</div>
 		    <div class="editor-field">
-			    @Html.CheckBoxFor(m => m.Bike, new { @tabindex="20", @title="Interesse op de fiets te komen en deze te kunnen stallen? (vrijblijvende reservering)" })
+			    @Html.CheckBoxFor(m => m.Bike, new { @title="Interesse op de fiets te komen en deze te kunnen stallen? (vrijblijvende reservering)" })
 			    <label for="Bike" title="Interesse op de fiets te komen en deze veilig te kunnen stallen? (vrijblijvende reservering)"></label>
                 <span id="bike-span" class="opt-text" style="display: none;">Ja! <span class="small">(Neem wel een slot mee)</span></span>
 		    </div>
 
-            <div class="editor-label">Going for gold?</div>
+            <div class="editor-label">Finale materiaal?</div>
 		    <div class="editor-field">
-			    <input id="recrserie" name="Finale" type="radio" tabindex="18" value="R" />
+			    <input id="recrserie" name="Finale" type="radio" value="R" @(Model.Finale=="R" ? "checked=\"checked\"" : "")/>
 			    <label for="recrserie" title="Recreatief!"></label>
-			    <input id="topserie" name="Finale" type="radio" value="W" />
+			    <input id="topserie" name="Finale" type="radio" value="W" @(Model.Finale=="W" ? "checked=\"checked\"" : "")/>
 			    <label for="topserie" title="Wedstrijd.."></label>
                 <span id="gold-span" class="opt-text">
                     <span class="small" id="topserie-text" style="display: none;">Ik denk dat ik de finale kan halen...</span>
@@ -253,22 +258,22 @@
 
                 <div class="editor-label">Straat</div>
 		        <div class="editor-field">
-                    @Html.TextBoxFor(m => m.Straat, new { @tabindex="10", @size=15, @maxLenght="50", @placeholder="Straat"} )
+                    @Html.TextBoxFor(m => m.Straat, new { @size=15, @maxLenght="50", @placeholder="Straat"} )
                 </div>
                 <div class="editor-label">Huisnummer</div>
 		        <div class="editor-field">
-                    @Html.TextBoxFor(m => m.Huisnummer, new { @tabindex="11", @size=5, @maxLenght="8", @placeholder="Huisnr"} )
+                    @Html.TextBoxFor(m => m.Huisnummer, new { @size=5, @maxLenght="8", @placeholder="Huisnr"} )
                 </div>
                 <div class="editor-label">Toevoeging</div>
 		        <div class="editor-field">
-                    @Html.TextBoxFor(m => m.HuisnummerToevoeging, new { @tabindex="12", @size=5, @maxLenght="5"} )
+                    @Html.TextBoxFor(m => m.HuisnummerToevoeging, new { @size=5, @maxLenght="5"} )
                 </div>
                 <div class="editor-label">Postcode</div>
 		        <div class="editor-field">
-                    @Html.TextBoxFor(m => m.Postcode, new { @tabindex="13", @size="9", @maxLenght="10", @placeholder="1234AB"} )
+                    @Html.TextBoxFor(m => m.Postcode, new { @size="9", @maxLenght="10", @placeholder="1234AB"} )
                 </div>
                 <div class="editor-label">Woonplaats</div>
-		        <div class="editor-field">@Html.TextBoxFor(m => m.Woonplaats, new { @tabindex="14", @size=30, @maxLenght="25", @placeholder="Woonplaats"} )</div>
+		        <div class="editor-field">@Html.TextBoxFor(m => m.Woonplaats, new { @size=30, @maxLenght="25", @placeholder="Woonplaats"} )</div>
                 <div class="editor-label">Land</div>
 		        <div class="editor-field">@Html.DropDownListFor(m => m.Land,
                     new SelectList(new Dictionary<string, string> {
@@ -300,10 +305,10 @@
                 <div class="editor-label">E-mail</div>
                 <div class="editor-field">
                     @if (Model.IsAdmin || Model.IsNewUser) {
-                        @Html.TextBoxFor(m => m.Email, new { @tabindex="15", @size="30", @maxLenght="100", @placeholder="E-mail"} )
+                        @Html.TextBoxFor(m => m.Email, new { @size="30", @maxLenght="100", @placeholder="E-mail"} )
                         @Html.HiddenFor(m => m.EmailBeforeUpdateIfAny)
                     } else {
-                        @Html.TextBoxFor(m => m.Email, new { @tabindex="15", @size="30", @maxLenght="100", @placeholder="E-mail", @disabled="disabled", @title="niet wijzigbaar" } )
+                        @Html.TextBoxFor(m => m.Email, new { @size="30", @maxLenght="100", @placeholder="E-mail", @disabled="disabled", @title="niet wijzigbaar" } )
                         @* TODO BW 2013-03-01: Adding email as hidden field is necessary to retain value, but this might open up hacking possiblities... *@
                         @Html.HiddenFor(m => m.Email)
                         @Html.HiddenFor(m => m.EmailBeforeUpdateIfAny)
@@ -311,7 +316,7 @@
                 </div>
                 <div class="editor-label">Telefoon</div>
 		        <div class="editor-field">
-                    @Html.TextBoxFor(m => m.Telefoon, new { @tabindex="16", @size=10, @maxLenght="15", @placeholder="Telefoon"} )
+                    @Html.TextBoxFor(m => m.Telefoon, new { @size=10, @maxLenght="15", @placeholder="Telefoon"} )
                 </div>
                 <div class="editor-label"></div>
 		        <div class="editor-field"></div>
@@ -322,26 +327,28 @@
 
             @*
             <div class="editor-label">Early bird friend</div>
-            <div class="editor-field"><input value="" type="text" tabindex="19" maxlength="100" style="width: 300px;" placeholder="E-mail van vriend(in) die ook Early Bird verdient..."></div>
+            <div class="editor-field"><input value="" type="text" maxlength="100" style="width: 300px;" placeholder="E-mail van vriend(in) die ook Early Bird verdient..."></div>
 
             <div class="editor-label">Video fun</div>
-            <div class="editor-field"><input value="" type="text" tabindex="20" style="width: 350px;" placeholder="URL van leuke YouTube video die je wil delen..."></div>
+            <div class="editor-field"><input value="" type="text" style="width: 350px;" placeholder="URL van leuke YouTube video die je wil delen..."></div>
             *@
 
-            <div class="editor-label">Betaalwijze</div>
-		    <div class="editor-field">@Html.DropDownListFor(m => m.PaymentType, Model.PaymentTypeList, null, new { @style = "width: 250px", @class="select2", @id="payment-type", @placeholder="Selecteer betaalwijze..." })</div>
+            if(Model.IsEditAllowed) {
+                <div class="editor-label">Betaalwijze</div>
+		        <div class="editor-field">@Html.DropDownListFor(m => m.Betaalwijze, Model.PaymentTypeList, new { @style = "width: 250px", @class="select2", @id="payment-type", @placeholder="Selecteer betaalwijze..." })</div>
 
-            <div class="editor-label">Bank (iDeal)</div>
-		    <div class="editor-field">@Html.DropDownListFor(m => m.BankCode, Model.BankList, new { @style = "width: 250px", @class="select2", @id="bank-code", @placeholder="Selecteer je bank..." })</div>
+                <div class="editor-label">Bank (iDeal)</div>
+		        <div class="editor-field">@Html.DropDownListFor(m => m.BankCode, Model.BankList, new { @style = "width: 250px", @class="select2", @id="bank-code", @placeholder="Selecteer je bank..." })</div>
 
             <div class="editor-label"></div>
-		    <div class="editor-field"></div>
-            <div class="editor-label"></div>
-		    <div class="editor-field"></div>
+		        <div class="editor-field"></div>
+                <div class="editor-label"></div>
+		        <div class="editor-field"></div>
+            }
 
             if(Model.IsEditAllowed) {
-                <div class="editor-label">Wat vind jij het meest aan Het Rondje Eilanden?</div>
-                <div class="editor-field">@Html.TextAreaFor(m => m.HebJeErZinIn, new { @tabindex="21", @cols="50", @rows="2", @maxlength="100", @placeholder="Wordt getoond op de website..."} )</div>
+                <div class="editor-label">De 1e zaterdag van augustus...</div>
+                <div class="editor-field">@Html.TextAreaFor(m => m.HebJeErZinIn, new { @cols="50", @rows="2", @maxlength="100", @placeholder="..."} )</div>
             } else {
                 <div class="editor-label">Heb je er zin in?</div>
                 <div class="editor-field">@(Model.HebJeErZinIn ?? "[Geen commentaar]")</div>
@@ -354,14 +361,14 @@
                 <div id="meer-opmerkingen">
                     <div class="editor-label">Opmerkingen voor speaker<br /></div>
 		            <div class="editor-field">
-                        @Html.TextAreaFor(m => m.OpmerkingenTbvSpeaker, new { @tabindex="22", @cols="50", @rows="2", @maxlength="1024", @placeholder="Voorzie speakers Ruud & Wilko van wat extra info.."} )
+                        @Html.TextAreaFor(m => m.OpmerkingenTbvSpeaker, new { @cols="50", @rows="2", @maxlength="1024", @placeholder="Voorzie speakers Ruud & Wilko van wat extra info.."} )
                         <div class="make-it-personal speaker"></div>
                     </div>
                     <br />
                     @if(Model.IsEditAllowed) {
                         <div class="editor-label">Opmerkingen aan organisatie</div>
                         <div class="editor-field">
-                            @Html.TextAreaFor(m => m.OpmerkingenAanOrganisatie, new { @tabindex="23", @cols="50", @rows="2", @maxlength="1024", @placeholder="Opmerkingen of vragen aan Pieter, Rudo, Kitty, Ad, overige organisatie.."} )
+                            @Html.TextAreaFor(m => m.OpmerkingenAanOrganisatie, new { @cols="50", @rows="2", @maxlength="1024", @placeholder="Opmerkingen of vragen aan Pieter, Rudo, Kitty, Ad, overige organisatie.."} )
                             <div class="make-it-personal organisatie"></div>
                         </div>
                     }
@@ -373,7 +380,7 @@
                         <div class="checkbox-above-save">@Html.CheckBoxFor(m => m.DoForceSendConfirmationOfChange) @Html.LabelFor(m => m.DoForceSendConfirmationOfChange)</div>
                     }
                     <br />
-                    <input class="@(Model.IsRegistered ? "save-button" : "save" )" name="submit" type="submit" tabindex="24" value="@(Model.IsRegistered ? "Opslaan" : "")" />
+                    <input class="@(Model.IsRegistered ? "save-button" : "save" )" name="submit" type="submit" value="@(Model.IsRegistered ? "Opslaan" : "")" />
                 </div>
             }
         }
@@ -385,43 +392,13 @@
     <script type="text/javascript" lang="javascript" src="/Scripts/jquery.jqEasyCharCounter.min.js"></script>
     @if(!Model.IsEditAllowed) {
         <script type="text/javascript" lang="javascript">
-            // Disable all editing unless this is the current users' subscription (or user is admin).
+            @* Disable all editing unless this is the current users' subscription (or user is admin). *@
             @* if ('@(Model.IsEditAllowed)' == 'False') { *@
                 $("input,select").prop('disabled', true);
             @* } *@
         </script>
     }
 
-    <script type="text/javascript">
-        $.datepicker.setDefaults($.datepicker.regional['nl']);
-
-        // Nederlands Localization.
-        $.datepicker.regional['nl'] = {
-            renderer: $.ui.datepicker.defaultRenderer,
-            monthNames: ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'],
-            monthNamesShort: ['jan', 'feb', 'maa', 'apr', 'mei', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
-            dayNames: ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'],
-            dayNamesShort: ['zon', 'maa', 'din', 'woe', 'don', 'vri', 'zat'],
-            dayNamesMin: ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'],
-            dateFormat: 'dd-mm-yy',
-            changeYear: true,
-            yearRange: '-100:-15',
-            firstDay: 1,
-            prevText: '←', prevStatus: '',
-            prevJumpText: '&#x3c;&#x3c;', prevJumpStatus: '',
-            nextText: '→', nextStatus: '',
-            nextJumpText: '&#x3e;&#x3e;', nextJumpStatus: '',
-            currentText: 'Vandaag', currentStatus: '',
-            todayText: 'Vandaag', todayStatus: '',
-            clearText: '-', clearStatus: '',
-            closeText: 'Sluiten', closeStatus: '',
-            yearStatus: '', monthStatus: '',
-            weekText: 'Wk', weekStatus: '',
-            dayStatus: 'DD d MM',
-            defaultStatus: '',
-            isRTL: false
-        };
-    </script>
 
     <script type="text/javascript">
         $(function() {
@@ -436,12 +413,11 @@
                 return false;
             });
 
-            $('input[type=submit]').attr('disabled', 'disabled');
             $('input:not(#DoForceSendConfirmationOfChange),textarea').change(function() {
                     $('#DoForceSendConfirmationOfChange').attr('checked', true);
                     $('input[type=submit]').removeAttr('disabled');                             
             });
-            $('#toon-uitleg').click(function () {
+            $('#toon-uitleg').click(function() {
                 $('ul#uitleg').slideToggle();
             });
 
@@ -449,18 +425,25 @@
                 $('#meer-opmerkingen').slideToggle();
             });
             
+            $.datepicker.setDefaults($.datepicker.regional['nl']);
+
             $datePicker = $(".datePicker");
             $datePicker.datepicker({
-                constrainInput: false,
-                defaultDate: new Date(1980,08,02),
+                constrainInput: true,
+                // defaultDate: new Date(1980,08,02),
                 yearRange: '-100:-15',
                 changeYear: true
             });
+
             $datePicker.click(function() {
-                $('.datePicker').datepicker('setDate', $('#GeboorteDatum').val());
+                gebDat = $('#GeboorteDatum').val()
+                if (gebDat == "") {
+                    $('.datePicker').datepicker('setDate', "-40yr");
+                } else {
+                    $('.datePicker').datepicker('setDate', gebDat);
+                }
             });
 
-            $("#GeboorteDatum").datepicker('option', 'defaultDate', -1000 );
             determineAndDisplayCosts();
 
             $('ul#uitleg').hide();
@@ -469,8 +452,42 @@
 
             $('#costs-inner').show();
 
-            $('#LicentieNummer').change(function() {
+            $('#LicentieNummer').on('keyup change', function() {
                 determineAndDisplayCosts();
+            });
+
+            $('#MyLapsChipNummer').on('keyup change', function() {
+                determineAndDisplayCosts();
+            });
+
+            if ($('#HasLicentieNummer').attr('checked')) {
+                $("#LicentieNummerSpan").show();
+            } else {
+                $("#LicentieNummerSpan").hide();
+            }
+            
+            $('#HasLicentieNummer').on('change', function() {
+                determineAndDisplayCosts();
+                if ($(this).is(":checked")) {
+                    $("#LicentieNummerSpan").show();
+                } else {
+                    $("#LicentieNummerSpan").hide();
+                }
+            });
+
+            if ($('#HasMyLapsChipNummer').attr('checked')) {
+                $("#mylaps-chip-span").show();
+            } else {
+                $("#mylaps-chip-span").hide();
+            }
+                
+            $('#HasMyLapsChipNummer').change(function() {
+                determineAndDisplayCosts();
+                if ($(this).is(":checked")) {
+                    $("#mylaps-chip-span").show();
+                } else {
+                    $("#mylaps-chip-span").hide();
+                }
             });
 
             $('#Food').change(function() {
@@ -495,36 +512,6 @@
                 } else {
                     $("#test-checkbox-span").hide();
                     $("#test-checkbox-span-weer-uit").show();
-                }
-            });
-
-            if ($('#HasLicentieNummer').attr('checked')) {
-                $("#LicentieNummerSpan").show();
-            } else {
-                $("#LicentieNummerSpan").hide();
-            }
-            
-            $('#HasLicentieNummer').change(function() {
-                determineAndDisplayCosts();
-                if ($(this).is(":checked")) {
-                    $("#LicentieNummerSpan").show();
-                } else {
-                    $("#LicentieNummerSpan").hide();
-                }
-            });
-
-            if ($('#HasMyLapsChipNummer').attr('checked')) {
-                $("#mylaps-chip-span").show();
-            } else {
-                $("#mylaps-chip-span").hide();
-            }
-                
-            $('#HasMyLapsChipNummer').change(function() {
-                determineAndDisplayCosts();
-                if ($(this).is(":checked")) {
-                    $("#mylaps-chip-span").show();
-                } else {
-                    $("#mylaps-chip-span").hide();
                 }
             });
                 
@@ -586,14 +573,13 @@
 
             $('input[name=Finale]').change(function() {
                 if ($('#topserie').is(":checked")) {
-                    $("#recrserie-text").hide('800');
+                    $("#recrserie-text").hide();
                     $("#topserie-text").show();
                 } else {
                     $("#recrserie-text").show();
-                    $("#topserie-text").hide('800');
+                    $("#topserie-text").hide();
                 }
             });
-
 
             $('#HebJeErZinIn').jqEasyCounter({
                 'maxChars': 100,
@@ -646,8 +632,11 @@
                         && ($('#LicentieNummer').val().substring(2,3)=='a' || $('#LicentieNummer').val().substring(2,3)=='A'
                             || $('#LicentieNummer').val().substring(2,3)=='x' || $('#LicentieNummer').val().substring(2,3)=='X');
             var hasMyLaps = $('#HasMyLapsChipNummer').is(":checked");
-            var isMyLapsGeel  = hasMyLaps && $('#MyLapsChipNummer').val().match(/^\d/);
-            var isMyLapsGroen = hasMyLaps && $('#MyLapsChipNummer').val().match(/^\w/);
+            var ml = $('#MyLapsChipNummer').val();
+            var myLapsGeel = /^\D/;
+            var myLapsGroen = /^\d/;
+            var isMyLapsGeel  = hasMyLaps && myLapsGeel.test(ml);
+            var isMyLapsGroen = hasMyLaps && myLapsGroen.test(ml);
             if (isMyLapsGroen) {
                 $('#my-laps-yellow').hide();
                 $('#my-laps-green').show();
@@ -657,12 +646,12 @@
                 $('#my-laps-yellow').show();
             }
 
-            var basicCosts = @(HreSettings.HuidigeDeelnameBedrag / 100);
-            var licenseCosts = isNtbWedstrijdLid ? 0 : @(HreSettings.KostenNtbDagLicentie / 100);
-            var chipCosts = hasMyLaps ? 0 : 
-                isMyLapsGeel ? @(HreSettings.KostenHuurMyLapsChipGeel/100) : @(HreSettings.KostenGebruikMyLapsChipGroen/100);
-            var reduction = !isEarlyBird ? 0 : @(HreSettings.HoogteEarlyBirdKorting / 100);
-            var foodCosts = !$('#Food').is(':checked') ? 0 : @(HreSettings.KostenEten / 100);
+            var basicCosts = @(HreSettings.HuidigeDeelnameBedrag);
+            var licenseCosts = isNtbWedstrijdLid ? 0 : @(HreSettings.KostenNtbDagLicentie );
+            var chipCosts = !hasMyLaps ? @(HreSettings.KostenHuurMyLapsChipGeel) : 
+                isMyLapsGeel ? 0 : @(HreSettings.KostenGebruikMyLapsChipGroen);
+            var reduction = !isEarlyBird ? 0 : @(HreSettings.HoogteEarlyBirdKorting );
+            var foodCosts = !$('#Food').is(':checked') ? 0 : @(HreSettings.KostenEten );
             var totalCosts = basicCosts + licenseCosts + chipCosts + foodCosts - reduction;
             $('#basic').html(euroBedrag(basicCosts));
             $('#license').html(euroBedrag(licenseCosts));
@@ -673,7 +662,8 @@
         }
 
         function euroBedrag(bedragInCenten) {
-            result = bedragInCenten.toFixed(2);
+            result = bedragInCenten / parseFloat(100);
+            result = result.toFixed(2);
             result = result.replace(".",",");
             result = result.replace(",00",",-");
             return "€ " + result;

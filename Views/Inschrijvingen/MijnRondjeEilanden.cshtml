@@ -3,9 +3,9 @@
 @using HRE.Business
 
 @{
-    ViewBag.Title = (Model==null) ? "Mijn Rondje Eilanden" : Model.VolledigeNaam + " - Mijn " + (Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value ? "2e " : "") + "Rondje Eilanden!";
+    ViewBag.Title = "Mijn Rondje Eilanden";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    string shareText = string.IsNullOrEmpty(Model.HebJeErZinIn) ? "Ik heb me zojuist als vroege vogel aangemeld voor Hét 2e Rondje Eilanden! #H2RE" : Model.HebJeErZinIn;
+    string shareText = string.IsNullOrEmpty(Model.HebJeErZinIn) ? "Ik heb me zojuist als vroege vogel aangemeld voor Hét Rondje Eilanden! #H3RE" : Model.HebJeErZinIn;
 }
 
 <div id="fb-root"></div>
@@ -38,13 +38,12 @@
     }
     <p>Je hebt je @Model.RegistrationDate.RelativeDateTimeDescription() aangemeld voor Hét 3e Rondje Eilanden.</p>
     if (!Model.IsVolledigEnCorrectBetaald) {
-        <p>Je moet nog @Model.BedragTeBetalen.AsAmount() betalen.</p>
         <div style="display: inline-block;">
-            <a href="@Model.SisowUrl" target="_blank" title="Betalen met iDEAL" id="sisow-pay-link">
+            <a href="@Model.SisowUrl" target="_blank" title="Betalen met iDEAL" id="sisow-pay-link" style="float: right;">
                 <img src="/Content/img/IdealButtonKlein.png" class="pay" alt="Betalen" runat="server" id="PayButton" /><br />
                 iDEAL<img src="/Content/img/IdealLinkje.png" class="pay" alt="Betalen" runat="server" id="PayLink" /><br />
             </a>
-            <p>Betaal het inschrijfgeld van @Model.InschrijfGeld.AsAmount() via iDeal.</p>
+            <p>Je moet nog @Model.BedragTeBetalen.AsAmount() betalen. Betaal nu via iDeal.</p>
         </div>
     }
     if (Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value && (!Model.IsBetaald.HasValue || !Model.IsBetaald.Value)) {

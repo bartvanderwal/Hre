@@ -65,25 +65,24 @@
 
 /****** Serie ***/
 /* Unchecked recreatieve serie radio button. */
-:root .editor-field > input[type="radio"][value="R"] ~ label:before {
+:root .editor-field > input[type="radio"][value="R"] + label:before {
 	background-position: -684px -214px;
 }
 
 /* Unchecked top serie radio button. */
-:root .editor-field > input[type="radio"][value="W"] ~ label:before {
+:root .editor-field > input[type="radio"][value="W"] + label:before {
 	background-position: -655px -214px;
 }
 
 /* Checked recreatieve serie radio button. */
-:root .editor-field > input[type="radio"][value="R"]:checked ~ label:before {
+:root .editor-field > input[type="radio"][value="R"]:checked + label:before {
 	background-position: -621px -214px;
 }
 
 /* Checked top serie radio button. */
-:root .editor-field > input[type="radio"][value="W"]:checked ~ label:before {
+:root .editor-field > input[type="radio"][value="W"]:checked + label:before {
 	background-position: -592px -214px;
 }
-
 
 li.test,
 .editor-field.test {
@@ -157,7 +156,7 @@ li.test {
 /****** Flessenpost ***/
 /* Unchecked newsletter checkbox. */
 :root .editor-field > input[type="checkbox"][name="Newsletter"] ~ label:before { 
-	background-position: -257px -254px;
+	background-position: -252px -254px;
 }
 
 /* Checked newsletter checkbox. */
@@ -236,7 +235,6 @@ ul#uitleg {
     display: inline-block;
     *display: inline;
     zoom: 1;
-    /* float: left; */
     width: 150px;
     text-align: right;
     margin: 10px 5px 5px 5px;
@@ -248,7 +246,6 @@ ul#uitleg {
     display: inline-block;
     *display: inline;
     zoom: 1;
-    /* float: left; */
     width: 400px;
     text-align: left;
     margin: 10px 5px 5px 5px;
@@ -256,7 +253,7 @@ ul#uitleg {
 }
 
 .edit-allowed .editor-field {
-    width: 250px !important;
+    width: 240px !important;
 }
 
 .editor-field input {
@@ -393,9 +390,14 @@ input.save[type=submit] {
     height: 40px;
 }
 
+#ui-datepicker-div {
+    font-size: small;
+}
+
 /* Start validation markup */
 .validation-summary-errors {
-    color: Red;
+    color: red;
+    font-size: small;
 }
 
 input.input-validation-error {
@@ -418,11 +420,12 @@ input.input-validation-error {
 #costs {
     float: right;
     color: #FFFFFF;
-    padding: 10px 10px;
     margin: 10px 0px 1080px 0px;
     display: inline-block;
     *display: inline;
     zoom: 1;
+    padding: 10px 6px;
+    width: 200px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
@@ -466,22 +469,22 @@ tr.total td:last-child {
 	background: url('/Content/img/InschrijvenHREIconSet.png') 0px 0px no-repeat;
 }
 
-#my-laps-green {
+.my-laps {
+	background: url('/Content/img/InschrijvenHREIconSet.png') no-repeat;
+    padding: 6px 0px 0px 0px;
     display: inline-block;
     *display: inline;
     zoom: 1;
     height: 24px;
     width: 24px;
-	background: url('/Content/img/InschrijvenHREIconSet.png') -392px -256px no-repeat;
+}
+
+#my-laps-green {
+	background-position: -392px -256px;
 }
 
 #my-laps-yellow {
-    display: inline-block;
-    *display: inline;
-    zoom: 1;
-    height: 24px;
-    width: 24px;
-	background: url('/Content/img/InschrijvenHREIconSet.png') -505px -257px no-repeat;
+	background-position: -505px -257px;
 }
 
 .make-it-personal.speaker {
