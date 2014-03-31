@@ -79,7 +79,13 @@ namespace HRE.Controllers {
 
         [Authorize]
         public ActionResult MijnRondjeEilanden(string externalId, string eventNr, bool emailConfirmed=false) {
-            InschrijvingModel model = CheckConfirmationParameters();
+            bool? isCheckSumValid;
+            InschrijvingModel model = CheckConfirmationParameters(out isCheckSumValid);
+
+            // If the checksum was incorrect then throw an exception in order to be notified (via Health Monitoring) of possible hacking or problems.
+            if (!isCheckSumValid.HasValue || isCheckSumValid.HasValue) {
+                throw new ArgumentException(string.Format("Error in checksum on checking iDeal parameters (extId: {0})", externalId));
+            }
             if (model==null) {
                 model = InschrijvingenRepository.GetByExternalIdentifier(externalId, eventNr);
             }
@@ -88,13 +94,17 @@ namespace HRE.Controllers {
 
 
         public ActionResult Aangemeld(InschrijvingModel model) {
-            // If this page is called as the confirmation screen then check data and set participation as paid if relevant.
-            // string txId = Request.QueryString["txid"];
-            // string errorFromIdeal = Request.QueryString["error"];
-            // if (!string.IsNullOrEmpty(txId) || !string.IsNullOrEmpty(errorFromIdeal)) {
-                // Check the confirmation parameters.
-                model = CheckConfirmationParameters();
-            // }
+            bool? isCheckSumValid;
+            model = CheckConfirmationParameters(out isCheckSumValid);
+
+            // If the checksum was incorrect then throw an exception in order to be notified (via Health Monitoring) of possible hacking or problems.
+            if (!isCheckSumValid.HasValue || isCheckSumValid.HasValue) {
+                string txId = Request.QueryString["txid"];
+                string ec = Request.QueryString["ec"];
+                string error = Request.QueryString["error"];
+                string status = Request.QueryString["status"];
+                throw new ArgumentException(string.Format("Er ging iets mis. Error in iDeal checksum (txId: {0}, ec: {1}, error: {2}, status: {3}.", txId, ec, error, status ));
+            }
             return View(model);
         }
 
@@ -920,7 +930,7 @@ namespace HRE.Controllers {
                 item1.Text += string.Format("<tr><td></td></tr>");
                 item1.Text += string.Format("<tr><th colspan=\"2\"><b>Extra's</b></th></tr>");
 
-                item1.Text += string.Format("<tr><td>Meeeten?</td><td>{0}</span></td></tr>", model.Food ? "Interesse" : "Geen interesse");
+                item1.Text += string.Format("<tr><td>Meeeten?</td><td>{0}</span></td></tr>", model.Food ? "Ja" : "Nee");
                 item1.Text += string.Format("<tr><td>Kamperen</td><td>{0}</span></td></tr>", model.Camp ? "Interesse" : "Geen interesse");
                 item1.Text += string.Format("<tr><td>Fiets stallen</td><td>{0}</span></td></tr>", model.Bike ? "Interesse" : "Geen interesse");
                 item1.Text += string.Format("<tr><td>Finale</td><td>{0}</span></td></tr>", model.Finale=="W" ? "Ik ga ervoor!" : "Ik zie wel" );
@@ -1019,14 +1029,14 @@ namespace HRE.Controllers {
         /// <summary>
         /// Handles the situation when the page is called back from iDEAL payment (with URL params).
         /// </summary>
-        protected InschrijvingModel CheckConfirmationParameters() {
+        protected InschrijvingModel CheckConfirmationParameters(out bool? isCheckSumValid) {
             InschrijvingModel result = null;
             string txID = Request.QueryString["txId"];
             string check = Request.QueryString["check"];
             string ec = Request.QueryString["ec"];
             string status = Request.QueryString["status"];
             string error = Request.QueryString["error"];
-            bool confirmationChecksOut = SisowIdealHandler.DoesConfirmationCheckOut(txID, ec, status, check, error);
+            bool confirmationChecksOut = SisowIdealHandler.DoesConfirmationCheckOut(txID, ec, status, check, error, out isCheckSumValid);
             
             if (confirmationChecksOut) {
                 int participationID = int.Parse(ec);

@@ -394,6 +394,10 @@ input.save[type=submit] {
     font-size: small;
 }
 
+.ui-dialog {
+    font-size: small;
+}
+
 /* Start validation markup */
 .validation-summary-errors {
     color: red;
