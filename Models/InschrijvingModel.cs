@@ -494,7 +494,7 @@ namespace HRE.Models {
         public List<SelectListItem> BankList {
             get {
                 if (_bankList==null) {
-                    _bankList = SisowIdealHandler.GetIssuerList();
+                    _bankList = SisowIdealHandlerV2.GetIssuerList();
                 }
                 return _bankList;
             }
@@ -531,15 +531,15 @@ namespace HRE.Models {
             set {
                 HttpRequest request = HttpContext.Current.Request;
                 string opionalPortNr = request.Url.IsDefaultPort ? "" : ":" + request.Url.Port;
-                _sisowReturnUrl = Uri.EscapeDataString(request.Url.Scheme + System.Uri.SchemeDelimiter 
-                    + request.Url.Host + opionalPortNr + value);
+                // Uri.EscapeDataString(...)
+                _sisowReturnUrl = request.Url.Scheme + System.Uri.SchemeDelimiter + request.Url.Host + opionalPortNr + value;
             }
         }
 
 
         public string SisowUrl {
             get {
-                string result = SisowIdealHandler.DetermineSisowGetUrl(InschrijfGeld.Value, 
+                string result = SisowIdealHandlerV2.DetermineSisowGetUrl(InschrijfGeld.Value, 
                         ParticipationId.ToString(), string.Format("{0} H3RE", Voornaam), SisowReturnUrl, BankCode);
                 return result;
             }

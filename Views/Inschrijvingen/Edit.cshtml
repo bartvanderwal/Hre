@@ -229,7 +229,7 @@
 			<div class="editor-field">
 				@Html.CheckBoxFor(m => m.Camp, new { @title="Interesse om na het avondprogramma te blijven kamperen? (vrijblijvende reservering)"})
 			    <label for="Camp" title="Ik wil blijven kamperen!"></label>
-                <span id="camp-span" class="opt-text" style="display: none;">Ja! <span class="small">&euro;10; met ontbijt (betalen 2 aug)</span></span>
+                <span id="camp-span" class="opt-text" style="display: none;">Ja! <span class="small">&euro;10; met ontbijt (cash 2 aug)</span></span>
 		    </div>
 		    <div class="editor-label">Fiets stallen?</div>
 		    <div class="editor-field">
@@ -245,7 +245,7 @@
 			    <input id="topserie" name="Finale" type="radio" value="W" @(Model.Finale=="W" ? "checked=\"checked\"" : "")/>
 			    <label for="topserie" title="Wedstrijd.."></label>
                 <span id="gold-span" class="opt-text">
-                    <span class="small" id="topserie-text" style="display: none;">Ik denk dat ik de finale kan halen...</span>
+                    <span class="small" id="topserie-text" style="display: none;">Ik hoor thuis in die finale!</span>
                     <span class="small" id="recrserie-text" style="display: none;">Fun first!</span>
                 </span>
 		    </div>

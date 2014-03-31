@@ -83,7 +83,7 @@ namespace HRE.Controllers {
             InschrijvingModel model = CheckConfirmationParameters(out isCheckSumValid);
 
             // If the checksum was incorrect then throw an exception in order to be notified (via Health Monitoring) of possible hacking or problems.
-            if (!isCheckSumValid.HasValue || isCheckSumValid.HasValue) {
+            if (isCheckSumValid.HasValue && !isCheckSumValid.Value) {
                 throw new ArgumentException(string.Format("Error in checksum on checking iDeal parameters (extId: {0})", externalId));
             }
             if (model==null) {
@@ -98,12 +98,13 @@ namespace HRE.Controllers {
             model = CheckConfirmationParameters(out isCheckSumValid);
 
             // If the checksum was incorrect then throw an exception in order to be notified (via Health Monitoring) of possible hacking or problems.
-            if (!isCheckSumValid.HasValue || isCheckSumValid.HasValue) {
-                string txId = Request.QueryString["txid"];
+            if (isCheckSumValid.HasValue && !isCheckSumValid.Value) {
+                string trxId = Request.QueryString["trxid"];
                 string ec = Request.QueryString["ec"];
                 string error = Request.QueryString["error"];
                 string status = Request.QueryString["status"];
-                throw new ArgumentException(string.Format("Er ging iets mis. Error in iDeal checksum (txId: {0}, ec: {1}, error: {2}, status: {3}.", txId, ec, error, status ));
+                string sha1 = Request.QueryString["sha1"];
+                throw new ArgumentException(string.Format("Er ging iets mis. Error in iDeal checksum (trxId: {0}, ec: {1}, error: {2}, status: {3}, sha1: {4}.", trxId, ec, error, status, sha1));
             }
             return View(model);
         }
@@ -1031,12 +1032,12 @@ namespace HRE.Controllers {
         /// </summary>
         protected InschrijvingModel CheckConfirmationParameters(out bool? isCheckSumValid) {
             InschrijvingModel result = null;
-            string txID = Request.QueryString["txId"];
-            string check = Request.QueryString["check"];
+            string trxID = Request.QueryString["trxId"];
+            string sha1 = Request.QueryString["sha1"];
             string ec = Request.QueryString["ec"];
             string status = Request.QueryString["status"];
             string error = Request.QueryString["error"];
-            bool confirmationChecksOut = SisowIdealHandler.DoesConfirmationCheckOut(txID, ec, status, check, error, out isCheckSumValid);
+            bool confirmationChecksOut = SisowIdealHandlerV2.DoesConfirmationCheckOut(trxID, ec, status, sha1, error, out isCheckSumValid);
             
             if (confirmationChecksOut) {
                 int participationID = int.Parse(ec);

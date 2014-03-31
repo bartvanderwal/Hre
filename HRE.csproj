@@ -143,6 +143,7 @@
     <Compile Include="Business\HtmlTextAreaExtensions.cs" />
     <Compile Include="Business\TypeExtensions.cs" />
     <Compile Include="Business\Util.cs" />
+    <Compile Include="Common\SisowIdealHandlerV2.cs" />
     <Compile Include="Common\MvcTransferResult.cs" />
     <Compile Include="Common\SisowIdealArgumentException.cs" />
     <Compile Include="Common\SisowIdealHandler.cs" />
@@ -227,6 +228,11 @@
     <Compile Include="Models\InschrijvingenModel.cs" />
     <Compile Include="Models\VolunteerModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\SisowV2\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\Sisow\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1105,6 +1111,10 @@
     <None Include="Scripts\select2\release.sh" />
     <None Include="Scripts\select2\select2.jquery.json" />
     <None Include="Scripts\select2\select2_locale_en.js.template" />
+    <None Include="Service References\SisowV2\HRE.SisowV2.ArrayOfString.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SisowV2\sisow.wsdl" />
     <None Include="Service References\Sisow\AssurePay.disco" />
     <None Include="Service References\Sisow\configuration91.svcinfo" />
     <None Include="Service References\Sisow\configuration.svcinfo" />
@@ -1163,6 +1173,13 @@
     <Content Include="Scripts\select2\select2_locale_vi.js" />
     <Content Include="Scripts\select2\select2_locale_zh-CN.js" />
     <Content Include="Scripts\select2\select2_locale_zh-TW.js" />
+    <None Include="Service References\SisowV2\sisow.disco" />
+    <None Include="Service References\SisowV2\configuration91.svcinfo" />
+    <None Include="Service References\SisowV2\configuration.svcinfo" />
+    <None Include="Service References\SisowV2\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="sitemap.xml" />
     <Content Include="sql\1.create_asp_tables.sql" />
     <Content Include="sql\2.create_hre.sql" />
@@ -1342,6 +1359,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Service References\SisowV2\" />
     <WCFMetadataStorage Include="Service References\Sisow\" />
   </ItemGroup>
   <ItemGroup>

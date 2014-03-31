@@ -8,18 +8,19 @@ using System.Web.Mvc;
 
 using HRE.Common;
 using HRE.Sisow;
+using System.Text.RegularExpressions;
 
 namespace HRE.Business {
     /// <summary>
-    /// Verzorgt het verrichten en afhandelen van Ideal transacties e.g. https://www.sisow.nl/Sisow/iDeal/Betaal.aspx.
-    /// Deze klasse gaat uit van PSP = Sisow.
+    // Verzorgt het verrichten en afhandelen van Ideal transacties obv v2.0 e.g. https://www.sisow.nl/Sisow/sisow.asmx 
+    // Deze klasse gaat uit van PSP = Sisow.
     /// </summary>
-    public static class SisowIdealHandler {
+    public static class SisowIdealHandlerV2 {
 
         private static string _merchantID = HreSettings.SisowMerchantId;
         private static string _password = HreSettings.SisowPassword;
         private static string _merchantKey = HreSettings.SisowMerchantKey;
-        private const string _pageUrl = "https://www.sisow.nl/Sisow/iDeal/Betaal.aspx";
+        private const string _pageUrl = "https://www.sisow.nl/Sisow/sisow.asmx";
 
 
         /// <summary>
@@ -28,18 +29,17 @@ namespace HRE.Business {
         /// <param name="amountInCents"></param>
         /// <param name="purchaseId"></param>
         /// <param name="description"></param>
-        /// <param name="returnurl"></param>
+        /// <param name="returnUrl"></param>
         /// <param name="issuerid"></param>
         /// <returns></returns>
-        public static string DetermineSisowGetUrl(int amountInCents, string purchaseId, string description, string returnurl, string issuerid) {
-            if (purchaseId.Length>16) {
+        public static string DetermineSisowGetUrl(int amountInCents, string transactionID, string description, string returnUrl, string issuerid) {
+            if (transactionID.Length>16) {
                 // De purchaseId mag niet langer zijn dan 16 karakters (Sisow specificatie).
-                throw new SisowIdealArgumentException("De purchaseId is langer dan 16 karakters: '" + purchaseId + "'.");
+                throw new SisowIdealArgumentException("De transactionID is langer dan 16 karakters: '" + transactionID + "'.");
             }
-            // TODO: Hier een regexp gebruiken [a-z,A-Z,0-9], oftewel: w.
-            if (purchaseId.Contains('.')) {
-                // De purchaseId mag alleen cijfers en letters bevatten, geen leestekens en dergelijke.
-                throw new SisowIdealArgumentException("De purchaseId mag alleen cijfers en letters bevatten, geen leestekens en dergelijke: '" + purchaseId + "'.");
+            // De purchaseId mag alleen cijfers en letters bevatten, geen leestekens en dergelijke.
+            if (Regex.IsMatch(transactionID, "^/w+$")) {
+                throw new SisowIdealArgumentException("De transactionID mag alleen cijfers en letters bevatten, geen leestekens en dergelijke: '" + transactionID + "'.");
             }
 
             if (description.Length>32) {
@@ -47,25 +47,22 @@ namespace HRE.Business {
                 throw new SisowIdealArgumentException("De description is langer dan 32 karakters: '" + description + "'.");
             }
 
-            string key = SHA1Encode(_merchantID + _password + purchaseId + amountInCents);
-            string payparams = "?key=" + key;
-            payparams += "&merchantid=" + _merchantID;
-            payparams += "&purchaseid=" + HttpUtility.UrlEncode(purchaseId);
-            payparams += "&amount=" + amountInCents;
-            payparams += "&description=" + HttpUtility.UrlEncode(description);
-            if (!string.IsNullOrEmpty(issuerid)) {
-                payparams += "&issuerid=" + HttpUtility.UrlEncode(issuerid);
-            } else {
-                payparams += "&confirm=1";
-            }
-            if (!string.IsNullOrEmpty(returnurl)) {
-                payparams += "&returnurl=" + returnurl;
-            }
 
-            // The confirmback URL param in the querystring results in the user getting an acknowledgement screen within Sisow. 
-            // at the end of the his/her IDEAL transaction.
-            // payparams += "&confirmback=";
-            return _pageUrl + payparams;
+            string key = SHA1Encode(_merchantID + _password + transactionID + amountInCents);
+            string sisowUrl = string.Empty;
+            string purchaseIDBeforeCall = transactionID;
+
+            string purchaseID = null;
+            using (SisowV2.sisowSoapClient service = new SisowV2.sisowSoapClient()) {
+                int result = service.GetURL(_merchantID, _merchantKey, "", issuerid, amountInCents, transactionID, description, null, returnUrl, null, null, null, out purchaseID, out sisowUrl);
+                if (result!=0) {
+                    throw new ArgumentException(string.Format("Error: error code {0} returned by 'GetUrl(...)' method.", result));
+                }
+            }
+            /* if (purchaseID!=purchaseIDBeforeCall) {
+                throw new ArgumentException(string.Format("The webservice 'changed' the purchaseID from {0} to {1}.", purchaseIDBeforeCall, purchaseID));
+            } */
+            return sisowUrl;
         }
 
 
@@ -87,8 +84,11 @@ namespace HRE.Business {
         public static List<SelectListItem> GetIssuerList() {
             List<SelectListItem> result = new List<SelectListItem>();
             
-            using (HRE.Sisow.AssurePaySoapClient service = new AssurePaySoapClient()) {
-                List<string> banks = service.GetIssuers(HreSettings.IsDevelopment).ToList();
+            using (SisowV2.sisowSoapClient service = new SisowV2.sisowSoapClient()) {
+                SisowV2.ArrayOfString banks = new SisowV2.ArrayOfString();
+                // List<string> banks = service.GetIssuers(HreSettings.IsDevelopment).ToList();
+                int dummy = service.GetIssuers(HreSettings.IsDevelopment, out banks);
+                
                 // Add empty item (for placeholder).
                 result.Add(new SelectListItem());
 
@@ -105,7 +105,6 @@ namespace HRE.Business {
         }
 
 
-
         /// <summary>
         ///  Check that the check string checks out correctly, by performing SHA1.
         /// </summary>
@@ -116,22 +115,19 @@ namespace HRE.Business {
         /// <param name="error">Message in case of error (if present than doesn't check out)</param>
         /// <param name="isCheckSumValid">Out parameters indicates whether the checksum is valid (true), or invalid (false) or not applicable (null)( asin the case no URL's params were present.</param>
         /// <returns>True if checks out, false otherwise</returns>
-        public static bool DoesConfirmationCheckOut(string txId, string ec, string status, string check, string error, out bool? isCheckSumValid) {
+        public static bool DoesConfirmationCheckOut(string txId, string ec, string status, string sha1, string error, out bool? isCheckSumValid) {
             isCheckSumValid = null;
             // If the error is set or one of the other paramaters is set, than the confirmation does not check out.
             if (!string.IsNullOrEmpty(error) || string.IsNullOrEmpty(txId) 
-                 || string.IsNullOrEmpty(ec) || string.IsNullOrEmpty(status) || string.IsNullOrEmpty(check)) {
+                 || string.IsNullOrEmpty(ec) || string.IsNullOrEmpty(status) || string.IsNullOrEmpty(sha1)) {
                 return false;
             }
 
             // Perform the actual SHA1 check of txId+ec+status+password against the 'check' param.
-            string string1 = txId + ec + status + _password;
-            string string2 = txId + "/" + ec  + "/" + status + "/" + _merchantID  + "/" + _merchantKey;
-            string string3 = txId + ec  + status + _merchantID + _merchantKey;
-            string checkSHA1 = SHA1Encode(string1);
-            // string checkSHA1 = SHA1Encode(txId + "/" + ec  + "/" + status + "/" + _merchantID  + "/" + _merchantKey);
+            string hashee = txId + ec + status + _merchantID + _merchantKey;
+            string checkSHA1 = SHA1Encode(hashee);
 
-            isCheckSumValid = checkSHA1.Equals(check.ToUpper());
+            isCheckSumValid = checkSHA1.Equals(sha1.ToUpper());
             return isCheckSumValid.Value;
         }
 
