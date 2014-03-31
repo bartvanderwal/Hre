@@ -22,9 +22,16 @@ namespace HRE.Business {
         private const string PAGEURL = "https://www.sisow.nl/Sisow/iDeal/Betaal.aspx";
 
 
-        // Bepaal de URL voor get request voor de Ideal transactie bij Sisow.
+        /// <summary>
+        /// Bepaal de URL voor get request voor de Ideal transactie bij Sisow.
+        /// </summary>
+        /// <param name="amountInCents"></param>
+        /// <param name="purchaseId"></param>
+        /// <param name="description"></param>
+        /// <param name="returnurl"></param>
+        /// <param name="issuerid"></param>
+        /// <returns></returns>
         public static string DetermineSisowGetUrl(int amountInCents, string purchaseId, string description, string returnurl, string issuerid) {
-            
             if (purchaseId.Length>16) {
                 // De purchaseId mag niet langer zijn dan 16 karakters (Sisow specificatie).
                 throw new SisowIdealArgumentException("De purchaseId is langer dan 16 karakters: '" + purchaseId + "'.");
@@ -106,9 +113,11 @@ namespace HRE.Business {
         /// <param name="ec">The event code</param>
         /// <param name="status">The status code</param>
         /// <param name="check">The SHA1 checksum string</param>
-        /// <param name="error">Optional message in case of error (if present than doesn't check out)</param>
+        /// <param name="error">Message in case of error (if present than doesn't check out)</param>
+        /// <param name="isCheckSumValid">Out parameters indicates whether the checksum is valid (true), or invalid (false) or not applicable (null)( asin the case no URL's params were present.</param>
         /// <returns>True if checks out, false otherwise</returns>
-        public static bool DoesConfirmationCheckOut(string txId, string ec, string status, string check, string error) {
+        public static bool DoesConfirmationCheckOut(string txId, string ec, string status, string check, string error, out bool? isCheckSumValid) {
+            isCheckSumValid = null;
             // If the error is set or one of the other paramaters is set, than the confirmation does not check out.
             if (!string.IsNullOrEmpty(error) || string.IsNullOrEmpty(txId) 
                  || string.IsNullOrEmpty(ec) || string.IsNullOrEmpty(status) || string.IsNullOrEmpty(check)) {
@@ -117,8 +126,8 @@ namespace HRE.Business {
 
             // Perform the actual SHA1 check of txId+ec+status+password against the 'check' param.
             string checkSHA1 = SHA1Encode(txId + ec + status + PASSWORD);
-            bool result = checkSHA1.Equals(check.ToUpper());
-            return result;
+            isCheckSumValid = checkSHA1.Equals(check.ToUpper());
+            return isCheckSumValid.Value;
         }
 
     }
