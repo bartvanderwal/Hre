@@ -12,14 +12,14 @@ namespace HRE.Dal {
 
         public static int Hre2012Id {
             get {
-                return InschrijvingenRepository.GetEvent(InschrijvingenRepository.HRE_EVENTNR).Id;
+                return SportsEventRepository.GetEvent(SportsEventRepository.HRE_EVENTNR).Id;
             }
         }
 
 
         public static int Hre2013Id {
             get {
-                return InschrijvingenRepository.GetEvent(InschrijvingenRepository.H2RE_EVENTNR).Id;
+                return SportsEventRepository.GetEvent(SportsEventRepository.H2RE_EVENTNR).Id;
             }
         }
 

@@ -447,7 +447,7 @@ namespace HRE.Dal {
                 }
                 */
                 
-                List<int> entries2012UserIds = InschrijvingenRepository.GetEntries(InschrijvingenRepository.HRE_EVENTNR, true).Select(e => e.UserId).ToList();
+                List<int> entries2012UserIds = InschrijvingenRepository.GetEntries(SportsEventRepository.HRE_EVENTNR, true).Select(e => e.UserId).ToList();
 
 
                 switch (hre2012ParticipantStatus) {
@@ -669,7 +669,7 @@ namespace HRE.Dal {
             foreach (string adminUserName in adminAndSpeakerUserNames) {
                 LogonUserDal user = LogonUserDal.GetByUserName(adminUserName);
                 if(user!=null) {
-                    SportsEventParticipationDal participation = SportsEventParticipationDal.GetByUserIdEventId(user.Id, InschrijvingenRepository.GetHreEvent().Id);
+                    SportsEventParticipationDal participation = SportsEventParticipationDal.GetByUserIdEventId(user.Id, SportsEventRepository.GetHreEvent().Id);
                     if (participation!=null) {
                         adminAndSpeakerUsers.Add(user);
                     }

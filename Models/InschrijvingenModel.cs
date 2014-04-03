@@ -12,8 +12,8 @@ namespace HRE.Models {
     public class InschrijvingenModel {
 
         public InschrijvingenModel() {
-            // Default to HRE 2014.
-            EventNumber = InschrijvingenRepository.H3RE_EVENTNR;
+            // Default to current year.
+            EventNumber = SportsEventRepository.GetCurrentEvent().ExternalEventIdentifier;
         }
 
         private List<InschrijvingModel> _inschrijvingen { get; set; }

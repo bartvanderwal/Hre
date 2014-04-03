@@ -175,8 +175,80 @@ namespace HRE.Common {
 
         
         /// <summary>
+        /// Sisow password.
+        /// </summary>
+        public static string SisowPassword {
+            get {
+                return ReadStringSetting("SisowPassword");
+            }
+        }
+
+        
+        /// <summary>
+        /// Sisow Merchant id.
+        /// </summary>
+        public static string SisowMerchantId {
+            get {
+                return ReadStringSetting("SisowMerchantId");
+            }
+        }
+
+       
+        /// <summary>
+        /// Sisow Merchant key.
+        /// </summary>
+        public static string SisowMerchantKey {
+            get {
+                return ReadStringSetting("SisowMerchantKey");
+            }
+        }
+
+
+        /// <summary>
+        /// Sisow Merchant key.
+        /// </summary>
+        public static string MailAddressSecretary {
+            get {
+                return ReadStringSetting("MailAddressSecretary", "pieter@hetrondjeeilanden.nl");
+            }
+        }
+
+
+        /// <summary>
+        /// Specifies
+        /// To be able to switch this of if SSL is no longer available, due to provider errors for example.
+        /// </summary>
+        public static bool IsSslAvailable {
+            get {
+                return ReadBoolSetting("IsSslAvailable", true);
+            }
+        }
+
+
+        /// <summary>
+        /// Het aantal personen per 'startschot' in de tijdrit serie. Default starten twee personen tegelijkertijd.
+        /// </summary>
+        public static int AantalPersonenPerStartschot {
+            get {
+                return ReadIntSetting("AantalPersonenPerStartschot", 2);
+            }
+        }
+
+
+        /// <summary>
+        /// Het aantal seconden twee twee startschots in de tijdrit serie. Default is dit 10 seconden.
+        /// </summary>
+        public static int AantalSecondenTussenStartschots {
+            get {
+                return ReadIntSetting("AantalSecondenTussenStartschots", 10);
+            }
+        }
+
+
+        /*
+        /// <summary>
         /// Het totaal aantal startplekken.
-        /// Default: 500.
+        /// Default: 700.
         /// </summary>
         public static int AantalStartPlekken {
             get {
@@ -271,17 +343,6 @@ namespace HRE.Common {
 
 
         /// <summary>
-        /// De kosten voor huur van een witte MyLaps chip.
-        /// Default: 250.
-        /// </summary>
-        public static int KostenHuurMyLapsChipWit {
-            get {
-                return ReadIntSetting("KostenHuurMyLapsChipWit", 150);
-            }
-        }
-
-
-        /// <summary>
         /// Kosten voor gebruik van een groene MyLaps chip.
         /// Default: 150.
         /// </summary>
@@ -302,86 +363,16 @@ namespace HRE.Common {
             }
         }
 
+        
         /// <summary>
         /// De korting voor Early Birds.
-        /// Default: 750.
+        /// Default: 500.
         /// </summary>
         public static int HoogteEarlyBirdKorting {
             get {
                 return ReadIntSetting("HoogteEarlyBirdKorting", 500);
             }
         }
-
-
-        /// <summary>
-        /// Sisow password.
-        /// </summary>
-        public static string SisowPassword {
-            get {
-                return ReadStringSetting("SisowPassword");
-            }
-        }
-
-        
-        /// <summary>
-        /// Sisow Merchant id.
-        /// </summary>
-        public static string SisowMerchantId {
-            get {
-                return ReadStringSetting("SisowMerchantId");
-            }
-        }
-
-       
-        /// <summary>
-        /// Sisow Merchant key.
-        /// </summary>
-        public static string SisowMerchantKey {
-            get {
-                return ReadStringSetting("SisowMerchantKey");
-            }
-        }
-
-
-        /// <summary>
-        /// Sisow Merchant key.
-        /// </summary>
-        public static string MailAddressSecretary {
-            get {
-                return ReadStringSetting("MailAddressSecretary", "pieter@hetrondjeeilanden.nl");
-            }
-        }
-
-
-        /// <summary>
-        /// Specifies
-        /// To be able to switch this of if SSL is no longer available, due to provider errors for example.
-        /// </summary>
-        public static bool IsSslAvailable {
-            get {
-                return ReadBoolSetting("IsSslAvailable", true);
-            }
-        }
-
-
-        /// <summary>
-        /// Het aantal personen per 'startschot' in de tijdrit serie. Default starten twee personen tegelijkertijd.
-        /// </summary>
-        public static int AantalPersonenPerStartschot {
-            get {
-                return ReadIntSetting("AantalPersonenPerStartschot", 2);
-            }
-        }
-
-
-        /// <summary>
-        /// Het aantal seconden twee twee startschots in de tijdrit serie. Default is dit 10 seconden.
-        /// </summary>
-        public static int AantalSecondenTussenStartschots {
-            get {
-                return ReadIntSetting("AantalSecondenTussenStartschots", 10);
-            }
-        }
-
+        */
     }
 }

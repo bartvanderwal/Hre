@@ -24,6 +24,8 @@ namespace HRE {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             // routes.IgnoreRoute("{resource}.aspx/{*pathInfo}");
             routes.IgnoreRoute("{resource}.html/{*pathInfo}");
+            routes.IgnoreRoute("{resource}.php/{*pathInfo}");
+
             // routes.IgnoreRoute("index.html");
             // routes.IgnoreRoute("");
 

@@ -214,6 +214,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BaseRepository.cs" />
     <Compile Include="Models\ContactViewModel.cs" />
+    <Compile Include="Models\SportsEventRepository.cs" />
     <Compile Include="Models\ParticipationRepository.cs" />
     <Compile Include="Models\emailauditRepository.cs" />
     <Compile Include="Models\HREContext.cs" />
@@ -277,6 +278,8 @@
     <Content Include="Content\img\IdealButtonKlein.png" />
     <Content Include="Content\img\IdealLinkje.png" />
     <Content Include="Content\img\MyLaps.jpg" />
+    <Content Include="Content\img\MyLapsGreen.png" />
+    <Content Include="Content\img\MyLapsYellow.png" />
     <Content Include="Content\img\Nieuwsbrief\flessenpost.png" />
     <Content Include="Content\img\Nieuwsbrief\flessenpost_.png" />
     <Content Include="Content\img\Nieuwsbrief\fp_DennisGoPro.jpg" />
@@ -1196,7 +1199,7 @@
     <Content Include="sql\20130731_insert_startnummers_en_tijden.sql" />
     <Content Include="sql\20130801AddSportsEventParticipation_UserCanceled.sql" />
     <Content Include="sql\20140114AddVolonteer.sql" />
-    <Content Include="sql\20140311_add_sportsevent_2014.sql" />
+    <Content Include="sql\20140311_extra_columns_2014.sql" />
     <Content Include="Views\emailaudits\Create.cshtml" />
     <Content Include="Views\emailaudits\Edit.cshtml" />
     <Content Include="Views\emailaudits\Delete.cshtml" />

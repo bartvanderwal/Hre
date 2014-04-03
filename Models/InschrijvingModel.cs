@@ -229,16 +229,18 @@ namespace HRE.Models {
         public DateTime? DateConfirmationSend { get; set; }
 
         /// <summary>
-        /// The user gets the Early Bird discount if he/she was a participant in 2012 or 2013 and is again in 2014 and is with the first 200 and is still on time for the discount.
+        /// The user gets the Early Bird discount if he/she:
+        /// - was a participant in an earlier year
+        /// - and is again in the current year and is with the first 200
+        /// - and is still on time for the discount.
         /// </summary>
         public bool? IsEarlyBird { 
             get {
                 if (!_isEarlyBird.HasValue) {
-                        _isEarlyBird = ExternalEventIdentifier==InschrijvingenRepository.H3RE_EVENTNR 
-                            && (SportsEventParticipationDal.GetByUserIdEventId(UserId, SportsEventDal.Hre2012Id)!=null
-                                || SportsEventParticipationDal.GetByUserIdEventId(UserId, SportsEventDal.Hre2013Id)!=null)
-                            && LogonUserDal.AantalIngeschrevenEarlyBirds() < HreSettings.AantalEarlyBirdStartPlekken
-                            && DateTime.Compare(DateTime.Now, HreSettings.EindDatumEarlyBirdKorting)<=0;
+                        _isEarlyBird = ExternalEventIdentifier==SportsEventRepository.GetCurrentEvent().ExternalEventIdentifier
+                            && InschrijvingenRepository.GetLatestInschrijvingOfUser(UserId)!=null
+                            && LogonUserDal.AantalIngeschrevenEarlyBirds() < SportsEventRepository.AantalEarlyBirdStartPlekken
+                            && DateTime.Now <= SportsEventRepository.EindDatumEarlyBirdKorting;
                 }
                 return _isEarlyBird.Value;
             }
@@ -253,7 +255,7 @@ namespace HRE.Models {
        
         public int EarlyBirdKorting {
             get {
-                return IsEarlyBird.HasValue && IsEarlyBird.Value ? HreSettings.HoogteEarlyBirdKorting : 0;
+                return IsEarlyBird.HasValue && IsEarlyBird.Value ? SportsEventRepository.HoogteEarlyBirdKorting : 0;
             }
         }
 
@@ -265,7 +267,7 @@ namespace HRE.Models {
             get {
                 if (string.IsNullOrEmpty(LicentieNummer) || 
                     (LicentieNummer.Substring(2,1).ToUpper()!="A" && LicentieNummer.Substring(2,1).ToUpper()!="X")) {
-                    return HreSettings.KostenNtbDagLicentie;
+                    return SportsEventRepository.KostenNtbDagLicentie;
                 } else {
                     return 0;
                 }
@@ -278,7 +280,7 @@ namespace HRE.Models {
         /// </summary>
         public int KostenEten {
             get {
-                return Food ? HreSettings.KostenEten : 0;
+                return Food ? SportsEventRepository.KostenEten : 0;
             }
         }
 
@@ -289,10 +291,10 @@ namespace HRE.Models {
         public int KostenChip {
             get {
                 if (!HasMyLapsChipNummer || string.IsNullOrEmpty(MyLapsChipNummer)) {
-                    return HreSettings.KostenHuurMyLapsChipGeel;
+                    return SportsEventRepository.KostenHuurMyLapsChipGeel;
                 }
                 if (Regex.IsMatch(MyLapsChipNummer, "^d")) {
-                    return HreSettings.KostenGebruikMyLapsChipGroen;
+                    return SportsEventRepository.KostenGebruikMyLapsChipGroen;
                 }
                 return 0;
             }
@@ -304,19 +306,19 @@ namespace HRE.Models {
 
         public int? BasisKosten { 
             get {
-                return (FreeStarter.HasValue && FreeStarter.Value) ? 0 : HreSettings.HuidigeDeelnameBedrag;
+                return (FreeStarter.HasValue && FreeStarter.Value) ? 0 : SportsEventRepository.HuidigeDeelnameBedrag;
             }
         }
 
 
         public int? InschrijfGeld { 
             get {
-                // Voor HRE 2012 of latere jaren als bedrag al ingevuld is, geef het bedrag uit database terug.
-                if (ExternalEventIdentifier==InschrijvingenRepository.HRE_EVENTNR || _inschrijfGeld.HasValue) {
+                // Als bedrag al ingevuld is of voor HRE 2012, geef het bedrag uit de database terug.
+                if (ExternalEventIdentifier==SportsEventRepository.HRE_EVENTNR || _inschrijfGeld.HasValue) {
                     return _inschrijfGeld;
                 }
 
-                // Voor HRE 2013 wordt het bedrag bepaald afhankelijk van gebruikersgegevens en vaste bedragen in de appsettings.
+                // Voor HRE 2013 en later wordt het bedrag bepaald afhankelijk van gebruikersgegevens en vaste bedragen in de appsettings.
                 // Dit gebeurd dus analoog aan maar apart van berekening in client side JavaScript om 'hackmogelijkheden' uit te sluiten.
                 return BasisKosten + KostenNtbDagLicentie + KostenChip + KostenEten - EarlyBirdKorting;
             }
@@ -504,6 +506,8 @@ namespace HRE.Models {
 
         protected List<SelectListItem> _paymentTypeList;
 
+        public string SisowTransactionID { get; set; }
+
         public List<SelectListItem> PaymentTypeList {
             get {
                 if (_paymentTypeList==null) {
@@ -524,7 +528,7 @@ namespace HRE.Models {
             get {
                 if (string.IsNullOrEmpty(_sisowReturnUrl)) {
                     // Set the default value
-                    SisowReturnUrl = "/Inschrijvingen/Aangemeld";
+                    SisowReturnUrl = "/Inschrijvingen/Aangemeld?SkipMaster=True";
                 }
                 return _sisowReturnUrl;
             }

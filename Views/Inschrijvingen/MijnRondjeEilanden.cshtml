@@ -5,7 +5,7 @@
 @{
     ViewBag.Title = "Mijn Rondje Eilanden";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    string shareText = string.IsNullOrEmpty(Model.HebJeErZinIn) ? "Ik heb me zojuist als vroege vogel aangemeld voor Hét Rondje Eilanden! #H3RE" : Model.HebJeErZinIn;
+    string shareText = string.IsNullOrEmpty(Model.HebJeErZinIn) ? "Ik heb me zojuist als vroege vogel aangemeld voor Hét Rondje Eilanden!" : Model.HebJeErZinIn;
 }
 
 <div id="fb-root"></div>
@@ -47,7 +47,7 @@
         </div>
     }
     if (Model.IsEarlyBird.HasValue && Model.IsEarlyBird.Value && (!Model.IsBetaald.HasValue || !Model.IsBetaald.Value)) {
-        <p>Let op: om Early Bird korting te verzilveren moet het inschrijfgeld voor @HRE.Common.HreSettings.EindDatumEarlyBirdKorting.ToShortDateString() overgemaakt te zijn!</p>
+        <p>Let op: om Early Bird korting te verzilveren moet het inschrijfgeld voor @HRE.Models.SportsEventRepository.EindDatumEarlyBirdKorting.ToShortDateString() overgemaakt te zijn!</p>
     }
     <p>NB: Je bent automatisch ingelogd via de link in de e-mail. Log als je klaar bent zelf weer uit via de link 'Uitloggen' rechts bovenin (om onder andere te voorkomen dat eventuele andere gebruikers van deze computer je gegevens kunnen zien/bewerken).</p>
     <br clear="all"/>

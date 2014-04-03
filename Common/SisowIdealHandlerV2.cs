@@ -47,7 +47,6 @@ namespace HRE.Business {
                 throw new SisowIdealArgumentException("De description is langer dan 32 karakters: '" + description + "'.");
             }
 
-
             string key = SHA1Encode(_merchantID + _password + transactionID + amountInCents);
             string sisowUrl = string.Empty;
             string purchaseIDBeforeCall = transactionID;

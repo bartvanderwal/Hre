@@ -18,7 +18,7 @@ namespace HRE.Models {
         /// </summary>
         /// <returns></returns>
         public static bool AlgemeneInschrijvingGeopend() {
-            return DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving)>0;
+            return DateTime.Compare(DateTime.Now, SportsEventRepository.OpeningsdatumAlgemeneInschrijving)>0;
         }
     }
 

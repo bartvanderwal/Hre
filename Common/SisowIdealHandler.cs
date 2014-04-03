@@ -14,7 +14,7 @@ namespace HRE.Business {
     /// Verzorgt het verrichten en afhandelen van Ideal transacties e.g. https://www.sisow.nl/Sisow/iDeal/Betaal.aspx.
     /// Deze klasse gaat uit van PSP = Sisow.
     /// </summary>
-    public static class SisowIdealHandler {
+    /* public static class SisowIdealHandler {
 
         private static string _merchantID = HreSettings.SisowMerchantId;
         private static string _password = HreSettings.SisowPassword;
@@ -136,4 +136,5 @@ namespace HRE.Business {
         }
 
     }
+    */
 }

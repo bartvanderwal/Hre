@@ -3,7 +3,7 @@
 @using HRE.Business
 
 @{
-    ViewBag.Title = "Inschrijvingen " + @Model.Event.Name;
+    ViewBag.Title = "Inschrijvingen " + Model.Event.Name;
     List<int> testParticipants = HRE.Dal.LogonUserDal.GetTestParticipantIds();
     
     var currentUser = HRE.Dal.LogonUserDal.GetCurrentUser();
@@ -23,9 +23,9 @@
         <text>Scrape:</text>
             @Html.DropDownList("EventNumber",
             new SelectList(new Dictionary<string, string> {
-                {"2014", HRE.Models.InschrijvingenRepository.H3RE_EVENTNR},
-                {"2013", HRE.Models.InschrijvingenRepository.H2RE_EVENTNR},
-                {"2012", HRE.Models.InschrijvingenRepository.HRE_EVENTNR}
+                {"2014", HRE.Models.SportsEventRepository.H3RE_EVENTNR},
+                {"2013", HRE.Models.SportsEventRepository.H2RE_EVENTNR},
+                {"2012", HRE.Models.SportsEventRepository.HRE_EVENTNR}
             },
             "Value", "Key"))
 
@@ -46,13 +46,13 @@
 }
 
 <div id="marquee-div">
-    <div id="marquee-label">Er hebben zich nu <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenDeelnemers(Model.EventNumber)</b> deelnemers ingeschreven. @*(max @HRE.Common.HreSettings.AantalStartPlekken) waarvan <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenEarlyBirds()</b> Early Birds™ (max @HRE.Common.HreSettings.AantalEarlyBirdStartPlekken). *@ Hebben zij er zin in?</div>
+    <div id="marquee-label">Er hebben zich nu <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenDeelnemers(Model.EventNumber)</b> deelnemers ingeschreven. @*(max @HRE.Models.SportsEventRepository.AantalStartPlekken) waarvan <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenEarlyBirds()</b> Early Birds™ (max @HRE.Common.HreSettings.AantalEarlyBirdStartPlekken). *@ Hebben zij er zin in?</div>
     <marquee>@Html.Raw(Model.ParticipantRemarks)</marquee>
 </div>
 
-<h1>@(Model.EventNumber==HRE.Models.InschrijvingenRepository.HRE_EVENTNR ? 
+<h1>@(Model.EventNumber==HRE.Models.SportsEventRepository.HRE_EVENTNR ? 
         "Deelnemerslijst HRE 2012" :
-        Model.EventNumber==HRE.Models.InschrijvingenRepository.H2RE_EVENTNR ? "Deelnemerslijst H2RE 2013" : "Deelnemerslijst H2RE 2014")</h1>
+        Model.EventNumber==HRE.Models.SportsEventRepository.H2RE_EVENTNR ? "Deelnemerslijst H2RE 2013" : "Deelnemerslijst H2RE 2014")</h1>
 
 @if (Model.HasSpeakerRole) {
     using(Html.BeginForm("DownloadSpeakerList", "Inschrijvingen", FormMethod.Post, new { @class="parallel-form" } )) {
@@ -64,10 +64,10 @@
 
 
 <span style="color: #ffffff; background-color: #2483B3; text-align: center; float: right; padding: 5px 10px; margin: 5px 10px; border: 1px solid #303030;">
-@if(DateTime.Compare(DateTime.Now, HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving)>0) {
+@if(DateTime.Compare(DateTime.Now, HRE.Models.SportsEventRepository.OpeningsdatumAlgemeneInschrijving)>0) {
     @Html.ActionLink("Ik doe mee!", "IkDoeMee", "Inschrijvingen")
 } else {
-    <text>Op @HRE.Common.HreSettings.OpeningsdatumAlgemeneInschrijving.ToShortDateString() opent de algemene inschrijving (totaal @HRE.Common.HreSettings.AantalStartPlekken startplekken)</text>
+    <text>Op @HRE.Models.SportsEventRepository.OpeningsdatumAlgemeneInschrijving.ToShortDateString() opent de algemene inschrijving (totaal @HRE.Models.SportsEventRepository.AantalStartPlekken startplekken)</text>
 }
 </span>
 <p>Hieronder de deelnemerslijst. Enige tijd voor het evenement worden de startnummers en starttijden definitief.<br />
@@ -75,7 +75,7 @@
     <p>Er zijn nog geen deelnemers.</p>
 } else {
     int startNummer = 1;
-    DateTime startTijd = HRE.Models.InschrijvingenRepository.GetCurrentEvent().EventDate.Value;
+    DateTime startTijd = HRE.Models.SportsEventRepository.GetCurrentEvent().EventDate.Value;
     HRE.Models.InschrijvingModel testInschrijving = Model.Inschrijvingen.FirstOrDefault();
     bool startNummersIngedeeld = testInschrijving!=null && testInschrijving.StartNummer.HasValue;
         

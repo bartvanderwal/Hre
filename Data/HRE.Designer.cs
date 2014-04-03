@@ -24,9 +24,9 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("hreModel", "UserIdSender", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "emailaudit", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.emailaudit), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "Newsletter1", "newsletter", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HRE.Data.newsletter), "newsletteritem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.newsletteritem), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "volunteer_User", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "volunteer", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.volunteer), true)]
-[assembly: EdmRelationshipAttribute("hreModel", "volunteer_sportevent", "sportsevent", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.sportsevent), "volunteer", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.volunteer), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "User", "logonuser", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.logonuser), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
 [assembly: EdmRelationshipAttribute("hreModel", "sportevent", "sportsevent", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.sportsevent), "sportseventparticipation", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.sportseventparticipation), true)]
+[assembly: EdmRelationshipAttribute("hreModel", "volunteer_sportevent", "sportsevent", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(HRE.Data.sportsevent), "volunteer", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HRE.Data.volunteer), true)]
 
 #endregion
 
@@ -177,22 +177,6 @@ namespace HRE.Data
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<sportsevent> sportsevent
-        {
-            get
-            {
-                if ((_sportsevent == null))
-                {
-                    _sportsevent = base.CreateObjectSet<sportsevent>("sportsevent");
-                }
-                return _sportsevent;
-            }
-        }
-        private ObjectSet<sportsevent> _sportsevent;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<usersecondaryaddress> usersecondaryaddress
         {
             get
@@ -269,6 +253,22 @@ namespace HRE.Data
             }
         }
         private ObjectSet<sportseventparticipation> _sportseventparticipation;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<sportsevent> sportsevent
+        {
+            get
+            {
+                if ((_sportsevent == null))
+                {
+                    _sportsevent = base.CreateObjectSet<sportsevent>("sportsevent");
+                }
+                return _sportsevent;
+            }
+        }
+        private ObjectSet<sportsevent> _sportsevent;
 
         #endregion
 
@@ -323,14 +323,6 @@ namespace HRE.Data
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the sportsevent EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddTosportsevent(sportsevent sportsevent)
-        {
-            base.AddObject("sportsevent", sportsevent);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the usersecondaryaddress EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddTousersecondaryaddress(usersecondaryaddress usersecondaryaddress)
@@ -368,6 +360,14 @@ namespace HRE.Data
         public void AddTosportseventparticipation(sportseventparticipation sportseventparticipation)
         {
             base.AddObject("sportseventparticipation", sportseventparticipation);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the sportsevent EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddTosportsevent(sportsevent sportsevent)
+        {
+            base.AddObject("sportsevent", sportsevent);
         }
 
         #endregion
@@ -2946,12 +2946,36 @@ namespace HRE.Data
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="dateCreated">Initial value of the DateCreated property.</param>
         /// <param name="dateUpdated">Initial value of the DateUpdated property.</param>
-        public static sportsevent Createsportsevent(global::System.Int32 id, global::System.DateTime dateCreated, global::System.DateTime dateUpdated)
+        /// <param name="aantalStartPlekken">Initial value of the AantalStartPlekken property.</param>
+        /// <param name="aantalPlekkenReserveLijst">Initial value of the AantalPlekkenReserveLijst property.</param>
+        /// <param name="aantalEarlyBirdStartPlekken">Initial value of the AantalEarlyBirdStartPlekken property.</param>
+        /// <param name="eindDatumEarlyBirdKorting">Initial value of the EindDatumEarlyBirdKorting property.</param>
+        /// <param name="openingsdatumAlgemeneInschrijving">Initial value of the OpeningsdatumAlgemeneInschrijving property.</param>
+        /// <param name="sluitingsDatumAlgemeneInschrijving">Initial value of the SluitingsDatumAlgemeneInschrijving property.</param>
+        /// <param name="huidigeDeelnameBedrag">Initial value of the HuidigeDeelnameBedrag property.</param>
+        /// <param name="kostenNtbDagLicentie">Initial value of the KostenNtbDagLicentie property.</param>
+        /// <param name="kostenHuurMyLapsChipGeel">Initial value of the KostenHuurMyLapsChipGeel property.</param>
+        /// <param name="kostenGebruikMyLapsChipGroen">Initial value of the KostenGebruikMyLapsChipGroen property.</param>
+        /// <param name="kostenEten">Initial value of the KostenEten property.</param>
+        /// <param name="hoogteEarlyBirdKorting">Initial value of the HoogteEarlyBirdKorting property.</param>
+        public static sportsevent Createsportsevent(global::System.Int32 id, global::System.DateTime dateCreated, global::System.DateTime dateUpdated, global::System.Int32 aantalStartPlekken, global::System.Int32 aantalPlekkenReserveLijst, global::System.Int32 aantalEarlyBirdStartPlekken, global::System.DateTime eindDatumEarlyBirdKorting, global::System.DateTime openingsdatumAlgemeneInschrijving, global::System.DateTime sluitingsDatumAlgemeneInschrijving, global::System.Int32 huidigeDeelnameBedrag, global::System.Int32 kostenNtbDagLicentie, global::System.Int32 kostenHuurMyLapsChipGeel, global::System.Int32 kostenGebruikMyLapsChipGroen, global::System.Int32 kostenEten, global::System.Int32 hoogteEarlyBirdKorting)
         {
             sportsevent sportsevent = new sportsevent();
             sportsevent.Id = id;
             sportsevent.DateCreated = dateCreated;
             sportsevent.DateUpdated = dateUpdated;
+            sportsevent.AantalStartPlekken = aantalStartPlekken;
+            sportsevent.AantalPlekkenReserveLijst = aantalPlekkenReserveLijst;
+            sportsevent.AantalEarlyBirdStartPlekken = aantalEarlyBirdStartPlekken;
+            sportsevent.EindDatumEarlyBirdKorting = eindDatumEarlyBirdKorting;
+            sportsevent.OpeningsdatumAlgemeneInschrijving = openingsdatumAlgemeneInschrijving;
+            sportsevent.SluitingsDatumAlgemeneInschrijving = sluitingsDatumAlgemeneInschrijving;
+            sportsevent.HuidigeDeelnameBedrag = huidigeDeelnameBedrag;
+            sportsevent.KostenNtbDagLicentie = kostenNtbDagLicentie;
+            sportsevent.KostenHuurMyLapsChipGeel = kostenHuurMyLapsChipGeel;
+            sportsevent.KostenGebruikMyLapsChipGroen = kostenGebruikMyLapsChipGroen;
+            sportsevent.KostenEten = kostenEten;
+            sportsevent.HoogteEarlyBirdKorting = hoogteEarlyBirdKorting;
             return sportsevent;
         }
 
@@ -3153,33 +3177,299 @@ namespace HRE.Data
         private global::System.String _ExternalEventSerieIdentifier;
         partial void OnExternalEventSerieIdentifierChanging(global::System.String value);
         partial void OnExternalEventSerieIdentifierChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 AantalStartPlekken
+        {
+            get
+            {
+                return _AantalStartPlekken;
+            }
+            set
+            {
+                OnAantalStartPlekkenChanging(value);
+                ReportPropertyChanging("AantalStartPlekken");
+                _AantalStartPlekken = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("AantalStartPlekken");
+                OnAantalStartPlekkenChanged();
+            }
+        }
+        private global::System.Int32 _AantalStartPlekken;
+        partial void OnAantalStartPlekkenChanging(global::System.Int32 value);
+        partial void OnAantalStartPlekkenChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 AantalPlekkenReserveLijst
+        {
+            get
+            {
+                return _AantalPlekkenReserveLijst;
+            }
+            set
+            {
+                OnAantalPlekkenReserveLijstChanging(value);
+                ReportPropertyChanging("AantalPlekkenReserveLijst");
+                _AantalPlekkenReserveLijst = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("AantalPlekkenReserveLijst");
+                OnAantalPlekkenReserveLijstChanged();
+            }
+        }
+        private global::System.Int32 _AantalPlekkenReserveLijst;
+        partial void OnAantalPlekkenReserveLijstChanging(global::System.Int32 value);
+        partial void OnAantalPlekkenReserveLijstChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 AantalEarlyBirdStartPlekken
+        {
+            get
+            {
+                return _AantalEarlyBirdStartPlekken;
+            }
+            set
+            {
+                OnAantalEarlyBirdStartPlekkenChanging(value);
+                ReportPropertyChanging("AantalEarlyBirdStartPlekken");
+                _AantalEarlyBirdStartPlekken = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("AantalEarlyBirdStartPlekken");
+                OnAantalEarlyBirdStartPlekkenChanged();
+            }
+        }
+        private global::System.Int32 _AantalEarlyBirdStartPlekken;
+        partial void OnAantalEarlyBirdStartPlekkenChanging(global::System.Int32 value);
+        partial void OnAantalEarlyBirdStartPlekkenChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime EindDatumEarlyBirdKorting
+        {
+            get
+            {
+                return _EindDatumEarlyBirdKorting;
+            }
+            set
+            {
+                OnEindDatumEarlyBirdKortingChanging(value);
+                ReportPropertyChanging("EindDatumEarlyBirdKorting");
+                _EindDatumEarlyBirdKorting = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("EindDatumEarlyBirdKorting");
+                OnEindDatumEarlyBirdKortingChanged();
+            }
+        }
+        private global::System.DateTime _EindDatumEarlyBirdKorting;
+        partial void OnEindDatumEarlyBirdKortingChanging(global::System.DateTime value);
+        partial void OnEindDatumEarlyBirdKortingChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime OpeningsdatumAlgemeneInschrijving
+        {
+            get
+            {
+                return _OpeningsdatumAlgemeneInschrijving;
+            }
+            set
+            {
+                OnOpeningsdatumAlgemeneInschrijvingChanging(value);
+                ReportPropertyChanging("OpeningsdatumAlgemeneInschrijving");
+                _OpeningsdatumAlgemeneInschrijving = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("OpeningsdatumAlgemeneInschrijving");
+                OnOpeningsdatumAlgemeneInschrijvingChanged();
+            }
+        }
+        private global::System.DateTime _OpeningsdatumAlgemeneInschrijving;
+        partial void OnOpeningsdatumAlgemeneInschrijvingChanging(global::System.DateTime value);
+        partial void OnOpeningsdatumAlgemeneInschrijvingChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime SluitingsDatumAlgemeneInschrijving
+        {
+            get
+            {
+                return _SluitingsDatumAlgemeneInschrijving;
+            }
+            set
+            {
+                OnSluitingsDatumAlgemeneInschrijvingChanging(value);
+                ReportPropertyChanging("SluitingsDatumAlgemeneInschrijving");
+                _SluitingsDatumAlgemeneInschrijving = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("SluitingsDatumAlgemeneInschrijving");
+                OnSluitingsDatumAlgemeneInschrijvingChanged();
+            }
+        }
+        private global::System.DateTime _SluitingsDatumAlgemeneInschrijving;
+        partial void OnSluitingsDatumAlgemeneInschrijvingChanging(global::System.DateTime value);
+        partial void OnSluitingsDatumAlgemeneInschrijvingChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 HuidigeDeelnameBedrag
+        {
+            get
+            {
+                return _HuidigeDeelnameBedrag;
+            }
+            set
+            {
+                OnHuidigeDeelnameBedragChanging(value);
+                ReportPropertyChanging("HuidigeDeelnameBedrag");
+                _HuidigeDeelnameBedrag = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("HuidigeDeelnameBedrag");
+                OnHuidigeDeelnameBedragChanged();
+            }
+        }
+        private global::System.Int32 _HuidigeDeelnameBedrag;
+        partial void OnHuidigeDeelnameBedragChanging(global::System.Int32 value);
+        partial void OnHuidigeDeelnameBedragChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 KostenNtbDagLicentie
+        {
+            get
+            {
+                return _KostenNtbDagLicentie;
+            }
+            set
+            {
+                OnKostenNtbDagLicentieChanging(value);
+                ReportPropertyChanging("KostenNtbDagLicentie");
+                _KostenNtbDagLicentie = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("KostenNtbDagLicentie");
+                OnKostenNtbDagLicentieChanged();
+            }
+        }
+        private global::System.Int32 _KostenNtbDagLicentie;
+        partial void OnKostenNtbDagLicentieChanging(global::System.Int32 value);
+        partial void OnKostenNtbDagLicentieChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 KostenHuurMyLapsChipGeel
+        {
+            get
+            {
+                return _KostenHuurMyLapsChipGeel;
+            }
+            set
+            {
+                OnKostenHuurMyLapsChipGeelChanging(value);
+                ReportPropertyChanging("KostenHuurMyLapsChipGeel");
+                _KostenHuurMyLapsChipGeel = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("KostenHuurMyLapsChipGeel");
+                OnKostenHuurMyLapsChipGeelChanged();
+            }
+        }
+        private global::System.Int32 _KostenHuurMyLapsChipGeel;
+        partial void OnKostenHuurMyLapsChipGeelChanging(global::System.Int32 value);
+        partial void OnKostenHuurMyLapsChipGeelChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 KostenGebruikMyLapsChipGroen
+        {
+            get
+            {
+                return _KostenGebruikMyLapsChipGroen;
+            }
+            set
+            {
+                OnKostenGebruikMyLapsChipGroenChanging(value);
+                ReportPropertyChanging("KostenGebruikMyLapsChipGroen");
+                _KostenGebruikMyLapsChipGroen = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("KostenGebruikMyLapsChipGroen");
+                OnKostenGebruikMyLapsChipGroenChanged();
+            }
+        }
+        private global::System.Int32 _KostenGebruikMyLapsChipGroen;
+        partial void OnKostenGebruikMyLapsChipGroenChanging(global::System.Int32 value);
+        partial void OnKostenGebruikMyLapsChipGroenChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 KostenEten
+        {
+            get
+            {
+                return _KostenEten;
+            }
+            set
+            {
+                OnKostenEtenChanging(value);
+                ReportPropertyChanging("KostenEten");
+                _KostenEten = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("KostenEten");
+                OnKostenEtenChanged();
+            }
+        }
+        private global::System.Int32 _KostenEten;
+        partial void OnKostenEtenChanging(global::System.Int32 value);
+        partial void OnKostenEtenChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 HoogteEarlyBirdKorting
+        {
+            get
+            {
+                return _HoogteEarlyBirdKorting;
+            }
+            set
+            {
+                OnHoogteEarlyBirdKortingChanging(value);
+                ReportPropertyChanging("HoogteEarlyBirdKorting");
+                _HoogteEarlyBirdKorting = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("HoogteEarlyBirdKorting");
+                OnHoogteEarlyBirdKortingChanged();
+            }
+        }
+        private global::System.Int32 _HoogteEarlyBirdKorting;
+        partial void OnHoogteEarlyBirdKortingChanging(global::System.Int32 value);
+        partial void OnHoogteEarlyBirdKortingChanged();
 
         #endregion
 
     
         #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("hreModel", "volunteer_sportevent", "volunteer")]
-        public EntityCollection<volunteer> volunteer
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<volunteer>("hreModel.volunteer_sportevent", "volunteer");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<volunteer>("hreModel.volunteer_sportevent", "volunteer", value);
-                }
-            }
-        }
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -3199,6 +3489,28 @@ namespace HRE.Data
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<sportseventparticipation>("hreModel.sportevent", "sportseventparticipation", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("hreModel", "volunteer_sportevent", "volunteer")]
+        public EntityCollection<volunteer> volunteer
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<volunteer>("hreModel.volunteer_sportevent", "volunteer");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<volunteer>("hreModel.volunteer_sportevent", "volunteer", value);
                 }
             }
         }
@@ -4296,6 +4608,30 @@ namespace HRE.Data
         private global::System.String _BankCode;
         partial void OnBankCodeChanging(global::System.String value);
         partial void OnBankCodeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String SisowTransactionID
+        {
+            get
+            {
+                return _SisowTransactionID;
+            }
+            set
+            {
+                OnSisowTransactionIDChanging(value);
+                ReportPropertyChanging("SisowTransactionID");
+                _SisowTransactionID = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("SisowTransactionID");
+                OnSisowTransactionIDChanged();
+            }
+        }
+        private global::System.String _SisowTransactionID;
+        partial void OnSisowTransactionIDChanging(global::System.String value);
+        partial void OnSisowTransactionIDChanged();
 
         #endregion
 

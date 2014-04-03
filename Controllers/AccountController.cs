@@ -58,7 +58,7 @@ namespace HRE.Controllers {
                 LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(email);
 
                 if (user!=null) {
-                    InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.HRE_EVENTNR);
+                    InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, SportsEventRepository.HRE_EVENTNR);
                     FormsAuthentication.SetAuthCookie(user.UserName, false);
                     RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier} );
                 }
@@ -244,12 +244,15 @@ namespace HRE.Controllers {
             } else {
                 FormsAuthentication.SetAuthCookie(email, false);
             }
-            InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.H3RE_EVENTNR);
+            InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, SportsEventRepository.GetCurrentEvent().ExternalEventIdentifier);
             if (inschrijving==null) {
                 inschrijving = InschrijvingenRepository.GetLatestInschrijvingOfUser(user.Id);
-                return RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, eventNr = InschrijvingenRepository.GetCurrentEvent().ExternalEventIdentifier });
+                return RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, 
+                    eventNr = SportsEventRepository.CurrentExternalEventIdentifier, userID = user.Id, SkipMaster = "False" });
             } else {
-                return RedirectToAction("MijnRondjeEilanden", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, eventNr = InschrijvingenRepository.H3RE_EVENTNR, emailConfirmed = emailConfirmed});
+                return RedirectToAction("MijnRondjeEilanden", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, 
+                    eventNr = inschrijving.ExternalEventIdentifier, 
+                    emailConfirmed = emailConfirmed, SkipMaster = "False"});
             }
         }
 
