@@ -245,6 +245,17 @@ namespace HRE.Common {
         }
 
 
+        /// <summary>
+        /// De minimumleeftijd (e.g. de leeftijd die de deelnemer in het jaar van het evenement dient te bereiken (e.g. leeftijd op 31 december).
+        /// Default: 15.
+        /// </summary>
+        public static int MinimumLeeftijd {
+            get {
+                return ReadIntSetting("MinimumLeeftijd", 15);
+            }
+        }
+
+
         /*
         /// <summary>
         /// Het totaal aantal startplekken.

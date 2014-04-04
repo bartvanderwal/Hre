@@ -772,6 +772,19 @@ namespace HRE.Controllers {
                 ModelState.AddModelError("BankCode", "Selecteer bank voor iDeal betaling");
             }
 
+            // Check birthday.
+            if (!model.GeboorteDatum.HasValue) {
+                ModelState.AddModelError("GeboorteDatum", "Geef je geboortedatum");
+            } else {
+                int currentYear = DateTime.Now.Year;
+                int birthYear = model.GeboorteDatum.Value.Year;
+                int minimumAge = HreSettings.MinimumLeeftijd;
+                if (currentYear-birthYear<minimumAge) {
+                    ModelState.AddModelError("GeboorteDatum", string.Format("Minimumleeftijd! Je moet 31 dec {0} minstens {1} zijn.", currentYear, minimumAge));
+                }
+            }
+
+
             // Subscrbe for the current event.
             string currentEventNr = SportsEventRepository.CurrentExternalEventIdentifier;
 

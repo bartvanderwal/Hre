@@ -113,7 +113,6 @@ namespace HRE.Models {
         [StringLength(20, ErrorMessage = "De naam {0} mag niet meer dan 20 karakters lang zijn.")]
         public string Voornaam { get; set; }
 
-        [Required(ErrorMessage = "Geef je geboortedatum")]
         [DataType(DataType.Date)]
         [Display(Name = "Geboortedatum")]
         // [StringLength(8)]

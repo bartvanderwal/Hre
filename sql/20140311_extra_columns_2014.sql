@@ -6,9 +6,9 @@
 -- delete from SportsEvent where Name='H4RE 2015';
 -- alter table SportsEventParticipation drop BankCode;
 -- alter table SportsEventParticipation drop SisowTransactionID;
-alter table SportsEvent drop column AantalStartPlekken, AantalPlekkenReserveLijst, AantalEarlyBirdStartPlekken,
-    EindDatumEarlyBirdKorting, OpeningsdatumAlgemeneInschrijving, SluitingsDatumAlgemeneInschrijving, HuidigeDeelnameBedrag int,
-    KostenNtbDagLicentie, KostenHuurMyLapsChipGeel, KostenGebruikMyLapsChipGroen, KostenEten, HoogteEarlyBirdKorting;
+-- alter table SportsEvent drop column AantalStartPlekken, AantalPlekkenReserveLijst, AantalEarlyBirdStartPlekken,
+--     EindDatumEarlyBirdKorting, OpeningsdatumAlgemeneInschrijving, SluitingsDatumAlgemeneInschrijving, HuidigeDeelnameBedrag int,
+--    KostenNtbDagLicentie, KostenHuurMyLapsChipGeel, KostenGebruikMyLapsChipGroen, KostenEten, HoogteEarlyBirdKorting;
 
 -- End of undo queries
 
@@ -61,4 +61,4 @@ alter table SportsEvent
     modify KostenEten int not null,
     modify HoogteEarlyBirdKorting int not null;
 
--- For on test.UPDATE sportsevent SET OpeningsdatumAlgemeneInschrijving='2014-04-03 00:00:00' WHERE Id=3;
+-- For on test.-- UPDATE sportsevent SET OpeningsdatumAlgemeneInschrijving='2014-04-03 00:00:00' WHERE Id=3;
