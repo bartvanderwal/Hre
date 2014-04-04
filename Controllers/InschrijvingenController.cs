@@ -707,6 +707,7 @@ namespace HRE.Controllers {
                     model.Bike = false;
                     model.Camp = false;
                     model.Food = false;
+                    model.IsEarlyBird = null;
                 } else {
                     return HttpNotFound();
                 }
