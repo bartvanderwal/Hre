@@ -611,14 +611,16 @@ namespace HRE.Dal {
 
 
         /// <summary>
-        /// Determines the number of participants or Early Birds in the 2013 HRE event.
+        /// Determines the number of participants or Early Birds in the current HRE event.
         /// </summary>
         /// <returns></returns>
         public static int AantalIngeschrevenEarlyBirds() {
-            return (from p in DB.sportseventparticipation 
-                    where p.SportsEventId==SportsEventDal.Hre2013Id && (p.EarlyBird.HasValue && p.EarlyBird.Value)
-                    select p
-                    ).Count();
+            int eventID = SportsEventRepository.CurrentEventInstance.Id;
+            return (
+                from p in DB.sportseventparticipation 
+                where p.SportsEventId==eventID && (p.EarlyBird.HasValue && p.EarlyBird.Value)
+                select p
+            ).Count();
         }
 
 

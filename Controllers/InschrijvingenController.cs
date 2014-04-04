@@ -897,9 +897,11 @@ namespace HRE.Controllers {
             newsletter.Items = new List<NewsletterItemViewModel>();
 
             if (!model.DoForceSendConfirmationOfChange) {
-                newsletter.IntroText = string.Format("Proficiat! Je hebt je zojuist aangemeld voor Hét Rondje Eilanden!");
-                if (model.BedragTeBetalen>0) {
+                newsletter.IntroText = string.Format("Proficiat! Je hebt je zojuist aangemeld voor Hét Rondje Eilanden! ");
+                if (!model.IsBetaald.HasValue || !model.IsBetaald.Value) {
                     newsletter.IntroText += "Je aanmelding wordt omgezet naar een inschrijving na betaling van het inschrijfgeld.";
+                } else {
+                    newsletter.IntroText += "Je hebt betaald en bent nu ingeschreven.";
                 }
             } else {
                 if (model.EmailBeforeUpdateIfAny!=model.Email) {
