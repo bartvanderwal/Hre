@@ -86,7 +86,7 @@
     $(".send").click(function (event) {
         event.preventDefault();
         $('#dialog_box').dialog({ 
-            title: 'Weet je zeker dat je de nieuwsbrief wilt versturen?',
+            title: 'Weet je zeker dat je de nieuwsbrief naar alle gebruikers wilt versturen?',
             width: 500, 
             height: 30, 
             modal: true, 
@@ -94,12 +94,12 @@
             draggable: false, 
             buttons:
             [{ 
-                text: 'Ja',
+                text: 'Verstuur',
                 click: function () {
                     location.href = "/Newsletter/Sent/" + $("#Newsletter_ID").val();
                 } 
             }, { 
-                text: 'Nee',
+                text: 'Annuleren',
                 click: function () { $(this).dialog('close'); return false; }
             }]
         });

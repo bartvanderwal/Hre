@@ -30,8 +30,9 @@ namespace HRE.Controllers {
 
         
         public ActionResult Index() {
+            InschrijvingenModel model = new InschrijvingenModel();
             Initialise(AppConstants.MeedoenOverzicht);
-            return View();
+            return View(model);
         }
 
 

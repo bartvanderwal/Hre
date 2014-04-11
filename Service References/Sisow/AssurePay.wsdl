@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="GetBanken">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetBankenResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBankenResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetIssuers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="test" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetIssuersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetIssuersResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="gebruiker" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="wachtwoord" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="transaction" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatusResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTransaction">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="gebruiker" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="wachtwoord" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="transaction" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTransactionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTransactionResult" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="stamp" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="amount" type="s:double" />
+            <s:element minOccurs="0" maxOccurs="1" name="account" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="city" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="purchaseid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetURL">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="gebruiker" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="wachtwoord" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="bank" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="bedrag" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="kenmerk" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="omschrijving" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="returnURL" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="entrance" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetURLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetURLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetURL2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="gebruiker" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="wachtwoord" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="bank" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="bedrag" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="kenmerk" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="omschrijving" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="returnURL" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="entrance" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetURL2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetURL2Result" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="txid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Ping">
+        <s:complexType />
+      </s:element>
+      <s:element name="PingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PingResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetBankenSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBanken" />
+  </wsdl:message>
+  <wsdl:message name="GetBankenSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBankenResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetIssuers" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetIssuersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTransactionSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTransaction" />
+  </wsdl:message>
+  <wsdl:message name="GetTransactionSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetURLSoapIn">
+    <wsdl:part name="parameters" element="tns:GetURL" />
+  </wsdl:message>
+  <wsdl:message name="GetURLSoapOut">
+    <wsdl:part name="parameters" element="tns:GetURLResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetURL2SoapIn">
+    <wsdl:part name="parameters" element="tns:GetURL2" />
+  </wsdl:message>
+  <wsdl:message name="GetURL2SoapOut">
+    <wsdl:part name="parameters" element="tns:GetURL2Response" />
+  </wsdl:message>
+  <wsdl:message name="PingSoapIn">
+    <wsdl:part name="parameters" element="tns:Ping" />
+  </wsdl:message>
+  <wsdl:message name="PingSoapOut">
+    <wsdl:part name="parameters" element="tns:PingResponse" />
+  </wsdl:message>
+  <wsdl:portType name="AssurePaySoap">
+    <wsdl:operation name="GetBanken">
+      <wsdl:input message="tns:GetBankenSoapIn" />
+      <wsdl:output message="tns:GetBankenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuers">
+      <wsdl:input message="tns:GetIssuersSoapIn" />
+      <wsdl:output message="tns:GetIssuersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatus">
+      <wsdl:input message="tns:GetStatusSoapIn" />
+      <wsdl:output message="tns:GetStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTransaction">
+      <wsdl:input message="tns:GetTransactionSoapIn" />
+      <wsdl:output message="tns:GetTransactionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetURL">
+      <wsdl:input message="tns:GetURLSoapIn" />
+      <wsdl:output message="tns:GetURLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetURL2">
+      <wsdl:input message="tns:GetURL2SoapIn" />
+      <wsdl:output message="tns:GetURL2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <wsdl:input message="tns:PingSoapIn" />
+      <wsdl:output message="tns:PingSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AssurePaySoap" type="tns:AssurePaySoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetBanken">
+      <soap:operation soapAction="http://tempuri.org/GetBanken" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuers">
+      <soap:operation soapAction="http://tempuri.org/GetIssuers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatus">
+      <soap:operation soapAction="http://tempuri.org/GetStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTransaction">
+      <soap:operation soapAction="http://tempuri.org/GetTransaction" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetURL">
+      <soap:operation soapAction="http://tempuri.org/GetURL" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetURL2">
+      <soap:operation soapAction="http://tempuri.org/GetURL2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap:operation soapAction="http://tempuri.org/Ping" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AssurePaySoap12" type="tns:AssurePaySoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetBanken">
+      <soap12:operation soapAction="http://tempuri.org/GetBanken" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuers">
+      <soap12:operation soapAction="http://tempuri.org/GetIssuers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatus">
+      <soap12:operation soapAction="http://tempuri.org/GetStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTransaction">
+      <soap12:operation soapAction="http://tempuri.org/GetTransaction" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetURL">
+      <soap12:operation soapAction="http://tempuri.org/GetURL" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetURL2">
+      <soap12:operation soapAction="http://tempuri.org/GetURL2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap12:operation soapAction="http://tempuri.org/Ping" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AssurePay">
+    <wsdl:port name="AssurePaySoap" binding="tns:AssurePaySoap">
+      <soap:address location="https://www.sisow.nl/Sisow/AssurePay.asmx" />
+    </wsdl:port>
+    <wsdl:port name="AssurePaySoap12" binding="tns:AssurePaySoap12">
+      <soap12:address location="https://www.sisow.nl/Sisow/AssurePay.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -32,6 +32,12 @@ namespace HRE.Business {
             return Shorten(s, 100);
         }
 
+
+        /// <summary>
+        /// Trim the string, and even remove leading and trailing non-breaking-spaces (&nbsp;'s). 
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static string TrimThisShit(this string s) {
             return s.Replace("&nbsp;", " ").Trim();
         }
@@ -142,7 +148,7 @@ namespace HRE.Business {
 
 
         /// <summary>
-        /// Turns 340 into 3,40 and 500 into € 5,- and so on.
+        /// Turns 340 into '€ 3,40' and '500' into € 5,- and so on (null becomes '?'.
         /// </summary>
         /// <param name="bedragInCenten">int amount to convert to formatted euro amount</param>
         /// <returns></returns>

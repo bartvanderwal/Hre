@@ -103,7 +103,17 @@ namespace HRE.Dal {
             set { _newsletter.Title = value; }
         }
 
-        // TODO Allow N newsletter items instead of three fixed ones.
+
+        /// <summary>
+        /// The path (including filename) to the file that is to be attached to the newsletter (if any, empty or null otherwise).
+        /// </summary>
+		public String AttachmentFilePath {
+            get { return _newsletter.AttachmentFilePath; }
+            set { _newsletter.AttachmentFilePath = value; }
+        }
+
+
+        // TODO BW Allow N newsletter items instead of three fixed ones.
         public NewsletterItemDal Item1 {
             get { 
                 if (_item1==null) {

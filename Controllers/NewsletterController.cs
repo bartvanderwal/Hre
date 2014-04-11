@@ -15,8 +15,16 @@ using HRE.Dal;
 namespace HRE.Controllers {
 
 
-    public class NewsletterController : Controller {
+    public class NewsletterController : BaseController {
         
+        
+        public override bool IsConfidentialPage {
+            get {
+                return true;
+            }
+        }
+
+
         NewsletterRepository nr = new NewsletterRepository();
 
 
@@ -76,6 +84,13 @@ namespace HRE.Controllers {
             message.Subject = spnvm.Newsletter.Title;
             message.IsBodyHtml = true;
             message.Body = Newsletter;
+            if (!string.IsNullOrEmpty(spnvm.Newsletter.AttachmentFilePath)) {
+                string filePath = Request.MapPath(spnvm.Newsletter.AttachmentFilePath);
+                if (System.IO.File.Exists(filePath)) {
+                    Attachment attachment = new Attachment(filePath);
+                    message.Attachments.Add(attachment);
+                }
+            }
             EmailSender.SendEmail(message, EmailCategory.Newsletter, spnvm.NewsletterId, spnvm.UserId);
 
             return View(spnvm);
@@ -89,11 +104,17 @@ namespace HRE.Controllers {
             spnvm.IsEmail = true;
 
             if (spnvm.Newsletter.DateSent == null) {
-                List<LogonUserDal> users = LogonUserDal.GetNewsletterReceivers(spnvm.Newsletter.Audience);
+                List<LogonUserDal> users = LogonUserDal.GetNewsletterReceivers(spnvm.Newsletter.SubscriptionStatus);
                 MailMessage mm = new MailMessage();
                 mm.From = new MailAddress(HreSettings.ReplyToAddress);
                 mm.Subject = spnvm.Newsletter.Title;
                 mm.IsBodyHtml = true;
+                
+                // TODO BW 2013-06-15: Below the SingleUserId and TestUserId are cleared to prevent using any selected test user and/or singleuser when sending newsletter to everyone. This occurred on 15-6-2013.
+                // This is due to logic in the UserId property of SendPersonalNewsletterViewModel. Maybe this model should be made aware of if it's sending in test mode or actual or something, to make this more transparant.
+                spnvm.SingleUserId=null;
+                spnvm.TestUserId=null;
+                // END TODO.
 
                 foreach (LogonUserDal user in users) {
                     spnvm.UserId = user.Id;
@@ -143,7 +164,7 @@ namespace HRE.Controllers {
         [Authorize(Roles="Admin")]
         [HttpPost]
         public ActionResult NewsletterAdresses(int id) {
-            return PartialView("_NewsletterAdresses", LogonUserDal.GetNewsletterReceivers(NewsletterRepository.GetByID(id).Audience));
+            return PartialView("_NewsletterAdresses", LogonUserDal.GetNewsletterReceivers(NewsletterRepository.GetByID(id).SubscriptionStatus));
         }
 
 

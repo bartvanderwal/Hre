@@ -12,7 +12,6 @@
 	opacity: 0;
 }
 
-
 /* General background image and display mode for inputs. */
 :root .editor-field > input ~ label:before {
 	background: url('/Content/img/InschrijvenHREIconSet.png') -35px -214px no-repeat;
@@ -29,10 +28,9 @@
 	width: 46px;
 }
 
-/* Has MyLaps chop checkbox image size (less wide than default). 
+/* Has MyLaps chip checkbox image size (less wide than default). 
 :root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"] ~ label:before,
-:root .editor-field > input[type="checkbox"][name="test-checkbox"] ~ label:before 
- {
+:root .editor-field > input[type="checkbox"][name="test-checkbox"] ~ label:before {
 	width: 30px;
 } */
 
@@ -67,25 +65,24 @@
 
 /****** Serie ***/
 /* Unchecked recreatieve serie radio button. */
-:root .editor-field > input[type="radio"][value="R"] ~ label:before {
+:root .editor-field > input[type="radio"][value="R"] + label:before {
 	background-position: -684px -214px;
 }
 
 /* Unchecked top serie radio button. */
-:root .editor-field > input[type="radio"][value="W"] ~ label:before {
+:root .editor-field > input[type="radio"][value="W"] + label:before {
 	background-position: -655px -214px;
 }
 
 /* Checked recreatieve serie radio button. */
-:root .editor-field > input[type="radio"][value="R"]:checked ~ label:before {
+:root .editor-field > input[type="radio"][value="R"]:checked + label:before {
 	background-position: -621px -214px;
 }
 
 /* Checked top serie radio button. */
-:root .editor-field > input[type="radio"][value="W"]:checked ~ label:before {
+:root .editor-field > input[type="radio"][value="W"]:checked + label:before {
 	background-position: -592px -214px;
 }
-
 
 li.test,
 .editor-field.test {
@@ -154,6 +151,19 @@ li.test {
 :root .editor-field > input[type="checkbox"][name="HasMyLapsChipNummer"]:checked ~ label:before {
 	background-position: -715px -216px;
 }
+
+
+/****** Flessenpost ***/
+/* Unchecked newsletter checkbox. */
+:root .editor-field > input[type="checkbox"][name="Newsletter"] ~ label:before { 
+	background-position: -252px -254px;
+}
+
+/* Checked newsletter checkbox. */
+:root .editor-field > input[type="checkbox"][name="Newsletter"]:checked ~ label:before{ 
+	background-position: -316px -254px;
+}
+
 
 
 /****** Eten ***/
@@ -225,7 +235,6 @@ ul#uitleg {
     display: inline-block;
     *display: inline;
     zoom: 1;
-    /* float: left; */
     width: 150px;
     text-align: right;
     margin: 10px 5px 5px 5px;
@@ -237,7 +246,6 @@ ul#uitleg {
     display: inline-block;
     *display: inline;
     zoom: 1;
-    /* float: left; */
     width: 400px;
     text-align: left;
     margin: 10px 5px 5px 5px;
@@ -245,7 +253,7 @@ ul#uitleg {
 }
 
 .edit-allowed .editor-field {
-    width: 222px !important;
+    width: 240px !important;
 }
 
 .editor-field input {
@@ -359,19 +367,19 @@ input.save[type=submit] {
 }
 
 .editor-spacer.name {
-    height: 260px;
+    height: 180px;
 }
 
 .editor-spacer.address {
-    height: 146px;
+    height: 185px;
 }
 
 .editor-spacer.email {
-    height: 42px;
+    height: 70px;
 }
 
 .editor-spacer.amount {
-    height: 96px;
+    height: 326px;
 }
 
 .editor-spacer.speaker {
@@ -382,9 +390,18 @@ input.save[type=submit] {
     height: 40px;
 }
 
+#ui-datepicker-div {
+    font-size: small;
+}
+
+.ui-dialog {
+    font-size: small;
+}
+
 /* Start validation markup */
 .validation-summary-errors {
-    color: Red;
+    color: red;
+    font-size: small;
 }
 
 input.input-validation-error {
@@ -407,11 +424,12 @@ input.input-validation-error {
 #costs {
     float: right;
     color: #FFFFFF;
-    padding: 10px 10px;
-    margin: 10px 0px 840px 0px;
+    margin: 10px 0px 1080px 0px;
     display: inline-block;
     *display: inline;
     zoom: 1;
+    padding: 10px 6px;
+    width: 200px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
@@ -446,10 +464,93 @@ tr.total td:last-child {
     zoom: 1;
 }
 
-#HebJeErZinIn {
-    ;
+.make-it-personal {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    height: 78px;
+    width: 325px;
+	background: url('/Content/img/InschrijvenHREIconSet.png') 0px 0px no-repeat;
+}
+
+.my-laps {
+	background: url('/Content/img/InschrijvenHREIconSet.png') no-repeat;
+    padding: 6px 0px 0px 0px;
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    height: 24px;
+    width: 24px;
+}
+
+#my-laps-green {
+	background-position: -392px -256px;
+}
+
+#my-laps-yellow {
+	background-position: -505px -257px;
+}
+
+.make-it-personal.speaker {
+    background-position: 0px -295px;
+}
+
+.make-it-personal.organisatie {
+    background-position: -0px -375px;
 }
 
 /* End subscription. */
 
+.item-text {
+    display: inline-block;
+    margin: 0px 0px 0px 4px;
+    padding: 0px 0px;
+    vertical-align: top;
+}
 
+.sprite { 
+	background-image: url('/Content/img/AllBanks2_small.png');
+    /* background-color: #FFFFFF00; */
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+	display: inline-block;
+	height: 19px;
+    margin: 3px 0px 0px 0px;
+	width: 19px;
+}
+    .sprite.p1 { /* iDeal */
+	    background-position: -61px -41px;
+    }
+    .sprite.b01 { /* ABNAmro */
+	    background-position: -21px 0px;
+    }
+    .sprite.b02 { /* ASN Bank */
+	    background-position: -41px 0px;
+    }
+    .sprite.b04 { /* Friesland Bank */
+	    background-position: -21px -42px;
+    }
+    .sprite.b05 { /* ING */
+	    background-position: -61px 0px;
+    }
+    .sprite.b06 { /* Rabobank */
+	    background-position: 0px -41px;
+    }
+    .sprite.b07 { /* SNS Bank */
+	    background-position: 0px -21px;
+    }
+    .sprite.b08 { /* Regiobank */
+	    background-position: -61px -21px;
+    }
+    .sprite.b09 { /* Triodos */
+	    background-position: -41px -21px;
+    }
+    .sprite.b10 { /* Van Lanschot */ 
+	    background-position: -41px -41px;
+    }
+    .sprite.b11 { /* Knab 11 */
+	    background-position: -21px -21px;
+    }
+    .sprite.b99 { /* Sisow Bank (Test) */
+	    background-position: -81px -41px;
+    }

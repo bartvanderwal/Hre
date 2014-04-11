@@ -1,0 +1,231 @@
+#contentContainer,#breadcrumb li:last-child a,label,.message-text {color: #D82944;}
+
+.filesharing-item-title a:link{
+	color: #3F3F3F;
+}
+
+h1.blog-entry-title a:link, .blog-entry-title a,
+.blog-entry-title,
+.album-title,.movie-page-title, 
+h1,h2,h3,h4,h5,h6 {
+color: #D82944;
+}
+
+ 
+#extraContent1 h1,#extraContent1 h2,#extraContent1 h3,#extraContent1 h4,#extraContent1 h5,#extraContent1 h6 {
+color: #133D5F;
+}
+
+#extraContent2 h1,#extraContent2 h2,#extraContent2 h3,#extraContent2 h4,#extraContent2 h5,#extraContent2 h6 {
+color: #133D5F;
+}
+
+#extraContent3 h1,#extraContent3 h2,#extraContent3 h3,#extraContent3 h4,#extraContent3 h5,#extraContent3 h6 {
+color: #FFFFFF;
+}
+
+#extraContent4 h1,#extraContent4 h2,#extraContent4 h3,#extraContent4 h4,#extraContent4 h5,#extraContent4 h6 {
+color: #FFFFFF;
+}
+
+nav li a {
+	color: #969796!important;
+}
+
+nav li a:hover {
+	color: #857F79!important;
+}
+
+nav li a.active {
+	color: #FFFFFF!important;
+}
+		
+.burger li {
+	background-color: #FFFFFF;
+}
+
+nav {
+	background-color: %colour_navslide%;
+}
+
+
+h1.siteTitle a:hover, h1.blog-entry-title a:hover {
+	color: #FF3D66;
+}
+
+a:link, a:visited {
+	color: #3F3F3F;
+}
+
+a:hover {
+	color: #3F3F3F;
+}
+
+#extraContent1 a:link, #extraContent1 a:visited  {
+	color: #3F3F3F;
+}
+
+#extraContent1 a:hover {
+	color: #3F3F3F;
+}
+
+#extraContent2 a:link, #extraContent2 a:visited  {
+	color: #3F3F3F;
+}
+
+#extraContent2 a:hover {
+	color: #3F3F3F;
+}
+
+#extraContent3 a:link, #extraContent3 a:visited  {
+	color: #3F3F3F;
+}
+
+#extraContent3 a:hover {
+	color: #3F3F3F;
+}
+
+#extraContent4 a:link, #extraContent4 a:visited  {
+	color: #3F3F3F;
+}
+
+#extraContent4 a:hover {
+	color: #3F3F3F;
+}
+
+.container {	
+	background-color: #133D5F!important;
+}
+
+@media only screen and (max-width: 780px) {
+
+header {
+	background-color: #133D5F!important;
+}
+}
+
+body {
+	background-color: #FDFDFD;
+}
+
+#contentContainer {
+	background-color: #FFFFFF;
+}
+
+#extraContainer1 {
+	color: #FFFFFF;
+} 
+
+#extraContent1 {
+	background-color: #02A5EC;	
+}
+
+#extraContainer2 {
+	color: #FFFFFF;
+} 
+
+#extraContent2 {
+	background-color: #00B9FF;	
+}
+
+#extraContainer3 {
+	color: #FFFFFF;
+} 
+
+#extraContent3 {
+	background-color: #00C66C;	
+}
+
+#extraContainer4 {
+	color: #00C66C;
+} 
+
+#extraContent4 {
+	background-color: #006D3B;	
+}
+
+#footer {
+	background-color: #8C2E00;
+}
+
+#footerContent {
+	color: #00C66C;
+}
+
+#footer a:link, #footer a:visited {
+	color: #32FFA1;
+}
+
+#footer a:hover, #footer a:active {
+	color: #3F3F3F;
+}
+
+h1.siteTitle a {
+	color: #FFFFFF;
+}
+
+h2.entry-title a {
+	color: %colour_entryTitle%;
+}
+
+.date-title{
+	color: %colour_entryDate%;
+}
+
+ul.tree a:link {
+	color: #3F3F3F;	
+}
+
+ul.tree ul li a{
+	color: #D82944!important;
+}
+
+blockquote:before {
+  background-color: #EBEDEE;
+}
+
+.link {
+	background: %colour_quotebackground%;
+}
+
+.post-title:hover  {
+	background: %colour_posthover%;
+}
+
+button, .blog-entry-category {
+  background: #FF6860!important;
+}
+
+button:hover, .blog-entry-category:hover {
+  background: #FFFFFF!important;
+}
+
+.form-input-field, .form-input-textarea {
+	border: 2px solid #EBEBEB;
+}
+
+form select {
+	background: url(images/arrow.png) no-repeat center #EBEBEB;
+	background-position: center right;
+	background-repeat: no-repeat;
+	border-color: #FDFDFD;
+}
+
+.form-input-field:focus,
+.textarea.form-input-field:focus{
+	border-color: #838383;
+}
+
+.form-input-button { 
+	background: #FF6860;
+	color: #FF6860;
+} 
+
+.form-input-button:hover { 
+	background-color: #FF6860;
+}
+
+.title .emphasis {
+  background: #FCFCFC;
+}
+

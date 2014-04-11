@@ -101,7 +101,16 @@ namespace HRE.Dal {
         /// </summary>
 		public string EmailAddress {
             get { return _user.EmailAddress; }
-            set { _user.EmailAddress = value; }
+            set { 
+                if (Membership.GetUser()!=null && Membership.GetUser().ProviderUserKey.ToString() == _user.ExternalId) {
+                    throw new ArgumentException("Het e-mail adres van de gebruiker kan NIET gewijzigd worden als deze momenteel ingelogd is/de huidige gebruiker is.");
+                }
+                _user.EmailAddress = value;
+                MembershipUser.Email = value;
+                if (_user.UserName!=EmailAddress) {
+                    ChangeUserName(int.Parse(ExternalId), value);
+                }
+            }
         }
 
 		/// <summary>
@@ -222,6 +231,36 @@ namespace HRE.Dal {
         }
 
         
+        public LogonUserStatus Status {
+            get {
+                return (LogonUserStatus) (_user.StatusId.HasValue ? _user.StatusId.Value : 0);
+            }
+            set {
+                _user.StatusId=(int) value;
+            }
+        }
+
+
+        /// <summary>
+        /// This method should be called on existing logon users (stored in database) on receiving confirmation of the users email address.
+        /// This sets the user status from undetermined or new to confirmed email address.
+        /// </summary>
+        /// <returns>Returns true when the e-mail address was not confirmed before (but is now), otherwise returns false.</returns>
+        public bool ConfirmEmailAddress() {
+            if (Id!=0 && IsEmailAddressUnconfirmed) {
+                Status = LogonUserStatus.EmailAddressConfirmed;
+                Save();
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsEmailAddressUnconfirmed {
+            get {
+                return Status==LogonUserStatus.Undetermined || Status==LogonUserStatus.New;
+            }
+        }
+
         /// <summary>
         /// Store the user object in the database.
         /// </summary>
@@ -230,6 +269,12 @@ namespace HRE.Dal {
             if (Id==0) {
                 DB.AddTologonuser(_user);
             }
+
+            // Set the user status to new, if it does not have a value yet.
+            if (!_user.StatusId.HasValue) {
+                Status=LogonUserStatus.New;
+            }
+
             // Add address entity if it has no primary key yet.
             if (PrimaryAddress.Id==0) {
                 // Add address entity if it has no primary key yet.
@@ -252,11 +297,17 @@ namespace HRE.Dal {
         }
 
 
-        // Creates a new logonuser, that is not active and with a random password stored in the comments.
+        /// <summary>
+        /// Creates a new logonuser, that is not active and with a random password stored in the comments.
+        /// </summary>
+        /// <param name="emailAddressAndUsername"></param>
+        /// <param name="password"></param>
+        /// <param name="externalSubscriptionIdentifier"></param>
+        /// <returns></returns>
         public static LogonUserDal CreateOrRetrieveUser(string emailAddressAndUsername, string password="", string externalSubscriptionIdentifier = null) {
             
             // If an non 'HRE' external identifier (meaning a real ext. id) was given, then try to retrieve the user via this.
-            if (!string.IsNullOrEmpty(externalSubscriptionIdentifier) && !externalSubscriptionIdentifier.StartsWith("HRE")) {
+            if (!string.IsNullOrEmpty(externalSubscriptionIdentifier) && externalSubscriptionIdentifier!="HRE0" /* && !externalSubscriptionIdentifier.StartsWith("HRE") */) {
                 int? userId = (from p in DB.sportseventparticipation where p.ExternalIdentifier == externalSubscriptionIdentifier select p.UserId).FirstOrDefault();
                 if (userId.HasValue) {
                     logonuser u = (from logonUser in DB.logonuser where logonUser.Id==userId.Value select logonUser).FirstOrDefault();
@@ -306,7 +357,7 @@ namespace HRE.Dal {
                 user.UserName = emailAddressAndUsername;
                 user.EmailAddress = emailAddressAndUsername;
                 user.DateCreated = DateTime.Now;
-                user.DateCreated = user.DateCreated;
+                user.DateUpdated = user.DateCreated;
                 DB.AddTologonuser(user);
             } else {
                 user.DateUpdated = DateTime.Now;
@@ -362,17 +413,53 @@ namespace HRE.Dal {
         /// - OnlyToNonMembers: All that are defined NOT to be subscribed to the mailing list / newsletter.
         ///    More SPAM alert. Only to notify non members with a modest message. Basically only to expand OnlyToMembers to if SpamAll was forgotten to be set.
         /// </summary>
-        public static List<LogonUserDal> GetNewsletterReceivers(NewsletterAudience audience) {
-            int audienceAsInt = (int) audience;
-            IQueryable<LogonUserDal> users = from logonuser user in DB.logonuser where 
-                    audience == (int) NewsletterAudience.OnlyToMembers && (!user.IsMailingListMember.HasValue || user.IsMailingListMember.Value)
-                    || (audienceAsInt == (int) NewsletterAudience.SpamAll)
-                    || ((audienceAsInt == (int) NewsletterAudience.OnlyToNonMembers) && user.IsMailingListMember.HasValue && !user.IsMailingListMember.Value) 
-                        select new LogonUserDal() {
-                            _user = user
-                        };
+        public static List<LogonUserDal> GetNewsletterReceivers(
+            NewsletterSubscriptionStatus subscriptionStatus = NewsletterSubscriptionStatus.OnlyToMembers, 
+            EntryFeePaidStatus feePaidStatus = EntryFeePaidStatus.All,
+            EarlyBirdStatus earlyBirdStatus = EarlyBirdStatus.All,
+            HREEventParticipantStatus hre2012ParticipantStatus = HREEventParticipantStatus.All) {
+            
+            List<LogonUserDal> users = LogonUserDal.MakeList(DB.logonuser.ToList());
 
-             return users.ToList();
+            switch (subscriptionStatus) {
+                case NewsletterSubscriptionStatus.OnlyToMembers:
+                    users = users.Where(u => u.IsMailingListMember.HasValue && u.IsMailingListMember.Value).ToList();
+                    break;
+                case NewsletterSubscriptionStatus.OnlyToNonMembers:
+                    users = users.Where(u => u.IsMailingListMember.HasValue && !u.IsMailingListMember.Value).ToList();
+                    break;
+            }
+
+
+            // Check if one of the provided filter parameters requires further trimming.
+            if (feePaidStatus!=EntryFeePaidStatus.All 
+                || earlyBirdStatus!=EarlyBirdStatus.All
+                || hre2012ParticipantStatus!=HREEventParticipantStatus.All) {
+
+                /*
+                switch (feePaidStatus) {
+                    case EntryFeePaidStatus.OnlyPaid:
+                        users = users.Where(u => entries.Contains(u.Id)).ToList();
+                        break;
+                    case EntryFeePaidStatus.OnlyNonPaid:
+                        users = users.Where(u => u.IsMailingListMember.HasValue && !u.IsMailingListMember.Value).ToList();
+                        break;
+                }
+                */
+                
+                List<int> entries2012UserIds = InschrijvingenRepository.GetEntries(SportsEventRepository.HRE_EVENTNR, true).Select(e => e.UserId).ToList();
+
+
+                switch (hre2012ParticipantStatus) {
+                    case HREEventParticipantStatus.OnlyParticipants:
+                        users = users.Where(u => entries2012UserIds.Contains(u.Id)).ToList();
+                        break;
+                    case HREEventParticipantStatus.OnlyNonParticipants:
+                        users = users.Where(u => !entries2012UserIds.Contains(u.Id)).ToList();
+                        break;
+                }
+            }
+            return users;
         }
 
 
@@ -406,18 +493,18 @@ namespace HRE.Dal {
         /// <summary>
         /// Create an entry in the membership table and the user (unless the second item already exists).
         /// </summary>
-        public static logonuser CreateUser(string userName, string password, string name, bool? gender, DateTime? dateOfBirth, bool? isMailingListMember, bool isLogOnUser) {
+        public static LogonUserDal CreateUser(string userName, string password, string name, bool? gender, DateTime? dateOfBirth, bool? isMailingListMember, bool isLogOnUser) {
             if (isLogOnUser) {
                 // Create ASP.NET user.
                 Membership.CreateUser(userName, password, userName);
             }
 
             // Create custom user to match.
-            logonuser user;
+            LogonUserDal user;
             user = GetUserByUsername(userName);
             bool isNewUser = user==null;
             if (isNewUser) {
-                user = new logonuser();
+                user = new LogonUserDal();
                 user.DateCreated = DateTime.Now;
                 user.UserName = userName;
                 user.EmailAddress = user.UserName;
@@ -425,7 +512,7 @@ namespace HRE.Dal {
             if (isLogOnUser) {
                 user.ExternalId = Membership.GetUser(user.UserName).ProviderUserKey.ToString();
             }
-            user.Name = name;
+            user.UserName = name;
             
             // Read date of birth, and parse with dutch locale (assuming format 'dd-MM-yyyy'enforced in UI).
             user.DateOfBirth = dateOfBirth; 
@@ -433,9 +520,9 @@ namespace HRE.Dal {
             user.IsMailingListMember = isMailingListMember;
             user.IsActive = isLogOnUser;
             if (isNewUser) {
-                DB.AddTologonuser(user);
+                user.Save();
             }
-            DB.SaveChanges();
+            // DB.SaveChanges();
 
             if (isLogOnUser) {
                 //Make sure the user stays logged in and has a session by setting the (persisted) authorization cookie\
@@ -457,8 +544,14 @@ namespace HRE.Dal {
         /// <summary>
         /// Gets a user by username.
         /// </summary>
-        public static logonuser GetUserByUsername(string userName) {
-            return (DB.logonuser.Where(u => u.UserName == userName).FirstOrDefault());
+        public static LogonUserDal GetUserByUsername(string userName) {
+            logonuser user = DB.logonuser.Where(u => u.UserName == userName).FirstOrDefault();
+            
+            if (user!=null) {
+                return new LogonUserDal((DB.logonuser.Where(u => u.UserName == userName).FirstOrDefault()));
+            } else {
+                return null;
+            }
         }
 
         /// <summary>
@@ -518,35 +611,74 @@ namespace HRE.Dal {
 
 
         /// <summary>
-        /// Determines the number of participants or early birds in the 2013 HRE event.
+        /// Determines the number of participants or Early Birds in the current HRE event.
         /// </summary>
         /// <returns></returns>
-        public static int DetermineNumberOfEarlyBirds() {
-            return (from p in DB.sportseventparticipation 
-                    where p.SportsEventId==SportsEventDal.Hre2013Id && (p.EarlyBird.HasValue && p.EarlyBird.Value)
-                    select p
-                    ).Count();
+        public static int AantalIngeschrevenEarlyBirds() {
+            int eventID = SportsEventRepository.CurrentEventInstance.Id;
+            return (
+                from p in DB.sportseventparticipation 
+                where p.SportsEventId==eventID && (p.EarlyBird.HasValue && p.EarlyBird.Value)
+                select p
+            ).Count();
         }
 
 
+        /// <summary>
+        /// Determines the number of participants or Early Birds in HRE event with the specified eventnr.
+        /// </summary>
+        /// <returns></returns>
+        public static int AantalIngeschrevenDeelnemers(string eventNr, bool? food=null, bool? camp = null, bool? bike = null, bool? earlyBird = null) {
+            var result = from p in DB.sportseventparticipation 
+                    join e in DB.sportsevent on p.SportsEventId equals e.Id
+                    where e.ExternalEventIdentifier==eventNr
+                    select p;
+
+            if (food.HasValue) {
+                result = result.Where(r => r.Food==food.Value);
+            }
+
+            if (camp.HasValue) {
+                result = result.Where(r => r.Camp==camp.Value);
+            }
+
+            if (bike.HasValue) {
+                result = result.Where(r => r.Bike==bike.Value);
+            }
+
+            if (earlyBird.HasValue) {
+                result = result.Where(r => r.EarlyBird==earlyBird.Value);
+            }
+
+            return result.Count();
+        }
+
+        
         /// <summary>
         /// For testing purposes this gets that part of the registered admin users who were also subscribed 
         /// for HRE 2012 (inserted for testing in NTB inschrijvingen).
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<LogonUserDal> GetTestParticipants() {
-            List<LogonUserDal> adminUsers = new List<LogonUserDal>();
-            foreach (string adminUserName in Roles.GetUsersInRole("Admin")) {
+            List<LogonUserDal> adminAndSpeakerUsers = new List<LogonUserDal>();
+
+            List<string> adminUserNames = Roles.GetUsersInRole(InschrijvingenRepository.ADMIN_ROLE_NAME).ToList();
+            List<string> speakerUserNames = Roles.GetUsersInRole(InschrijvingenRepository.ADMIN_ROLE_NAME).ToList();
+
+            List<string> adminAndSpeakerUserNames = adminUserNames;
+            adminAndSpeakerUserNames.AddRange(speakerUserNames);
+
+            foreach (string adminUserName in adminAndSpeakerUserNames) {
                 LogonUserDal user = LogonUserDal.GetByUserName(adminUserName);
                 if(user!=null) {
-                    SportsEventParticipationDal participation = SportsEventParticipationDal.GetByUserIdEventId(user.Id, InschrijvingenRepository.GetHreEvent().Id);
+                    SportsEventParticipationDal participation = SportsEventParticipationDal.GetByUserIdEventId(user.Id, SportsEventRepository.GetHreEvent().Id);
                     if (participation!=null) {
-                        adminUsers.Add(user);
+                        adminAndSpeakerUsers.Add(user);
                     }
                 }
             }
 
-            return adminUsers;
+            return adminAndSpeakerUsers;
         }
 
 
@@ -570,8 +702,120 @@ namespace HRE.Dal {
             }
 
             return result;
+        }
 
-            // return (from ps in GetTestParticipants() select ps.Id).ToList();
+
+        /// <summary>
+        /// Constructor for list. Construct a list of objects based on a list of DB objects.
+        /// </summary>
+        public static List<LogonUserDal> MakeList(List<logonuser> items) {
+            List<LogonUserDal> dals = new List<LogonUserDal>(items.Count());
+            foreach (logonuser item in items) {
+                dals.Add(new LogonUserDal(item));
+            }
+            return dals;
+        }
+
+
+        /// <summary>
+        /// Return all entities.
+        /// </summary>
+        public static List<LogonUserDal> GetAll() {             
+            return MakeList(DB.logonuser.ToList());
+        }
+
+
+        /// <summary>
+        /// Return all entities.
+        /// </summary>
+        public static List<SelectListItem> GetAllAsSelectList() {
+            List<SelectListItem> result = new List<SelectListItem>();
+            
+            List<int> testParticipants = GetTestParticipantIds();
+
+            foreach(LogonUserDal user in GetAll()) {
+                if (!testParticipants.Contains(user.Id)) {
+                    result.Add(new SelectListItem() { Text = user.EmailAddress, Value = user.Id.ToString()});
+                }
+            }
+
+            return result;
+        }
+            
+
+
+        /// <summary>
+        /// Source: http://stackoverflow.com/questions/2141952/manually-changing-username-in-asp-net-membership
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="newUserName"></param>
+        /// <returns></returns>
+        public static bool ChangeUserName(int externalUserId, string newUserName) {
+            bool success = false;
+            newUserName = newUserName.Trim();
+
+            // Make sure there is no user with the new username.
+            if (Membership.GetUser(newUserName) == null) {
+                MembershipUser u = Membership.GetUser(externalUserId);
+                string oldUsername = u.UserName;
+                // get current application
+
+                my_aspnet_users userToChange = (from user in DB.my_aspnet_users
+                                    where user.id == externalUserId
+                                    select user).FirstOrDefault();
+
+                if (userToChange != null) {
+                    userToChange.name = newUserName;
+
+                    DB.SaveChanges();
+
+                    /*
+                    // ASP.NET Issues a cookie with the user name. 
+                    // When a request is made with the specified cookie, 
+                    // ASP.NET creates a row in aspnet_users table.
+                    // To prevent this sign out the user and then sign it in
+                    string cookieName = FormsAuthentication.FormsCookieName;
+                    HttpCookie authCookie = HttpContext.Current.Request.Cookies[cookieName];
+
+                    FormsAuthenticationTicket authTicket = null;
+
+                    try {
+                        authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+
+                        FormsIdentity formsIdentity = new FormsIdentity(
+                                new FormsAuthenticationTicket(
+                                    authTicket.Version, 
+                                    newUserName, 
+                                    authTicket.IssueDate, 
+                                    authTicket.Expiration, 
+                                    authTicket.IsPersistent, 
+                                    authTicket.UserData));
+
+                        string y = HttpContext.Current.User.Identity.Name;
+                        string[] roles = authTicket.UserData.Split(new char[] { '|' });
+                        System.Security.Principal.GenericPrincipal genericPrincipal = 
+                            new System.Security.Principal.GenericPrincipal(
+                                                                formsIdentity, 
+                                                                roles);
+
+                        HttpContext.Current.User = genericPrincipal;
+                    }
+                    catch (ArgumentException ex) {
+                        // Handle exceptions
+                    }
+                    catch( NullReferenceException ex) {
+                        // Handle exceptions
+                    }
+
+                    FormsAuthentication.SignOut();
+                    HttpContext.Current.Session.Abandon();
+                    FormsAuthentication.SetAuthCookie(newUserName, false);
+                    */
+                    success = true;
+                }
+            }
+
+            return success;
         }
 
     }

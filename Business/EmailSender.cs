@@ -17,7 +17,12 @@ namespace HRE.Business {
         /// Sends an e-mail (and creates an e-mail audit record).
         /// </summary>
         public static void SendEmail(MailMessage message, EmailCategory? category, int? relatedEntityID, int? userIdReceiver = null) {
-            EmailAuditDal emailAuditDal = new EmailAuditDal(message, category, LogonUserDal.GetCurrentUser().Id, userIdReceiver, relatedEntityID);
+            int? currentUserId = null;
+            if (LogonUserDal.GetCurrentUser()!=null) {
+                currentUserId = LogonUserDal.GetCurrentUser().Id;
+            }
+
+            EmailAuditDal emailAuditDal = new EmailAuditDal(message, category, currentUserId, userIdReceiver, relatedEntityID);
 
             SmtpClient smtpClient = new SmtpClient();
             
@@ -31,7 +36,7 @@ namespace HRE.Business {
             } catch (SmtpException e) {
                 // When sending the mail fails set the status to sendError and set the status message.
                 emailAuditDal.EmailStatus = EmailStatus.SendError;                          
-                emailAuditDal.StatusMessage = e.Message;
+                emailAuditDal.StatusMessage = string.Format("Fout bij het verzenden ('{0}').", e.Message);
             }
         
             emailAuditDal.Save();

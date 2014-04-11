@@ -13,5 +13,9 @@
             }
         }
     });
-
+    $("a[href^='https://www.hetrondjeeilanden.nl/']").each(function() {
+            var $this = $(this),
+            aHref = $this.attr('href');  //get the value of an attribute 'href'.
+            $this.attr('href', aHref.replace('https://www.hetrondjeeilanden.nl/', 'http://localhost:44301/')); //set the value of an attribute 'href'.
+    });
 });

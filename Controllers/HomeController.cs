@@ -28,9 +28,23 @@ namespace HRE.Controllers {
             }
         }
 
-        public ActionResult Index() {
-            Initialise(AppConstants.HomeWelkom);
-            return View();
+
+        public ActionResult Index(string first) {
+            string path;
+            if (first==null || !first.EndsWith("index.html")) {
+                if (string.IsNullOrEmpty(first)) {
+                    path = Url.Content("~/index.html");
+                } else {
+                    first += "/index.html";
+                    path = Url.Content("~/" + first);
+                }
+                return Redirect(path);
+            }
+            path = Url.Content("~/" + first);
+            return Redirect(first);
+
+            // Initialise(AppConstants.HomeWelkom);
+            // return View();
         }
 
 

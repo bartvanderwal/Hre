@@ -9,12 +9,15 @@
           <EntitySet Name="address" EntityType="hreModel.Store.address" store:Type="Tables" Schema="hre" />
           <EntitySet Name="emailaudit" EntityType="hreModel.Store.emailaudit" store:Type="Tables" Schema="hre" />
           <EntitySet Name="logonuser" EntityType="hreModel.Store.logonuser" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="my_aspnet_users" EntityType="hreModel.Store.my_aspnet_users" store:Type="Tables" Schema="hre" />
           <EntitySet Name="newsletter" EntityType="hreModel.Store.newsletter" store:Type="Tables" Schema="hre" />
           <EntitySet Name="newsletteritem" EntityType="hreModel.Store.newsletteritem" store:Type="Tables" Schema="hre" />
           <EntitySet Name="paymenttype" EntityType="hreModel.Store.paymenttype" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="raceslot" EntityType="hreModel.Store.raceslot" store:Type="Tables" Schema="hre" />
           <EntitySet Name="sportsevent" EntityType="hreModel.Store.sportsevent" store:Type="Tables" Schema="hre" />
           <EntitySet Name="sportseventparticipation" EntityType="hreModel.Store.sportseventparticipation" store:Type="Tables" Schema="hre" />
           <EntitySet Name="usersecondaryaddress" EntityType="hreModel.Store.usersecondaryaddress" store:Type="Tables" Schema="hre" />
+          <EntitySet Name="volunteer" EntityType="hreModel.Store.volunteer" store:Type="Tables" Schema="hre" />
           <AssociationSet Name="Newsletter1" Association="hreModel.Store.Newsletter1">
             <End Role="newsletter" EntitySet="newsletter" />
             <End Role="newsletteritem" EntitySet="newsletteritem" />
@@ -38,6 +41,14 @@
           <AssociationSet Name="UserIdSender" Association="hreModel.Store.UserIdSender">
             <End Role="logonuser" EntitySet="logonuser" />
             <End Role="emailaudit" EntitySet="emailaudit" />
+          </AssociationSet>
+          <AssociationSet Name="volunteer_sportevent" Association="hreModel.Store.volunteer_sportevent">
+            <End Role="sportsevent" EntitySet="sportsevent" />
+            <End Role="volunteer" EntitySet="volunteer" />
+          </AssociationSet>
+          <AssociationSet Name="volunteer_User" Association="hreModel.Store.volunteer_User">
+            <End Role="logonuser" EntitySet="logonuser" />
+            <End Role="volunteer" EntitySet="volunteer" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="address">
@@ -102,6 +113,16 @@
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
           <Property Name="UserName" Type="varchar" Nullable="false" MaxLength="64" />
         </EntityType>
+        <EntityType Name="my_aspnet_users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="applicationId" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="256" />
+          <Property Name="isAnonymous" Type="bool" Nullable="false" />
+          <Property Name="lastActivityDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="newsletter">
           <Key>
             <PropertyRef Name="Id" />
@@ -116,6 +137,7 @@
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
           <Property Name="IntroText" Type="varchar" MaxLength="512" />
+          <Property Name="AttachmentFilePath" Type="varchar" MaxLength="127" />
         </EntityType>
         <EntityType Name="newsletteritem">
           <Key>
@@ -139,6 +161,17 @@
           <Property Name="ExternalId" Type="varchar" Nullable="false" MaxLength="80" />
           <Property Name="Name" Type="varchar" Nullable="false" MaxLength="80" />
         </EntityType>
+        <EntityType Name="raceslot">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="RaceNumber" Type="int" />
+          <Property Name="PlannedStartTime" Type="time" />
+          <Property Name="FullName" Type="varchar" MaxLength="100" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="64" />
+        </EntityType>
         <EntityType Name="sportsevent">
           <Key>
             <PropertyRef Name="Id" />
@@ -151,6 +184,18 @@
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
           <Property Name="ExternalEventIdentifier" Type="varchar" MaxLength="64" />
           <Property Name="ExternalEventSerieIdentifier" Type="varchar" MaxLength="64" />
+          <Property Name="AantalStartPlekken" Type="int" Nullable="false" />
+          <Property Name="AantalPlekkenReserveLijst" Type="int" Nullable="false" />
+          <Property Name="AantalEarlyBirdStartPlekken" Type="int" Nullable="false" />
+          <Property Name="EindDatumEarlyBirdKorting" Type="datetime" Nullable="false" />
+          <Property Name="OpeningsdatumAlgemeneInschrijving" Type="datetime" Nullable="false" />
+          <Property Name="SluitingsDatumAlgemeneInschrijving" Type="datetime" Nullable="false" />
+          <Property Name="HuidigeDeelnameBedrag" Type="int" Nullable="false" />
+          <Property Name="KostenNtbDagLicentie" Type="int" Nullable="false" />
+          <Property Name="KostenHuurMyLapsChipGeel" Type="int" Nullable="false" />
+          <Property Name="KostenGebruikMyLapsChipGroen" Type="int" Nullable="false" />
+          <Property Name="KostenEten" Type="int" Nullable="false" />
+          <Property Name="HoogteEarlyBirdKorting" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="sportseventparticipation">
           <Key>
@@ -187,6 +232,20 @@
           <Property Name="NotesToAll" Type="varchar" MaxLength="100" />
           <Property Name="EmailAddressOfFriend" Type="varchar" MaxLength="100" />
           <Property Name="DateConfirmationSend" Type="datetime" />
+          <Property Name="VirtualRegistrationDateForOrdering" Type="datetime" />
+          <Property Name="RaceNumber" Type="int" />
+          <Property Name="PlannedStartTime" Type="time" />
+          <Property Name="RaceCat" Type="varchar" MaxLength="3" />
+          <Property Name="WantsToDoFinal" Type="bit" />
+          <Property Name="ResultPosition" Type="int" />
+          <Property Name="ResultPositionInCategory" Type="int" />
+          <Property Name="TotalTime" Type="time" />
+          <Property Name="TimeInFinal" Type="time" />
+          <Property Name="TimeOnTimedSwimPart" Type="time" />
+          <Property Name="TimeOnTimedRunPart" Type="time" />
+          <Property Name="HasPaidEnoughToList" Type="bit" />
+          <Property Name="BankCode" Type="varchar" MaxLength="3" />
+          <Property Name="SisowTransactionID" Type="varchar" MaxLength="32" />
         </EntityType>
         <EntityType Name="usersecondaryaddress">
           <Key>
@@ -198,6 +257,22 @@
           <Property Name="AddressId" Type="int" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateUpdated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="volunteer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="DateUpdated" Type="datetime" Nullable="false" />
+          <Property Name="DateRegistered" Type="datetime" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="SportsEventId" Type="int" />
+          <Property Name="Notes" Type="varchar" MaxLength="1024" />
+          <Property Name="TShirtSize" Type="varchar" MaxLength="6" />
+          <Property Name="Food" Type="bit" />
+          <Property Name="HasBoat" Type="bit" />
+          <Property Name="PreferredTask" Type="varchar" MaxLength="64" />
         </EntityType>
         <Association Name="Newsletter1">
           <End Role="newsletter" Type="hreModel.Store.newsletter" Multiplicity="1">
@@ -283,6 +358,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="volunteer_sportevent">
+          <End Role="sportsevent" Type="hreModel.Store.sportsevent" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="volunteer" Type="hreModel.Store.volunteer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sportsevent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="volunteer">
+              <PropertyRef Name="SportsEventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="volunteer_User">
+          <End Role="logonuser" Type="hreModel.Store.logonuser" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="volunteer" Type="hreModel.Store.volunteer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="logonuser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="volunteer">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -290,9 +393,11 @@
         <EntityContainer Name="hreEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="address" EntityType="hreModel.address" />
           <EntitySet Name="emailaudit" EntityType="hreModel.emailaudit" />
+          <EntitySet Name="logonuser" EntityType="hreModel.logonuser" />
+          <EntitySet Name="newsletter" EntityType="hreModel.newsletter" />
+          <EntitySet Name="newsletteritem" EntityType="hreModel.newsletteritem" />
           <EntitySet Name="paymenttype" EntityType="hreModel.paymenttype" />
           <EntitySet Name="usersecondaryaddress" EntityType="hreModel.usersecondaryaddress" />
-          <EntitySet Name="logonuser" EntityType="hreModel.logonuser" />
           <AssociationSet Name="PrimaryAddress" Association="hreModel.PrimaryAddress">
             <End Role="address" EntitySet="address" />
             <End Role="logonuser" EntitySet="logonuser" />
@@ -305,21 +410,30 @@
             <End Role="logonuser" EntitySet="logonuser" />
             <End Role="emailaudit" EntitySet="emailaudit" />
           </AssociationSet>
-          <EntitySet Name="sportsevent" EntityType="hreModel.sportsevent" />
-          <EntitySet Name="newsletter" EntityType="hreModel.newsletter" />
-          <EntitySet Name="newsletteritem" EntityType="hreModel.newsletteritem" />
           <AssociationSet Name="Newsletter1" Association="hreModel.Newsletter1">
             <End Role="newsletter" EntitySet="newsletter" />
             <End Role="newsletteritem" EntitySet="newsletteritem" />
           </AssociationSet>
+          <EntitySet Name="volunteer" EntityType="hreModel.volunteer" />
+          <AssociationSet Name="volunteer_User" Association="hreModel.volunteer_User">
+            <End Role="logonuser" EntitySet="logonuser" />
+            <End Role="volunteer" EntitySet="volunteer" />
+          </AssociationSet>
+          <EntitySet Name="my_aspnet_users" EntityType="hreModel.my_aspnet_users" />
+          <EntitySet Name="raceslot" EntityType="hreModel.raceslot" />
           <EntitySet Name="sportseventparticipation" EntityType="hreModel.sportseventparticipation" />
           <AssociationSet Name="User" Association="hreModel.User">
             <End Role="logonuser" EntitySet="logonuser" />
             <End Role="sportseventparticipation" EntitySet="sportseventparticipation" />
           </AssociationSet>
+          <EntitySet Name="sportsevent" EntityType="hreModel.sportsevent" />
           <AssociationSet Name="sportevent" Association="hreModel.sportevent">
             <End Role="sportsevent" EntitySet="sportsevent" />
             <End Role="sportseventparticipation" EntitySet="sportseventparticipation" />
+          </AssociationSet>
+          <AssociationSet Name="volunteer_sportevent" Association="hreModel.volunteer_sportevent">
+            <End Role="sportsevent" EntitySet="sportsevent" />
+            <End Role="volunteer" EntitySet="volunteer" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="address">
@@ -364,7 +478,66 @@
           <Property Type="Int32" Name="EmailCategoryId" />
           <NavigationProperty Name="logonuser" Relationship="hreModel.UserIdReceiver" FromRole="emailaudit" ToRole="logonuser" />
           <NavigationProperty Name="logonuser1" Relationship="hreModel.UserIdSender" FromRole="emailaudit" ToRole="logonuser" />
-          </EntityType>
+        </EntityType>
+        <EntityType Name="logonuser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="ExternalId" />
+          <Property Type="String" Name="EmailAddress" />
+          <Property Type="String" Name="TelephoneNumber" />
+          <Property Type="Boolean" Name="IsActive" />
+          <Property Type="Boolean" Name="IsMailingListMember" />
+          <Property Type="Int32" Name="StatusId" />
+          <Property Type="String" Name="EntryKey" />
+          <Property Type="String" Name="Name" />
+          <Property Type="String" Name="Language" />
+          <Property Type="Boolean" Name="Gender" />
+          <Property Type="DateTime" Name="DateOfBirth" />
+          <Property Type="Int32" Name="PrimaryAddressId" />
+          <Property Type="String" Name="NtbLicenseNumber" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
+          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="false" />
+          <NavigationProperty Name="address" Relationship="hreModel.PrimaryAddress" FromRole="logonuser" ToRole="address" />
+          <NavigationProperty Name="emailaudit" Relationship="hreModel.UserIdReceiver" FromRole="logonuser" ToRole="emailaudit" />
+          <NavigationProperty Name="emailaudit1" Relationship="hreModel.UserIdSender" FromRole="logonuser" ToRole="emailaudit" />
+          <NavigationProperty Name="volunteer" Relationship="hreModel.volunteer_User" FromRole="logonuser" ToRole="volunteer" />
+          <NavigationProperty Name="sportseventparticipation" Relationship="hreModel.User" FromRole="logonuser" ToRole="sportseventparticipation" />
+        </EntityType>
+        <EntityType Name="newsletter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Title" />
+          <Property Type="Int32" Name="CultureId" Nullable="false" />
+          <Property Type="DateTime" Name="DateSent" />
+          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
+          <Property Type="Boolean" Name="AddPersonalLoginLink" />
+          <Property Type="Int32" Name="Audience" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
+          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
+          <Property Type="String" Name="IntroText" />
+          <Property Type="String" Name="AttachmentFilePath" />
+          <NavigationProperty Name="newsletteritem" Relationship="hreModel.Newsletter1" FromRole="newsletter" ToRole="newsletteritem" />
+        </EntityType>
+        <EntityType Name="newsletteritem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="NewsletterId" Nullable="false" />
+          <Property Type="String" Name="ItemTitle" />
+          <Property Type="String" Name="ItemSubTitle" />
+          <Property Type="String" Name="ItemText" />
+          <Property Type="String" Name="PictureURL" />
+          <Property Type="String" Name="IconPictureURL" />
+          <Property Type="String" Name="HeadingHtmlColour" />
+          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
+          <NavigationProperty Name="newsletter" Relationship="hreModel.Newsletter1" FromRole="newsletteritem" ToRole="newsletter" />
+        </EntityType>
         <EntityType Name="paymenttype">
           <Key>
             <PropertyRef Name="Id" />
@@ -383,32 +556,6 @@
           <Property Type="Int32" Name="AddressId" />
           <Property Type="DateTime" Name="DateCreated" Nullable="false" />
           <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
-        </EntityType>
-        <EntityType Name="logonuser">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="ExternalId" />
-          <Property Type="String" Name="EmailAddress" />
-          <Property Type="Boolean" Name="IsActive" />
-          <Property Type="Boolean" Name="IsMailingListMember" />
-          <Property Type="Int32" Name="StatusId" />
-          <Property Type="String" Name="EntryKey" />
-          <Property Type="String" Name="Name" />
-          <Property Type="String" Name="Language" />
-          <Property Type="Boolean" Name="Gender" />
-          <Property Type="DateTime" Name="DateOfBirth" />
-          <Property Type="Int32" Name="PrimaryAddressId" />
-          <Property Type="String" Name="NtbLicenseNumber" />
-          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
-          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
-          <Property Type="String" Name="UserName" Nullable="false" />
-          <Property Type="String" Name="TelephoneNumber" />
-          <NavigationProperty Name="address" Relationship="hreModel.PrimaryAddress" FromRole="logonuser" ToRole="address" />
-          <NavigationProperty Name="emailaudit" Relationship="hreModel.UserIdReceiver" FromRole="logonuser" ToRole="emailaudit" />
-          <NavigationProperty Name="emailaudit1" Relationship="hreModel.UserIdSender" FromRole="logonuser" ToRole="emailaudit" />
-          <NavigationProperty Name="sportseventparticipation" Relationship="hreModel.User" FromRole="logonuser" ToRole="sportseventparticipation" />
         </EntityType>
         <Association Name="PrimaryAddress">
           <End Type="hreModel.address" Role="address" Multiplicity="0..1" />
@@ -446,51 +593,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="sportsevent">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Name" />
-          <Property Type="DateTime" Name="EventDate" />
-          <Property Type="String" Name="EventPlace" />
-          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
-          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
-          <Property Type="String" Name="ExternalEventIdentifier" />
-          <Property Type="String" Name="ExternalEventSerieIdentifier" />
-          <NavigationProperty Name="sportseventparticipation" Relationship="hreModel.sportevent" FromRole="sportsevent" ToRole="sportseventparticipation" />
-        </EntityType>
-        <EntityType Name="newsletter">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Title" />
-          <Property Type="Int32" Name="CultureId" Nullable="false" />
-          <Property Type="DateTime" Name="DateSent" />
-          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
-          <Property Type="Boolean" Name="AddPersonalLoginLink" />
-          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
-          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
-          <Property Type="Int32" Name="Audience" />
-          <Property Type="String" Name="IntroText" />
-          <NavigationProperty Name="newsletteritem" Relationship="hreModel.Newsletter1" FromRole="newsletter" ToRole="newsletteritem" />
-        </EntityType>
-        <EntityType Name="newsletteritem">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="NewsletterId" Nullable="false" />
-          <Property Type="String" Name="ItemTitle" />
-          <Property Type="String" Name="ItemSubTitle" />
-          <Property Type="String" Name="ItemText" />
-          <Property Type="String" Name="PictureURL" />
-          <Property Type="String" Name="IconPictureURL" />
-          <Property Type="String" Name="HeadingHtmlColour" />
-          <Property Type="Int32" Name="SequenceNumber" Nullable="false" />
-          <NavigationProperty Name="newsletter" Relationship="hreModel.Newsletter1" FromRole="newsletteritem" ToRole="newsletter" />
-        </EntityType>
         <Association Name="Newsletter1">
           <End Type="hreModel.newsletter" Role="newsletter" Multiplicity="1" />
           <End Type="hreModel.newsletteritem" Role="newsletteritem" Multiplicity="*" />
@@ -503,6 +605,57 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="volunteer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
+          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
+          <Property Type="DateTime" Name="DateRegistered" Nullable="false" />
+          <Property Type="Int32" Name="UserId" />
+          <Property Type="Int32" Name="SportsEventId" />
+          <Property Type="String" Name="Notes" />
+          <Property Type="String" Name="TShirtSize" />
+          <Property Type="Boolean" Name="Food" />
+          <Property Type="Boolean" Name="HasBoat" />
+          <Property Type="String" Name="PreferredTask" />
+          <NavigationProperty Name="logonuser" Relationship="hreModel.volunteer_User" FromRole="volunteer" ToRole="logonuser" />
+          <NavigationProperty Name="sportsevent" Relationship="hreModel.volunteer_sportevent" FromRole="volunteer" ToRole="sportsevent" />
+        </EntityType>
+        <Association Name="volunteer_User">
+          <End Type="hreModel.logonuser" Role="logonuser" Multiplicity="0..1" />
+          <End Type="hreModel.volunteer" Role="volunteer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="logonuser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="volunteer">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="my_aspnet_users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="applicationId" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" />
+          <Property Type="Boolean" Name="isAnonymous" Nullable="false" />
+          <Property Type="DateTime" Name="lastActivityDate" />
+        </EntityType>
+        <EntityType Name="raceslot">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" />
+          <Property Type="Int32" Name="RaceNumber" />
+          <Property Type="Time" Name="PlannedStartTime" />
+          <Property Type="String" Name="FullName" />
+          <Property Type="String" Name="EmailAddress" />
+        </EntityType>
         <EntityType Name="sportseventparticipation">
           <Key>
             <PropertyRef Name="Id" />
@@ -538,6 +691,20 @@
           <Property Type="String" Name="NotesToAll" />
           <Property Type="String" Name="EmailAddressOfFriend" />
           <Property Type="DateTime" Name="DateConfirmationSend" />
+          <Property Type="DateTime" Name="VirtualRegistrationDateForOrdering" />
+          <Property Type="Int32" Name="RaceNumber" />
+          <Property Type="Time" Name="PlannedStartTime" />
+          <Property Type="String" Name="RaceCat" />
+          <Property Type="Boolean" Name="WantsToDoFinal" />
+          <Property Type="Int32" Name="ResultPosition" />
+          <Property Type="Int32" Name="ResultPositionInCategory" />
+          <Property Type="Time" Name="TotalTime" />
+          <Property Type="Time" Name="TimeInFinal" />
+          <Property Type="Time" Name="TimeOnTimedSwimPart" />
+          <Property Type="Time" Name="TimeOnTimedRunPart" />
+          <Property Type="Boolean" Name="HasPaidEnoughToList" />
+          <Property Type="String" Name="BankCode" />
+          <Property Type="String" Name="SisowTransactionID" />
           <NavigationProperty Name="logonuser" Relationship="hreModel.User" FromRole="sportseventparticipation" ToRole="logonuser" />
           <NavigationProperty Name="sportsevent" Relationship="hreModel.sportevent" FromRole="sportseventparticipation" ToRole="sportsevent" />
         </EntityType>
@@ -553,6 +720,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="sportsevent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" />
+          <Property Type="DateTime" Name="EventDate" />
+          <Property Type="String" Name="EventPlace" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" />
+          <Property Type="DateTime" Name="DateUpdated" Nullable="false" />
+          <Property Type="String" Name="ExternalEventIdentifier" />
+          <Property Type="String" Name="ExternalEventSerieIdentifier" />
+          <Property Type="Int32" Name="AantalStartPlekken" Nullable="false" />
+          <Property Type="Int32" Name="AantalPlekkenReserveLijst" Nullable="false" />
+          <Property Type="Int32" Name="AantalEarlyBirdStartPlekken" Nullable="false" />
+          <Property Type="DateTime" Name="EindDatumEarlyBirdKorting" Nullable="false" />
+          <Property Type="DateTime" Name="OpeningsdatumAlgemeneInschrijving" Nullable="false" />
+          <Property Type="DateTime" Name="SluitingsDatumAlgemeneInschrijving" Nullable="false" />
+          <Property Type="Int32" Name="HuidigeDeelnameBedrag" Nullable="false" />
+          <Property Type="Int32" Name="KostenNtbDagLicentie" Nullable="false" />
+          <Property Type="Int32" Name="KostenHuurMyLapsChipGeel" Nullable="false" />
+          <Property Type="Int32" Name="KostenGebruikMyLapsChipGroen" Nullable="false" />
+          <Property Type="Int32" Name="KostenEten" Nullable="false" />
+          <Property Type="Int32" Name="HoogteEarlyBirdKorting" Nullable="false" />
+          <NavigationProperty Name="sportseventparticipation" Relationship="hreModel.sportevent" FromRole="sportsevent" ToRole="sportseventparticipation" />
+          <NavigationProperty Name="volunteer" Relationship="hreModel.volunteer_sportevent" FromRole="sportsevent" ToRole="volunteer" />
+        </EntityType>
         <Association Name="sportevent">
           <End Type="hreModel.sportsevent" Role="sportsevent" Multiplicity="0..1" />
           <End Type="hreModel.sportseventparticipation" Role="sportseventparticipation" Multiplicity="*" />
@@ -561,6 +755,18 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="sportseventparticipation">
+              <PropertyRef Name="SportsEventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="volunteer_sportevent">
+          <End Type="hreModel.sportsevent" Role="sportsevent" Multiplicity="0..1" />
+          <End Type="hreModel.volunteer" Role="volunteer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sportsevent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="volunteer">
               <PropertyRef Name="SportsEventId" />
             </Dependent>
           </ReferentialConstraint>
@@ -613,31 +819,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="paymenttype">
-            <EntityTypeMapping TypeName="hreModel.paymenttype">
-              <MappingFragment StoreEntitySet="paymenttype">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="usersecondaryaddress">
-            <EntityTypeMapping TypeName="hreModel.usersecondaryaddress">
-              <MappingFragment StoreEntitySet="usersecondaryaddress">
-                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="AddressTypeId" ColumnName="AddressTypeId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="logonuser">
             <EntityTypeMapping TypeName="hreModel.logonuser">
               <MappingFragment StoreEntitySet="logonuser">
-                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
@@ -651,22 +835,9 @@
                 <ScalarProperty Name="StatusId" ColumnName="StatusId" />
                 <ScalarProperty Name="IsMailingListMember" ColumnName="IsMailingListMember" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
                 <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
                 <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sportsevent">
-            <EntityTypeMapping TypeName="hreModel.sportsevent">
-              <MappingFragment StoreEntitySet="sportsevent">
-                <ScalarProperty Name="ExternalEventSerieIdentifier" ColumnName="ExternalEventSerieIdentifier" />
-                <ScalarProperty Name="ExternalEventIdentifier" ColumnName="ExternalEventIdentifier" />
-                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="EventPlace" ColumnName="EventPlace" />
-                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -674,10 +845,11 @@
           <EntitySetMapping Name="newsletter">
             <EntityTypeMapping TypeName="hreModel.newsletter">
               <MappingFragment StoreEntitySet="newsletter">
+                <ScalarProperty Name="AttachmentFilePath" ColumnName="AttachmentFilePath" />
                 <ScalarProperty Name="IntroText" ColumnName="IntroText" />
-                <ScalarProperty Name="Audience" ColumnName="Audience" />
                 <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Audience" ColumnName="Audience" />
                 <ScalarProperty Name="AddPersonalLoginLink" ColumnName="AddPersonalLoginLink" />
                 <ScalarProperty Name="SequenceNumber" ColumnName="SequenceNumber" />
                 <ScalarProperty Name="DateSent" ColumnName="DateSent" />
@@ -702,9 +874,84 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="paymenttype">
+            <EntityTypeMapping TypeName="hreModel.paymenttype">
+              <MappingFragment StoreEntitySet="paymenttype">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usersecondaryaddress">
+            <EntityTypeMapping TypeName="hreModel.usersecondaryaddress">
+              <MappingFragment StoreEntitySet="usersecondaryaddress">
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="AddressTypeId" ColumnName="AddressTypeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="volunteer">
+            <EntityTypeMapping TypeName="hreModel.volunteer">
+              <MappingFragment StoreEntitySet="volunteer">
+                <ScalarProperty Name="PreferredTask" ColumnName="PreferredTask" />
+                <ScalarProperty Name="HasBoat" ColumnName="HasBoat" />
+                <ScalarProperty Name="Food" ColumnName="Food" />
+                <ScalarProperty Name="TShirtSize" ColumnName="TShirtSize" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="SportsEventId" ColumnName="SportsEventId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="DateRegistered" ColumnName="DateRegistered" />
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="my_aspnet_users">
+            <EntityTypeMapping TypeName="hreModel.my_aspnet_users">
+              <MappingFragment StoreEntitySet="my_aspnet_users">
+                <ScalarProperty Name="lastActivityDate" ColumnName="lastActivityDate" />
+                <ScalarProperty Name="isAnonymous" ColumnName="isAnonymous" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="applicationId" ColumnName="applicationId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="raceslot">
+            <EntityTypeMapping TypeName="hreModel.raceslot">
+              <MappingFragment StoreEntitySet="raceslot">
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="PlannedStartTime" ColumnName="PlannedStartTime" />
+                <ScalarProperty Name="RaceNumber" ColumnName="RaceNumber" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="sportseventparticipation">
             <EntityTypeMapping TypeName="hreModel.sportseventparticipation">
               <MappingFragment StoreEntitySet="sportseventparticipation">
+                <ScalarProperty Name="SisowTransactionID" ColumnName="SisowTransactionID" />
+                <ScalarProperty Name="BankCode" ColumnName="BankCode" />
+                <ScalarProperty Name="HasPaidEnoughToList" ColumnName="HasPaidEnoughToList" />
+                <ScalarProperty Name="TimeOnTimedRunPart" ColumnName="TimeOnTimedRunPart" />
+                <ScalarProperty Name="TimeOnTimedSwimPart" ColumnName="TimeOnTimedSwimPart" />
+                <ScalarProperty Name="TimeInFinal" ColumnName="TimeInFinal" />
+                <ScalarProperty Name="TotalTime" ColumnName="TotalTime" />
+                <ScalarProperty Name="ResultPositionInCategory" ColumnName="ResultPositionInCategory" />
+                <ScalarProperty Name="ResultPosition" ColumnName="ResultPosition" />
+                <ScalarProperty Name="WantsToDoFinal" ColumnName="WantsToDoFinal" />
+                <ScalarProperty Name="RaceCat" ColumnName="RaceCat" />
+                <ScalarProperty Name="PlannedStartTime" ColumnName="PlannedStartTime" />
+                <ScalarProperty Name="RaceNumber" ColumnName="RaceNumber" />
+                <ScalarProperty Name="VirtualRegistrationDateForOrdering" ColumnName="VirtualRegistrationDateForOrdering" />
                 <ScalarProperty Name="DateConfirmationSend" ColumnName="DateConfirmationSend" />
                 <ScalarProperty Name="EmailAddressOfFriend" ColumnName="EmailAddressOfFriend" />
                 <ScalarProperty Name="NotesToAll" ColumnName="NotesToAll" />
@@ -739,6 +986,32 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="sportsevent">
+            <EntityTypeMapping TypeName="hreModel.sportsevent">
+              <MappingFragment StoreEntitySet="sportsevent">
+                <ScalarProperty Name="HoogteEarlyBirdKorting" ColumnName="HoogteEarlyBirdKorting" />
+                <ScalarProperty Name="KostenEten" ColumnName="KostenEten" />
+                <ScalarProperty Name="KostenGebruikMyLapsChipGroen" ColumnName="KostenGebruikMyLapsChipGroen" />
+                <ScalarProperty Name="KostenHuurMyLapsChipGeel" ColumnName="KostenHuurMyLapsChipGeel" />
+                <ScalarProperty Name="KostenNtbDagLicentie" ColumnName="KostenNtbDagLicentie" />
+                <ScalarProperty Name="HuidigeDeelnameBedrag" ColumnName="HuidigeDeelnameBedrag" />
+                <ScalarProperty Name="SluitingsDatumAlgemeneInschrijving" ColumnName="SluitingsDatumAlgemeneInschrijving" />
+                <ScalarProperty Name="OpeningsdatumAlgemeneInschrijving" ColumnName="OpeningsdatumAlgemeneInschrijving" />
+                <ScalarProperty Name="EindDatumEarlyBirdKorting" ColumnName="EindDatumEarlyBirdKorting" />
+                <ScalarProperty Name="AantalEarlyBirdStartPlekken" ColumnName="AantalEarlyBirdStartPlekken" />
+                <ScalarProperty Name="AantalPlekkenReserveLijst" ColumnName="AantalPlekkenReserveLijst" />
+                <ScalarProperty Name="AantalStartPlekken" ColumnName="AantalStartPlekken" />
+                <ScalarProperty Name="ExternalEventSerieIdentifier" ColumnName="ExternalEventSerieIdentifier" />
+                <ScalarProperty Name="ExternalEventIdentifier" ColumnName="ExternalEventIdentifier" />
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="EventPlace" ColumnName="EventPlace" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -755,43 +1028,60 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="False" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Default" />
+        <DesignerProperty Name="DDLGenerationTemplate" Value="$(VSEFTools)\DBGen\SSDLToMySQL.tt" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="HRE" ZoomLevel="57">
-        <EntityTypeShape EntityType="hreModel.address" Width="1.5" PointX="0.625" PointY="3.625" Height="3.7109993489583317" />
-        <EntityTypeShape EntityType="hreModel.emailaudit" Width="1.5" PointX="6" PointY="3.875" Height="4.6725065104166674" />
-        <EntityTypeShape EntityType="hreModel.paymenttype" Width="1.5" PointX="0.75" PointY="1" Height="1.5956835937500102" />
-        <EntityTypeShape EntityType="hreModel.usersecondaryaddress" Width="2.75" PointX="2.75" PointY="1" Height="2.1725878906250102" />
-        <EntityTypeShape EntityType="hreModel.logonuser" Width="1.5" PointX="2.75" PointY="3.875" Height="4.8648079427083335" />
+        <EntityTypeShape EntityType="hreModel.address" Width="1.5" PointX="0.75" PointY="7.125" Height="3.7109993489583317" />
+        <EntityTypeShape EntityType="hreModel.emailaudit" Width="1.5" PointX="5.25" PointY="6.625" Height="4.6725065104166674" />
+        <EntityTypeShape EntityType="hreModel.logonuser" Width="1.5" PointX="3" PointY="6.5" Height="5.0571093750000031" />
+        <EntityTypeShape EntityType="hreModel.newsletter" Width="1.5" PointX="10.75" PointY="1" Height="3.3263964843750031" />
+        <EntityTypeShape EntityType="hreModel.newsletteritem" Width="1.5" PointX="13" PointY="1.125" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="hreModel.paymenttype" Width="1.5" PointX="2.75" PointY="0.75" Height="1.5956835937500031" />
+        <EntityTypeShape EntityType="hreModel.usersecondaryaddress" Width="1.5" PointX="10.75" PointY="5.75" Height="2.1725878906250031" />
         <AssociationConnector Association="hreModel.PrimaryAddress" >
-          <ConnectorPoint PointX="2.125" PointY="5.6054996744791659" />
-          <ConnectorPoint PointX="2.75" PointY="5.6054996744791659" />
+          <ConnectorPoint PointX="2.25" PointY="8.9804996744791659" />
+          <ConnectorPoint PointX="3" PointY="8.9804996744791659" />
         </AssociationConnector>
         <AssociationConnector Association="hreModel.UserIdReceiver" >
-          <ConnectorPoint PointX="4.25" PointY="7.0316710069443982" />
-          <ConnectorPoint PointX="6" PointY="7.0316710069443982" />
+          <ConnectorPoint PointX="4.5" PointY="9.781670994719267" />
+          <ConnectorPoint PointX="5.25" PointY="9.781670994719267" />
         </AssociationConnector>
         <AssociationConnector Association="hreModel.UserIdSender" >
-          <ConnectorPoint PointX="4.25" PointY="5.3908355034721991" />
-          <ConnectorPoint PointX="6" PointY="5.3908355034721991" />
+          <ConnectorPoint PointX="4.5" PointY="8.1408354973596335" />
+          <ConnectorPoint PointX="5.25" PointY="8.1408354973596335" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="hreModel.sportsevent" Width="1.5" PointX="5.375" PointY="9.125" Height="2.7494921875000031" />
-        <EntityTypeShape EntityType="hreModel.newsletter" Width="1.5" PointX="8.75" PointY="0.875" Height="2.9417936197916674" />
-        <EntityTypeShape EntityType="hreModel.newsletteritem" Width="1.5" PointX="11" PointY="1" Height="2.9417936197916674" />
         <AssociationConnector Association="hreModel.Newsletter1" >
-          <ConnectorPoint PointX="10.25" PointY="2.4708968098958337" />
-          <ConnectorPoint PointX="11" PointY="2.4708968098958337" />
+          <ConnectorPoint PointX="12.25" PointY="2.5958968098958337" />
+          <ConnectorPoint PointX="13" PointY="2.5958968098958337" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="hreModel.sportseventparticipation" Width="1.5" PointX="8.625" PointY="5.25" Height="7.3647265625000031" />
+        <EntityTypeShape EntityType="hreModel.volunteer" Width="1.5" PointX="11.25" PointY="9.375" Height="3.5186979166666674" />
+        <AssociationConnector Association="hreModel.volunteer_User" >
+          <ConnectorPoint PointX="3.75" PointY="11.749410807291666" />
+          <ConnectorPoint PointX="3.75" PointY="12.731970041333485" />
+          <ConnectorPoint PointX="11.25" PointY="12.731970041333485" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="hreModel.my_aspnet_users" Width="1.5" PointX="0.75" PointY="3.75" Height="1.9802864583333353" />
+        <EntityTypeShape EntityType="hreModel.raceslot" Width="1.5" PointX="0.75" PointY="12.75" Height="2.1725878906250031" />
+        <EntityTypeShape EntityType="hreModel.sportseventparticipation" Width="1.5" PointX="8.25" PointY="2.125" Height="10.056946614583339" />
         <AssociationConnector Association="hreModel.User" >
-          <ConnectorPoint PointX="4.25" PointY="8.7710579427083335" />
-          <ConnectorPoint PointX="8.625" PointY="8.7710579427083335" />
+          <ConnectorPoint PointX="4.5" PointY="11.554708658854167" />
+          <ConnectorPoint PointX="7.072916666666667" PointY="11.554708658854167" />
+          <ConnectorPoint PointX="7.239583333333333" PointY="11.554708658854167" />
+          <ConnectorPoint PointX="8.25" PointY="11.554708658854167" />
         </AssociationConnector>
+        <EntityTypeShape EntityType="hreModel.sportsevent" Width="1.5" PointX="6" PointY="0.75" Height="5.2494108072916674" />
         <AssociationConnector Association="hreModel.sportevent" >
-          <ConnectorPoint PointX="6.875" PointY="10.49974609375" />
-          <ConnectorPoint PointX="8.625" PointY="10.49974609375" />
+          <ConnectorPoint PointX="7.5" PointY="4.0622054036458337" />
+          <ConnectorPoint PointX="8.25" PointY="4.0622054036458337" />
+        </AssociationConnector>
+        <AssociationConnector Association="hreModel.volunteer_sportevent" >
+          <ConnectorPoint PointX="7.15625" PointY="5.9994108072916674" />
+          <ConnectorPoint PointX="7.15625" PointY="12.456955827958407" />
+          <ConnectorPoint PointX="11.25" PointY="12.456955827958407" />
         </AssociationConnector>
         </Diagram>
     </Diagrams>

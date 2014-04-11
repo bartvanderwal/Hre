@@ -1,0 +1,161 @@
+
+#stacks_in_127_page3 .stacks_left {
+	float:left;
+	width:49%;
+}
+
+#stacks_in_127_page3 .stacks_right {
+	float:right;
+	width:49%;
+}/* Start Liquid Columns stack CSS code */ .stacks_in_130_page3column { float:left; display:inline; }.stacks_in_130_page3one-third.stacks_in_130_page3column { 	width: 33.333333333% /* 320px / 960px */;}.stacks_in_130_page3first{	padding-left: 0;	padding-right: 13px;	padding-bottom: 0;}.stacks_in_130_page3middle{	padding-left: 7px;	padding-right: 6px;	padding-bottom: 0;}.stacks_in_130_page3last{	padding-left: 13px;	padding-right: 0;	padding-bottom: 0;}@media only screen and (max-width: 979px) {	.stacks_in_130_page3first{	padding-left: 0;	padding-right: 0;	padding-bottom: 20px;	}	.stacks_in_130_page3middle{		padding-left: 0;		padding-right: 10px;		padding-bottom: 0;	}		.stacks_in_130_page3last{		padding-left: 10px;		padding-right: 0;		padding-bottom: 0;	}	    .stacks_in_130_page3one-third.stacks_in_130_page3column {     	width: 50%;     }    .stacks_in_130_page3one-third.stacks_in_130_page3column.stacks_in_130_page3more-important {     	width:100%;     }    }@media only screen and (max-width: 480px) {	.stacks_in_130_page3first{	padding-left: 0;	padding-right: 0;	padding-bottom: 10px;	}	.stacks_in_130_page3middle{		padding-left: 0;		padding-right: 0;		padding-bottom: 10px;	}		.stacks_in_130_page3last{		padding-left: 0;		padding-right: 0;		padding-bottom: 0;	}	    .stacks_in_130_page3one-third.stacks_in_130_page3column {     	width: 100%;    }        .stacks_in_130_page3one-third.stacks_in_130_page3column.stacks_in_130_page3more-important {     	width:100%;     }    }/* End Liquid Columns stack CSS code */
+#stacks_in_138_page3 {
+	background-color: #02A5EC;
+	-moz-border-radius:  4px;
+	-webkit-border-radius:  4px;
+	border-radius:  4px;
+	padding:  10px;
+}
+
+#stacks_in_140_page3 {
+	background-color: #02A5EC;
+	-moz-border-radius:  4px;
+	-webkit-border-radius:  4px;
+	border-radius:  4px;
+	padding:  10px;
+}
+
+#stacks_in_144_page3 {
+	background-color: #02A5EC;
+	-moz-border-radius:  4px;
+	-webkit-border-radius:  4px;
+	border-radius:  4px;
+	padding:  10px;
+}
+/* Start Liquid Columns stack CSS code */ .stacks_in_134_page3column { float:left; display:inline; }.stacks_in_134_page3one-third.stacks_in_134_page3column { 	width: 33.333333333% /* 320px / 960px */;}.stacks_in_134_page3first{	padding-left: 0;	padding-right: 13px;	padding-bottom: 0;}.stacks_in_134_page3middle{	padding-left: 7px;	padding-right: 6px;	padding-bottom: 0;}.stacks_in_134_page3last{	padding-left: 13px;	padding-right: 0;	padding-bottom: 0;}@media only screen and (max-width: 979px) {	.stacks_in_134_page3first{	padding-left: 0;	padding-right: 0;	padding-bottom: 20px;	}	.stacks_in_134_page3middle{		padding-left: 0;		padding-right: 10px;		padding-bottom: 0;	}		.stacks_in_134_page3last{		padding-left: 10px;		padding-right: 0;		padding-bottom: 0;	}	    .stacks_in_134_page3one-third.stacks_in_134_page3column {     	width: 50%;     }    .stacks_in_134_page3one-third.stacks_in_134_page3column.stacks_in_134_page3more-important {     	width:100%;     }    }@media only screen and (max-width: 480px) {	.stacks_in_134_page3first{	padding-left: 0;	padding-right: 0;	padding-bottom: 10px;	}	.stacks_in_134_page3middle{		padding-left: 0;		padding-right: 0;		padding-bottom: 10px;	}		.stacks_in_134_page3last{		padding-left: 0;		padding-right: 0;		padding-bottom: 0;	}	    .stacks_in_134_page3one-third.stacks_in_134_page3column {     	width: 100%;    }        .stacks_in_134_page3one-third.stacks_in_134_page3column.stacks_in_134_page3more-important {     	width:100%;     }    }/* End Liquid Columns stack CSS code */
+#stacks_in_146_page3 {
+	background-color: #02A5EC;
+	-moz-border-radius:  4px;
+	-webkit-border-radius:  4px;
+	border-radius:  4px;
+	padding:  10px;
+}
+
+#stacks_in_148_page3 {
+	background-color: #02A5EC;
+	-moz-border-radius:  4px;
+	-webkit-border-radius:  4px;
+	border-radius:  4px;
+	padding:  10px;
+}
+
+#stacks_in_142_page3 {
+	background-color: #02A5EC;
+	-moz-border-radius:  4px;
+	-webkit-border-radius:  4px;
+	border-radius:  4px;
+	padding:  10px;
+}
+/* Start Launcher stack CSS code */#stacks_in_1729_page3 img{	max-width: 100%;	height: auto;}.stacks_in_1729_page3lightbox{	cursor: pointer;}.stacks_in_1729_page3lightboxContents{	display: none;}.stacks_in_1729_page3launcherWrapper{	border: 6px solid #E24159;	-webkit-border-top-left-radius: 4px;	-webkit-border-top-right-radius: 4px;	-moz-border-radius-topleft: 4px;	-moz-border-radius-topright: 4px;	border-top-left-radius: 4px;	border-top-right-radius: 4px;}.stacks_in_1729_page3launcherWrapper a{	text-decoration: none;}.stacks_in_1729_page3help{	display: none;	border-left: 6px solid #E24159;	border-right: 6px solid #E24159;	background: #3398DB;	color: #fff;	padding: 20px;	font-size: 14px;	padding-left: 50px;	}.stacks_in_1729_page3helpTitle{	font-size: 1.4em;	font-weight: bold;}.stacks_in_1729_page3launcherLabel{	display: block;	position: absolute;	top:0;	left: 0;	z-index: 1000001;}.stacks_in_1729_page3galleryLabel{	display: block;	position: absolute;	top:0;	left: 0;	z-index: 1000001;}.stacks_in_1729_page3helpLabel{	display: block;	position: absolute;	top:3px;	left: 0;	z-index: 1000001;}/* ------ venobox.css --------*/.vbox-overlay *, .vbox-overlay *:before, .vbox-overlay *:after{    -webkit-backface-visibility: hidden;    -webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}body{    -webkit-overflow-scrolling:touch;}/* ------- overlay: change here background color and opacity ----- */.vbox-overlay{    background: rgba(0,0,0,0.85);     width: 100%;    height: auto;    position: absolute;    top: 0;    left: 0;    z-index: 1000002;    overflow: hidden;    opacity: 0;    transition: opacity .25s ease-in-out;    -moz-transition: opacity .25s ease-in-out;    -webkit-transition: opacity .25s ease-in-out;}.relativo{    float: left;    width: 100%;    height: 100%;    display: block;    position: relative;}/* ----- preloader ----- */.vbox-preloader{    position:fixed;     width:36px;     height:36px;    left:50%;     top:50%;     margin-left:-18px;     margin-top:-18px;    background: url(../files/launcherAssets/preload.gif) center center no-repeat;    text-indent: -100px;    overflow: hidden;}/* ----- navigation ----- */.vbox-close{    cursor: pointer;    position: fixed;    top: -1px;    right: 0;    width: 46px;    height: 40px;    padding: 10px 20px 10px 0;    display: block;    background: url(../files/launcherAssets/close.gif) no-repeat #161617;    background-position:10px center;    color: #fff;    text-indent: -100px;    overflow: hidden;}.vbox-next, .vbox-prev{    cursor: pointer;    position: fixed;    top: 50%;    color: #fff;    width: 30px;    height: 30px;    margin-top: -15px;    text-indent: -100px;    overflow: hidden;}.vbox-prev{    left: 10px;    background: url(../files/launcherAssets/prev.gif) center center no-repeat;}.vbox-next{    right: 10px;    background: url(../files/launcherAssets/next.gif) center center no-repeat;}.vbox-title{    width: 100%;    height: 40px;    float: left;    text-align: center;    line-height: 28px;    font-size: 12px;    color: #fff;    padding: 6px 40px;    overflow: hidden;    background: #161617;    position: fixed;    display: none;    top: -1px;    left: 0;}.vbox-num{    cursor: pointer;    position: fixed;    top: -1px;    left: 0;    height: 40px;    display: block;    color: #fff;    overflow: hidden;    line-height: 28px;    font-size: 12px;    padding: 6px 10px;    background: #161617;    display: none;}/* ------- inline window ------ */.vbox-inline{    display: inline-block;    padding: 10px;    background: #fff;    text-align: left;    margin: 0 auto;    overflow: scroll;}/* ------- Video window ------ */.videoframe{    width: 420px;    padding: 10px;    background: #fff;    text-align: left;    margin: 0 auto;    overflow: scroll;}/* ------- Video & iFrames window ------ */.venoframe{    border: none;    width: 960px;    height: 720px;    overflow: scroll;}@media (max-width: 992px) {    .venoframe{        width: 640px;        height: 480px;    }}@media (max-width: 767px) {    .venoframe{        width: 420px;        height: 315px;    }}@media (max-width: 460px) {    .vbox-inline{        width: 100%;    }    .venoframe{        width: 100%;        height: 260px;    }}/* ------- PLease do NOT edit this! (or do it at your own risk) ------ */.vbox-container{    position: relative;    background: #000;    width: 98%;    max-width: 1024px;    margin: 0 auto;}.stacks_in_1729_page3vbox-content{    text-align: center;    float: left;    width: 100%;    position: relative;    overflow: hidden;}.vbox-container img{    max-width: 100%;    height: auto;}.vwrap{    opacity: 1;    transition: opacity .25s ease-in-out;    -moz-transition: opacity .25s ease-in-out;    -webkit-transition: opacity .25s ease-in-out;    width: 100%;    float: left;    position: relative;    margin: 0;    padding: 0;    left: 0;    height: auto;    overflow: hidden;    z-index: 1000001;}/* End Launcher stack CSS code */
+@font-face {
+    font-family: 'Lato';
+    src: url('../files/font/lato-lig-webfont.eot');
+    src: url('../files/font/lato-lig-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../files/font/lato-lig-webfont.woff') format('woff'),
+         url('../files/font/lato-lig-webfont.ttf') format('truetype'),
+         url('../files/font/lato-lig-webfont.svg#latolight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+#stacks_in_1734_page3 .stacks_in_1734_page3-button {
+	text-shadow: none;
+	border: none;
+	outline: none;
+	word-wrap: normal;
+	white-space: nowrap;
+	overflow: hidden;
+	position: relative;
+	font-family: Lato, sans-serif;
+	font-size: 17px !important;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	display: inline-block;
+	-webkit-font-smoothing: subpixel-antialiased;
+	text-rendering: optimizeLegibility;
+	text-align: center;
+	height: 54px;
+	line-height: 54px;
+}
+
+#stacks_in_1734_page3 .button_text {
+	padding: 0 20px 0 20px;
+	display: inline-block;
+}
+
+#stacks_in_1734_page3 .button_icon {
+	display: inline-block;
+	height: 54px;
+	line-height: 54px;
+/*	padding-left: 20px;
+	padding-right: 20px;
+*/	font-size: 17px !important;
+	
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-bottomleft: 4px;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	float: left;
+  width: 54px;
+}
+
+
+
+
+	#stacks_in_1734_page3 {
+		text-align: center;
+	}
+
+
+
+
+
+
+
+
+
+#stacks_in_1734_page3 a.stacks_in_1734_page3-button, #stacks_in_1734_page3 a.stacks_in_1734_page3-button:visited, #stacks_in_1734_page3 a.stacks_in_1734_page3-button:hover, #stacks_in_1734_page3 a.stacks_in_1734_page3-button:active {
+	text-decoration: none;
+}
+
+
+/* Color picker option */
+	#stacks_in_1734_page3 .stacks_in_1734_page3-button {
+		background-color: #029EE3;
+	}
+
+	#stacks_in_1734_page3 a.stacks_in_1734_page3-button, #stacks_in_1734_page3 a.stacks_in_1734_page3-button:visited {
+		color: #E4F7F3;
+	}
+
+	#stacks_in_1734_page3 a.stacks_in_1734_page3-button:hover, #stacks_in_1734_page3 a.stacks_in_1734_page3-button:active {
+		text-decoration: none;
+		color: #E4F7F3;
+		background-color: #16B2F7;
+	}
+
+	
+	#stacks_in_1734_page3 .button_icon {
+		background-color: #22AFE6;
+	}
+
+	#stacks_in_1734_page3 a.stacks_in_1734_page3-button:hover .button_icon, #stacks_in_1734_page3 a.stacks_in_1734_page3-button:active .button_icon {
+		background-color: #36C3FA;
+	}
+	
+
+
+/* Start Launcher Video stack CSS code */.stacks_in_1735_page3center{	display: block;	margin: 0 auto 0 auto;}.stacks_in_1735_page3editWrapper{	border: 6px solid #95A5A5;	padding: 20px;	-webkit-border-radius: 4px;	-moz-border-radius: 4px;	border-radius: 4px;	background: url("../files/geometry.png");	margin: 10px;}#stacks_in_1735_page3 img{	max-width: 100%;	height: auto;}.stacks_in_1735_page3iframeLabel{	display: block;	position: absolute;	top:0;	left: 0;	z-index: 1000001;}.stacks_in_1735_page3pathLabel{	display: block;	position: absolute;	top:10px;	right: 10px;	z-index: 1000001;	font-size: 12px;}.stacks_in_1735_page3pathLabel:not(:empty){	padding: 3px 10px 3px 10px;	-webkit-border-radius: 10px;	-moz-border-radius: 10px;	border-radius: 10px;	background: #95A5A5;	color: #fff;	max-width: 50%;	text-align: right;	overflow: hidden;}.stacks_in_1735_page3pathLabel:empty:before{	content:"Add a URL";	padding: 3px 10px 3px 10px;	-webkit-border-radius: 10px;	-moz-border-radius: 10px;	border-radius: 10px;	background: #E0415A;	color: #fff;	max-width: 50%;	text-align: right;	overflow: hidden;}/* End Launcher Video stack CSS code */

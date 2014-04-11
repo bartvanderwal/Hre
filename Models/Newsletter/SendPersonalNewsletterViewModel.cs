@@ -9,10 +9,29 @@ using HRE.Dal;
 namespace HRE.Models.Newsletters {
     public class SendPersonalNewsletterViewModel {
         
-        [Required(ErrorMessage = "Kies een test geadresseerde.")]
-        [Display(Name = "Test email adres:")]
-        public int UserId { get; set; }
+        [Display(Name = "Test gebruiker")]
+        public int? TestUserId { get; set; }
         
+        [Display(Name = "Gebruiker")]
+        public int? SingleUserId { get; set; }
+
+        private int _userId { get; set; }
+
+        /// <summary>
+        /// The user is the User previously set, or if not the single user selected, or if not the test user selected, or 0 otherwise.
+        /// </summary>
+        public int UserId { 
+            get {
+                if (_userId==0) {
+                    _userId = SingleUserId.HasValue ? SingleUserId.Value : (TestUserId.HasValue ? TestUserId.Value : 0);
+                }
+                return _userId;
+            }
+            set {
+                _userId = value;
+            }
+        }
+
         public int NewsletterId { get; set; }
 
 

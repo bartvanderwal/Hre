@@ -10,14 +10,17 @@
 @{ Html.BeginForm(); }
 @if (!ViewData.ModelState.IsValid) { Html.RenderPartial("_MessageBox"); } 
 
-@Html.LabelFor(m => m.UserId) @Html.DropDownListFor(m => m.UserId, HRE.Dal.LogonUserDal.GetTestParticipantsAsSelectList())
+@Html.LabelFor(m => m.TestUserId) @Html.DropDownListFor(m => m.TestUserId, HRE.Dal.LogonUserDal.GetTestParticipantsAsSelectList(), "Selecteer...")
 @Html.TextBoxFor(m => m.Newsletter.ID, new { @style = "display: none" })
-<input type="submit" value="Verzend test" /><br /><br />
+<br />
+@Html.LabelFor(m => m.SingleUserId) @Html.DropDownListFor(m => m.SingleUserId, HRE.Dal.LogonUserDal.GetAllAsSelectList(), "Selecteer...")
+<br />
+<input type="submit" value="Verstuur" /><br /><br />
 
 <div>
     @Html.ActionLink("Naar index", "Index")
     @if (!Model.Newsletter.DateSent.HasValue) {
-        <a class="nice-button send" style="margin: 5px;" href="#">Verstuur nieuwsbrief</a>
+        <a class="nice-button send" style="margin: 5px;" href="#">Verstuur naar iedereen</a>
     }
     <a class="nice-button adresses" style="margin: 5px;" href="#">Toon geaddresseerden</a>
 </div>

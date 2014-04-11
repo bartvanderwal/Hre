@@ -13,12 +13,21 @@ using HRE.Common;
 namespace HRE.Controllers {
     public class AccountController : BaseController {
 
+
+        public override bool IsConfidentialPage {
+            get {
+                return true;
+            }
+        }
+
+
         public void Initialise(string activeSubMenuItem) {
             ActiveMenuItem = AppConstants.Account;
             ActiveSubMenuItem = activeSubMenuItem;
             ViewBag.SubMenuItems = SubMenuItems;
         }
-        
+
+
         public new List<string> SubMenuItems {
             get { 
                 List<string> subMenuItems = new List<string> {
@@ -37,7 +46,6 @@ namespace HRE.Controllers {
 
         //
         // GET: /Account/LogOn
-        //
         public ActionResult Login(string id) {
             string email = System.Web.HttpUtility.UrlDecode(id);
             if (!string.IsNullOrEmpty(id)) {
@@ -50,7 +58,7 @@ namespace HRE.Controllers {
                 LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(email);
 
                 if (user!=null) {
-                    InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.HRE_EVENTNR);
+                    InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, SportsEventRepository.HRE_EVENTNR);
                     FormsAuthentication.SetAuthCookie(user.UserName, false);
                     RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier} );
                 }
@@ -87,8 +95,12 @@ namespace HRE.Controllers {
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\")) {
                         return Redirect(returnUrl);
                     } else {
-                        if (Roles.IsUserInRole(InschrijvingenRepository.ADMIN_ROLE_NAME)) {
-                            return Redirect("/Admin/Dashboard.aspx");
+                        if (User.IsInRole(InschrijvingenRepository.ADMIN_ROLE_NAME) || User.IsInRole(InschrijvingenRepository.SPEAKER_ROLE_NAME)) {
+                            // Persist admin cookie always to prevent logging out problems for instance in newsletter.
+                            if (!model.RememberMe) {
+                                FormsAuthentication.SetAuthCookie(login, true);
+                            }
+                            return Redirect("/Inschrijvingen");
                         } else {
                             return RedirectToAction("Index", "Home");
                         }
@@ -104,7 +116,6 @@ namespace HRE.Controllers {
 
         //
         // GET: /Account/LogOff
-
         public ActionResult LogUit() {
             FormsAuthentication.SignOut();
 
@@ -113,7 +124,6 @@ namespace HRE.Controllers {
 
         //
         // GET: /Account/Register
-
         public ActionResult Registreer() {
             Initialise(AppConstants.AccountRegistreer);
             return View();
@@ -121,7 +131,6 @@ namespace HRE.Controllers {
 
         //
         // POST: /Account/Register
-
         [HttpPost]
         public ActionResult Registreer(RegisterModel model) {
             if (ModelState.IsValid) {
@@ -143,7 +152,6 @@ namespace HRE.Controllers {
 
         //
         // GET: /Account/ChangePassword
-
         [Authorize]
         public ActionResult WijzigWW() {
             Initialise(AppConstants.AccountWijzigWW);
@@ -152,25 +160,15 @@ namespace HRE.Controllers {
 
 
         public ActionResult Index() {
-            Initialise(AppConstants.AccountWelkom);
-            return RedirectToAction("Eilanders");
+            // Initialise(AppConstants.AccountWelkom);
+            return RedirectToAction("Login");
         }
 
-
-        public ActionResult Welkom() {
-            Initialise(AppConstants.Account);
-            return RedirectToAction("Eilanders");
-        }
-        
-        public ActionResult Eilanders() {
-            Initialise(AppConstants.Account);
-            return View();
-        }
 
         
         // Alias.
         public ActionResult Overzicht() {
-            Initialise(AppConstants.MeedoenOverzicht);
+            // Initialise(AppConstants.MeedoenOverzicht);
             return RedirectToAction("Index");
         }
 
@@ -222,26 +220,39 @@ namespace HRE.Controllers {
             try {
                 email = Common.Common.RC2Decryption(email, HreSettings.EmaCypher, HreSettings.HiddenCypher);
             } catch (Exception) {
-                ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal nog niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
+                ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je HRE deelnemer in 2012 en/of 2013? En heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal nog niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
                 return View();
             }
 
             LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(email);
             
             if (user==null) {
-                ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je deelnemer in 2012 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal nog niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
+                ViewBag.Message = "Ongeldige Early Bird™ link!<br/><br/> Was je deelnemer in 2012 en/of 2013 en heb je problemen met inloggen vanuit de nieuwsbrief? Of heb je de nieuwsbrief helemaal nog niet ontvangen? Laat het ons weten: <a href=\"mailto:info@hetrondjeeilanden.nl\">info@hetrondjeeilanden.nl</a>.";
                 return View();
             }
 
             // Log de gebruiker in (op basis van de e-mail link dus).
             // TODO BW 2013-02-10: In geencrypte key nog expiration date zetten!
-            FormsAuthentication.SetAuthCookie(email, false);
-            InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.H2RE_EVENTNR);
-            if (inschrijving==null) {
-                inschrijving = InschrijvingenRepository.GetInschrijving(user, InschrijvingenRepository.HRE_EVENTNR);
-                return RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, eventNr = InschrijvingenRepository.H2RE_EVENTNR });
+            bool emailConfirmed = user.ConfirmEmailAddress();
+
+            // Log de gebruiker in (op basis van de e-mail link dus).
+            // TODO BW 2013-02-10: In geencrypte key nog expiration date zetten!
+            if (Roles.IsUserInRole(user.UserName, "Admin")) {
+                ViewBag.Message = string.Format("Voor admin gebruikers is inloggen via FlessenPost™ link disabled ivm security! Je moet inloggen met login en paswoord.");
+                // But sign out any current user to prevent confusion about the above, and loggin in as current user to subscription of other user.
+                FormsAuthentication.SignOut();
             } else {
-                return RedirectToAction("MijnRondjeEilanden", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, eventNr = InschrijvingenRepository.H2RE_EVENTNR});
+                FormsAuthentication.SetAuthCookie(email, false);
+            }
+            InschrijvingModel inschrijving = InschrijvingenRepository.GetInschrijving(user, SportsEventRepository.GetCurrentEvent().ExternalEventIdentifier);
+            if (inschrijving==null) {
+                inschrijving = InschrijvingenRepository.GetLatestInschrijvingOfUser(user.Id);
+                return RedirectToAction("Edit", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, 
+                    eventNr = SportsEventRepository.CurrentExternalEventIdentifier, userID = user.Id, SkipMaster = "False" });
+            } else {
+                return RedirectToAction("MijnRondjeEilanden", "Inschrijvingen", new { externalId = inschrijving.ExternalIdentifier, 
+                    eventNr = inschrijving.ExternalEventIdentifier, 
+                    emailConfirmed = emailConfirmed, SkipMaster = "False"});
             }
         }
 

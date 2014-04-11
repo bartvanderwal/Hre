@@ -1,0 +1,13 @@
+body{font:20px/32px 'Lato',sans-serif}#nav{font:22px/28px 'Lato',sans-serif;text-shadow:none}@media only screen and (max-width:767px){#nav{font:13px/20px 'Lato',sans-serif}}blockquote{font:42px/54px 'Lato',sans-serif}.filesharing-item-title a:link{font:14px 'Lato',sans-serif}.form-input-field{font:18px/20px 'Lato',sans-serif}textarea.form-input-field{font:18px/20px 'Lato',sans-serif}.form-input-button{font:18px/20px 'Lato',sans-serif}@media only screen and (max-width:767px){body{font:1.0em/1.4em 'Lato',sans-serif}}
+
+@media only screen and (max-width: 480px) {
+h1.siteTitle {
+margin-left: -20px;
+margin-top: 12px!important;
+}
+}
+
+
+.head h1 {
+	margin-top: 20px;
+}

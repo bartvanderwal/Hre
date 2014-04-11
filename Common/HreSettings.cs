@@ -175,16 +175,110 @@ namespace HRE.Common {
 
         
         /// <summary>
-        /// Het totaal aantal startplekken.
-        /// Default: 500.
+        /// Sisow password.
         /// </summary>
-        public static int AantalStartPlekken {
+        public static string SisowPassword {
             get {
-                return ReadIntSetting("AantalStartPlekken", 500);
+                return ReadStringSetting("SisowPassword");
+            }
+        }
+
+        
+        /// <summary>
+        /// Sisow Merchant id.
+        /// </summary>
+        public static string SisowMerchantId {
+            get {
+                return ReadStringSetting("SisowMerchantId");
+            }
+        }
+
+       
+        /// <summary>
+        /// Sisow Merchant key.
+        /// </summary>
+        public static string SisowMerchantKey {
+            get {
+                return ReadStringSetting("SisowMerchantKey");
             }
         }
 
 
+        /// <summary>
+        /// Sisow Merchant key.
+        /// </summary>
+        public static string MailAddressSecretary {
+            get {
+                return ReadStringSetting("MailAddressSecretary", "pieter@hetrondjeeilanden.nl");
+            }
+        }
+
+
+        /// <summary>
+        /// Specifies
+        /// To be able to switch this of if SSL is no longer available, due to provider errors for example.
+        /// </summary>
+        public static bool IsSslAvailable {
+            get {
+                return ReadBoolSetting("IsSslAvailable", true);
+            }
+        }
+
+
+        /// <summary>
+        /// Het aantal personen per 'startschot' in de tijdrit serie. Default starten twee personen tegelijkertijd.
+        /// </summary>
+        public static int AantalPersonenPerStartschot {
+            get {
+                return ReadIntSetting("AantalPersonenPerStartschot", 2);
+            }
+        }
+
+
+        /// <summary>
+        /// Het aantal seconden twee twee startschots in de tijdrit serie. Default is dit 10 seconden.
+        /// </summary>
+        public static int AantalSecondenTussenStartschots {
+            get {
+                return ReadIntSetting("AantalSecondenTussenStartschots", 10);
+            }
+        }
+
+
+        /// <summary>
+        /// De minimumleeftijd (e.g. de leeftijd die de deelnemer in het jaar van het evenement dient te bereiken (e.g. leeftijd op 31 december).
+        /// Default: 15.
+        /// </summary>
+        public static int MinimumLeeftijd {
+            get {
+                return ReadIntSetting("MinimumLeeftijd", 15);
+            }
+        }
+
+
+        /*
+        /// <summary>
+        /// Het totaal aantal startplekken.
+        /// Default: 700.
+        /// </summary>
+        public static int AantalStartPlekken {
+            get {
+                return ReadIntSetting("AantalStartPlekken", 700);
+            }
+        }
+
+
+        /// <summary>
+        /// Het aantal plekken op de rerervelijst.
+        /// Default: 100.
+        /// </summary>
+        public static int AantalPlekkenReserveLijst {
+            get {
+                return ReadIntSetting("AantalPlekkenReserveLijst", 100);
+            }
+        }
+
+        
         /// <summary>
         /// Het aantal Early Bird startplekken.
         /// Default: 200.
@@ -197,30 +291,60 @@ namespace HRE.Common {
 
 
         /// <summary>
+        /// De einddatum waarna er geen Early Bird korting meer wordt gegeven.
+        /// </summary>
+        public static DateTime EindDatumEarlyBirdKorting {
+            get {
+                return ReadDateTimeSetting("EindDatumEarlyBirdKorting", "30-04-2014");
+            }
+        }
+
+
+        /// <summary>
+        /// Openingsdatum algemene inschrijving.
+        /// </summary>
+        public static DateTime OpeningsdatumAlgemeneInschrijving {
+            get {
+                return ReadDateTimeSetting("OpeningsdatumAlgemeneInschrijving", "01-04-2014");
+            }
+        }
+
+
+        /// <summary>
+        /// Sluitingsdatum algemene inschrijving.
+        /// </summary>
+        public static DateTime SluitingsDatumAlgemeneInschrijving {
+            get {
+                return ReadDateTimeSetting("SluitingsDatumAlgemeneInschrijving", "27-7-2014 00:00:00");
+            }
+        }
+
+
+        /// <summary>
         /// Het huidige - kale - deelnamebedrag (exclusief korting zoals early bird, en extra kosten zoals chip/licentie).
-        /// Default: 2750.
+        /// Default: 2500.
         /// </summary>
         public static int HuidigeDeelnameBedrag {
             get {
-                return ReadIntSetting("HuidigeDeelnameBedrag", 2750);
+                return ReadIntSetting("HuidigeDeelnameBedrag", 2500);
             }
         }
 
 
         /// <summary>
         /// Kosten van een daglicentie.
-        /// Default: 230 (EUR 2,30).
+        /// Default: 220 (EUR 2,20).
         /// </summary>
-        public static int KostenDagLicentie {
+        public static int KostenNtbDagLicentie {
             get {
-                return ReadIntSetting("KostenDagLicentie", 220);
+                return ReadIntSetting("KostenNtbDagLicentie", 300);
             }
         }
 
 
         /// <summary>
-        /// De kosten voor huur van een (gele) MyLaps chip.
-        /// Default: 250.
+        /// De kosten voor huur van een gele MyLaps chip.
+        /// Default: 200.
         /// </summary>
         public static int KostenHuurMyLapsChipGeel {
             get {
@@ -230,14 +354,36 @@ namespace HRE.Common {
 
 
         /// <summary>
+        /// Kosten voor gebruik van een groene MyLaps chip.
+        /// Default: 150.
+        /// </summary>
+        public static int KostenGebruikMyLapsChipGroen {
+            get {
+                return ReadIntSetting("KostenGebruikMyLapsChipGroen", 150);
+            }
+        }
+
+
+        /// <summary>
+        /// De kosten voor eten.
+        /// Default: 1000.
+        /// </summary>
+        public static int KostenEten {
+            get {
+                return ReadIntSetting("KostenEten", 1000);
+            }
+        }
+
+        
+        /// <summary>
         /// De korting voor Early Birds.
-        /// Default: 750.
+        /// Default: 500.
         /// </summary>
         public static int HoogteEarlyBirdKorting {
             get {
-                return ReadIntSetting("HoogteEarlyBirdKorting", 750);
+                return ReadIntSetting("HoogteEarlyBirdKorting", 500);
             }
         }
-       
+        */
     }
 }

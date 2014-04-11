@@ -1,10 +1,9 @@
-﻿@model HRE.Models.ScrapeNtbIModel
+﻿@model HRE.Models.InschrijvingenModel
 
 @using HRE.Business
 
-
 @{
-    ViewBag.Title = "Scrape NTB";
+    ViewBag.Title = "Inschrijvingen " + Model.Event.Name;
     List<int> testParticipants = HRE.Dal.LogonUserDal.GetTestParticipantIds();
     
     var currentUser = HRE.Dal.LogonUserDal.GetCurrentUser();
@@ -14,93 +13,155 @@
     }
 }
 
-@if (Model.IsAdmin) {
+<link href="@Url.Content("~/Content/subscribe.css")" rel="stylesheet" type="text/css">
+
+@if (Model.HasAdminRole) {
     <div id="admin-panel-header">Admin panel</div>
-    using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="select-edition", @class="parallel-form" } )) {
-        @Html.DropDownList("EventNumber",
-            new SelectList(new Dictionary<string, string> {
-                {"2013", HRE.Models.InschrijvingenRepository.H2RE_EVENTNR},
-                {"2012", HRE.Models.InschrijvingenRepository.HRE_EVENTNR}
-            },
-            "Value", "Key"))
-        <input type="submit" value="Update" />
-    }
-    
-    using(@Html.BeginForm("DeleteTestUser", "Inschrijvingen", FormMethod.Post, new { @id="deleteTestUser", @class="parallel-form"} )) {
-        @Html.DropDownListFor(m => m.UserIdToDelete, HRE.Dal.LogonUserDal.GetTestParticipantsAsSelectList());
-        <input type="submit" value="Delete" />
-    }
-    
-    using(Html.BeginForm("Scrape", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) {
+            
+    using(Html.BeginForm("Index", "Inschrijvingen", FormMethod.Post, new { @id="scrape", @class="parallel-form" } )) {
         @Html.AntiForgeryToken();
         <text>Scrape:</text>
-        @Html.DropDownList("maxNumberOfScrapedItems",
+            @Html.DropDownList("EventNumber",
+            new SelectList(new Dictionary<string, string> {
+                {"2014", HRE.Models.SportsEventRepository.H3RE_EVENTNR},
+                {"2013", HRE.Models.SportsEventRepository.H2RE_EVENTNR},
+                {"2012", HRE.Models.SportsEventRepository.HRE_EVENTNR}
+            },
+            "Value", "Key"))
+
+            @Html.DropDownList("maxNumberOfScrapedItems",
             new SelectList(new Dictionary<string, int> { {"Alles", 0}, {"5", 5}, {"10", 10}, {"20", 20}, {"50", 50}, 
                                                             {"100", 100}, {"200", 200}, {"300", 300}, {"500", 500}, 
                                                             {"1000", 1000}}, "Value", "Key"));
         @Html.CheckBoxFor(m => m.OverrideLocallyUpdated, new { @title="Override"});
         <text>Overwrite</text>
-        <input type="submit" value="Scrape" />
+        <input type="submit" name="SubmitAction" value="Update" />
+        <input type="submit" name="SubmitAction" value="Scrape" />
+        <input type="submit" name="SubmitAction" value="Download" class="download-excel"/>
     }
 }
-
-
 
 @if(!string.IsNullOrEmpty(Model.Message)) {
     <div class="message">@Model.Message</div>
 }
 
 <div id="marquee-div">
-    <div id="marquee-label">Hebben de Early Birds™ er zin in?</div> 
+    <div id="marquee-label">Er hebben zich nu <b>@HRE.Dal.LogonUserDal.AantalIngeschrevenDeelnemers(Model.EventNumber)</b> deelnemers ingeschreven. Wat zeggen zij over de 1e zaterdag van augustus..?</div>
     <marquee>@Html.Raw(Model.ParticipantRemarks)</marquee>
 </div>
 
-<h1>@(Model.EventNumber==HRE.Models.InschrijvingenRepository.HRE_EVENTNR ? 
+<h1>@(Model.EventNumber==HRE.Models.SportsEventRepository.HRE_EVENTNR ? 
         "Deelnemerslijst HRE 2012" :
-        "Deelnemerslijst H2RE 2013")</h1>
+        Model.EventNumber==HRE.Models.SportsEventRepository.H2RE_EVENTNR ? "Deelnemerslijst H2RE 2013" : "Deelnemerslijst H2RE 2014")</h1>
 
-@if (!Model.IsAdmin && !User.Identity.IsAuthenticated) {
-    <p>Op de inschrijvingspagina's alvast een voorproefje van de nieuwe layout die we gaande 2013 zullen krijgen!</p>
+@if (Model.HasSpeakerRole) {
+    using(Html.BeginForm("DownloadSpeakerList", "Inschrijvingen", FormMethod.Post, new { @class="parallel-form" } )) {
+        @Html.AntiForgeryToken();
+        <input type="submit" value="SpeakerLijst" class="download-excel"/>
+        <i>@Model.NrOfEntries deelnemers (Food: @Model.NrOfFoodInteressees, Camp: @Model.NrOfCampInteressees, Bike: @Model.NrOfBikeInteressees, Early Birds: @Model.NrOfEarlyBirds)</i>
+    }
 }
 
-@if (Model==null || Model.Entries==null || Model.Entries.Count==0) {
+
+<span style="color: #ffffff; background-color: #2483B3; text-align: center; float: right; padding: 5px 10px; margin: 5px 10px; border: 1px solid #303030;">
+@if(DateTime.Compare(DateTime.Now, HRE.Models.SportsEventRepository.OpeningsdatumAlgemeneInschrijving)>0) {
+    @Html.ActionLink("Ik doe mee!", "IkDoeMee", "Inschrijvingen")
+} else {
+    <text>Op @HRE.Models.SportsEventRepository.OpeningsdatumAlgemeneInschrijving.ToShortDateString() opent de algemene inschrijving (totaal @HRE.Models.SportsEventRepository.AantalStartPlekken startplekken)</text>
+}
+</span>
+<p>Hieronder de deelnemerslijst. Enige tijd voor het evenement worden de startnummers en starttijden definitief.<br />
+@if (Model==null || Model.Inschrijvingen==null || Model.Inschrijvingen.Count==0) {
     <p>Er zijn nog geen deelnemers.</p>
 } else {
-    <table class="deelnemers@(Model.IsAdmin ? " admin-view" : string.Empty)">
+    int startNummer = 1;
+    DateTime startTijd = HRE.Models.SportsEventRepository.GetCurrentEvent().EventDate.Value;
+    HRE.Models.InschrijvingModel testInschrijving = Model.Inschrijvingen.FirstOrDefault();
+    bool startNummersIngedeeld = testInschrijving!=null && testInschrijving.StartNummer.HasValue;
+        
+        <table class="deelnemers@(Model.HasAdminRole ? " admin-view" : string.Empty)">
         <tr>
-            <th>Deelnemer</th>            <th>Woonplaats</th>
-            <th>Aangemeld</th>
-            @if (Model.IsAdmin) {
-                <th>E-mail adres</th>
-                <th>Geb. datum</th>
+            <th>@(startNummersIngedeeld ? "Voorlopig " : "")Startnr.</th>
+            <th>@(startNummersIngedeeld ? "Voorlopige " : "")Starttijd</th>
+            <th>Deelnemer</th>
+            <th>Woonplaats</th>
+            <th></th>
+            <th></th>
+            @if (Model.HasAdminRole) {
+                <th>DVD</th>
+                @*<th>Geb. datum</th>
                 <th>Eerst gescraped</th>
-                <th>Laatst gescraped</th>
+                <th>Laatst gescraped</th> *@
+                <th>Saldo</th>
+                <th>NTB</th>
                 <th>Updated</th>
+                <th></th>
             }
         </tr>
 
-        @foreach (var entry in Model.Entries) {
+        @foreach (var entry in Model.Inschrijvingen) {
             string participant = entry.Achternaam;
             bool isTestUser = testParticipants.Contains(entry.UserId);
             bool isMe = currentUserId==entry.UserId;
             <tr class="@(isTestUser ? "test-user" : "") @(isMe ? "is-me" : "")">
+                <td>@(startNummersIngedeeld ? entry.StartNummer : @startNummer)</td>
+                <td>@(startNummersIngedeeld ? entry.StartTijd.ToString() : string.Format("{0:H:mm:ss}", startTijd))</td> 
                 <td>@Html.ActionLink(entry.VolledigeNaam, "Edit", new { externalId = entry.ExternalIdentifier, eventNr = entry.ExternalEventIdentifier })</td>
                 <td>@entry.Woonplaats</td>
-                <td>@string.Format("{0:dd-MM-yyyy}", entry.RegistrationDate)</td>
-                @if (Model.IsAdmin) {
-                    <td><a href="mailto:@entry.Email">@entry.Email</a></td>
-                    <td>@string.Format("{0:dd-MM-yyyy}", entry.GeboorteDatum)</td>
-                    <td>@string.Format("{0:dd-MM-yyyy}", entry.DateFirstSynchronized.HasValue ? entry.DateFirstSynchronized.Value.RelativeDateDescription() : "-")</td>
-                    <td>@string.Format("{0:dd-MM-yyyy}", entry.DateLastSynchronized.HasValue ? entry.DateLastSynchronized.Value.RelativeDateDescription()  : "-")</td>
-                    <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>
+                <td>@string.Format("{0:d-MMM}", entry.RegistrationDate)</td>
+                <td style="width: 120px;">
+		            <div class="editor-field">
+                        @{string foodTitle = entry.Food ? string.Format("{0} blijft eten!", entry.Voornaam.UppercaseFirst()) : "";}
+                        @Html.CheckBoxFor(m => entry.Food, new { @title= @foodTitle, @disabled="",  })
+			            <label for="entry.Food" title="Blijft eten"></label>
+		            </div>
+		            <div class="editor-field">
+                        @{string campTitle = entry.Camp ? string.Format("{0} blijft kamperen!", entry.Voornaam.UppercaseFirst()) : "";}
+			            @Html.CheckBoxFor(m => entry.Camp, new { @title= @campTitle, @disabled="",  })
+			            <label for="entry.Camp" title="Blijft kamperen"></label>
+		            </div>
+                    <div class="editor-field">
+                        @{string bikeTitle = entry.Bike ? string.Format("{0} komt op de fiets!", entry.Voornaam.UppercaseFirst()) : "";}
+                        @Html.CheckBoxFor(m => entry.Bike, new { @title= @bikeTitle, @disabled=""})
+                        <label for="entry.Bike" title="Komt op de fiets"></label>    
+                    </div>
+                </td>
+                @if (Model.HasAdminRole) {
+                    using(Html.BeginForm("DeleteEntry", "Inschrijvingen", new { model = Model, participantUserId = entry.ParticipationId}, FormMethod.Post, null)) {
+                        @Html.HiddenFor(model => model.EventNumber)
+                        <td>@string.Format("{0:dd-MM-yyyy H:mm}", @entry.VirtualRegistrationDateForOrdering)</td>
+                        <td><span title="@string.Format("Inschrijfgeld: {0}, Betaald: {1}.", (entry.InschrijfGeld.HasValue ? entry.InschrijfGeld.AsAmount() : "-"), (entry.BedragBetaald.HasValue ? entry.BedragBetaald.AsAmount() : "-"))">@((entry.InschrijfGeld.HasValue && entry.BedragBetaald.HasValue ? (entry.InschrijfGeld.Value-entry.BedragBetaald.Value).AsAmount() : "-"))</span></td>
+                        <td>@(entry.DateLastSynchronized.HasValue ? "1" : "")</td>
+                        <td><span title="@string.Format("Aangemaakt: {0:dd-MM-yyyy}", entry.DateCreated.RelativeDateDescription())">@string.Format("{0:dd-MM-yyyy}", entry.DateUpdated.RelativeDateDescription())</span></td>
+                        <td><input value="Verwijderen" type="submit" onclick="return confirm('Weet je zeker dat je de inschrijving van gebruiker @entry.UserName wilt verwijderen?\n NB Bij verwijderen van inschrijving zal het account van deze gebruiker hierbij NIET mee verwijderd woden.');" /></td>
+                    }
                 }
             </tr>
+            if (!startNummersIngedeeld) {
+                if ((startNummer%HRE.Common.HreSettings.AantalPersonenPerStartschot)==0) {
+                    startTijd = startTijd.AddSeconds(HRE.Common.HreSettings.AantalSecondenTussenStartschots);
+                }
+                startNummer++;
+            }
         }
     </table>
 }
 
 <script type="text/javascript">
-    $('#EventNumber.').change(function () {
-        document.getElementById('select-edition').submit()
+    $(function () {
+        $('#EventNumber.').change(function () {
+            document.getElementById('select-edition').submit()
+        });
+
+        $("[data-confirm]").click(function (e) {
+            return confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?');
+        });
+
+        $('#uitleg').hide();
+
+        $('#toon-uitleg').click(function () {
+            $('ul#uitleg').slideToggle();
+        });
+
     });
 </script>

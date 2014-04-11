@@ -1,0 +1,80 @@
+@model HRE.Data.emailaudit
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>emailaudit</legend>
+
+    <div class="display-label">ToAddresses</div>
+    <div class="display-field">@Model.ToAddresses</div>
+
+    <div class="display-label">FromAddress</div>
+    <div class="display-field">@Model.FromAddress</div>
+
+    <div class="display-label">CCAddresses</div>
+    <div class="display-field">@Model.CCAddresses</div>
+
+    <div class="display-label">BccAddresses</div>
+    <div class="display-field">@Model.BccAddresses</div>
+
+    <div class="display-label">Subject</div>
+    <div class="display-field">@Model.Subject</div>
+
+    <div class="display-label">Body</div>
+    <div class="display-field">@Model.Body</div>
+
+    <div class="display-label">isHtml</div>
+    <div class="display-field">@Model.isHtml</div>
+
+    <div class="display-label">AttachmentEntityId</div>
+    <div class="display-field">@Model.AttachmentEntityId</div>
+
+    <div class="display-label">EmailStatusId</div>
+    <div class="display-field">@Model.EmailStatusId</div>
+
+    <div class="display-label">StatusMessage</div>
+    <div class="display-field">@Model.StatusMessage</div>
+
+    <div class="display-label">UserIdSender</div>
+    <div class="display-field">@Model.UserIdSender</div>
+
+    <div class="display-label">UserIdReceiver</div>
+    <div class="display-field">@Model.UserIdReceiver</div>
+
+    <div class="display-label">DateCreated</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateCreated)</div>
+
+    <div class="display-label">DateUpdated</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateUpdated)</div>
+
+    <div class="display-label">DateSent</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateSent)</div>
+
+    <div class="display-label">EmailCategoryId</div>
+    <div class="display-field">@Model.EmailCategoryId</div>
+
+    <div class="display-label">logonuser</div>
+    <div class="display-field">@(Model.logonuser == null ? "None" : Model.logonuser.Name)</div>
+
+    <div class="display-label">logonuserReference</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.logonuserReference).ToString()</div>
+
+    <div class="display-label">logonuser1</div>
+    <div class="display-field">@(Model.logonuser1 == null ? "None" : Model.logonuser1.Name)</div>
+
+    <div class="display-label">logonuser1Reference</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.logonuser1Reference).ToString()</div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+
+

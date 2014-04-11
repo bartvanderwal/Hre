@@ -3,16 +3,31 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading;
+using System.Globalization;
 
 namespace HRE.Common {
 
     public class SettingsBase {
+
         /// <summary>
         /// Read a boolean setting from the appsettings. The setting must be set to "True", "true", "TRUE" or something like that, for other values or if it is not present it will be regarded as False.
         /// </summary>
-        /// </summary>
         protected static bool ReadBoolSetting(string settingKey) {
-            return "True".Equals(ConfigurationManager.AppSettings[settingKey], StringComparison.InvariantCultureIgnoreCase);
+            return ReadBoolSetting(settingKey, false);
+        }
+
+
+        /// <summary>
+        /// Read a boolean setting from the appsettings. The setting must be set to "True", "true", "TRUE" or something like that, for other values or if it is not present it will be regarded as False.
+        /// </summary>
+        protected static bool ReadBoolSetting(string settingKey, bool defaultValue) {
+            bool boolSettingAsBool;
+            string boolSettingAsString = ConfigurationManager.AppSettings[settingKey];
+            if (!string.IsNullOrEmpty(boolSettingAsString) && bool.TryParse(boolSettingAsString, out boolSettingAsBool)) {
+                return boolSettingAsBool;
+            } else {
+                return defaultValue;
+            }
         }
 
 
@@ -34,10 +49,21 @@ namespace HRE.Common {
         /// <summary>
         /// Read a string setting from the settings and allow for a default value.
         /// </summary>
-        protected static string ReadStringSetting(string settingKey, string defaultValue) {
+        protected static string ReadStringSetting(string settingKey, string defaultValue = "") {
             // Read the setting from the appsettings file.
             string result = ConfigurationManager.AppSettings[settingKey];
             return result != null ? result : defaultValue;
+        }
+
+
+        /// <summary>
+        /// Read a datetime setting from the settings or else return the passed default time-value-as-string as a date.
+        /// TODO BW 2013-02-28 Make a little more robust, with other string parsing options, and an overwrite without default.
+        /// </summary>
+        protected static DateTime ReadDateTimeSetting(string settingKey, string defaultValue) {
+            string dateString = ReadStringSetting(settingKey, defaultValue);
+            var result = DateTime.Parse(dateString, CultureInfo.CreateSpecificCulture("nl-NL"));
+            return result;
         }
 
 

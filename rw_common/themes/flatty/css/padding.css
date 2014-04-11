@@ -1,0 +1,25 @@
+#extraContent1, #extraContent2, #extraContent3, #extraContent4, #contentContainer {
+	padding: 20px;
+}
+
+header.slideRight {
+	padding-left: 10px;
+}
+
+nav {
+	top: 0;
+	right: 15px;
+}
+
+
+/* Tablet and Mobile */
+@media only screen and (max-width:767px) {
+    
+    #extraContent1 {
+		padding-top: 70px;
+	}
+	
+	#contentContainer {
+		padding-top: 30px;
+	}
+}

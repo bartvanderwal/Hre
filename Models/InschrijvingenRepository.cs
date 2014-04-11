@@ -9,9 +9,9 @@ using HRE.Models;
 using HRE.Data;
 using HRE.Common;
 using HRE.Dal;
+using HRE.Business;
 
 namespace HRE.Models {
-
 
     /// <summary>
     /// Class with utility functions to put into and retrieve Ntb entries from the database.
@@ -20,23 +20,9 @@ namespace HRE.Models {
 
         #region :: Constants
 
-        public const string HRE_NAME = "HRE";
-
-        public const string HRE_EVENTNR = "2005881";
-
-        public const string HRE_SERIENR = "4549";
-
-        public static DateTime HRE_DATE = new DateTime(2012,8,4,16,00,0);
-
-        public const string H2RE_NAME = "H2RE";
-
-        public const string H2RE_EVENTNR = "2005971";
-
-        public const string H2RE_SERIENR = "5089";
-
-        public static DateTime H2RE_DATE = new DateTime(2013,8,3,15,30,0);
-
         public static string ADMIN_ROLE_NAME = "Admin";
+
+        public static string SPEAKER_ROLE_NAME = "Speaker";
 
         #endregion :: Constants
 
@@ -49,19 +35,26 @@ namespace HRE.Models {
                 Roles.CreateRole(ADMIN_ROLE_NAME);
             }
 
-            List<AutoCreatedUser> listOfAdmins = new List<AutoCreatedUser>() { 
+            if (!Roles.RoleExists(SPEAKER_ROLE_NAME)) {
+                Roles.CreateRole(SPEAKER_ROLE_NAME);
+            }
+
+            List<AutoCreatedUser> listOfAdmins = new List<AutoCreatedUser>() {
                 new AutoCreatedUser("bart@hetrondjeeilanden.nl", "24dec2012"), 
                 new AutoCreatedUser("yordi@hetrondjeeilanden.nl", "24dec2012"), 
                 new AutoCreatedUser("pieter@hetrondjeeilanden.nl", "24dec2012"), 
                 new AutoCreatedUser("rudo@hetrondjeeilanden.nl", "24dec2012"),
                 new AutoCreatedUser("cock@hetrondjeeilanden.nl", "24dec2012"),
                 new AutoCreatedUser("ad@hetrondjeeilanden.nl", "24dec2012"),
-                new AutoCreatedUser("kitty@hetrondjeeilanden.nl", "24dec2012")
+                new AutoCreatedUser("kitty@hetrondjeeilanden.nl", "24dec2012"),
+                new AutoCreatedUser("bastian@hetrondjeeilanden.nl", "24dec2012"),
+                new AutoCreatedUser("mylapsmaarten@hetrondjeeilanden.nl", "krol"),
+                new AutoCreatedUser("mylapsmarijn@hetrondjeeilanden.nl", "smulders")
             };
 
-            List<AutoCreatedUser> listOfTestUsers = new List<AutoCreatedUser>() { 
-                new AutoCreatedUser("tester1@hetrondjeeilanden.nl", "24dec2012"), 
-                new AutoCreatedUser("tester2@hetrondjeeilanden.nl", "24dec2012"), 
+            List<AutoCreatedUser> listOfSpeakers = new List<AutoCreatedUser>() { 
+                new AutoCreatedUser("wilko@hetrondjeeilanden.nl", "topspe@kert"),
+                new AutoCreatedUser("ruud@hetrondjeeilanden.nl", "topspe@kert")
             };
 
             foreach(AutoCreatedUser adminUser in listOfAdmins) {
@@ -74,35 +67,15 @@ namespace HRE.Models {
                 }
             }
 
-
-            foreach(AutoCreatedUser testUser in listOfTestUsers) {
-                MembershipUser user = Membership.GetUser(testUser.UserNameAndEmail);
+            foreach(AutoCreatedUser speakerUser in listOfSpeakers) {
+                MembershipUser user = Membership.GetUser(speakerUser.UserNameAndEmail);
                 if (user==null) {
-                    LogonUserDal logonUser = LogonUserDal.CreateOrRetrieveUser(testUser.UserNameAndEmail, testUser.Password);
+                    LogonUserDal logonUser = LogonUserDal.CreateOrRetrieveUser(speakerUser.UserNameAndEmail, speakerUser.Password);
+                    if (!Roles.IsUserInRole(speakerUser.UserNameAndEmail, SPEAKER_ROLE_NAME)) {
+                        Roles.AddUserToRole(speakerUser.UserNameAndEmail, SPEAKER_ROLE_NAME); 
+                    }
                 }
             }
-
-
-            LogonUserDal bart = LogonUserDal.GetByEmailAddress("bart@hetrondjeeilanden.nl");
-            if (bart!=null && !bart.DateOfBirth.HasValue) {
-                bart.DateCreated = DateTime.Now;
-                bart.DateOfBirth = DateTime.ParseExact("27/06/1977", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                bart.IsMailingListMember = true;
-                bart.IsActive = true;
-                bart.Gender = true;
-                bart.UserName = bart.EmailAddress;
-                bart.Save();
-            }
-        }
-
-
-        public static sportsevent GetHreEvent() {
-            return GetOrCreateEvent(HRE_EVENTNR, HRE_SERIENR, HRE_NAME, HRE_DATE);
-        }
-
-        
-        public static sportsevent GetH2reEvent() {
-            return GetOrCreateEvent(H2RE_EVENTNR, H2RE_SERIENR, H2RE_NAME, H2RE_DATE);
         }
 
 
@@ -129,9 +102,72 @@ namespace HRE.Models {
         }
 
 
-        // Retrieve an InschrijvingModel for a user and a certain event (determined by externalIdentifier).
+        /// <summary>
+        /// Retrieve an InschrijvingModel for a user and a certain event (determined by externalIdentifier).
+        /// </summary>
+        /// <param name="logonUser"></param>
+        /// <param name="eventNr"></param>
+        /// <returns></returns>
         public static InschrijvingModel GetInschrijving(LogonUserDal logonUser, string eventNr) {
             return SelectEntries(eventNr, true, logonUser.Id).FirstOrDefault();
+        }
+
+
+        /// <summary>
+        /// Retrieve an InschrijvingModel for the latest event participation by the given user.
+        /// </summary>
+        /// <param name="userID">The ID of the user.</param>
+        /// <returns></returns>
+        public static InschrijvingModel GetLatestInschrijvingOfUser(int userID) {
+            var participation = (
+                from p in DB.sportseventparticipation
+                join e in DB.sportsevent on p.SportsEventId equals e.Id
+                orderby e.EventDate descending
+                where p.UserId == userID
+                select new {
+                    EventNr = e.ExternalEventIdentifier,
+                    UserId = p.UserId,
+                }
+            ).FirstOrDefault();
+
+            if (participation!=null) {
+                InschrijvingModel result = SelectEntries(participation.EventNr, true, participation.UserId.Value).FirstOrDefault();
+                return result;
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Retrieve an InschrijvingModel by ID.
+        /// </summary>
+        /// <param name="participationID"></param>
+        /// <param name="eventNr"></param>
+        /// <returns></returns>
+        public static InschrijvingModel GetInschrijvingByParticipationID(int participationID) {
+            var participation = (
+                from p in DB.sportseventparticipation 
+                where p.Id == participationID 
+                select new {
+                    userID = p.UserId,
+                    eventID = p.SportsEventId
+                }).FirstOrDefault();
+
+            string eventNr = null;
+            
+            if (participation.eventID.HasValue) {
+                eventNr = (
+                    from e in DB.sportsevent
+                    where e.Id == participation.eventID.Value
+                    select e.ExternalEventIdentifier
+                ).FirstOrDefault();
+
+                if (participation.userID.HasValue && !string.IsNullOrEmpty(eventNr)) {
+                    InschrijvingModel result = SelectEntries(eventNr, true, participation.userID.Value).FirstOrDefault();
+                    return result;
+                }
+            }
+            return null;
         }
 
 
@@ -140,7 +176,7 @@ namespace HRE.Models {
         /// </summary>
         /// <param name="eventNr"></param>
         /// <returns></returns>
-        public static IEnumerable<InschrijvingModel> SelectEntries(string eventNr, bool addTestParticipants = false, int userId = 0) {
+        public static IEnumerable<InschrijvingModel> SelectEntries(string eventNr, bool includeTestParticipants = false, int userId = 0) {
             hreEntities DB = DBConnection.GetHreContext();
             
             List<int> testParticipantIds = LogonUserDal.GetTestParticipantIds();
@@ -149,9 +185,11 @@ namespace HRE.Models {
                 join sportsevent e in DB.sportsevent on p.SportsEventId equals e.Id
                 join logonuser u in DB.logonuser on p.UserId equals u.Id 
                 join address a in DB.address on u.PrimaryAddressId equals a.Id
-                where e.ExternalEventIdentifier == eventNr && (addTestParticipants || !testParticipantIds.Contains(u.Id))
+                where e.ExternalEventIdentifier == eventNr && (includeTestParticipants || !testParticipantIds.Contains(u.Id))
                 select new InschrijvingModel() {
                     // User data.
+                    StartNummer = p.RaceNumber,
+                    StartTijd = p.PlannedStartTime,
                     UserId = u.Id,
                     UserName = u.UserName,
                     GeboorteDatum = u.DateOfBirth,
@@ -164,7 +202,7 @@ namespace HRE.Models {
                     Voornaam = a.Firstname,
                     Tussenvoegsel = a.Insertion,
                     Achternaam = a.Lastname,
-                    InteresseNieuwsbrief = u.IsMailingListMember,
+                    Newsletter = u.IsMailingListMember.HasValue && u.IsMailingListMember.Value,
                     Straat = a.Street,
                     Huisnummer = a.Housenumber,
                     HuisnummerToevoeging = a.HouseNumberAddition,
@@ -181,7 +219,11 @@ namespace HRE.Models {
 
                     ExternalIdentifier = p.ExternalIdentifier,
                     RegistrationDate = p.DateRegistered,
-                    
+                    VirtualRegistrationDateForOrdering = p.VirtualRegistrationDateForOrdering,
+                    BankCode = p.BankCode,
+                    Betaalwijze = (PaymentType?) p.PaymentType,
+                    SisowTransactionID = p.SisowTransactionID,
+
                     // TODO BW 2013-02-06: Rename the database fields from 'Scraped' also to 'Synchronized' like the ORM fields
                     // once this is an accurate description (e.g. when posting 'updates' and 'inserts' to NTB inschrijvingen is also done on Save).
                     DateFirstSynchronized = p.DateFirstScraped,
@@ -195,65 +237,32 @@ namespace HRE.Models {
                     Camp = p.Camp.HasValue && p.Camp.Value,
                     Food = p.Food.HasValue && p.Food.Value,
                     Bike = p.Bike.HasValue && p.Bike.Value,
+                    Finale = p.WantsToDoFinal.HasValue && p.WantsToDoFinal.Value ? "W" : "R",
                     HebJeErZinIn = p.NotesToAll,
                     OpmerkingenTbvSpeaker = p.SpeakerRemarks,
-                    Bijzonderheden = p.Notes,
+                    OpmerkingenAanOrganisatie = p.Notes,
                     
                     IsEarlyBird = p.EarlyBird,
+                    FreeStarter = p.FreeStarter,
                     InschrijfGeld = p.ParticipationAmountInEuroCents,
+                    BedragBetaald = p.ParticipationAmountPaidInEuroCents,
+                    GenoegBetaaldVoorDeelnemerslijst = p.HasPaidEnoughToList.HasValue && p.HasPaidEnoughToList.Value,
 
+                    DatumBetaald = p.DatePaymentReceived,
+                    IsBetaald = p.HasPaid,
                     DateConfirmationSend = p.DateConfirmationSend
                 };
 
             if (userId!=0) {
                 raceEntries = raceEntries.Where(e => e.UserId==userId);
             }
-
-            // Zet de volgorde om, voor laatst ingeschrevenen eerst.
-            if(addTestParticipants) {
-                raceEntries = raceEntries.OrderByDescending(e => e.RegistrationDate);
-            }
-
-            return raceEntries;
+            
+            return raceEntries.OrderBy(i => i.StartNummer ?? int.MaxValue);
         }
 
 
         /// <summary>
-        /// Gets an event by external=eventNumber, or creates it in the database if it doesn't exist yet.
-        /// </summary>
-        /// <param name="eventNumber"></param>
-        /// <param name="eventName"></param>
-        /// <param name="eventDate"></param>
-        /// <returns></returns>
-        private static sportsevent GetOrCreateEvent(string eventNumber, string serieNumber, string eventName, DateTime eventDate) {
-            sportsevent hreEvent = GetEvent(eventNumber);
-            if (hreEvent==null) {
-                hreEvent = new sportsevent();
-                hreEvent.Name=HRE_NAME;
-                hreEvent.ExternalEventIdentifier=eventNumber;
-                hreEvent.ExternalEventSerieIdentifier=serieNumber;
-                hreEvent.DateCreated = DateTime.Now;
-                hreEvent.DateUpdated = DateTime.Now;
-                hreEvent.EventDate = eventDate;
-                hreEvent.EventPlace = "Vinkeveen - Zandeiland 1";
-                DB.AddTosportsevent(hreEvent);
-                DB.SaveChanges();
-            }
-            return hreEvent;
-        }
-
-
-        /// <summary>
-        /// Gets an event by external=eventNumber, or creates it in the database if it doesn't exist yet.
-        /// </summary>
-        /// <param name="eventNumber"></param>
-        public static sportsevent GetEvent(string eventNumber) {
-            return (from e in DB.sportsevent where e.ExternalEventIdentifier==eventNumber select e).FirstOrDefault();
-        }
-
-
-        /// <summary>
-        /// Sav an entry.
+        /// Save an entry.
         /// </summary>
         /// <param name="inschrijving"></param>
         /// <param name="eventNumber"></param>
@@ -261,21 +270,37 @@ namespace HRE.Models {
 
             // TODO BW 2013-02-6 Als een inschrijving wordt gesaved die is gescraped van NTB inschrijvingen, maar het e-mail adres is
             // inmiddels aangepast dan werkt onderstaande niet. De persoon wordt dan onder een nieuwe inschrijving gesaved en klapt er mogelijk uit op duplicate NTB licentie nummer..
+            inschrijving.Email = inschrijving.Email.ToLower();
+
+            bool isEmailGewijzigd = (!string.IsNullOrEmpty(inschrijving.EmailBeforeUpdateIfAny) && inschrijving.EmailBeforeUpdateIfAny!=inschrijving.Email);
+
+            string gebruikersnaam = isEmailGewijzigd ? inschrijving.EmailBeforeUpdateIfAny : inschrijving.Email;
 
             // Create and/or retrieve the user (and the underlying ASP.NET membership user).
-            LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(inschrijving.Email, "", inschrijving.ExternalIdentifier);
+            LogonUserDal user = LogonUserDal.CreateOrRetrieveUser(gebruikersnaam, "", inschrijving.ExternalIdentifier);
 
             // Update the rest of the user data ONLY if:
             // - It is NOT being scraped for this save
             // - Or the raceEntry is first created
             // - OR it IS being scraped but was scraped before and was NOT updated after it was last scraped (e.g. DateUpdated<=DateLastScraped)
             // TODO: Update (and save) only if the information is newer; somehow...
-            if (overrideLocallyUpdated || !isScrape || !user.DateOfBirth.HasValue || (inschrijving.DateLastSynchronized.HasValue 
-                                && DateTime.Compare(inschrijving.DateUpdated, inschrijving.DateLastSynchronized.Value)<=0)) {
+            if (overrideLocallyUpdated || !isScrape || !user.DateOfBirth.HasValue || 
+                    (!inschrijving.DateLastSynchronized.HasValue || (inschrijving.DateLastSynchronized.HasValue 
+                        && DateTime.Compare(inschrijving.DateUpdated, inschrijving.DateLastSynchronized.Value)<=0))) {
                 user.DateOfBirth = inschrijving.GeboorteDatum;
-                user.IsMailingListMember = inschrijving.InteresseNieuwsbrief;
+                user.IsMailingListMember = inschrijving.Newsletter;
+
+                if (user.EmailAddress != inschrijving.Email) {
+                    // TODO BW 2013-07-28: A check has to be added that the new e-mail address does not exist yet (or is it already present?).
+                    if (Membership.GetUser(inschrijving.Email)!=null) {
+                        throw new ArgumentException(string.Format("Het e-mail adres is gewijzigd van {0} naar {1}, maar dit laatste e-mail adres is al gebruikt door een andere gebruiker.", user.EmailAddress, inschrijving.Email));
+                    }
+
+                    user.EmailAddress = inschrijving.Email;
+                    // Set user status as unconfirmed, since the e-mail address is changed, and the new address is not confirmed yet.
+                    user.Status = Business.LogonUserStatus.Undetermined;
+                }
                 user.UserName = inschrijving.Email;
-                user.EmailAddress = inschrijving.Email;
                 user.TelephoneNumber = inschrijving.Telefoon;
 
                 user.NtbLicenseNumber = inschrijving.HasLicentieNummer ? inschrijving.LicentieNummer : null;
@@ -294,6 +319,9 @@ namespace HRE.Models {
                     // address.DateCreated = DateTime.Now;
                 }
                 address.DateUpdated = DateTime.Now;
+                if (address.DateCreated==null || address.DateCreated==DateTime.MinValue) {
+                    address.DateCreated = DateTime.Now;
+                }
                 address.City = inschrijving.Woonplaats;
                 address.Street = inschrijving.Straat;
                 address.Housenumber = inschrijving.Huisnummer;
@@ -303,10 +331,14 @@ namespace HRE.Models {
                 address.Insertion = inschrijving.Tussenvoegsel;
                 address.Lastname = inschrijving.Achternaam;
                 address.PostalCode = inschrijving.Postcode;
-                user.PrimaryAddress = address; 
+                user.PrimaryAddress = address;
                 user.Save();
 
-                int eventId = InschrijvingenRepository.GetEvent(eventNumber).Id;
+                // Set the userId of the inschrijvingmodel, if not set before (for registration of completely new users).
+                if (inschrijving.UserId==0) {
+                    inschrijving.UserId=user.Id;
+                }
+                int eventId = SportsEventRepository.GetEvent(eventNumber).Id;
 
                 // Create the sportsparticipation.
                 sportseventparticipation participation = (from p in DB.sportseventparticipation where p.UserId==user.Id && p.SportsEventId ==  eventId select p).FirstOrDefault();
@@ -335,10 +367,13 @@ namespace HRE.Models {
                     participation.DateRegistered=inschrijving.RegistrationDate;
                 } else {
                     participation.ExternalIdentifier = inschrijving.ExternalIdentifier;
-                    if(inschrijving.IsNew) {
-                        participation.DateRegistered = participation.DateUpdated;
-                    }
+                    participation.DateRegistered = participation.DateUpdated;
                     participation.ParticipationAmountInEuroCents = inschrijving.InschrijfGeld;
+                }
+
+                // Initialiseer de virtuele datum voor orderen op de inschrijfdatum (door wijzigen kun je later de volgorde 'kunstmatig' wijzigen, maar dit is wel iets minder kunstmatig dan met de inschrijfdatum zelf :P).
+                if (!participation.VirtualRegistrationDateForOrdering.HasValue) {
+                    participation.VirtualRegistrationDateForOrdering = participation.DateRegistered;
                 }
 
                 participation.SportsEventId = (from sportsevent se in DB.sportsevent 
@@ -350,11 +385,16 @@ namespace HRE.Models {
                 participation.Camp = inschrijving.Camp;
                 participation.Food = inschrijving.Food;
                 participation.Bike = inschrijving.Bike;
+                participation.WantsToDoFinal = inschrijving.Finale=="W";
                 participation.TShirtSize = inschrijving.MaatTshirt;
+                
                 participation.ParticipationStatus = 1;
-                participation.Notes = inschrijving.Bijzonderheden;
+                participation.Notes = inschrijving.OpmerkingenAanOrganisatie;
                 participation.NotesToAll = inschrijving.HebJeErZinIn;
                 participation.DateConfirmationSend = inschrijving.DateConfirmationSend;
+
+                participation.BankCode = inschrijving.BankCode;
+                participation.PaymentType = (int?) inschrijving.Betaalwijze;
 
                 if (participation.Id==0) {
                     DB.AddTosportseventparticipation(participation);
@@ -363,6 +403,25 @@ namespace HRE.Models {
                 inschrijving.ParticipationId = participation.Id;
                 inschrijving.RegistrationDate = participation.DateRegistered;
             }
+        }
+
+
+        /// <summary>
+        /// Save an entry.
+        /// </summary>
+        /// <param name="inschrijving"></param>
+        /// <param name="eventNumber"></param>
+        public static void MarkEntryAsPaid(int participationID, string sisowTransactionID) {
+            var participation = (from p in DB.sportseventparticipation where p.Id == participationID select p).FirstOrDefault();
+            
+            if (participation!=null) {
+                DateTime now = DateTime.Now;
+                participation.DatePaymentReceived = now;
+                participation.HasPaid = true;
+                participation.ParticipationAmountPaidInEuroCents = participation.ParticipationAmountInEuroCents;
+                participation.SisowTransactionID = sisowTransactionID;
+            }
+            DB.SaveChanges();
         }
 
 

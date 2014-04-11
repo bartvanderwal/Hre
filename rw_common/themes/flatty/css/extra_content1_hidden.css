@@ -1,0 +1,8 @@
+#extraContent1{display:none}
+
+/* Tablet and Mobile */
+@media only screen and (max-width:767px) {
+	#contentContainer {
+		padding-top: 60px!important;
+	}
+}
