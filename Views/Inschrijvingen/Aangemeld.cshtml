@@ -25,7 +25,7 @@
     <ul class="icons">
         @if (Model.IsBetaald.HasValue && Model.IsBetaald.Value) {
             <li><i class="icon-ok"></i>Het inschrijfgeld (@Model.InschrijfGeld.AsAmount()) is voldaan!</li>
-        } else {
+        } else if (Request.QueryString["callback"]!="true") {
             <li>
                 <i class="icon-remove"></i>
                 <div style="display: inline-block;">
